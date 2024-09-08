@@ -1,8 +1,12 @@
 ﻿@page "/daily"
 @using DokkanDaily.Components.Shared
 @using DokkanDaily.Helpers
+@using DokkanDaily.Models
 
 <PageTitle>Dokkan Daily Stage Challenge!</PageTitle>
+
+<h1>Dokkan Daily Stage Challenge!</h1>
+<h3>Today's challenge type is: @dailyType!</h3>
 
 @if(Executing)
 {
@@ -10,13 +14,35 @@
 }
 else
 {
-    
+    @if(dailyType == DailyType.LinkSkill)
+    {
+        
+    }
+    @if(dailyType == DailyType.Category)
+    {
+        
+    }
+    @if(dailyType == DailyType.Character)
+    {
+        
+    }
 }
 
 @code {
     bool Executing { get; set; }
 
-    Random Random => RNGHelper.GetDailySeededRandom();
+    Random Random => RNGHelper.GetDailySeed();
 
+    DailyType dailyType { get; set; }
 
+    protected override void OnInitialized()
+    {
+        dailyType = DailyType.LinkSkill; //RNGHelper.GetRandomDailyType(Random);
+        base.OnInitialized();
+    }
+
+    private void SetupLinkSkillChallenge()
+    {
+        
+    }
 }

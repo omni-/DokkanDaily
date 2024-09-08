@@ -9,7 +9,8 @@ namespace DokkanDaily
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddRazorComponents()
+            builder.Services
+                .AddRazorComponents()
                 .AddInteractiveServerComponents();
 
             var app = builder.Build();
@@ -33,6 +34,13 @@ namespace DokkanDaily
 
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
+
+            app.MapGet("/", context =>
+            {
+                context.Response.Redirect("/daily");
+                return Task.CompletedTask;
+            });
+
 
             app.Run();
         }
