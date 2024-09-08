@@ -1,0 +1,22 @@
+﻿@page "/daily"
+@using DokkanDaily.Components.Shared
+@using DokkanDaily.Helpers
+
+<PageTitle>Dokkan Daily Stage Challenge!</PageTitle>
+
+@if(Executing)
+{
+    <BusySpinner />
+}
+else
+{
+    
+}
+
+@code {
+    bool Executing { get; set; }
+
+    Random Random => RNGHelper.GetDailySeededRandom();
+
+
+}
