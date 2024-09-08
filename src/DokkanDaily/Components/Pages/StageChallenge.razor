@@ -3,10 +3,11 @@
 @using DokkanDaily.Helpers
 @using DokkanDaily.Models
 
-<PageTitle>Dokkan Daily Stage Challenge!</PageTitle>
+<PageTitle>Dokkandle</PageTitle>
 
-<h1>Dokkan Daily Stage Challenge!</h1>
-<h3>Today's challenge type is: @dailyType!</h3>
+<h1>Dokkandle</h1>
+
+<p>Today's challenge type is: @dailyType!</p>
 
 @if(Executing)
 {
@@ -16,16 +17,26 @@ else
 {
     @if(dailyType == DailyType.LinkSkill)
     {
-        
+        <h3><b>Challenge!</b> defeat <b>@todaysStage.Name</b> using only units that have the <b>@linkSkill.Name</b> Link Skill! (Friend Unit excluded)</h3>
     }
     @if(dailyType == DailyType.Category)
     {
-        
+        <h3><b>Challenge!</b> defeat <b>@todaysStage.Name</b> using only units belonging to the <b>@category.Name</b> Category! (Friend Unit excluded)</h3>
     }
     @if(dailyType == DailyType.Character)
     {
-        
+        <h3><b>Challenge!</b> build a team using <b>[@leader.Title] @leader.Name</b> as the Leader!</h3>
     }
+    @if (todaysStage != null && todaysStage.WallpaperImagePath != null)
+    {
+        <p>
+            <img src="@todaysStage.WallpaperImagePath" />
+        </p>
+    }
+
+    <footer style="position:fixed; bottom:0;">
+        <p>Time until challenge resets: @hoursToReset hours</p>
+    </footer>
 }
 
 @code {
@@ -35,14 +46,24 @@ else
 
     DailyType dailyType { get; set; }
 
+    Event todaysStage { get; set; }
+
+    LinkSkill linkSkill { get; set; }
+
+    Category category { get; set; }
+
+    Unit leader { get; set; }
+
+    int hoursToReset => 24 - DateTime.UtcNow.Hour;
+
     protected override void OnInitialized()
     {
-        dailyType = DailyType.LinkSkill; //RNGHelper.GetRandomDailyType(Random);
+        dailyType = RNGHelper.GetRandomDailyType(Random);
+        todaysStage = RNGHelper.GetRandomStage(Random);
+        linkSkill = RNGHelper.GetRandomLinkSkill(Random, todaysStage.Tier);
+        category = RNGHelper.GetRandomCategory(Random, todaysStage.Tier);
+        leader = RNGHelper.GetRandomLeader(Random); //, todaysStage.Tier);
         base.OnInitialized();
     }
 
-    private void SetupLinkSkillChallenge()
-    {
-        
-    }
 }

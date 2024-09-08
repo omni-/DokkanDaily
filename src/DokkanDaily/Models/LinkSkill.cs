@@ -1,9 +1,9 @@
 ﻿namespace DokkanDaily.Models
 {
-    public class LinkSkill(string name, Difficulty d)
+    public class LinkSkill(string name, Tier d)
     {
         public string Name { get; init; } = name;
 
-        public Difficulty Difficulty { get; init; } = d;
+        public Tier Tier { get; init; } = d;
     }
 }
