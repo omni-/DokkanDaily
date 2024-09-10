@@ -9,7 +9,7 @@
 
 <style>
     body {
-        background: url('images/wallpaper.jpg') fixed center no-repeat;
+        background: url('images/misc/wallpaper.jpg') fixed center no-repeat;
         background-size: cover;
         text-align: center;
         margin: 0 auto;
@@ -28,6 +28,7 @@
 else
 {
     <div class="challenge-box">
+        <div style="margin: 0 1em 0 1em">
         @if(dailyType == DailyType.LinkSkill)
         {
             <p class="challenge-text"><b>Challenge!</b> defeat <b>@todaysEvent.Name</b>, <b>Stage @todaysEvent.Stage</b> using only units that have the Link Skill <div class="dokkan-link-wrapper"><div class="dokkan-link"><div class="text">@linkSkill.Name</div></div></div><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
@@ -38,7 +39,7 @@ else
         }
         @if(dailyType == DailyType.Character)
         {
-            <p class="challenge-text"><b>Challenge!</b> build a team using <img style="width:3em;height:auto;" src="@todaysUnit.ImageURL" /> <b style="color:#@typeColor">[@leader.Title] @leader.Name</b> as the Leader and defeat <b>@todaysEvent.Name</b>, <b>Stage @todaysEvent.Stage</b>!</p>
+            <p class="challenge-text"><b>Challenge!</b> build a team using <img style="width:3em;height:auto;" src="@todaysUnit.ImageURL" /> <b style="color:@typeColor">[@leader.Title] @leader.Name</b> as the Leader and defeat <b>@todaysEvent.Name</b>, <b>Stage @todaysEvent.Stage</b>!</p>
         }
         @if (todaysEvent != null && todaysEvent.WallpaperImagePath != null)
         {
@@ -46,6 +47,7 @@ else
                 <img style="width:88%;height:20%;border:solid;margin-top:2em;" src="@todaysEvent.BannerImagePath" />
             </p>
         }
+        </div>
     </div>
 
     <footer style="position:fixed; bottom:0;">
