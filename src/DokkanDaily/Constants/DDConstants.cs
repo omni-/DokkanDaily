@@ -6,6 +6,10 @@ namespace DokkanDaily.Constants
 {
     public static class DDConstants
     {
+        #region Link Skills
+        public static IReadOnlyList<LinkSkill> LinkSkills { get => linkSkills; }
+        public static IReadOnlyDictionary<string, LinkSkill> LinkSkillMap { get; }
+
         private static List<LinkSkill> linkSkills =
         [
             new("All in the Family", Tier.S),
@@ -58,6 +62,10 @@ namespace DokkanDaily.Constants
             new("Warriors of Universe 6", Tier.C),
             new("Z Fighters", Tier.E)
         ];
+        #endregion
+
+        #region Leaders
+        public static IReadOnlyList<Leader> Leaders { get => leaders; }
 
         private static List<Leader> leaders =
         [
@@ -86,19 +94,89 @@ namespace DokkanDaily.Constants
             new("All-Out Final Battle", "Super Saiyan God SS Goku & Super Saiyan God SS Vegeta", Tier.S),
             new("Hope at the End of a Deadly Showdown", "Super Saiyan Trunks (Future)", Tier.A),
             new("Universe's Last Hope", "Super Saiyan 3 Goku & Super Saiyan 2 Vegeta", Tier.A),
-            //new("Tenacious Secret Plan", "Super Vegeta", Tier.B), missing?
+            new("Tenacious Secret Plan", "Super Vegeta", Tier.B),
             new("Showdown for the World's Strongest", "Goku", Tier.A),
             new("Ultimate and Invincible Fusion", "Vegito", Tier.B),
+            new("Ultimate and Supreme Fusion", "Gogeta", Tier.B),
+            new("Awakened Super Hero", "Ultimate Gohan", Tier.A),
+            new("Heroic Warrior", "Gohan (Future)", Tier.B),
+            new("The Power to Protect", "Gohan (Kid)", Tier.E),
+            new("Genius Scientist's Courage and Resolve", "Android 21 (Normal)", Tier.A),
+            new("Epic Defensive Battle", "Piccolo & Gohan (Kid)/Gohan (Kid)", Tier.B),
+            new("Extraordinary Super Warrior", "Super Saiyan Goku", Tier.B),
+            new("Intense Struggle for Survival", "Androids 17 & 18", Tier.S),
+            new("Awakened True Power", "Super Saiyan Gohan (Youth)", Tier.C),
+            new("Miracle-Calling Clash", "Super Saiyan Gohan (Teen) & Super Saiyan Goten (Kid)", Tier.C),
+            new("Raging Counterattack", "Bardock", Tier.E),
+            new("A Soul Pumped Up in Battle", "Goku", Tier.B),
+            new("Quest for the Dragon Balls", "Goku (Youth)", Tier.C),
+            new("Super Power Counterattack", "Super Saiyan Trunks (Teen)", Tier.E),
+            new("Fusion Reborn", "Goku (Angel) & Vegeta (Angel)", Tier.F),
+            new("Pinnacle of Fury", "Goku", Tier.F),
+            new("Righteous Otherworld Defense", "Paikuhan", Tier.F),
+            new("Mark of Saiyan Strength", "Super Saiyan 3 Bardock", Tier.E),
+            new("Kami and Demon King United", "Piccolo", Tier.D),
+            new("Resilient Will to Protect the Future", "Trunks (Teen) (Future)", Tier.C),
+            new("Imperturbable Hero", "Gamma 1", Tier.B),
+            new("Fearless Hero", "Gamma 2", Tier.C),
+            new("Earth-Shaking Immense Power", "Super Saiyan Goku", Tier.D),
+            new("Beyond the Shining Clouds", "Gohan (Kid)", Tier.B),
+            new("Transcendent Fusion", "Super Saiyan Gogeta", Tier.C),
+            new("Divine Warriors with Infinite Power", "Super Saiyan God Goku & Super Saiyan God Vegeta", Tier.C),
+            new("Saiyan Warriors with Ultimate Power", "Super Saiyan 4 Goku & Super Saiyan 4 Vegeta", Tier.D),
+            new("Earth's Dominant Elite", "Yamcha", Tier.A),
+            new("Final Super Power", "Super Saiyan God SS Goku (Kaioken)", Tier.B),
+            new("Limitless Combat Power", "Super Saiyan Vegeta", Tier.E),
+            new("Hot-Blooded God of Destruction", "Beerus", Tier.C),
+            new("Resilient Power of Emotions", "Kale (Berserk)", Tier.C),
+            new("Full-Power Final Showdown", "Super Saiyan Goku & Super Saiyan Vegeta", Tier.C),
+            new("Warriors Entrusted with Earth's Fate", "Super Saiyan Goku/Super Saiyan Gohan (Youth)", Tier.E),
+            new("Absolute Power", "Jiren", Tier.F),
+            new("Battle Against the Fate of Annihilation", "Bardock", Tier.E),
+            new("Battle to Protect Tomorrow", "Super Saiyan 2 Goku", Tier.E),
+            new("Stamina to Attack Evil", "Pan (GT)", Tier.F),
+            new("Divine Combat Begins", "Super Saiyan God SS Goku/Super Saiyan God SS Vegeta", Tier.F),
+            new("Strike of Full Anger", "Super Saiyan Goku", Tier.F),
+            new("Battle to Become the Strongest", "Super Saiyan Goku (GT)", Tier.F),
+            new("Battle to Reach the Top", "Super Saiyan Vegeta (GT)", Tier.F),
+            new("Boiling Power", "Super Saiyan Goku", Tier.F),
             //extreme
             new("Universe-Devastating Combat Power", "Broly", Tier.S),
             new("Surge of Heightened Fighting Spirit", "Super Saiyan Broly", Tier.S),
             new("Awakening of the Prince", "Vegeta", Tier.S),
-            //new("The Awakened Ego and Joy of Combat", "Majin Buu (Good)", Tier.S), missing?
+            new("The Awakened Ego and Joy of Combat", "Majin Buu (Good)", Tier.S),
             new("Infinite Sanctuary", "Fusion Zamasu", Tier.S),
-            //new("Mastery of the Power of Rage", "Goku Black (Super Saiyan Rosé)", Tier.S), missing?
+            new("Mastery of the Power of Rage", "Goku Black (Super Saiyan Rosé)", Tier.S),
             new("Beautiful Final View", "Frieza (1st Form)", Tier.A),
-            new("Death Match for World Domination", "Piccolo Jr. (Giant Form)", Tier.A)
+            new("Death Match for World Domination", "Piccolo Jr. (Giant Form)", Tier.A),
+            new("Invincible Absorption", "Majin Buu (Gotenks)", Tier.S),
+            new("Split Into Good and Evil", "Majin Buu (Good)/Majin Buu (Pure Evil)", Tier.A),
+            new("Terrifying Phantom Majin", "Hirudegarn", Tier.S),
+            new("Instinctive Destruction", "Legendary Super Saiyan Broly", Tier.B),
+            new("True Power of a God", "Zamasu", Tier.C),
+            new("Planet-Crushing Blow", "Cooler (Final Form)", Tier.D),
+            new("The True Value of Perfect Form", "Cell (Perfect Form)", Tier.D),
+            new("Demonic Fighter Wielding Forbidden Power", "Turles", Tier.D),
+            new("Infinite Terror", "Metal Cooler", Tier.E),
+            new("Extreme Ultimate Power", "Cooler", Tier.E),
+            new("Foe Elimination Circuit", "Android 13", Tier.D),
+            new("The Ultimate Shadow Dragon", "Omega Shenron", Tier.F),
+            new("Shocking Absorption Ability", "Buu (Super)", Tier.D),
+            new("Ultimate Life Form with Immense Power", "Cell (1st Form)", Tier.D),
+            new("Evil-Stained Androids", "Android 17 & Hell Fighter 17", Tier.F),
+            new("Roar of Resentment", "Frieza (Full Power)", Tier.F),
+            new("Fusion with the Big Gete Star", "Metal Cooler", Tier.F),
+            new("Game of Death", "Androids 17 (Future) & 18 (Future)", Tier.E),
+            new("Captain's Ace in the Hole", "Captain Ginyu", Tier.F),
+            new("Epitome of Sublime Beauty", "Goku Black", Tier.F),
+            new("Endless Evolution of the Warrior Race", "Super Saiyan Broly", Tier.F),
+            new("Brief Paternal Moment", "Majin Vegeta", Tier.E),
+            new("Unveiling of Power", "Raditz", Tier.F)
         ];
+        #endregion
+
+        #region Events
+        public static IReadOnlyList<Event> Events { get => events; }
 
         private static List<Event> events =
         [
@@ -121,6 +199,10 @@ namespace DokkanDaily.Constants
             new("9th Anniv.! Anniversary Battle", Tier.A, "ANNI", 9),
             new("Ultimate Red Zone [Dismal Future Edition]", Tier.B, "DF_RZ", 5)
         ];
+        #endregion
+
+        #region Categories
+        public static IReadOnlyList<Category> Categories { get => categories; }
 
         private static List<Category> categories =
         [
@@ -215,24 +297,21 @@ namespace DokkanDaily.Constants
             new("Worthy Rivals", Tier.C),
             new("Youth", Tier.E)
         ];
+        #endregion
 
-        private static List<Unit> UnitDB = new List<Unit>();
+        #region Misc.
+        private static readonly List<Unit> UnitDB = [];
 
-        public static IReadOnlyDictionary<DokkanType, string> TypeToHexMap = new Dictionary<DokkanType, string>()
+        public static readonly IReadOnlyDictionary<DokkanType, string> TypeToHexMap = new Dictionary<DokkanType, string>()
         {
-            { DokkanType.AGL, "0555D5" },
-            { DokkanType.STR, "C4151E" },
-            { DokkanType.PHY, "B46D00" },
-            { DokkanType.INT, "883BA9" },
-            { DokkanType.TEQ, "008806" }
+            { DokkanType.AGL, "#0555D5" },
+            { DokkanType.STR, "#C4151E" },
+            { DokkanType.PHY, "#B46D00" },
+            { DokkanType.INT, "#883BA9" },
+            { DokkanType.TEQ, "#008806" }
         }.AsReadOnly();
-
-        public static IReadOnlyList<LinkSkill> LinkSkills { get => linkSkills; }
-        public static IReadOnlyDictionary<string, LinkSkill> LinkSkillMap { get; }
-        public static IReadOnlyList<DailyType> DailyTypes { get; } 
-        public static IReadOnlyList<Event> Events { get => events; }
-        public static IReadOnlyList<Category> Categories { get => categories; }
-        public static IReadOnlyList<Leader> Leaders { get => leaders; }
+        public static IReadOnlyList<DailyType> DailyTypes { get; }
+        #endregion
 
         static DDConstants()
         {

@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="wwwroot\data\DokkanCharacterData.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
