@@ -27,18 +27,18 @@
 }
 else
 {
-    <div style="position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);padding: 2em .5em 1em .5em;background-color:#EFCFA7;border:solid;">
+    <div class="challenge-box">
         @if(dailyType == DailyType.LinkSkill)
         {
-            <h4><b>Challenge!</b> defeat <b>@todaysEvent.Name</b> using only units that have the <b>@linkSkill.Name</b> Link Skill! (Friend Unit excluded)</h4>
+            <p class="challenge-text"><b>Challenge!</b> defeat <b>@todaysEvent.Name</b>, <b>Stage @todaysEvent.Stage</b> using only units that have the Link Skill <div class="dokkan-link-wrapper"><div class="dokkan-link"><div class="text">@linkSkill.Name</div></div></div><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
         }
         @if(dailyType == DailyType.Category)
         {
-            <h4><b>Challenge!</b> defeat <b>@todaysEvent.Name</b> using only units belonging to:<br /><img style="width:auto;height:3em;" src="@category.ImageURL" /><br /><p style="padding-top:.5em">(Friend Unit excluded)</p></h4>
+            <p class="challenge-text"><b>Challenge!</b> defeat <b>@todaysEvent.Name</b>, <b>Stage @todaysEvent.Stage</b> using only units belonging to:<br /><img style="width:auto;height:3em;" src="@category.ImageURL" /><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
         }
         @if(dailyType == DailyType.Character)
         {
-            <h4><b>Challenge!</b> build a team using <img style="width:3em;height:auto;" src="@todaysUnit.ImageURL"/> <b style="color:#@typeColor">[@leader.Title] @leader.Name</b> as the Leader and defeat <b>@todaysEvent.Name</b>, <b>Stage @todaysEvent.Stage</b>!</h4>
+            <p class="challenge-text"><b>Challenge!</b> build a team using <img style="width:3em;height:auto;" src="@todaysUnit.ImageURL" /> <b style="color:#@typeColor">[@leader.Title] @leader.Name</b> as the Leader and defeat <b>@todaysEvent.Name</b>, <b>Stage @todaysEvent.Stage</b>!</p>
         }
         @if (todaysEvent != null && todaysEvent.WallpaperImagePath != null)
         {
@@ -68,7 +68,23 @@ else
 
     Leader leader { get; set; }
 
-    Unit todaysUnit { get; set; }
+    Unit fallback;
+
+    Unit todaysUnit 
+    { 
+        get 
+        { 
+            if (fallback == null)
+            {
+                Task.Delay(100);
+            }
+            return fallback;
+        } 
+        set
+        {
+            fallback = value;
+        }
+    }
 
     string typeColor => DDConstants.TypeToHexMap[todaysUnit.DokkanType];
 
@@ -81,7 +97,7 @@ else
         linkSkill = RNGHelper.GetRandomLinkSkill(Random, todaysEvent.Tier);
         category = RNGHelper.GetRandomCategory(Random, todaysEvent.Tier);
         leader = RNGHelper.GetRandomLeader(Random, todaysEvent.Tier);
-        todaysUnit = DDConstants.GetUnit(leader);
+        fallback = DDConstants.GetUnit(leader);
         base.OnInitialized();
     }
 

@@ -2,7 +2,7 @@
 
 namespace DokkanDaily.Models
 {
-    public class Leader(string title, string name, Tier t)
+    public class Leader(string title, string name, Tier t) : ITieredObject
     {
         public string Name { get; init; } = name;
 
