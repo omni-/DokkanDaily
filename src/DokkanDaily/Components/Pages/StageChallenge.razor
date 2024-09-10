@@ -27,14 +27,14 @@
 }
 else
 {
-    <div style="position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);background-color:#EFCFA7;border:solid;">
+    <div style="position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);padding: 2em .5em 1em .5em;background-color:#EFCFA7;border:solid;">
         @if(dailyType == DailyType.LinkSkill)
         {
             <h4><b>Challenge!</b> defeat <b>@todaysEvent.Name</b> using only units that have the <b>@linkSkill.Name</b> Link Skill! (Friend Unit excluded)</h4>
         }
         @if(dailyType == DailyType.Category)
         {
-            <h4><b>Challenge!</b> defeat <b>@todaysEvent.Name</b> using only units belonging to the <b>@category.Name</b> Category! (Friend Unit excluded)</h4>
+            <h4><b>Challenge!</b> defeat <b>@todaysEvent.Name</b> using only units belonging to:<br /><img style="width:auto;height:3em;" src="@category.ImageURL" /><br /><p style="padding-top:.5em">(Friend Unit excluded)</p></h4>
         }
         @if(dailyType == DailyType.Character)
         {
@@ -43,7 +43,7 @@ else
         @if (todaysEvent != null && todaysEvent.WallpaperImagePath != null)
         {
             <p>
-                <img style="width:88%;height:20%" src="@todaysEvent.BannerImagePath" />
+                <img style="width:88%;height:20%;border:solid;" src="@todaysEvent.BannerImagePath" />
             </p>
         }
     </div>
@@ -76,11 +76,11 @@ else
 
     protected override void OnInitialized()
     {
-        dailyType = DailyType.Character; //RNGHelper.GetRandomDailyType(Random);
+        dailyType = RNGHelper.GetRandomDailyType(Random);
         todaysEvent = RNGHelper.GetRandomStage(Random);
         linkSkill = RNGHelper.GetRandomLinkSkill(Random, todaysEvent.Tier);
         category = RNGHelper.GetRandomCategory(Random, todaysEvent.Tier);
-        leader = RNGHelper.GetRandomLeader(Random); //, todaysStage.Tier);
+        leader = RNGHelper.GetRandomLeader(Random, todaysEvent.Tier);
         todaysUnit = DDConstants.GetUnit(leader);
         base.OnInitialized();
     }

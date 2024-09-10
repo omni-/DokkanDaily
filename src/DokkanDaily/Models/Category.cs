@@ -6,6 +6,8 @@ namespace DokkanDaily.Models
     {
         public string Name { get; init; } = name;
 
+        public string ImageURL => $"images/categories/{string.Join('_', Name.Split(' '))}_Category.png";
+
         public Tier Tier { get; init; } = d;
     }
 }
