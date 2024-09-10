@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5B6688B8-8A4
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DokkanDaily", "src\DokkanDaily\DokkanDaily.csproj", "{179DD97B-2367-4B71-96F0-6F65763E528D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9463184C-B53E-4392-B606-C0310D51022D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DokkanDailyTests", "tests\DokkanDailyTests\DokkanDailyTests.csproj", "{E3F1826D-A58D-4A8E-98C4-11E4307C9585}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,12 +21,17 @@ Global
 		{179DD97B-2367-4B71-96F0-6F65763E528D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{179DD97B-2367-4B71-96F0-6F65763E528D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{179DD97B-2367-4B71-96F0-6F65763E528D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3F1826D-A58D-4A8E-98C4-11E4307C9585}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3F1826D-A58D-4A8E-98C4-11E4307C9585}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3F1826D-A58D-4A8E-98C4-11E4307C9585}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3F1826D-A58D-4A8E-98C4-11E4307C9585}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{179DD97B-2367-4B71-96F0-6F65763E528D} = {5B6688B8-8A47-45D7-803A-F988110C83F8}
+		{E3F1826D-A58D-4A8E-98C4-11E4307C9585} = {9463184C-B53E-4392-B606-C0310D51022D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A0D9FCB5-487F-4522-9081-44D353C18BB9}
