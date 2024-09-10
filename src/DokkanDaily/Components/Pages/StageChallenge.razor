@@ -34,7 +34,7 @@ else
         }
         @if(dailyType == DailyType.Category)
         {
-            <p class="challenge-text"><b>Challenge!</b> defeat <b>@todaysEvent.Name</b>, <b>Stage @todaysEvent.Stage</b> using only units belonging to:<br /><img style="width:auto;height:3em;" src="@category.ImageURL" /><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
+            <p class="challenge-text"><b>Challenge!</b> defeat <b>@todaysEvent.Name</b>, <b>Stage @todaysEvent.Stage</b> using only units belonging to:<br /><img style="width:auto;height:3em;margin-top:.5em" src="@category.ImageURL" /><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
         }
         @if(dailyType == DailyType.Character)
         {
@@ -43,7 +43,7 @@ else
         @if (todaysEvent != null && todaysEvent.WallpaperImagePath != null)
         {
             <p>
-                <img style="width:88%;height:20%;border:solid;" src="@todaysEvent.BannerImagePath" />
+                <img style="width:88%;height:20%;border:solid;margin-top:2em;" src="@todaysEvent.BannerImagePath" />
             </p>
         }
     </div>
@@ -68,23 +68,8 @@ else
 
     Leader leader { get; set; }
 
-    Unit fallback;
 
-    Unit todaysUnit 
-    { 
-        get 
-        { 
-            if (fallback == null)
-            {
-                Task.Delay(100);
-            }
-            return fallback;
-        } 
-        set
-        {
-            fallback = value;
-        }
-    }
+    Unit todaysUnit { get; set; }
 
     string typeColor => DDConstants.TypeToHexMap[todaysUnit.DokkanType];
 
@@ -97,7 +82,7 @@ else
         linkSkill = RNGHelper.GetRandomLinkSkill(Random, todaysEvent.Tier);
         category = RNGHelper.GetRandomCategory(Random, todaysEvent.Tier);
         leader = RNGHelper.GetRandomLeader(Random, todaysEvent.Tier);
-        fallback = DDConstants.GetUnit(leader);
+        todaysUnit = DDConstants.GetUnit(leader);
         base.OnInitialized();
     }
 
