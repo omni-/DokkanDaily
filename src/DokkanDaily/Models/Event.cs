@@ -2,7 +2,7 @@
 
 namespace DokkanDaily.Models
 {
-    public class Event(string name, Tier d, string path, int stage = 1)
+    public class Event(string name, Tier d, string path, int stage = 1) : ITieredObject
     {
         public string Name { get; init; } = name;
 

@@ -2,7 +2,7 @@
 
 namespace DokkanDaily.Models
 {
-    public class LinkSkill(string name, Tier d)
+    public class LinkSkill(string name, Tier d) : ITieredObject
     {
         public string Name { get; init; } = name;
 

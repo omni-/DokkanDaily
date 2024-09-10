@@ -13,6 +13,26 @@ namespace DokkanDaily.Helpers
             return new Random(seed);
         }
 
+        private static List<T> CreateSeededCollection<T>(IEnumerable<T> input, Tier tier) where T : ITieredObject
+        {
+            List<T> output = [];
+
+            foreach(T item in input)
+            {
+                int diff = (int)tier - (int)item.Tier;
+                if (diff < 2)
+                {
+                    diff = Math.Abs(diff);
+                    for (int i = 0; i < 6 - diff; i++)
+                    {
+                        output.Add(item);
+                    }
+                }
+            }
+
+            return output;
+        }
+
         public static DailyType GetRandomDailyType(Random random)
         {
             return DDConstants.DailyTypes[random.Next(0, DDConstants.DailyTypes.Count)];
@@ -25,7 +45,7 @@ namespace DokkanDaily.Helpers
 
         public static LinkSkill GetRandomLinkSkill(Random random, Tier minTier)
         {
-            List<LinkSkill> links = DDConstants.LinkSkills.Where(x => x.Tier >= minTier).ToList();
+            var links = CreateSeededCollection(DDConstants.LinkSkills, minTier);
             return links[random.Next(0, links.Count)];
         }
 
@@ -40,7 +60,7 @@ namespace DokkanDaily.Helpers
         }
         public static Category GetRandomCategory(Random random, Tier minTier)
         {
-            List<Category> cats = DDConstants.Categories.Where(x => x.Tier >= minTier).ToList();
+            var cats = CreateSeededCollection(DDConstants.Categories, minTier);
             return cats[random.Next(0, cats.Count)];
         }
 
@@ -51,7 +71,7 @@ namespace DokkanDaily.Helpers
 
         public static Leader GetRandomLeader(Random random, Tier minTier)
         {
-            List<Leader> leaders = DDConstants.Leaders.Where(x => x.Tier >= minTier).ToList();
+            var leaders = CreateSeededCollection(DDConstants.Leaders, minTier);
             return leaders[random.Next(0, leaders.Count)];
         }
     }

@@ -6,13 +6,8 @@
     font-style: italic;
     font-display: swap;
 }
-
-html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
 @font-face {
-    font-family: 'dokkan';
+    font-family: 'Rodin';
     src: url('font/NewRodinProN-B-AlphaNum.eot');
     src: url('font/NewRodinProN-B-AlphaNum.eot?#iefix') format('embedded-opentype'), url('font/NewRodinProN-B-AlphaNum.woff2') format('woff2'), url('font/NewRodinProN-B-AlphaNum.woff') format('woff'), url('font/NewRodinProN-B-AlphaNum.ttf') format('truetype'), url('font/NewRodinProN-B-AlphaNum.svg#NewRodinProN-B-AlphaNum') format('svg');
     font-weight: normal;
@@ -20,8 +15,23 @@ html, body {
     font-display: swap;
 }
 
-h4 {
-    font-family: 'dokkan', sans-serif
+html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.dokkan-link {
+    border-image-source: url("images/misc/btn_team_linkskill.png");
+    border-image-slice: 15 16 16 15 fill;
+    border-image-width: 15px 16px 16px 15px;
+    border-image-repeat: repeat stretch;
+    color: rgb(var(--bs-light-rgb)) !important;
+    display: flex;
+    padding: 15px;
+    transform-origin: top left;
+    align-items: center;
+    min-height: 60px;
+    min-width: 250px;
+    max-width:20%;
 }
 
 a, .btn-link {
