@@ -6,6 +6,8 @@ namespace DokkanDaily.Helpers
 {
     public static class RNGHelper
     {
+        private static readonly int MaxTierDifference = 2;
+        private static readonly int MaxCopies = 6;
         public static Random GetDailySeed()
         {
             var date = DateTime.UtcNow.Date;
@@ -20,10 +22,10 @@ namespace DokkanDaily.Helpers
             foreach(T item in input)
             {
                 int diff = (int)tier - (int)item.Tier;
-                if (diff < 2)
+                if (diff < MaxTierDifference)
                 {
                     diff = Math.Abs(diff);
-                    for (int i = 0; i < 6 - diff; i++)
+                    for (int i = 0; i < MaxCopies - diff; i++)
                     {
                         output.Add(item);
                     }
