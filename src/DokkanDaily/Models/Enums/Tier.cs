@@ -1,4 +1,4 @@
-﻿namespace DokkanDaily.Models
+﻿namespace DokkanDaily.Models.Enums
 {
     public enum Tier
     {

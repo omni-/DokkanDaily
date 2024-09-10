@@ -1,5 +1,27 @@
+@font-face {
+    font-family: 'Helvetica Neue';
+    src: url('font/HelveticaNeue-BlackCondObl.eot');
+    src: url('font/HelveticaNeue-BlackCondObl.eot?#iefix') format('embedded-opentype'), url('font/HelveticaNeue-BlackCondObl.woff2') format('woff2'), url('font/HelveticaNeue-BlackCondObl.woff') format('woff'), url('font/HelveticaNeue-BlackCondObl.ttf') format('truetype'), url('font/HelveticaNeue-BlackCondObl.svg#HelveticaNeue-BlackCondObl') format('svg');
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+}
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+@font-face {
+    font-family: 'dokkan';
+    src: url('font/NewRodinProN-B-AlphaNum.eot');
+    src: url('font/NewRodinProN-B-AlphaNum.eot?#iefix') format('embedded-opentype'), url('font/NewRodinProN-B-AlphaNum.woff2') format('woff2'), url('font/NewRodinProN-B-AlphaNum.woff') format('woff'), url('font/NewRodinProN-B-AlphaNum.ttf') format('truetype'), url('font/NewRodinProN-B-AlphaNum.svg#NewRodinProN-B-AlphaNum') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+h4 {
+    font-family: 'dokkan', sans-serif
 }
 
 a, .btn-link {
@@ -42,9 +64,9 @@ h1:focus {
     color: white;
 }
 
-    .blazor-error-boundary::after {
-        content: "An error has occurred."
-    }
+.blazor-error-boundary::after {
+    content: "An error has occurred."
+}
 
 .darker-border-checkbox.form-check-input {
     border-color: #929292;

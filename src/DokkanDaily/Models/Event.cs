@@ -1,4 +1,6 @@
-﻿namespace DokkanDaily.Models
+﻿using DokkanDaily.Models.Enums;
+
+namespace DokkanDaily.Models
 {
     public class Event(string name, Tier d, string path, int stage = 1)
     {

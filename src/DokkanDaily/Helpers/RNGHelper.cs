@@ -1,5 +1,6 @@
 ﻿using DokkanDaily.Constants;
 using DokkanDaily.Models;
+using DokkanDaily.Models.Enums;
 
 namespace DokkanDaily.Helpers
 {
@@ -43,14 +44,14 @@ namespace DokkanDaily.Helpers
             return cats[random.Next(0, cats.Count)];
         }
 
-        public static Unit GetRandomLeader(Random random)
+        public static Leader GetRandomLeader(Random random)
         {
             return DDConstants.Leaders[random.Next(0, DDConstants.Leaders.Count)];
         }
 
-        public static Unit GetRandomLeader(Random random, Tier minTier)
+        public static Leader GetRandomLeader(Random random, Tier minTier)
         {
-            List<Unit> leaders = DDConstants.Leaders.Where(x => x.Tier >= minTier).ToList();
+            List<Leader> leaders = DDConstants.Leaders.Where(x => x.Tier >= minTier).ToList();
             return leaders[random.Next(0, leaders.Count)];
         }
     }

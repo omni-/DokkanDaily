@@ -1,41 +1,55 @@
 ﻿@page "/daily"
 @using DokkanDaily.Components.Shared
+@using DokkanDaily.Constants
 @using DokkanDaily.Helpers
-@using DokkanDaily.Models
+@using DokkanDaily.Models;
+@using DokkanDaily.Models.Enums
 
 <PageTitle>Dokkandle</PageTitle>
 
-<h1>Dokkandle</h1>
+<style>
+    body {
+        background: url('images/wallpaper.jpg') fixed center no-repeat;
+        background-size: cover;
+        text-align: center;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+</style>
 
-<p>Today's challenge type is: @dailyType!</p>
-
+<div style="max-width: fit-content;margin-left: auto;margin-right: auto;">
+    <img src="images/logo/logo.png" />
+    <p style="color:white;padding-left:.5em;">Today's challenge type is: @dailyType!</p>
+</div>
 @if(Executing)
 {
     <BusySpinner />
 }
 else
 {
-    @if(dailyType == DailyType.LinkSkill)
-    {
-        <h3><b>Challenge!</b> defeat <b>@todaysStage.Name</b> using only units that have the <b>@linkSkill.Name</b> Link Skill! (Friend Unit excluded)</h3>
-    }
-    @if(dailyType == DailyType.Category)
-    {
-        <h3><b>Challenge!</b> defeat <b>@todaysStage.Name</b> using only units belonging to the <b>@category.Name</b> Category! (Friend Unit excluded)</h3>
-    }
-    @if(dailyType == DailyType.Character)
-    {
-        <h3><b>Challenge!</b> build a team using <b>[@leader.Title] @leader.Name</b> as the Leader!</h3>
-    }
-    @if (todaysStage != null && todaysStage.WallpaperImagePath != null)
-    {
-        <p>
-            <img src="@todaysStage.WallpaperImagePath" />
-        </p>
-    }
+    <div style="position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);background-color:#EFCFA7;border:solid;">
+        @if(dailyType == DailyType.LinkSkill)
+        {
+            <h4><b>Challenge!</b> defeat <b>@todaysEvent.Name</b> using only units that have the <b>@linkSkill.Name</b> Link Skill! (Friend Unit excluded)</h4>
+        }
+        @if(dailyType == DailyType.Category)
+        {
+            <h4><b>Challenge!</b> defeat <b>@todaysEvent.Name</b> using only units belonging to the <b>@category.Name</b> Category! (Friend Unit excluded)</h4>
+        }
+        @if(dailyType == DailyType.Character)
+        {
+            <h4><b>Challenge!</b> build a team using <img style="width:3em;height:auto;" src="@todaysUnit.ImageURL"/> <b style="color:#@typeColor">[@leader.Title] @leader.Name</b> as the Leader and defeat <b>@todaysEvent.Name</b>, <b>Stage @todaysEvent.Stage</b>!</h4>
+        }
+        @if (todaysEvent != null && todaysEvent.WallpaperImagePath != null)
+        {
+            <p>
+                <img style="width:88%;height:20%" src="@todaysEvent.BannerImagePath" />
+            </p>
+        }
+    </div>
 
     <footer style="position:fixed; bottom:0;">
-        <p>Time until challenge resets: @hoursToReset hours</p>
+        <p style="color:white">Time until challenge resets: @hoursToReset hour(s)</p>
     </footer>
 }
 
@@ -46,23 +60,28 @@ else
 
     DailyType dailyType { get; set; }
 
-    Event todaysStage { get; set; }
+    Event todaysEvent { get; set; }
 
     LinkSkill linkSkill { get; set; }
 
     Category category { get; set; }
 
-    Unit leader { get; set; }
+    Leader leader { get; set; }
+
+    Unit todaysUnit { get; set; }
+
+    string typeColor => DDConstants.TypeToHexMap[todaysUnit.DokkanType];
 
     int hoursToReset => 24 - DateTime.UtcNow.Hour;
 
     protected override void OnInitialized()
     {
-        dailyType = RNGHelper.GetRandomDailyType(Random);
-        todaysStage = RNGHelper.GetRandomStage(Random);
-        linkSkill = RNGHelper.GetRandomLinkSkill(Random, todaysStage.Tier);
-        category = RNGHelper.GetRandomCategory(Random, todaysStage.Tier);
+        dailyType = DailyType.Character; //RNGHelper.GetRandomDailyType(Random);
+        todaysEvent = RNGHelper.GetRandomStage(Random);
+        linkSkill = RNGHelper.GetRandomLinkSkill(Random, todaysEvent.Tier);
+        category = RNGHelper.GetRandomCategory(Random, todaysEvent.Tier);
         leader = RNGHelper.GetRandomLeader(Random); //, todaysStage.Tier);
+        todaysUnit = DDConstants.GetUnit(leader);
         base.OnInitialized();
     }
 

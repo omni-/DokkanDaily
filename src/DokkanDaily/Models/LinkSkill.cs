@@ -1,4 +1,6 @@
-﻿namespace DokkanDaily.Models
+﻿using DokkanDaily.Models.Enums;
+
+namespace DokkanDaily.Models
 {
     public class LinkSkill(string name, Tier d)
     {
