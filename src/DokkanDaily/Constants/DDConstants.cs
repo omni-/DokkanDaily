@@ -186,8 +186,10 @@ namespace DokkanDaily.Constants
             new("Fighting Legend: Vegeta", Tier.E, "LVE"),
             new("Fighting Legend: Frieza", Tier.D, "LFE"),
             new("The Devil Awakens", Tier.A, "DevilAwakens"),
+            new("The Devil Awakens", Tier.A, "DevilAwakens", 2),
             new("Supreme Magnificent Battle [Movie Edition]", Tier.C, "SMB_MOVIE", 3),
             new("Supreme Magnificent Battle [Universe Survival Saga]", Tier.S, "SMB_USS", 4),
+            new("Supreme Magnificent Battle [Universe Survival Saga]", Tier.E, "SMB_USS"),
             new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.S, "SMB_DBS", 7),
             new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.S, "SMB_DBS", 8),
             new("Ultimate Red Zone [Majin Buu Saga]", Tier.S, "MBS_RZ", 4),
@@ -197,7 +199,9 @@ namespace DokkanDaily.Constants
             new("Ultimate Red Zone [Movie Edition 2]", Tier.C, "MOVIE2_RZ", 6),
             new("Ultimate Red Zone [Movie Edition 2]", Tier.B, "MOVIE2_RZ", 7),
             new("9th Anniv.! Anniversary Battle", Tier.A, "ANNI", 9),
-            new("Ultimate Red Zone [Dismal Future Edition]", Tier.B, "DF_RZ", 5)
+            new("Ultimate Red Zone [Dismal Future Edition]", Tier.B, "DF_RZ", 5),
+            new("Ultimate Red Zone [Wicked Bloodline Edition]", Tier.C, "WB_RZ", 5),
+            new("Ultimate Red Zone [Movie Edition]", Tier.B, "MOVIE_RZ", 8)
         ];
         #endregion
 
@@ -300,7 +304,8 @@ namespace DokkanDaily.Constants
         #endregion
 
         #region Misc.
-        private static readonly List<Unit> UnitDB = [];
+        private static readonly List<Unit> unitDB = [];
+        public static IReadOnlyList<Unit> UnitDB { get => unitDB.AsReadOnly(); }
 
         public static readonly IReadOnlyDictionary<DokkanType, string> TypeToHexMap = new Dictionary<DokkanType, string>()
         {
@@ -317,17 +322,17 @@ namespace DokkanDaily.Constants
         {
             LinkSkillMap = new Dictionary<string, LinkSkill>(linkSkills.Select(x => new KeyValuePair<string, LinkSkill>(x.Name, x)));
             DailyTypes = [DailyType.Category, DailyType.LinkSkill, DailyType.Character];
-            UnitDB = DDHelper.BuildCharacterDb().ToList();
+            unitDB = DDHelper.BuildCharacterDb().ToList();
         }
 
         public static Unit GetUnit(string name, string title)
         {
-            return UnitDB.FirstOrDefault(x => x.Name == name && x.Title == title);
+            return unitDB.FirstOrDefault(x => x.Name == name && x.Title == title);
         }
 
         public static Unit GetUnit(Leader leader)
         {
-            return UnitDB.FirstOrDefault(x => x.Name == leader.Name && x.Title == leader.Title);
+            return unitDB.FirstOrDefault(x => x.Name == leader.Name && x.Title == leader.Title);
         }
     }
 }
