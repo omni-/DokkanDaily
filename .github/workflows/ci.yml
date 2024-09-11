@@ -42,18 +42,20 @@ jobs:
     permissions: write-all
     needs: build
     steps:
-    - name: Download artifact from build job
-      uses: actions/download-artifact@v3
-      with:
-        name: webapp
-        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+    - uses: actions/checkout@v4
     - name: Check for source changes
       id: changes
       uses: dorny/paths-filter@v3
       with:
         filters: |
           src:
-            - 'src' 
+            - 'src'
+    - name: Download artifact from build job
+      if: steps.changes.outputs.src == 'true'
+      uses: actions/download-artifact@v3
+      with:
+        name: webapp
+        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} 
     - name: Deploy to Azure WebApp
       if: github.ref == 'refs/heads/master' && steps.changes.outputs.src == 'true'
       uses: azure/webapps-deploy@v2
