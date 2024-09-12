@@ -11,6 +11,9 @@ TODO:
 	- Fit screen better
 	- smoother/smaller images
 	- Bottom bar with links
+* Logging infra
+* Admin dashboard
+* Login
 
 IDEAS:
 * Unit DB tool?

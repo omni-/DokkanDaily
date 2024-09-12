@@ -13,6 +13,8 @@ namespace DokkanDaily
                 .AddRazorComponents()
                 .AddInteractiveServerComponents();
 
+            builder.Services.AddSingleton<DailyResetService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -40,7 +42,6 @@ namespace DokkanDaily
                 context.Response.Redirect("/daily");
                 return Task.CompletedTask;
             });
-
 
             app.Run();
         }
