@@ -4,6 +4,9 @@
 @using DokkanDaily.Helpers
 @using DokkanDaily.Models;
 @using DokkanDaily.Models.Enums
+@using DokkanDaily.Services
+
+@inject IRngHelperService RngSvc
 
 <PageTitle>Dokkandle!</PageTitle>
 
@@ -58,8 +61,6 @@ else
 @code {
     bool Executing { get; set; }
 
-    Random Random => RNGHelper.GetDailySeed();
-
     DailyType dailyType { get; set; }
 
     Event todaysEvent { get; set; }
@@ -78,12 +79,13 @@ else
 
     protected override void OnInitialized()
     {
-        dailyType = RNGHelper.GetRandomDailyType(Random);
-        todaysEvent = RNGHelper.GetRandomStage(Random);
-        linkSkill = RNGHelper.GetRandomLinkSkill(Random, todaysEvent.Tier);
-        category = RNGHelper.GetRandomCategory(Random, todaysEvent.Tier);
-        leader = RNGHelper.GetRandomLeader(Random, todaysEvent.Tier);
+        dailyType = RngSvc.GetRandomDailyType();
+        todaysEvent = RngSvc.GetRandomStage();
+        linkSkill = RngSvc.GetRandomLinkSkill(todaysEvent.Tier);
+        category = RngSvc.GetRandomCategory(todaysEvent.Tier);
+        leader = RngSvc.GetRandomLeader(todaysEvent.Tier);
         todaysUnit = DDConstants.GetUnit(leader);
+
         base.OnInitialized();
     }
 

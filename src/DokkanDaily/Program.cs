@@ -1,4 +1,6 @@
 using DokkanDaily.Components;
+using DokkanDaily.Configuration;
+using DokkanDaily.Services;
 
 namespace DokkanDaily
 {
@@ -14,6 +16,8 @@ namespace DokkanDaily
                 .AddInteractiveServerComponents();
 
             builder.Services.AddSingleton<DailyResetService>();
+            builder.Services.AddTransient<IRngHelperService, RngHelperService>();
+            builder.Services.Configure<DokkanDailySettings>(builder.Configuration.GetSection(nameof(DokkanDailySettings)));
 
             var app = builder.Build();
 

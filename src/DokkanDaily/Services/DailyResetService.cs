@@ -1,5 +1,14 @@
-﻿public class DailyResetService : BackgroundService
+﻿using DokkanDaily.Configuration;
+using Microsoft.Extensions.Options;
+
+namespace DokkanDaily.Services;
+
+public class DailyResetService : BackgroundService
 {
+    public DailyResetService(IOptions<DokkanDailySettings> options) 
+    { 
+    }
+
     private static DateTime GetNextDateTime(DateTime currentDateTime, TimeOnly time)
     {
         var scheduledTime = currentDateTime.Date + time.ToTimeSpan();
