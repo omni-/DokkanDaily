@@ -3,15 +3,10 @@ Wordle-esque daily challenge for DBZ: Dokkan Battle.
 
 
 TODO:
-* Add image upload for sharing and viewing clears
-	- OCR for verification, high scores, etc?
-* Formalize daily reset
-	- Number of clears posted?
+* OCR for verification, high scores, etc?
 * UI improvements
 	- Fit screen better
 	- smoother/smaller images
-	- Bottom bar with links
-* Logging infra
 * Admin dashboard
 * Login
 
