@@ -1,12 +1,18 @@
 ﻿@page "/daily"
+@rendermode InteractiveServer
+
 @using DokkanDaily.Components.Shared
 @using DokkanDaily.Constants
 @using DokkanDaily.Helpers
 @using DokkanDaily.Models;
+@using DokkanDaily.Models.Dto
 @using DokkanDaily.Models.Enums
 @using DokkanDaily.Services
 
 @inject IRngHelperService RngSvc
+@inject IAzureBlobService BlobSvc
+@inject IJSRuntime JsRuntime
+@inject NavigationManager NavManager
 
 <PageTitle>Dokkandle!</PageTitle>
 
@@ -24,6 +30,7 @@
     <img src="images/logo/logo.png" />
     <p style="color:white;padding-left:.5em;">Today's challenge type is: @dailyType!</p>
 </div>
+
 @if(Executing)
 {
     <BusySpinner />
@@ -32,24 +39,30 @@ else
 {
     <div class="challenge-box">
         <div style="margin: 0 1em 0 1em">
-        @if(dailyType == DailyType.LinkSkill)
-        {
-            <p class="challenge-text"><b>Challenge!</b> defeat <b>@todaysEvent.Name</b>, <b>Stage @todaysEvent.Stage</b> using only units that have the Link Skill <div class="dokkan-link-wrapper"><div class="dokkan-link"><div class="text">@linkSkill.Name</div></div></div><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
-        }
-        @if(dailyType == DailyType.Category)
-        {
-            <p class="challenge-text"><b>Challenge!</b> defeat <b>@todaysEvent.Name</b>, <b>Stage @todaysEvent.Stage</b> using only units belonging to:<br /><img style="width:auto;height:3em;margin-top:.5em" src="@category.ImageURL" /><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
-        }
-        @if(dailyType == DailyType.Character)
-        {
-            <p class="challenge-text"><b>Challenge!</b> build a team using <img style="width:3em;height:auto;" src="@todaysUnit.ImageURL" /> <b style="color:@typeColor">[@leader.Title] @leader.Name</b> as the Leader and defeat <b>@todaysEvent.Name</b>, <b>Stage @todaysEvent.Stage</b>!</p>
-        }
-        @if (todaysEvent != null && todaysEvent.WallpaperImagePath != null)
-        {
-            <p>
-                <img style="width:88%;height:20%;border:solid;margin-top:2em;" src="@todaysEvent.BannerImagePath" />
-            </p>
-        }
+            @if(dailyType == DailyType.LinkSkill)
+            {
+                <p class="challenge-text"><b>Challenge!</b> defeat <b>@todaysEvent.Name</b>, <b>Stage @todaysEvent.Stage</b> using only units that have the Link Skill <div class="dokkan-link-wrapper"><div class="dokkan-link"><div class="text">@linkSkill.Name</div></div></div><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
+            }
+            @if(dailyType == DailyType.Category)
+            {
+                <p class="challenge-text"><b>Challenge!</b> defeat <b>@todaysEvent.Name</b>, <b>Stage @todaysEvent.Stage</b> using only units belonging to:<br /><img src="@category.ImageURL" /><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
+            }
+            @if(dailyType == DailyType.Character)
+            {
+                <p class="challenge-text"><b>Challenge!</b> build a team using <img style="width:3em;height:auto;" src="@todaysUnit.ImageURL" /> <b style="color:@typeColor">[@leader.Title] @leader.Name</b> as the Leader and defeat <b>@todaysEvent.Name</b>, <b>Stage @todaysEvent.Stage</b>!</p>
+            }
+            @if (todaysEvent != null && todaysEvent.WallpaperImagePath != null)
+            {
+                <p>
+                    <img style="width:88%;height:20%;border:solid;margin-top:2em;" src="@todaysEvent.BannerImagePath" />
+                </p>
+            }
+            <div class="clear-box">
+                <p>@dailyFileCount clear(s) uploaded today</p>
+                <button type="button" class="btn btn-secondary btn-lg" @onclick=OnClick>
+                    Go to clears
+                </button>
+            </div>
         </div>
     </div>
 
@@ -79,8 +92,9 @@ else
     string typeColor => DDConstants.TypeToHexMap[todaysUnit.DokkanType];
 
     int hoursToReset => 24 - DateTime.UtcNow.Hour;
+    int dailyFileCount = 0;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         dailyType = RngSvc.GetRandomDailyType();
         todaysEvent = RngSvc.GetRandomStage();
@@ -89,7 +103,15 @@ else
         leader = RngSvc.GetRandomLeader(todaysEvent.Tier);
         todaysUnit = DDConstants.GetUnit(leader);
 
+        dailyFileCount = await BlobSvc
+            .GetFileCountForTag(DateTime.UtcNow.GetTagName())
+            .ConfigureAwait(false);
+
         base.OnInitialized();
     }
 
+    void OnClick()
+    {
+        NavManager.NavigateTo("/clears", false);
+    }
 }

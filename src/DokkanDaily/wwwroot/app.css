@@ -6,6 +6,7 @@
     font-style: italic;
     font-display: swap;
 }
+
 @font-face {
     font-family: 'Rodin';
     src: url('font/NewRodinProN-B-AlphaNum.eot');
@@ -14,6 +15,8 @@
     font-style: normal;
     font-display: swap;
 }
+
+@import url('font/open-iconic/font/css/open-iconic-bootstrap.min.css');
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;

@@ -1,0 +1,173 @@
+﻿@page "/clears"
+@rendermode InteractiveServer
+
+@using DokkanDaily.Helpers
+@using DokkanDaily.Models.Dto
+@using DokkanDaily.Services
+
+@inject IAzureBlobService BlobSvc
+@inject IJSRuntime jsRuntime
+
+<PageTitle>Dokkandle!</PageTitle>
+
+<style>
+    body {
+        background: url('images/misc/wallpaper.jpg') fixed center no-repeat;
+        background-size: cover;
+        text-align: center;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+</style>
+
+<div style="max-width: fit-content;margin-left: auto;margin-right: auto;">
+    <img src="images/logo/logo.png" />
+</div>
+
+@if (warningMessage.Length > 0)
+{
+    <div class="alert alert-warning">
+        <strong>Warning!</strong> @warningMessage.
+    </div>
+}
+<div class="clear-box">
+    <div style="margin: 0 1em 0 1em">
+        <div class="row">
+            <div class="col-sm-6">
+                <label>
+                    <InputFile class="form-control" disabled="@fileLoading" style="width:100%;font-family: 'Helvetica', sans-serif;" OnChange="@OnInputFileChange" single />
+                </label>
+                @if (fileLoading)
+                {
+                    <i class="fa fa-refresh"></i> <span>Loading...</span>
+                }
+            </div>
+            <div class="col-sm-2">
+                <button type="button" disabled="@fileLoading" class="btn btn-secondary btn-lg" style="width:10em;height:2.5em;margin:auto;padding-bottom:.25em;right:5%" @onclick="OnUploadSubmit">
+                    Upload File
+                </button>
+            </div>
+        </div>
+        @if (displayMessage.Length > 0)
+        {
+            <div class="alert alert-success">
+                <strong>Success!</strong> @displayMessage.
+            </div>
+        }
+        <br />
+        <div class="row cardbox">
+            @if (fileUploadViewModels.Count > 0)
+            {
+                @foreach (var attachment in fileUploadViewModels)
+                {
+                    <div class="card">
+                        <img style="object-fit: cover;" src="@GetImgPath(attachment)" @onclick="() => OnFileViewClick(attachment)" />
+                    </div>
+                }
+            }
+            else
+            {
+                <strong style="margin-top:20%;">No clears yet!</strong>
+            }
+        </div>
+    </div>
+</div>
+@code {
+    private string warningMessage = "";
+    private string displayMessage = "";
+    private List<IBrowserFile> loadedFiles = new();
+    private long maxFileSize = 1024 * 15;
+    private int maxAllowedFiles = 3;
+    private bool fileLoading;
+    private string Message = "No file(s) selected";
+    private IReadOnlyList<IBrowserFile> selectedFiles = [];
+    private List<FileUploadViewModel> fileUploadViewModels = [];
+    private const string defaultWarning = "Something went wrong! Please try again.";
+
+    protected override async Task OnInitializedAsync()
+    {
+        fileUploadViewModels = await Task.Run(async () =>
+        {
+            List<FileUploadViewModel> ret = [];
+            var result = await BlobSvc.GetFilesForTag(DateTime.UtcNow.GetTagName());
+            foreach(var f in result)
+            {
+                ret.Add(new()
+                {
+                    FileName = f.Name,
+                    FileStorageUrl = f.Uri.ToString()
+                });
+            }
+            return ret;
+        }).ConfigureAwait(false);
+    }
+
+    private void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles();
+        Message = $"{selectedFiles.Count} file(s) selected";
+        this.StateHasChanged();
+    }
+    private async void OnUploadSubmit()
+    {
+        fileLoading = true;
+
+        foreach (var file in selectedFiles)
+        {
+            try
+            {
+                var trustedFileNameForFileStorage = file.Name;
+                var blobUrl = await BlobSvc.UploadFileToBlobAsync(trustedFileNameForFileStorage, file.ContentType, file.OpenReadStream(20971520));
+                if (blobUrl != null)
+                {
+                    FileUploadViewModel fileUploadViewModel = new FileUploadViewModel()
+                        {
+                            FileName = trustedFileNameForFileStorage,
+                            FileStorageUrl = blobUrl,
+                            ContentType = file.ContentType,
+                        };
+
+                    fileUploadViewModels.Add(fileUploadViewModel);
+                    Message = trustedFileNameForFileStorage + " Uploaded!!";
+                }
+                else
+                    warningMessage = defaultWarning;
+            }
+            catch (Exception ex)
+            {
+                warningMessage = ex.Message;
+            }
+        }
+
+        fileLoading = false;
+
+        this.StateHasChanged();
+    }
+
+    private string GetImgPath(FileUploadViewModel attachment)
+    {
+        var sasToken = BlobSvc.GetBlobSASTOkenByFile(attachment.FileName);
+
+        return attachment.FileStorageUrl + "?" + sasToken;
+    }
+
+    private async void OnFileViewClick(FileUploadViewModel attachment)
+    {
+        try
+        {
+            var sasToken = BlobSvc.GetBlobSASTOkenByFile(attachment.FileName);
+            if (sasToken != null)
+            {
+                string fileUrl = attachment.FileStorageUrl + "?" + sasToken;
+                await jsRuntime.InvokeVoidAsync("open", fileUrl, "_blank");
+            }
+
+        }
+        catch (Exception ex)
+        {
+            warningMessage = ex.Message;
+        }
+
+        this.StateHasChanged();
+    }
+}

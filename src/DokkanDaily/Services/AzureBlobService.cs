@@ -40,8 +40,8 @@ namespace DokkanDaily.Services
                 var blob = container.GetBlobClient(strFileName);
 
                 await blob.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
-                await blob.UploadAsync(fileStream, options:new BlobUploadOptions() 
-                { 
+                await blob.UploadAsync(fileStream, options: new BlobUploadOptions()
+                {
                     HttpHeaders = new BlobHttpHeaders { ContentType = contentType },
                     Tags = new Dictionary<string, string>() { { "date", DateTime.UtcNow.GetTagName() } },
                 });
@@ -65,7 +65,7 @@ namespace DokkanDaily.Services
                 if (createResponse != null && createResponse.GetRawResponse().Status == 201)
                     await container.SetAccessPolicyAsync(PublicAccessType.Blob);
 
-                string searchExpression = $"@container = '{_containerName}' AND \"date\" = '{tagName}'";
+                string searchExpression = $"\"date\" = '{tagName}'";
 
                 await foreach (var b in container.FindBlobsByTagsAsync(searchExpression))
                 {
@@ -109,5 +109,62 @@ namespace DokkanDaily.Services
             }
         }
 
+        public async Task<int> GetFileCountForTag(string tagName)
+        {
+            try
+            {
+                var container = new BlobContainerClient(_connectionString, _containerName);
+                var createResponse = await container.CreateIfNotExistsAsync();
+
+                if (createResponse != null && createResponse.GetRawResponse().Status == 201)
+                    await container.SetAccessPolicyAsync(PublicAccessType.Blob);
+
+                string searchExpression = $"\"date\" = '{tagName}'";
+
+                int ctr = 0;
+                await foreach (var b in container.FindBlobsByTagsAsync(searchExpression))
+                {
+                    ctr++;
+                }
+
+                return ctr;
+
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError("Unhandled exception {@Ex}", ex);
+                throw;
+            }
+        }
+
+        public async Task<List<BlobClient>> GetFilesForTag(string tagName)
+        {
+            List <BlobClient> files = [];
+
+            try
+            {
+                var container = new BlobContainerClient(_connectionString, _containerName);
+                var createResponse = await container.CreateIfNotExistsAsync();
+
+                if (createResponse != null && createResponse.GetRawResponse().Status == 201)
+                    await container.SetAccessPolicyAsync(PublicAccessType.Blob);
+
+                string searchExpression = $"\"date\" = '{tagName}'";
+
+                await foreach (var b in container.FindBlobsByTagsAsync(searchExpression))
+                {
+                    var blob = container.GetBlobClient(b.BlobName);
+                    files.Add(blob);
+                }
+
+                return files;
+
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError("Unhandled exception {@Ex}", ex);
+                throw;
+            }
+        }
     }
 }
