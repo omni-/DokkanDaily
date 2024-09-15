@@ -15,9 +15,14 @@ namespace DokkanDaily
                 .AddRazorComponents()
                 .AddInteractiveServerComponents();
 
-            builder.Services.AddSingleton<DailyResetService>();
+            builder.Services.AddHostedService<DailyResetService>();
+
             builder.Services.AddTransient<IRngHelperService, RngHelperService>();
-            builder.Services.Configure<DokkanDailySettings>(builder.Configuration.GetSection(nameof(DokkanDailySettings)));
+            builder.Services.AddTransient<IAzureBlobService, AzureBlobService>();
+
+            builder.Services
+                .Configure<DokkanDailySettings>(builder.Configuration.GetSection(nameof(DokkanDailySettings)))
+                .AddLogging(builder => builder.AddConsole());
 
             var app = builder.Build();
 

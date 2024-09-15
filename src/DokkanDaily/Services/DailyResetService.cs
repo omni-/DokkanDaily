@@ -1,13 +1,11 @@
-﻿using DokkanDaily.Configuration;
-using Microsoft.Extensions.Options;
+﻿using DokkanDaily.Helpers;
 
 namespace DokkanDaily.Services;
 
-public class DailyResetService : BackgroundService
+public class DailyResetService(IAzureBlobService azureBlobService, ILogger<DailyResetService> logger) : BackgroundService
 {
-    public DailyResetService(IOptions<DokkanDailySettings> options) 
-    { 
-    }
+    private readonly ILogger<DailyResetService> _logger = logger;
+    private readonly IAzureBlobService _azureBlobService = azureBlobService;
 
     private static DateTime GetNextDateTime(DateTime currentDateTime, TimeOnly time)
     {
@@ -23,9 +21,19 @@ public class DailyResetService : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
+            _logger.LogInformation("Waiting until next scheduled time...");
             await WaitUntilNextScheduledTime(stoppingToken);
 
-            // TODO: Daily Reset Activities!
+            // delete yesterdays clears
+            _logger.LogInformation("Starting daily reset...");
+
+            string tagName = DateTime.UtcNow.Subtract(TimeSpan.FromDays(1)).GetTagName();
+
+            _logger.LogInformation("Deleting tag {@Tag}", tagName);
+
+            await _azureBlobService.DeleteByTagAsync(tagName);
+
+            _logger.LogInformation("Reset complete.");
         }
     }
 
@@ -38,6 +46,7 @@ public class DailyResetService : BackgroundService
             .Min();
 
         var waitTime = nextScheduledTime - currentDateTime;
+        _logger.LogInformation("Will execute work at {NextTime} UTC time in {WaitTime}", nextScheduledTime, waitTime);
         await Task.Delay(waitTime, ct);
     }
 }

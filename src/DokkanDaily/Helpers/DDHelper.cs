@@ -19,5 +19,10 @@ namespace DokkanDaily.Helpers
 
             return result;
         }
+
+        public static string GetTagName(this DateTime dt)
+        {
+            return dt.ToShortDateString().Replace('/', '-');
+        }
     }
 }
