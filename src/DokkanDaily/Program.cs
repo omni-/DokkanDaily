@@ -1,4 +1,6 @@
 using DokkanDaily.Components;
+using DokkanDaily.Configuration;
+using DokkanDaily.Services;
 
 namespace DokkanDaily
 {
@@ -12,6 +14,15 @@ namespace DokkanDaily
             builder.Services
                 .AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            builder.Services.AddHostedService<DailyResetService>();
+
+            builder.Services.AddTransient<IRngHelperService, RngHelperService>();
+            builder.Services.AddTransient<IAzureBlobService, AzureBlobService>();
+
+            builder.Services
+                .Configure<DokkanDailySettings>(builder.Configuration.GetSection(nameof(DokkanDailySettings)))
+                .AddLogging(builder => builder.AddConsole());
 
             var app = builder.Build();
 
@@ -40,7 +51,6 @@ namespace DokkanDaily
                 context.Response.Redirect("/daily");
                 return Task.CompletedTask;
             });
-
 
             app.Run();
         }
