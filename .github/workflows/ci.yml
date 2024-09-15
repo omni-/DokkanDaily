@@ -51,7 +51,6 @@ jobs:
           src:
             - 'src'
     - name: Download artifact from build job
-      if: steps.changes.outputs.src == 'true'
       uses: actions/download-artifact@v3
       with:
         name: webapp
