@@ -103,9 +103,13 @@ else
         leader = RngSvc.GetRandomLeader(todaysEvent.Tier);
         todaysUnit = DDConstants.GetUnit(leader);
 
-        dailyFileCount = await BlobSvc
-            .GetFileCountForTag(DateTime.UtcNow.GetTagName())
-            .ConfigureAwait(false);
+        try
+        {
+            dailyFileCount = await BlobSvc
+                .GetFileCountForTag(DateTime.UtcNow.GetTagName())
+                .ConfigureAwait(false);
+        }
+        catch { }
 
         base.OnInitialized();
     }

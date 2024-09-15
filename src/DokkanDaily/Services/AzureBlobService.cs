@@ -77,7 +77,6 @@ namespace DokkanDaily.Services
             catch (Exception ex)
             {
                 _logger?.LogError("Unhandled exception {@Ex}", ex);
-                throw;
             }
         }
 

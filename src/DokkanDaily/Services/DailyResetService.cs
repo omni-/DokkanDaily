@@ -30,14 +30,18 @@ public class DailyResetService(IAzureBlobService azureBlobService, ILogger<Daily
 
             // delete yesterdays clears
             _logger.LogInformation("Starting daily reset...");
+            try
+            {
 
-            string tagName = DateTime.UtcNow.Subtract(TimeSpan.FromDays(1)).GetTagName();
+                string tagName = DateTime.UtcNow.Subtract(TimeSpan.FromDays(1)).GetTagName();
 
-            _logger.LogInformation("Deleting tag {@Tag}", tagName);
+                _logger.LogInformation("Deleting tag {@Tag}", tagName);
 
-            await _azureBlobService.DeleteByTagAsync(tagName);
+                await _azureBlobService.DeleteByTagAsync(tagName);
 
-            _logger.LogInformation("Reset complete.");
+                _logger.LogInformation("Reset complete.");
+            }
+            catch { }
         }
     }
 

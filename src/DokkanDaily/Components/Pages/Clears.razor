@@ -86,20 +86,24 @@
 
     protected override async Task OnInitializedAsync()
     {
-        fileUploadViewModels = await Task.Run(async () =>
+        try
         {
-            List<FileUploadViewModel> ret = [];
-            var result = await BlobSvc.GetFilesForTag(DateTime.UtcNow.GetTagName());
-            foreach(var f in result)
+            fileUploadViewModels = await Task.Run(async () =>
             {
-                ret.Add(new()
+                List<FileUploadViewModel> ret = [];
+                var result = await BlobSvc.GetFilesForTag(DateTime.UtcNow.GetTagName());
+                foreach (var f in result)
                 {
-                    FileName = f.Name,
-                    FileStorageUrl = f.Uri.ToString()
-                });
-            }
-            return ret;
-        }).ConfigureAwait(false);
+                    ret.Add(new()
+                        {
+                            FileName = f.Name,
+                            FileStorageUrl = f.Uri.ToString()
+                        });
+                }
+                return ret;
+            }).ConfigureAwait(false);
+        }
+        catch { }
     }
 
     private void OnInputFileChange(InputFileChangeEventArgs e)
@@ -148,7 +152,7 @@
     {
         var sasToken = BlobSvc.GetBlobSASTOkenByFile(attachment.FileName);
 
-        return attachment.FileStorageUrl + "?" + sasToken;
+        return attachment?.FileStorageUrl + "?" + sasToken;
     }
 
     private async void OnFileViewClick(FileUploadViewModel attachment)
