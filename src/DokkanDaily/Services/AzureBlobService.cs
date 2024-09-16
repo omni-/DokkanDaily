@@ -40,10 +40,12 @@ namespace DokkanDaily.Services
                 var blob = container.GetBlobClient(strFileName);
 
                 await blob.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
+
+                string tag = DDHelper.GetUtcNowDateTag();
                 await blob.UploadAsync(fileStream, options: new BlobUploadOptions()
                 {
                     HttpHeaders = new BlobHttpHeaders { ContentType = contentType },
-                    Tags = new Dictionary<string, string>() { { "date", DateTime.UtcNow.GetTagName() } },
+                    Tags = new Dictionary<string, string>() { { "date", tag } },
                 });
 
                 var urlString = blob.Uri.ToString();

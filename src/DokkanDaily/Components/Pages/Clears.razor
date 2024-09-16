@@ -1,6 +1,7 @@
 ﻿@page "/clears"
 @rendermode InteractiveServer
 
+@using DokkanDaily.Components.Shared
 @using DokkanDaily.Helpers
 @using DokkanDaily.Models.Dto
 @using DokkanDaily.Services
@@ -19,21 +20,19 @@
         overflow: hidden;
     }
 </style>
+<div style="height:100vh;">
 
-<div style="max-width: fit-content;margin-left: auto;margin-right: auto;">
-    <img src="images/logo/logo.png" />
-</div>
+    <Logo />
 
-@if (warningMessage.Length > 0)
-{
-    <div class="alert alert-warning">
-        <strong>Warning!</strong> @warningMessage.
-    </div>
-}
-<div class="clear-box">
-    <div style="margin: 0 1em 0 1em">
-        <div class="row">
-            <div class="col-sm-6">
+    @if (warningMessage.Length > 0)
+    {
+        <div class="alert alert-warning">
+            <strong>Warning!</strong> @warningMessage.
+        </div>
+    }
+    <div class="container clear-box text-center">
+        <div style="padding-top:2vh;" class="row">
+            <div class="col col-sm-6">
                 <label>
                     <InputFile class="form-control" disabled="@fileLoading" style="width:100%;font-family: 'Helvetica', sans-serif;" OnChange="@OnInputFileChange" single />
                 </label>
@@ -42,8 +41,8 @@
                     <i class="fa fa-refresh"></i> <span>Loading...</span>
                 }
             </div>
-            <div class="col-sm-2">
-                <button type="button" disabled="@fileLoading" class="btn btn-secondary btn-lg" style="width:10em;height:2.5em;margin:auto;padding-bottom:.25em;right:5%" @onclick="OnUploadSubmit">
+            <div class="col col-sm-2">
+                <button type="button" disabled="@fileLoading" class="btn btn-secondary btn-md" @onclick="OnUploadSubmit">
                     Upload File
                 </button>
             </div>
@@ -55,7 +54,7 @@
             </div>
         }
         <br />
-        <div class="row cardbox">
+        <div>
             @if (fileUploadViewModels.Count > 0)
             {
                 @foreach (var attachment in fileUploadViewModels)
@@ -67,7 +66,7 @@
             }
             else
             {
-                <strong style="margin-top:20%;">No clears yet!</strong>
+                <p style="margin-top:25vh;">No clears yet!</p>
             }
         </div>
     </div>
@@ -91,7 +90,8 @@
             fileUploadViewModels = await Task.Run(async () =>
             {
                 List<FileUploadViewModel> ret = [];
-                var result = await BlobSvc.GetFilesForTag(DateTime.UtcNow.GetTagName());
+                string tag = DDHelper.GetUtcNowDateTag();
+                var result = await BlobSvc.GetFilesForTag(tag);
                 foreach (var f in result)
                 {
                     ret.Add(new()

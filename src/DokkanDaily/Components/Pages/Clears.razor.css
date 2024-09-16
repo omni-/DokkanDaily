@@ -13,16 +13,11 @@
 }
 
 .clear-box {
-    position: fixed;
     margin-top:3em;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 2em .5em 1em .5em;
     background-color: #EFCFA7;
     border: solid;
-    width:60%;
-    height:70%;
+    min-height:70vh;
+    max-width:60vw;
 }
 
 footer {
@@ -57,13 +52,19 @@ button {
     /* Add shadows to create the "card" effect */
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
-    width: 10%;
+    width: 15%;
     height: auto;
     display: inline-flex;
-    margin: 1% 1% 1% 1%
+    margin: 10px 10px 10px 10px;
+    flex-shrink: 0;
 }
 
 /* On mouse-over, add a deeper shadow */
 .card:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.cardbox {
+    display:flex;
+    align-items:flex-start;
 }

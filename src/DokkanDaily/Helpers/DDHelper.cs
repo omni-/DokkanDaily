@@ -20,9 +20,14 @@ namespace DokkanDaily.Helpers
             return result;
         }
 
-        public static string GetTagName(this DateTime dt)
+        public static string GetUtcNowDateTag()
         {
-            return dt.ToShortDateString().Replace('/', '-');
+            return DateTime.UtcNow.ToString("MM-dd-yyyy");
+        }
+
+        public static string GetTagFromDate(this DateTime date)
+        {
+            return date.ToString("MM-dd-yyyy");
         }
     }
 }

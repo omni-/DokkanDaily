@@ -1,0 +1,19 @@
+﻿@inject NavigationManager NavManager
+
+<div style="max-width: fit-content;margin-left: auto;margin-right: auto;">
+    <img style="cursor:pointer" @onclick=OnClick src="images/logo/logo.png" />
+    @if (!string.IsNullOrEmpty(dailyType))
+    {
+        <p style="color:white;padding-left:.5em;">Today's challenge type is: @dailyType!</p>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string dailyType { get; set; }
+
+    void OnClick()
+    {
+        NavManager.NavigateTo("/daily", false);
+    }
+}

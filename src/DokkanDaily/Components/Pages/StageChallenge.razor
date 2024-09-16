@@ -26,10 +26,7 @@
     }
 </style>
 
-<div style="max-width: fit-content;margin-left: auto;margin-right: auto;">
-    <img src="images/logo/logo.png" />
-    <p style="color:white;padding-left:.5em;">Today's challenge type is: @dailyType!</p>
-</div>
+<Logo dailyType="@dailyType.ToString()" />
 
 @if(Executing)
 {
@@ -106,7 +103,7 @@ else
         try
         {
             dailyFileCount = await BlobSvc
-                .GetFileCountForTag(DateTime.UtcNow.GetTagName())
+                .GetFileCountForTag(DDHelper.GetUtcNowDateTag())
                 .ConfigureAwait(false);
         }
         catch { }
