@@ -9,6 +9,7 @@ TODO:
 	- smoother/smaller images
 * Admin dashboard
 * Login
+* Make logo link to homepage
 
 IDEAS:
 * Unit DB tool?

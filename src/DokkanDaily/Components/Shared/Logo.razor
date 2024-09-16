@@ -1,0 +1,12 @@
+﻿<div style="max-width: fit-content;margin-left: auto;margin-right: auto;">
+    <img src="images/logo/logo.png" />
+    @if (!string.IsNullOrEmpty(dailyType))
+    {
+        <p style="color:white;padding-left:.5em;">Today's challenge type is: @dailyType!</p>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string dailyType { get; set; }
+}

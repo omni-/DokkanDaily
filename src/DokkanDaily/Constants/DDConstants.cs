@@ -140,6 +140,8 @@ namespace DokkanDaily.Constants
             new("Battle to Become the Strongest", "Super Saiyan Goku (GT)", Tier.F),
             new("Battle to Reach the Top", "Super Saiyan Vegeta (GT)", Tier.F),
             new("Boiling Power", "Super Saiyan Goku", Tier.F),
+            new("All-Out Super Attack", "Super Saiyan Gohan (Teen)", Tier.S),
+            new("Super Warrior Who Destroys All", "Legendary Super Saiyan Broly", Tier.S),
             //extreme
             new("Universe-Devastating Combat Power", "Broly", Tier.S),
             new("Surge of Heightened Fighting Spirit", "Super Saiyan Broly", Tier.S),

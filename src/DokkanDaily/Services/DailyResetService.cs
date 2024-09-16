@@ -21,10 +21,6 @@ public class DailyResetService(IAzureBlobService azureBlobService, ILogger<Daily
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-
-
-            await _azureBlobService.DeleteByTagAsync(DateTime.UtcNow.GetTagName());
-
             _logger.LogInformation("Waiting until next scheduled time...");
             await WaitUntilNextScheduledTime(stoppingToken);
 
@@ -33,7 +29,7 @@ public class DailyResetService(IAzureBlobService azureBlobService, ILogger<Daily
             try
             {
 
-                string tagName = DateTime.UtcNow.Subtract(TimeSpan.FromDays(1)).GetTagName();
+                string tagName = DateTime.UtcNow.Subtract(TimeSpan.FromDays(1)).GetTagFromDate();
 
                 _logger.LogInformation("Deleting tag {@Tag}", tagName);
 
