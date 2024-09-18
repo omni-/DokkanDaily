@@ -20,10 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Razor\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="wwwroot\data\DokkanCharacterData.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

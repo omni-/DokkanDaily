@@ -2,12 +2,15 @@
 @rendermode InteractiveServer
 
 @using DokkanDaily.Components.Shared
+@using DokkanDaily.Constants
 @using DokkanDaily.Helpers
+@using DokkanDaily.Models
 @using DokkanDaily.Models.Dto
 @using DokkanDaily.Services
 
 @inject IAzureBlobService BlobSvc
 @inject IJSRuntime jsRuntime
+@inject IRngHelperService RngSvc
 
 <PageTitle>Dokkandle!</PageTitle>
 
@@ -22,7 +25,7 @@
 </style>
 <div style="height:100vh;">
 
-    <Logo />
+    <Logo dailyType="@RngSvc.GetRandomDailyType().ToString()" />
 
     @if (warningMessage.Length > 0)
     {
@@ -32,7 +35,15 @@
     }
     <div class="container clear-box text-center">
         <div style="padding-top:2vh;" class="row">
-            <div class="col col-sm-6">
+@*             <div>
+                <p>
+                    <label>
+                        Enter a name:
+                        <input @bind="@Name" />
+                    </label>
+                </p>
+            </div> *@
+            <div>
                 <label>
                     <InputFile class="form-control" disabled="@fileLoading" style="width:100%;font-family: 'Helvetica', sans-serif;" OnChange="@OnInputFileChange" single />
                 </label>
@@ -41,7 +52,7 @@
                     <i class="fa fa-refresh"></i> <span>Loading...</span>
                 }
             </div>
-            <div class="col col-sm-2">
+            <div style="padding-top:1vh;">
                 <button type="button" disabled="@fileLoading" class="btn btn-secondary btn-md" @onclick="OnUploadSubmit">
                     Upload File
                 </button>
@@ -61,6 +72,9 @@
                 {
                     <div class="card">
                         <img style="object-fit: cover;" src="@GetImgPath(attachment)" @onclick="() => OnFileViewClick(attachment)" />
+@*                         <div class="container">
+                            <h4><b>@attachment.Tags.GetTagValueOrDefault(DDConstants.USER_NAME_TAG)</b></h4>
+                        </div> *@
                     </div>
                 }
             }
@@ -82,11 +96,14 @@
     private IReadOnlyList<IBrowserFile> selectedFiles = [];
     private List<FileUploadViewModel> fileUploadViewModels = [];
     private const string defaultWarning = "Something went wrong! Please try again.";
+    private Challenge challengeModel;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
+            challengeModel = RngSvc.CreateChallengeModel();
+
             fileUploadViewModels = await Task.Run(async () =>
             {
                 List<FileUploadViewModel> ret = [];
@@ -94,10 +111,12 @@
                 var result = await BlobSvc.GetFilesForTag(tag);
                 foreach (var f in result)
                 {
+                    var tags = await f.GetTagsAsync();
                     ret.Add(new()
                         {
                             FileName = f.Name,
-                            FileStorageUrl = f.Uri.ToString()
+                            FileStorageUrl = f.Uri.ToString(),
+                            Tags = tags.Value.Tags
                         });
                 }
                 return ret;
@@ -120,19 +139,18 @@
         {
             try
             {
-                var trustedFileNameForFileStorage = file.Name;
-                var blobUrl = await BlobSvc.UploadFileToBlobAsync(trustedFileNameForFileStorage, file.ContentType, file.OpenReadStream(20971520));
+                var blobUrl = await BlobSvc.UploadToAzureAsync(file.Name, file.ContentType, file.OpenReadStream(20971520), challengeModel);
                 if (blobUrl != null)
                 {
                     FileUploadViewModel fileUploadViewModel = new FileUploadViewModel()
                         {
-                            FileName = trustedFileNameForFileStorage,
+                            FileName = file.Name,
                             FileStorageUrl = blobUrl,
-                            ContentType = file.ContentType,
+                            ContentType = file.ContentType
                         };
 
                     fileUploadViewModels.Add(fileUploadViewModel);
-                    Message = trustedFileNameForFileStorage + " Uploaded!!";
+                    Message = file.Name + " Uploaded!!";
                 }
                 else
                     warningMessage = defaultWarning;

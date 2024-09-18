@@ -83,5 +83,16 @@ namespace DokkanDaily.Services
             return output;
         }
 
+        public Challenge CreateChallengeModel()
+        {
+            DailyType dailyType = GetRandomDailyType();
+            Event todaysEvent = GetRandomStage();
+            LinkSkill linkSkill = GetRandomLinkSkill(todaysEvent.Tier);
+            Category category = GetRandomCategory(todaysEvent.Tier);
+            Leader leader = GetRandomLeader(todaysEvent.Tier);
+            Unit todaysUnit = DDConstants.GetUnit(leader);
+
+            return new (dailyType, todaysEvent, linkSkill, category, leader, todaysUnit);
+        }
     }
 }
