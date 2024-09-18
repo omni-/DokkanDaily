@@ -6,6 +6,8 @@ namespace DokkanDaily.Models
     {
         public string Name { get; init; } = name;
 
+        public string FullName => $"{Name}, Stage {stage}";
+
         public Tier Tier { get; init; } = d;
 
         private string folder = path;

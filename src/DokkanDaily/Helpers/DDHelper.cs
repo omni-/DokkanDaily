@@ -29,5 +29,12 @@ namespace DokkanDaily.Helpers
         {
             return date.ToString("MM-dd-yyyy");
         }
+
+        public static string GetTagValueOrDefault(this IDictionary<string, string> dictionary, string tagName)
+        {
+            if (dictionary == null || !dictionary.TryGetValue(tagName, out string result)) return "<Unknown>";
+
+            return result;
+        }
     }
 }

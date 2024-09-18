@@ -3,14 +3,18 @@ Wordle-esque daily challenge for DBZ: Dokkan Battle.
 
 
 TODO:
-* OCR for verification, high scores, etc?
+* OCR! (library research in progress)
+	- Call into JS EasyOCR?
 * UI improvements
 	- Fit screen better
 	- smoother/smaller images
 * Admin dashboard
 * Login
-* Make logo link to homepage
+* GUESS THE UNIT!
+* Patch scraper to look for the dokkan awaken arrow and filter out TURs of LRs
+* TESTS
 
 IDEAS:
 * Unit DB tool?
-* Another type of daily dokkan challenge? (guess the unit?)
+* More daily challenges
+* Run the scraper as a job? Rewrite it natively?

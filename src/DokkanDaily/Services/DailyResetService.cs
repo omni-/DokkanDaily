@@ -24,16 +24,14 @@ public class DailyResetService(IAzureBlobService azureBlobService, ILogger<Daily
             _logger.LogInformation("Waiting until next scheduled time...");
             await WaitUntilNextScheduledTime(stoppingToken);
 
-            // delete yesterdays clears
             _logger.LogInformation("Starting daily reset...");
             try
             {
+                //hacky, but better than having a random second reset
+                Environment.SetEnvironmentVariable("DOTNET_DokkanDailySettings__SeedOffset", "0");
 
-                string tagName = DateTime.UtcNow.Subtract(TimeSpan.FromDays(1)).GetTagFromDate();
-
-                _logger.LogInformation("Deleting tag {@Tag}", tagName);
-
-                await _azureBlobService.DeleteByTagAsync(tagName);
+                // delete old clears
+                await _azureBlobService.PruneContainers(30);
 
                 _logger.LogInformation("Reset complete.");
             }

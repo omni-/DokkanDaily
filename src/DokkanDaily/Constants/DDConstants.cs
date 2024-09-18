@@ -1,10 +1,11 @@
 ﻿using DokkanDaily.Helpers;
 using DokkanDaily.Models;
 using DokkanDaily.Models.Enums;
+using System.Text.RegularExpressions;
 
 namespace DokkanDaily.Constants
 {
-    public static class DDConstants
+    public static partial class DDConstants
     {
         #region Link Skills
         public static IReadOnlyList<LinkSkill> LinkSkills { get => linkSkills; }
@@ -35,7 +36,7 @@ namespace DokkanDaily.Constants
             new("Limit-Breaking Form", Tier.E),
             new("Majin", Tier.S),
             new("Messenger from the Future", Tier.F),
-            new("Metamorphosis", Tier.C),
+            new("Metamorphosis", Tier.D),
             new("Namekians", Tier.F),
             new("Nightmare", Tier.C),
             new("Over in a Flash", Tier.A),
@@ -73,7 +74,6 @@ namespace DokkanDaily.Constants
             new("Newfound Power Beyond the Ultimate", "Gohan (Beast)", Tier.S),
             new("Transcendent Divine Power", "Goku (Ultra Instinct -Sign-)", Tier.S),
             new("Fierce Clash of Burning Power", "Super Saiyan Goku & Super Saiyan Gohan (Youth) & Super Saiyan Trunks (Teen)", Tier.S),
-            new("Power of an Isolated Iron Wall", "Jiren", Tier.S),
             new("True Warrior Race", "Super Saiyan God SS Evolved Vegeta", Tier.S),
             new("Radiantly Shining Heroes", "Gamma 1 & Gamma 2/Gamma 1", Tier.S),
             new("True Ultra Instinct", "Goku (Ultra Instinct)", Tier.S),
@@ -141,7 +141,6 @@ namespace DokkanDaily.Constants
             new("Battle to Reach the Top", "Super Saiyan Vegeta (GT)", Tier.F),
             new("Boiling Power", "Super Saiyan Goku", Tier.F),
             new("All-Out Super Attack", "Super Saiyan Gohan (Teen)", Tier.S),
-            new("Super Warrior Who Destroys All", "Legendary Super Saiyan Broly", Tier.S),
             //extreme
             new("Universe-Devastating Combat Power", "Broly", Tier.S),
             new("Surge of Heightened Fighting Spirit", "Super Saiyan Broly", Tier.S),
@@ -173,7 +172,12 @@ namespace DokkanDaily.Constants
             new("Epitome of Sublime Beauty", "Goku Black", Tier.F),
             new("Endless Evolution of the Warrior Race", "Super Saiyan Broly", Tier.F),
             new("Brief Paternal Moment", "Majin Vegeta", Tier.E),
-            new("Unveiling of Power", "Raditz", Tier.F)
+            new("Unveiling of Power", "Raditz", Tier.F),
+            new("Super Warrior Who Destroys All", "Legendary Super Saiyan Broly", Tier.S),
+
+            // unreleased on global
+            // new("Power of an Isolated Iron Wall", "Jiren", Tier.S),
+            // new("Bright and Fun Life", "Master Roshi", Tier.A)
         ];
         #endregion
 
@@ -190,8 +194,10 @@ namespace DokkanDaily.Constants
             new("The Devil Awakens", Tier.A, "DevilAwakens"),
             new("The Devil Awakens", Tier.A, "DevilAwakens", 2),
             new("Supreme Magnificent Battle [Movie Edition]", Tier.C, "SMB_MOVIE", 3),
+            new("Supreme Magnificent Battle [Movie Edition]", Tier.A, "SMB_MOVIE", 4),
+            new("Supreme Magnificent Battle [Movie Edition]", Tier.A, "SMB_MOVIE", 5),
             new("Supreme Magnificent Battle [Universe Survival Saga]", Tier.S, "SMB_USS", 4),
-            new("Supreme Magnificent Battle [Universe Survival Saga]", Tier.E, "SMB_USS"),
+            new("Supreme Magnificent Battle [Universe Survival Saga]", Tier.B, "SMB_USS"),
             new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.S, "SMB_DBS", 7),
             new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.S, "SMB_DBS", 8),
             new("Ultimate Red Zone [Majin Buu Saga]", Tier.S, "MBS_RZ", 4),
@@ -203,7 +209,10 @@ namespace DokkanDaily.Constants
             new("9th Anniv.! Anniversary Battle", Tier.A, "ANNI", 9),
             new("Ultimate Red Zone [Dismal Future Edition]", Tier.B, "DF_RZ", 5),
             new("Ultimate Red Zone [Wicked Bloodline Edition]", Tier.C, "WB_RZ", 5),
-            new("Ultimate Red Zone [Movie Edition]", Tier.B, "MOVIE_RZ", 8)
+            new("Ultimate Red Zone [Movie Edition]", Tier.B, "MOVIE_RZ", 8),
+            new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.A, "MB_ME", 7),
+            new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.A, "MB_ME", 8),
+
         ];
         #endregion
 
@@ -305,6 +314,13 @@ namespace DokkanDaily.Constants
         ];
         #endregion
 
+        #region Internal
+        public static string DATE_TAG => "date";
+        public static string USER_NAME_TAG => "username";
+        public static string DAILY_TYPE_TAG => "dailytype";
+        public static string EVENT_TAG => "event";
+        #endregion
+
         #region Misc.
         private static readonly List<Unit> unitDB = [];
         public static IReadOnlyList<Unit> UnitDB { get => unitDB.AsReadOnly(); }
@@ -318,7 +334,11 @@ namespace DokkanDaily.Constants
             { DokkanType.TEQ, "#008806" }
         }.AsReadOnly();
         public static IReadOnlyList<DailyType> DailyTypes { get; }
+
+        [GeneratedRegex("[^a-zA-Z0-9 -]")]
+        public static partial Regex AlphaNumericRegex();
         #endregion
+
 
         static DDConstants()
         {

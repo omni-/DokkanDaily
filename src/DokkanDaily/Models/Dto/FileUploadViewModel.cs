@@ -2,10 +2,12 @@
 {
     public class FileUploadViewModel
     {
-        public string FileName { get; set; }
+        public string FileName { get; init; }
 
-        public string FileStorageUrl { get; set; }
+        public string FileStorageUrl { get; init; }
 
-        public string ContentType { get; set; }
+        public string ContentType { get; init; }
+
+        public IDictionary<string, string> Tags { get; set; }
     }
 }

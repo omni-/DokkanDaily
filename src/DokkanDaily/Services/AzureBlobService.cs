@@ -1,9 +1,12 @@
-﻿using Azure.Storage;
+﻿using Azure;
+using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
 using DokkanDaily.Configuration;
+using DokkanDaily.Constants;
 using DokkanDaily.Helpers;
+using DokkanDaily.Models;
 using Microsoft.Extensions.Options;
 
 namespace DokkanDaily.Services
@@ -17,6 +20,8 @@ namespace DokkanDaily.Services
         private readonly string _containerName;
         private readonly string _accountName;
 
+        private string TodaysBucketFullName => $"{_containerName}-{DDHelper.GetUtcNowDateTag()}";
+
         public AzureBlobService(IOptions<DokkanDailySettings> settings, ILogger<AzureBlobService> logger)
         {
             _settings = settings.Value;
@@ -27,25 +32,20 @@ namespace DokkanDaily.Services
             _accountName = _settings.AzureAccountName;
         }
 
-        public async Task<string> UploadFileToBlobAsync(string strFileName, string contentType, Stream fileStream)
+        public async Task<string> UploadToAzureAsync(string strFileName, string contentType, Stream fileStream, Challenge model, string bucket = null)
         {
             try
             {
-                var container = new BlobContainerClient(_connectionString, _containerName);
-
-                var createResponse = await container.CreateIfNotExistsAsync();
-                if (createResponse != null && createResponse.GetRawResponse().Status == 201)
-                    await container.SetAccessPolicyAsync(PublicAccessType.Blob);
+                var (container, _) = await GetOrCreate(bucket);
 
                 var blob = container.GetBlobClient(strFileName);
 
                 await blob.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
 
-                string tag = DDHelper.GetUtcNowDateTag();
                 await blob.UploadAsync(fileStream, options: new BlobUploadOptions()
                 {
                     HttpHeaders = new BlobHttpHeaders { ContentType = contentType },
-                    Tags = new Dictionary<string, string>() { { "date", tag } },
+                    Tags = BuildTagDict(model)
                 });
 
                 var urlString = blob.Uri.ToString();
@@ -57,24 +57,12 @@ namespace DokkanDaily.Services
                 throw;
             }
         }
-        public async Task DeleteByTagAsync(string tagName)
+        public async Task PruneContainers(int daysToKeep)
         {
             try
             {
-                var container = new BlobContainerClient(_connectionString, _containerName);
-                var createResponse = await container.CreateIfNotExistsAsync();
-
-                if (createResponse != null && createResponse.GetRawResponse().Status == 201)
-                    await container.SetAccessPolicyAsync(PublicAccessType.Blob);
-
-                string searchExpression = $"\"date\" = '{tagName}'";
-
-                await foreach (var b in container.FindBlobsByTagsAsync(searchExpression))
-                {
-                    var blob = container.GetBlobClient(b.BlobName);
-
-                    await blob.DeleteAsync(DeleteSnapshotsOption.IncludeSnapshots);
-                }
+                // TODO
+                throw new NotImplementedException();
             }
             catch (Exception ex)
             {
@@ -88,7 +76,7 @@ namespace DokkanDaily.Services
             {
                 BlobSasBuilder blobSasBuilder = new()
                 {
-                    BlobContainerName = _containerName,
+                    BlobContainerName = TodaysBucketFullName,
                     BlobName = fileName,
                     ExpiresOn = DateTime.UtcNow.AddMinutes(2)
                 };
@@ -110,15 +98,13 @@ namespace DokkanDaily.Services
             }
         }
 
-        public async Task<int> GetFileCountForTag(string tagName)
+        public async Task<int> GetFileCountForTag(string tagName, string bucket = null)
         {
             try
             {
-                var container = new BlobContainerClient(_connectionString, _containerName);
-                var createResponse = await container.CreateIfNotExistsAsync();
+                var (container, created) = await GetOrCreate(bucket);
 
-                if (createResponse != null && createResponse.GetRawResponse().Status == 201)
-                    await container.SetAccessPolicyAsync(PublicAccessType.Blob);
+                if (created) return 0;
 
                 string searchExpression = $"\"date\" = '{tagName}'";
 
@@ -138,17 +124,14 @@ namespace DokkanDaily.Services
             }
         }
 
-        public async Task<List<BlobClient>> GetFilesForTag(string tagName)
+        public async Task<List<BlobClient>> GetFilesForTag(string tagName, string bucket = null)
         {
             List <BlobClient> files = [];
 
             try
             {
-                var container = new BlobContainerClient(_connectionString, _containerName);
-                var createResponse = await container.CreateIfNotExistsAsync();
-
-                if (createResponse != null && createResponse.GetRawResponse().Status == 201)
-                    await container.SetAccessPolicyAsync(PublicAccessType.Blob);
+                var (container, created) = await GetOrCreate(bucket);
+                if (created) return files;
 
                 string searchExpression = $"\"date\" = '{tagName}'";
 
@@ -166,6 +149,35 @@ namespace DokkanDaily.Services
                 _logger?.LogError("Unhandled exception {@Ex}", ex);
                 throw;
             }
+        }
+
+        private Dictionary<string, string> BuildTagDict(Challenge model)
+        {
+            string tag = DDHelper.GetUtcNowDateTag();
+
+            return new Dictionary<string, string>()
+            {
+                { DDConstants.DATE_TAG, tag },
+                { DDConstants.DAILY_TYPE_TAG, model.DailyType.ToString() },
+                { DDConstants.EVENT_TAG, DDConstants.AlphaNumericRegex().Replace(model.TodaysEvent.FullName, "") }
+            };
+        }
+
+        private async Task<(BlobContainerClient, bool)> GetOrCreate(string bucket)
+        {
+            bool created = false;
+
+            var container = new BlobContainerClient(_connectionString, bucket ?? TodaysBucketFullName);
+
+            var createResponse = await container.CreateIfNotExistsAsync();
+
+            if (createResponse?.GetRawResponse()?.Status == 201)
+            {
+                await container.SetAccessPolicyAsync(PublicAccessType.None);
+                created = true;
+            }
+
+            return (container, created);
         }
     }
 }
