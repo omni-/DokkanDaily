@@ -19,6 +19,7 @@ namespace DokkanDaily
 
             builder.Services.AddTransient<IRngHelperService, RngHelperService>();
             builder.Services.AddTransient<IAzureBlobService, AzureBlobService>();
+            builder.Services.AddTransient<IOcrService, OcrService>();
 
             builder.Services
                 .Configure<DokkanDailySettings>(builder.Configuration.GetSection(nameof(DokkanDailySettings)))

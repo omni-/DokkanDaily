@@ -1,10 +1,11 @@
 # DokkanDaily
 Wordle-esque daily challenge for DBZ: Dokkan Battle.
 
+https://www.dokkandle.net
+
 
 TODO:
 * OCR! (library research in progress)
-	- Call into JS EasyOCR?
 * UI improvements
 	- Fit screen better
 	- smoother/smaller images

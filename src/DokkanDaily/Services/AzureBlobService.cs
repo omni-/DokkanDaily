@@ -7,6 +7,7 @@ using DokkanDaily.Configuration;
 using DokkanDaily.Constants;
 using DokkanDaily.Helpers;
 using DokkanDaily.Models;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Options;
 
 namespace DokkanDaily.Services
@@ -15,14 +16,17 @@ namespace DokkanDaily.Services
     {
         private readonly DokkanDailySettings _settings;
         private readonly ILogger<AzureBlobService> _logger;
+        private readonly IOcrService _ocrService;
         private readonly string _connectionString;
         private readonly string _azureKey;
         private readonly string _containerName;
         private readonly string _accountName;
 
+        private const int maxFileSize = 1024 * 8192;
+
         private string TodaysBucketFullName => $"{_containerName}-{DDHelper.GetUtcNowDateTag()}";
 
-        public AzureBlobService(IOptions<DokkanDailySettings> settings, ILogger<AzureBlobService> logger)
+        public AzureBlobService(IOptions<DokkanDailySettings> settings, ILogger<AzureBlobService> logger, IOcrService ocrService)
         {
             _settings = settings.Value;
             _logger = logger;
@@ -30,9 +34,10 @@ namespace DokkanDaily.Services
             _azureKey = _settings.AzureBlobKey;
             _containerName = _settings.AzureBlobContainerName;
             _accountName = _settings.AzureAccountName;
+            _ocrService = ocrService;
         }
 
-        public async Task<string> UploadToAzureAsync(string strFileName, string contentType, Stream fileStream, Challenge model, string bucket = null)
+        public async Task<string> UploadToAzureAsync(string strFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null)
         {
             try
             {
@@ -42,11 +47,24 @@ namespace DokkanDaily.Services
 
                 await blob.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
 
-                await blob.UploadAsync(fileStream, options: new BlobUploadOptions()
+                MemoryStream ms = new();
+                using Stream azureStream = browserFile.OpenReadStream(maxFileSize);
+                await azureStream.CopyToAsync(ms);
+                ms.Position = 0;
+
+                await blob.UploadAsync(ms, options: new BlobUploadOptions()
                 {
                     HttpHeaders = new BlobHttpHeaders { ContentType = contentType },
-                    Tags = BuildTagDict(model)
                 });
+
+                // do OCR analysis, dont block the main thread
+                await Task.Run(async () =>
+                {
+                    var metadata = _ocrService.ProcessImage(ms);
+                    var tags = BuildTagDict(model, metadata);
+                    await blob.SetMetadataAsync(tags);
+
+                }).ConfigureAwait(false);
 
                 var urlString = blob.Uri.ToString();
                 return urlString;
@@ -151,7 +169,7 @@ namespace DokkanDaily.Services
             }
         }
 
-        private Dictionary<string, string> BuildTagDict(Challenge model)
+        private Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata)
         {
             string tag = DDHelper.GetUtcNowDateTag();
 
@@ -159,7 +177,10 @@ namespace DokkanDaily.Services
             {
                 { DDConstants.DATE_TAG, tag },
                 { DDConstants.DAILY_TYPE_TAG, model.DailyType.ToString() },
-                { DDConstants.EVENT_TAG, DDConstants.AlphaNumericRegex().Replace(model.TodaysEvent.FullName, "") }
+                { DDConstants.EVENT_TAG, DDConstants.AlphaNumericRegex().Replace(model.TodaysEvent.FullName, "") },
+                { DDConstants.NICKNAME_TAG, metadata.Nickname },
+                { DDConstants.ITEMLESS_TAG, metadata.ItemlessClear.ToString() },
+                { DDConstants.CLEAR_TIME_TAG, metadata.ClearTime }
             };
         }
 

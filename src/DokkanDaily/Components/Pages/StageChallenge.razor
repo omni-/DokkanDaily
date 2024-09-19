@@ -83,7 +83,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        todaysChallenge = RngSvc.CreateChallengeModel();
+        todaysChallenge = RngSvc.GetDailyChallenge();
 
         try
         {
