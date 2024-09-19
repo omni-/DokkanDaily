@@ -48,8 +48,8 @@ namespace DokkanDaily.Services
                 await blob.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
 
                 MemoryStream ms = new();
-                using Stream azureStream = browserFile.OpenReadStream(maxFileSize);
-                await azureStream.CopyToAsync(ms);
+                using Stream fileStream = browserFile.OpenReadStream(maxFileSize);
+                await fileStream.CopyToAsync(ms);
                 ms.Position = 0;
 
                 await blob.UploadAsync(ms, options: new BlobUploadOptions()

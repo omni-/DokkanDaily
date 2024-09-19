@@ -5,7 +5,6 @@ https://www.dokkandle.net
 
 
 TODO:
-* OCR! (library research in progress)
 * UI improvements
 	- Fit screen better
 	- smoother/smaller images
