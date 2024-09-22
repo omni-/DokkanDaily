@@ -18,5 +18,7 @@ namespace DokkanDaily.Models.Database
 
         [DataTableIndex(4)]
         public bool IsDailyHighscore { get; set; }
+
+        public TimeSpan ClearTimeSpan { get; set; }
     }
 }

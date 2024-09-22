@@ -43,34 +43,39 @@ public class DailyResetService(
                 // upload clears for the day
                 var result = await _azureBlobService.GetFilesForTag(DDHelper.GetUtcNowDateTag());
                 List<DbClear> clears = [];
-                foreach(var clear in result)
+
+                foreach (var clear in result)
                 {
                     var props = await clear.GetPropertiesAsync(cancellationToken: stoppingToken);
                     var tags = props.Value.Metadata;
 
                     // skip upload in case of missing data
-                    if (!tags.ContainsKey(DDConstants.USER_NAME_TAG) 
-                        || !tags.ContainsKey(DDConstants.CLEAR_TIME_TAG) 
+                    if (!tags.ContainsKey(DDConstants.USER_NAME_TAG)
+                        || !tags.ContainsKey(DDConstants.CLEAR_TIME_TAG)
                         || !tags.ContainsKey(DDConstants.ITEMLESS_TAG))
                         continue;
+
+                    if (!TimeSpan.TryParseExact(tags[DDConstants.CLEAR_TIME_TAG], "h\\'mm\\\"ss\\.f", System.Globalization.CultureInfo.InvariantCulture, out TimeSpan timeSpan))
+                        timeSpan = TimeSpan.MaxValue;
 
                     clears.Add(new DbClear()
                     {
                         DokkanNickname = tags[DDConstants.USER_NAME_TAG],
                         ClearTime = tags[DDConstants.CLEAR_TIME_TAG],
-                        ItemlessClear = bool.Parse(tags[DDConstants.ITEMLESS_TAG])
+                        ItemlessClear = bool.Parse(tags[DDConstants.ITEMLESS_TAG]),
+                        ClearTimeSpan = timeSpan
                     });
-                    clears.MinBy(x =>
-                    {
-                        if (TimeSpan.TryParseExact(x.ClearTime, "h\\'mm\\\"ss\\.f", System.Globalization.CultureInfo.InvariantCulture, out TimeSpan result))
-                            return result;
-
-                        return TimeSpan.MaxValue;
-   
-                    }).IsDailyHighscore = true;
-
-                    await _repository.InsertDailyClears(clears);
                 }
+
+                clears.MinBy(x => x.ClearTimeSpan).IsDailyHighscore = true;
+
+                clears = clears
+                    .GroupBy(x => x.DokkanNickname)
+                    .Select(group => group
+                        .MinBy(x => x.ClearTimeSpan))
+                    .ToList();
+
+                await _repository.InsertDailyClears(clears);
 
                 _logger.LogInformation("Reset complete.");
             }
@@ -78,7 +83,7 @@ public class DailyResetService(
         }
     }
 
-    private async Task WaitUntilNextScheduledTime(CancellationToken ct)
+    protected virtual async Task WaitUntilNextScheduledTime(CancellationToken ct)
     {
         var schedule = new TimeOnly[] { new(23, 59) }; 
         var currentDateTime = DateTime.UtcNow;

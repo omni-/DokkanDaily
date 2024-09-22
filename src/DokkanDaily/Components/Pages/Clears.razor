@@ -108,11 +108,12 @@
                 foreach (var f in result)
                 {
                     var tags = await f.GetTagsAsync();
+                    var metadata = await f.GetPropertiesAsync();
                     ret.Add(new()
                     {
                         FileName = f.Name,
                         FileStorageUrl = f.Uri.ToString(),
-                        Tags = tags.Value.Tags
+                        Tags = tags.Value.Tags.Concat(metadata.Value.Metadata).ToDictionary()
                     });
                 }
                 return ret;
