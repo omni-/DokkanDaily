@@ -76,6 +76,7 @@ namespace DokkanDaily.Services
                 throw;
             }
         }
+
         public async Task PruneContainers(int daysToKeep)
         {
             try
@@ -177,7 +178,7 @@ namespace DokkanDaily.Services
             {
                 { DDConstants.DAILY_TYPE_TAG, model.DailyType.ToString() },
                 { DDConstants.EVENT_TAG, model.TodaysEvent.FullName },
-                { DDConstants.NICKNAME_TAG, metadata.Nickname },
+                { DDConstants.USER_NAME_TAG, metadata.Nickname },
                 { DDConstants.ITEMLESS_TAG, metadata.ItemlessClear.ToString() },
                 { DDConstants.CLEAR_TIME_TAG, metadata.ClearTime }
             };
