@@ -7,6 +7,10 @@ on:
   schedule:
       - cron: '30 15 * * WED'
   workflow_dispatch:
+  
+permissions:
+    id-token: write
+    contents: read
 
 env:
   AZURE_WEBAPP_NAME: DokkanDaily20240909223201
@@ -112,7 +116,6 @@ jobs:
       
   db-deploy:
     runs-on: windows-latest
-    permissions: write-all
     needs: build
     steps:
     - name: Download artifact (Database)
@@ -129,11 +132,11 @@ jobs:
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         
     - name: Deploy DACPAC to Azure
-      uses: azure/sql-action@v2.2
+      uses: azure/sql-action@v2.3
       with:
         connection-string: ${{ secrets.SQL_CONNECTION_STRING }}
-        path: ${{ env.DACPAC_PATH }}
-        action: Publish
+        path: './${{ env.DACPAC_PATH }}'
+        action: 'publish'
         arguments: '/p:DropObjectsNotInSource=false'
     
     - name: Logout from Azure
