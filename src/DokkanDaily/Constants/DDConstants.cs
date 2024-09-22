@@ -321,7 +321,6 @@ namespace DokkanDaily.Constants
         public static string EVENT_TAG => "event";
         public static string CLEAR_TIME_TAG => "cleartime";
         public static string ITEMLESS_TAG => "itemless";
-        public static string NICKNAME_TAG => "nickname";
         #endregion
 
         #region Misc.

@@ -32,11 +32,14 @@ namespace DokkanDaily.Services
 
             return new ClearMetadata()
             {
-                ClearTime = clearTime?.Replace('°', ':'),
+                ClearTime = clearTime?
+                    .Replace('°', '"')
+                    .Replace('O', '0'),
                 Nickname = split
-                            .FirstOrDefault(x => x
-                            .StartsWith(OcrConstants.Nickname))?
-                            .Replace(OcrConstants.Nickname, string.Empty),
+                    .FirstOrDefault(x => x
+                    .StartsWith(OcrConstants.Nickname))?
+                    .Replace(OcrConstants.Nickname, string.Empty)?
+                    .Replace("DBCe", "DBC*"),
                 ItemlessClear = itemless
             };
         }

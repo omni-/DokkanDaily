@@ -25,9 +25,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\data\DokkanCharacterData.json">
+    <Content Update="wwwroot\data\*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+      <Content Update="wwwroot\tessdata\*">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
   </ItemGroup>
 
 </Project>

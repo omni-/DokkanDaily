@@ -84,3 +84,21 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+}
+
+footer > p {
+    color: white;
+    align-content: flex-start;
+}
+
+footer > div {
+    align-self: flex-end;
+    padding-bottom: .75em;
+    padding-right: .5em;
+}

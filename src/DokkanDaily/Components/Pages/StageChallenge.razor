@@ -63,12 +63,7 @@ else
         </div>
     </div>
 
-    <footer>
-        <div>
-            <a href="https://github.com/omni-/DokkanDaily"><img src="images/misc/github.png" /></a>
-        </div>
-        <p>Time until challenge resets: @hoursToReset hour(s)</p>
-    </footer>
+    <Footer />
 }
 
 @code {
@@ -78,7 +73,6 @@ else
 
     string typeColor => DDConstants.TypeToHexMap[todaysChallenge.TodaysUnit.DokkanType];
 
-    int hoursToReset => 24 - DateTime.UtcNow.Hour;
     int dailyFileCount = 0;
 
     protected override async Task OnInitializedAsync()

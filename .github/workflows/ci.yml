@@ -73,7 +73,7 @@ jobs:
         cd ../..
       
     - name: Test
-      run: dotnet test ./tests/DokkanDailyTests/DokkanDailyTests.csproj -v d
+      run: dotnet test ./tests/DokkanDailyTests/DokkanDailyTests.csproj -v n
       
     - name: Publish
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
@@ -132,6 +132,7 @@ jobs:
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         
     - name: Deploy DACPAC to Azure
+      if: github.ref == 'refs/heads/master'
       uses: azure/sql-action@v2.3
       with:
         connection-string: ${{ secrets.SQL_CONNECTION_STRING }}

@@ -32,7 +32,7 @@ namespace DokkanDaily.Helpers
 
         public static string GetTagValueOrDefault(this IDictionary<string, string> dictionary, string tagName)
         {
-            if (dictionary == null || !dictionary.TryGetValue(tagName, out string result)) return "<Unknown>";
+            if (dictionary == null || !dictionary.TryGetValue(tagName, out string result)) return null;
 
             return result;
         }

@@ -18,6 +18,8 @@ namespace DokkanDaily
 
             builder.Services.AddHostedService<DailyResetService>();
 
+            builder.Services.AddSingleton<ILeaderboardService, LeaderboardService>();
+
             builder.Services.AddTransient<IRngHelperService, RngHelperService>();
             builder.Services.AddTransient<IAzureBlobService, AzureBlobService>();
             builder.Services.AddTransient<IOcrService, OcrService>();

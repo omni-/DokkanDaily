@@ -17,6 +17,6 @@ namespace DokkanDaily.Models.Database
         public string ClearTime { get; init; }
 
         [DataTableIndex(4)]
-        public bool IsDailyHighscore { get; init; }
+        public bool IsDailyHighscore { get; set; }
     }
 }

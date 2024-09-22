@@ -1,11 +1,18 @@
-﻿using DokkanDaily.Helpers;
+﻿using DokkanDaily.Constants;
+using DokkanDaily.Helpers;
+using DokkanDaily.Models.Database;
+using DokkanDaily.Repository;
 
 namespace DokkanDaily.Services;
 
-public class DailyResetService(IAzureBlobService azureBlobService, ILogger<DailyResetService> logger) : BackgroundService
+public class DailyResetService(
+    IAzureBlobService azureBlobService, 
+    IDokkanDailyRepository repository,
+    ILogger<DailyResetService> logger) : BackgroundService
 {
     private readonly ILogger<DailyResetService> _logger = logger;
     private readonly IAzureBlobService _azureBlobService = azureBlobService;
+    private readonly IDokkanDailyRepository _repository = repository;
 
     private static DateTime GetNextDateTime(DateTime currentDateTime, TimeOnly time)
     {
@@ -33,6 +40,33 @@ public class DailyResetService(IAzureBlobService azureBlobService, ILogger<Daily
                 // delete old clears
                 await _azureBlobService.PruneContainers(30);
 
+                // upload clears for the day
+                var result = await _azureBlobService.GetFilesForTag(DDHelper.GetUtcNowDateTag());
+                List<DbClear> clears = [];
+                foreach(var clear in result)
+                {
+                    var props = await clear.GetPropertiesAsync(cancellationToken: stoppingToken);
+                    var tags = props.Value.Metadata;
+
+                    clears.Add(new DbClear()
+                    {
+                        DokkanNickname = tags[DDConstants.USER_NAME_TAG],
+                        ClearTime = tags[DDConstants.CLEAR_TIME_TAG],
+                        ItemlessClear = bool.Parse(tags[DDConstants.ITEMLESS_TAG])
+                    });
+                    clears.MinBy(x =>
+                    {
+                        try
+                        {
+                            TimeSpan.TryParseExact(x.ClearTime, "h\\'mm\\\"ss\\.f", System.Globalization.CultureInfo.InvariantCulture, out TimeSpan result);
+                            return result;
+                        }
+                        catch { return TimeSpan.MaxValue; }
+                    }).IsDailyHighscore = true;
+
+                    await _repository.InsertDailyClears(clears);
+                }
+
                 _logger.LogInformation("Reset complete.");
             }
             catch { }
@@ -41,7 +75,7 @@ public class DailyResetService(IAzureBlobService azureBlobService, ILogger<Daily
 
     private async Task WaitUntilNextScheduledTime(CancellationToken ct)
     {
-        var schedule = new TimeOnly[] { new(0, 0) }; 
+        var schedule = new TimeOnly[] { new(23, 59) }; 
         var currentDateTime = DateTime.UtcNow;
         var nextScheduledTime = schedule
             .Select(record => GetNextDateTime(currentDateTime, record))

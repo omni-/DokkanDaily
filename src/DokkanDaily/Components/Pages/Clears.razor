@@ -35,14 +35,6 @@
     }
     <div class="container clear-box text-center">
         <div style="padding-top:2vh;" class="row">
-@*             <div>
-                <p>
-                    <label>
-                        Enter a name:
-                        <input @bind="@Name" />
-                    </label>
-                </p>
-            </div> *@
             <div>
                 <label>
                     <InputFile class="form-control" disabled="@fileLoading" style="width:100%;font-family: 'Helvetica', sans-serif;" OnChange="@OnInputFileChange" single />
@@ -72,9 +64,12 @@
                 {
                     <div class="card">
                         <img style="object-fit: cover;" src="@GetImgPath(attachment)" @onclick="() => OnFileViewClick(attachment)" />
-@*                         <div class="container">
-                            <h4><b>@attachment.Tags.GetTagValueOrDefault(DDConstants.USER_NAME_TAG)</b></h4>
-                        </div> *@
+                        @if (@attachment.Tags.GetTagValueOrDefault(DDConstants.USER_NAME_TAG) != null)
+                        {
+                            <div class="container">
+                                <h4><b>@attachment.Tags.GetTagValueOrDefault(DDConstants.USER_NAME_TAG)</b></h4>
+                            </div>
+                        }
                     </div>
                 }
             }
@@ -85,6 +80,9 @@
         </div>
     </div>
 </div>
+
+<Footer />
+
 @code {
     private string warningMessage = "";
     private string displayMessage = "";
@@ -111,11 +109,11 @@
                 {
                     var tags = await f.GetTagsAsync();
                     ret.Add(new()
-                        {
-                            FileName = f.Name,
-                            FileStorageUrl = f.Uri.ToString(),
-                            Tags = tags.Value.Tags
-                        });
+                    {
+                        FileName = f.Name,
+                        FileStorageUrl = f.Uri.ToString(),
+                        Tags = tags.Value.Tags
+                    });
                 }
                 return ret;
             }).ConfigureAwait(false);

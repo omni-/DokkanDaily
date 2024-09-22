@@ -55,6 +55,7 @@ namespace DokkanDaily.Services
                 await blob.UploadAsync(ms, options: new BlobUploadOptions()
                 {
                     HttpHeaders = new BlobHttpHeaders { ContentType = contentType },
+                    Tags = new Dictionary<string, string>{ { DDConstants.DATE_TAG, DDHelper.GetUtcNowDateTag() } }
                 });
 
                 // do OCR analysis, dont block the main thread
@@ -171,13 +172,11 @@ namespace DokkanDaily.Services
 
         private Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata)
         {
-            string tag = DDHelper.GetUtcNowDateTag();
 
             return new Dictionary<string, string>()
             {
-                { DDConstants.DATE_TAG, tag },
                 { DDConstants.DAILY_TYPE_TAG, model.DailyType.ToString() },
-                { DDConstants.EVENT_TAG, DDConstants.AlphaNumericRegex().Replace(model.TodaysEvent.FullName, "") },
+                { DDConstants.EVENT_TAG, model.TodaysEvent.FullName },
                 { DDConstants.NICKNAME_TAG, metadata.Nickname },
                 { DDConstants.ITEMLESS_TAG, metadata.ItemlessClear.ToString() },
                 { DDConstants.CLEAR_TIME_TAG, metadata.ClearTime }
