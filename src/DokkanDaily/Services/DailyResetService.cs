@@ -48,6 +48,12 @@ public class DailyResetService(
                     var props = await clear.GetPropertiesAsync(cancellationToken: stoppingToken);
                     var tags = props.Value.Metadata;
 
+                    // skip upload in case of missing data
+                    if (!tags.ContainsKey(DDConstants.USER_NAME_TAG) 
+                        || !tags.ContainsKey(DDConstants.CLEAR_TIME_TAG) 
+                        || !tags.ContainsKey(DDConstants.ITEMLESS_TAG))
+                        continue;
+
                     clears.Add(new DbClear()
                     {
                         DokkanNickname = tags[DDConstants.USER_NAME_TAG],
