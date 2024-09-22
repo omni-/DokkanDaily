@@ -18,7 +18,7 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: src/DokkanDaily
-  DACPAC_PATH: Dacpac/DokkanDailyDB.dacpac
+  DACPAC_NAME: DokkanDailyDB.dacpac
 jobs:
   db-build:
     runs-on: windows-latest
@@ -40,7 +40,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: database
-        path: ${{ env.DACPAC_PATH }}    
+        path: Dacpac/${{ env.DACPAC_NAME }}    
 
   build:
     runs-on: ubuntu-latest
@@ -122,7 +122,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: database
-        path: ${{ env.DACPAC_PATH }}
+        path: .
           
     - name: Login to Azure
       uses: azure/login@v1
@@ -135,7 +135,7 @@ jobs:
       uses: azure/sql-action@v2.3
       with:
         connection-string: ${{ secrets.SQL_CONNECTION_STRING }}
-        path: './${{ env.DACPAC_PATH }}'
+        path: './${{ env.DACPAC_NAME }}'
         action: 'publish'
         arguments: '/p:DropObjectsNotInSource=false'
     
