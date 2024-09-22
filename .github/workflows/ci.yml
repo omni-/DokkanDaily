@@ -16,7 +16,7 @@ env:
   WORKING_DIRECTORY: src/DokkanDaily
   DACPAC_PATH: Dacpac/DokkanDailyDB.dacpac
 jobs:
-  build:
+  db-build:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
@@ -28,6 +28,26 @@ jobs:
         
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
+      
+    - name: Build (Database)
+      run: msbuild /m /t:Rebuild /p:Configuration=Release ./src/DokkanDailyDB /p:OutputPath=../../Dacpac
+      
+    - name: Publish Artifacts (Database)
+      uses: actions/upload-artifact@v3
+      with:
+        name: database
+        path: ${{ env.DACPAC_PATH }}    
+
+  build:
+    runs-on: ubuntu-latest
+    needs: db-build
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
         
     - name: Restore
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
@@ -35,18 +55,21 @@ jobs:
     - name: Build
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
       
-    - name: Build (Database)
-      run: msbuild /m /t:Rebuild /p:Configuration=Release ./src/DokkanDailyDB /p:OutputPath=../../Dacpac
+    - name: Download artifact (Database)
+      uses: actions/download-artifact@v3
+      with:
+        name: database
+        path: src/DokkanDailyDB/Dacpac
     
     - name: Setup SQL Server Container
       run: |
-        cd ./src/DokkanDailyDB
+        cd src/DokkanDailyDB/
         docker build . --build-arg PASSWORD="<YourStrong@Passw0rd>" -t mydatabase:1.0 --no-cache
         docker run -p 1433:1433 --name sqldb -d mydatabase:1.0
         cd ../..
       
     - name: Test
-      run: dotnet test
+      run: dotnet test ./tests/DokkanDailyTests/DokkanDailyTests.csproj
       
     - name: Publish
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
@@ -56,12 +79,6 @@ jobs:
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-      
-    - name: Publish Artifacts (Database)
-      uses: actions/upload-artifact@v3
-      with:
-        name: database
-        path: ${{ env.DACPAC_PATH }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -115,7 +132,7 @@ jobs:
       uses: azure/sql-action@v2.2
       with:
         connection-string: ${{ secrets.SQL_CONNECTION_STRING }}
-        path: './DokkanDailyDB.dacpac'
+        path: ${{ env.DACPAC_PATH }}
         action: Publish
         arguments: '/p:DropObjectsNotInSource=false'
     
