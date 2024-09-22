@@ -73,7 +73,7 @@ jobs:
         cd ../..
       
     - name: Test
-      run: dotnet test ./tests/DokkanDailyTests/DokkanDailyTests.csproj
+      run: dotnet test ./tests/DokkanDailyTests/DokkanDailyTests.csproj -v d
       
     - name: Publish
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
