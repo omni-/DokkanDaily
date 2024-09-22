@@ -62,12 +62,11 @@ public class DailyResetService(
                     });
                     clears.MinBy(x =>
                     {
-                        try
-                        {
-                            TimeSpan.TryParseExact(x.ClearTime, "h\\'mm\\\"ss\\.f", System.Globalization.CultureInfo.InvariantCulture, out TimeSpan result);
+                        if (TimeSpan.TryParseExact(x.ClearTime, "h\\'mm\\\"ss\\.f", System.Globalization.CultureInfo.InvariantCulture, out TimeSpan result))
                             return result;
-                        }
-                        catch { return TimeSpan.MaxValue; }
+
+                        return TimeSpan.MaxValue;
+   
                     }).IsDailyHighscore = true;
 
                     await _repository.InsertDailyClears(clears);
