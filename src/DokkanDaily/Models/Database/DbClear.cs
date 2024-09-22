@@ -1,0 +1,22 @@
+﻿using DokkanDaily.Repository.Attributes;
+
+namespace DokkanDaily.Models.Database
+{
+    public class DbClear
+    {
+        [DataTableIndex(0)]
+        public string DokkanNickname { get; init; }
+
+        [DataTableIndex(1)]
+        public string DiscordUsername { get; init; }
+
+        [DataTableIndex(2)]
+        public bool ItemlessClear { get; init; }
+
+        [DataTableIndex(3)]
+        public string ClearTime { get; init; }
+
+        [DataTableIndex(4)]
+        public bool IsDailyHighscore { get; init; }
+    }
+}

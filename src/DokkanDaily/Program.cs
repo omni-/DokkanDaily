@@ -1,5 +1,6 @@
 using DokkanDaily.Components;
 using DokkanDaily.Configuration;
+using DokkanDaily.Repository;
 using DokkanDaily.Services;
 
 namespace DokkanDaily
@@ -20,6 +21,8 @@ namespace DokkanDaily
             builder.Services.AddTransient<IRngHelperService, RngHelperService>();
             builder.Services.AddTransient<IAzureBlobService, AzureBlobService>();
             builder.Services.AddTransient<IOcrService, OcrService>();
+            builder.Services.AddTransient<ISqlConnectionWrapper, SqlConnectionWrapper>();
+            builder.Services.AddTransient<IDokkanDailyRepository, DokkanDailyRepository>();
 
             builder.Services
                 .Configure<DokkanDailySettings>(builder.Configuration.GetSection(nameof(DokkanDailySettings)))

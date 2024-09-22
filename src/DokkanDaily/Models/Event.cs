@@ -6,12 +6,14 @@ namespace DokkanDaily.Models
     {
         public string Name { get; init; } = name;
 
-        public string FullName => $"{Name}, Stage {stage}";
+        public string FullName => $"{Name}, Stage {Stage}";
 
         public Tier Tier { get; init; } = d;
 
-        private string folder = path;
+        private readonly string folder = path;
+
         public string WallpaperImagePath => $"images/events/{folder}/wall.png";
+
         public string BannerImagePath => $"images/events/{folder}/banner.png";
 
         public int Stage { get; init; } = stage;

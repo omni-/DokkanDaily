@@ -4,6 +4,7 @@ using DokkanDaily.Models;
 
 namespace DokkanDailyTests
 {
+    [TestFixture]
     public class DailyTests
     {
         [SetUp]

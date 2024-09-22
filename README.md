@@ -13,6 +13,7 @@ TODO:
 * GUESS THE UNIT!
 * Patch scraper to look for the dokkan awaken arrow and filter out TURs of LRs
 * TESTS
+* Leaderboard
 
 IDEAS:
 * Unit DB tool?
