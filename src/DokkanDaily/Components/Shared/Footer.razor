@@ -1,0 +1,20 @@
+﻿@inject NavigationManager NavManager
+
+<footer>
+    <div>
+        <img style="cursor:pointer" @onclick=OnClick src="images/misc/leaderboard_icon.png" />
+    </div>
+    <div>
+        <a href="https://github.com/omni-/DokkanDaily"><img src="images/misc/github.png" /></a>
+    </div>
+    <p>Time until challenge resets: @hoursToReset hour(s)</p>
+</footer>
+
+@code {
+    int hoursToReset => 24 - DateTime.UtcNow.Hour;
+
+    void OnClick()
+    {
+        NavManager.NavigateTo("/leaderboard", false);
+    }
+}

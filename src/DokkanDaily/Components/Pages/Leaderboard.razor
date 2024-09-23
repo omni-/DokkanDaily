@@ -1,0 +1,61 @@
+﻿@page "/leaderboard"
+@rendermode InteractiveServer
+
+@using DokkanDaily.Components.Shared
+@using DokkanDaily.Models
+@using DokkanDaily.Services
+
+@inject ILeaderboardService LeaderboardSvc;
+@inject IRngHelperService RngSvc;
+
+<PageTitle>Dokkandle!</PageTitle>
+
+<style>
+    body {
+        background: url('images/misc/wallpaper.jpg') fixed center no-repeat;
+        background-size: cover;
+        text-align: center;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+</style>
+
+<Logo dailyType="@RngSvc.GetRandomDailyType().ToString()" />
+
+<div class="container leaderboard text-center">
+    @if (leaderboard != null)
+    {
+        <h3>Current Standings:</h3>
+        @for (int i = 1; i < leaderboard.Count + 1; i++)
+        {
+            <p>@i. @GetDisplayName(leaderboard[i - 1]) - @leaderboard[i - 1].TotalScore points</p>
+        }
+    }
+    else
+    {
+        <p>@displayText</p>
+    }
+</div>
+
+<Footer />
+
+@code {
+    List<LeaderboardUser> leaderboard;
+
+    string displayText => string.IsNullOrEmpty(errorText) ? "Sorry, there's nothing here yet!" : errorText;
+    string errorText;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            leaderboard = await LeaderboardSvc.GetDailyLeaderboard();
+        }
+        catch(Exception e) { errorText = e.Message; }
+    }
+
+    private string GetDisplayName(LeaderboardUser leaderboardUser)
+    {
+        return string.IsNullOrWhiteSpace(leaderboardUser.DiscordUsername) ? leaderboardUser.DokkanNickname : $"{leaderboardUser.DiscordUsername} ({leaderboardUser.DokkanNickname})";
+    }
+}

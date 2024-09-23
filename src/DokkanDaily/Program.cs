@@ -1,5 +1,6 @@
 using DokkanDaily.Components;
 using DokkanDaily.Configuration;
+using DokkanDaily.Repository;
 using DokkanDaily.Services;
 
 namespace DokkanDaily
@@ -15,10 +16,16 @@ namespace DokkanDaily
                 .AddRazorComponents()
                 .AddInteractiveServerComponents();
 
-            builder.Services.AddHostedService<DailyResetService>();
+            builder.Services.AddHostedService<Worker>();
 
+            builder.Services.AddSingleton<ILeaderboardService, LeaderboardService>();
+
+            builder.Services.AddTransient<IResetService, ResetService>();
             builder.Services.AddTransient<IRngHelperService, RngHelperService>();
             builder.Services.AddTransient<IAzureBlobService, AzureBlobService>();
+            builder.Services.AddTransient<IOcrService, OcrService>();
+            builder.Services.AddTransient<ISqlConnectionWrapper, SqlConnectionWrapper>();
+            builder.Services.AddTransient<IDokkanDailyRepository, DokkanDailyRepository>();
 
             builder.Services
                 .Configure<DokkanDailySettings>(builder.Configuration.GetSection(nameof(DokkanDailySettings)))

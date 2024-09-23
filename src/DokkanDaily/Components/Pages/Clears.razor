@@ -35,14 +35,6 @@
     }
     <div class="container clear-box text-center">
         <div style="padding-top:2vh;" class="row">
-@*             <div>
-                <p>
-                    <label>
-                        Enter a name:
-                        <input @bind="@Name" />
-                    </label>
-                </p>
-            </div> *@
             <div>
                 <label>
                     <InputFile class="form-control" disabled="@fileLoading" style="width:100%;font-family: 'Helvetica', sans-serif;" OnChange="@OnInputFileChange" single />
@@ -72,9 +64,12 @@
                 {
                     <div class="card">
                         <img style="object-fit: cover;" src="@GetImgPath(attachment)" @onclick="() => OnFileViewClick(attachment)" />
-@*                         <div class="container">
-                            <h4><b>@attachment.Tags.GetTagValueOrDefault(DDConstants.USER_NAME_TAG)</b></h4>
-                        </div> *@
+                        @if (@attachment.Tags.GetTagValueOrDefault(DDConstants.USER_NAME_TAG) != null)
+                        {
+                            <div class="container">
+                                <h4><b>@attachment.Tags.GetTagValueOrDefault(DDConstants.USER_NAME_TAG)</b></h4>
+                            </div>
+                        }
                     </div>
                 }
             }
@@ -85,12 +80,13 @@
         </div>
     </div>
 </div>
+
+<Footer />
+
 @code {
     private string warningMessage = "";
     private string displayMessage = "";
     private List<IBrowserFile> loadedFiles = new();
-    private long maxFileSize = 1024 * 15;
-    private int maxAllowedFiles = 3;
     private bool fileLoading;
     private string Message = "No file(s) selected";
     private IReadOnlyList<IBrowserFile> selectedFiles = [];
@@ -102,7 +98,7 @@
     {
         try
         {
-            challengeModel = RngSvc.CreateChallengeModel();
+            challengeModel = RngSvc.GetDailyChallenge();
 
             fileUploadViewModels = await Task.Run(async () =>
             {
@@ -112,12 +108,13 @@
                 foreach (var f in result)
                 {
                     var tags = await f.GetTagsAsync();
+                    var metadata = await f.GetPropertiesAsync();
                     ret.Add(new()
-                        {
-                            FileName = f.Name,
-                            FileStorageUrl = f.Uri.ToString(),
-                            Tags = tags.Value.Tags
-                        });
+                    {
+                        FileName = f.Name,
+                        FileStorageUrl = f.Uri.ToString(),
+                        Tags = tags.Value.Tags.Concat(metadata.Value.Metadata).ToDictionary()
+                    });
                 }
                 return ret;
             }).ConfigureAwait(false);
@@ -139,15 +136,15 @@
         {
             try
             {
-                var blobUrl = await BlobSvc.UploadToAzureAsync(file.Name, file.ContentType, file.OpenReadStream(20971520), challengeModel);
+                var blobUrl = await BlobSvc.UploadToAzureAsync(file.Name, file.ContentType, file, challengeModel);
                 if (blobUrl != null)
                 {
                     FileUploadViewModel fileUploadViewModel = new FileUploadViewModel()
-                        {
-                            FileName = file.Name,
-                            FileStorageUrl = blobUrl,
-                            ContentType = file.ContentType
-                        };
+                    {
+                        FileName = file.Name,
+                        FileStorageUrl = blobUrl,
+                        ContentType = file.ContentType
+                    };
 
                     fileUploadViewModels.Add(fileUploadViewModel);
                     Message = file.Name + " Uploaded!!";

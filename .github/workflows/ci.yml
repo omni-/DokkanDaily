@@ -7,6 +7,10 @@ on:
   schedule:
       - cron: '30 15 * * WED'
   workflow_dispatch:
+  
+permissions:
+    id-token: write
+    contents: read
 
 env:
   AZURE_WEBAPP_NAME: DokkanDaily20240909223201
@@ -14,23 +18,66 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: src/DokkanDaily
+  DACPAC_NAME: DokkanDailyDB.dacpac
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  db-build:
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
+    
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+        
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+      
+    - name: Build (Database)
+      run: msbuild /m /t:Rebuild /p:Configuration=Release ./src/DokkanDailyDB /p:OutputPath=../../Dacpac
+      
+    - name: Publish Artifacts (Database)
+      uses: actions/upload-artifact@v3
+      with:
+        name: database
+        path: Dacpac/${{ env.DACPAC_NAME }}    
+
+  build:
+    runs-on: ubuntu-latest
+    needs: db-build
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+        
     - name: Restore
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
+      
     - name: Build
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+      
+    - name: Download artifact (Database)
+      uses: actions/download-artifact@v3
+      with:
+        name: database
+        path: src/DokkanDailyDB/Dacpac
+    
+    - name: Setup SQL Server Container
+      run: |
+        cd src/DokkanDailyDB/
+        docker build . --build-arg PASSWORD="<YourStrong@Passw0rd>" -t mydatabase:1.0 --no-cache
+        docker run -p 1433:1433 --name sqldb -d mydatabase:1.0
+        cd ../..
+      
     - name: Test
-      run: dotnet test
+      run: dotnet test ./tests/DokkanDailyTests/DokkanDailyTests.csproj -v n
+      
     - name: Publish
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+      
     - name: Publish Artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -43,6 +90,7 @@ jobs:
     needs: build
     steps:
     - uses: actions/checkout@v4
+    
     - name: Check for source changes
       id: changes
       uses: dorny/paths-filter@v3
@@ -50,11 +98,13 @@ jobs:
         filters: |
           src:
             - 'src'
+            
     - name: Download artifact from build job
       uses: actions/download-artifact@v3
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} 
+        
     - name: Deploy to Azure WebApp
       if: github.ref == 'refs/heads/master'
       uses: azure/webapps-deploy@v2
@@ -62,3 +112,34 @@ jobs:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         publish-profile: ${{ secrets.DokkanDaily20240909223201_703E }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+      
+      
+  db-deploy:
+    runs-on: windows-latest
+    needs: build
+    steps:
+    - name: Download artifact (Database)
+      uses: actions/download-artifact@v3
+      with:
+        name: database
+        path: .
+          
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        
+    - name: Deploy DACPAC to Azure
+      if: github.ref == 'refs/heads/master'
+      uses: azure/sql-action@v2.3
+      with:
+        connection-string: ${{ secrets.SQL_CONNECTION_STRING }}
+        path: './${{ env.DACPAC_NAME }}'
+        action: 'publish'
+        arguments: '/p:DropObjectsNotInSource=false'
+    
+    - name: Logout from Azure
+      run: |
+        az logout

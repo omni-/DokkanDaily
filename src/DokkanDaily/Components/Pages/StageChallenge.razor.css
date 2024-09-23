@@ -29,24 +29,6 @@
     border: solid;
 }
 
-footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    display: flex;
-}
-
-footer > p {
-    color: white;
-    align-content: flex-start;
-}
-
-footer > div {
-    align-self: flex-end;
-    padding-bottom:.75em;
-    padding-right:.5em;
-}
-
 .challenge-text img {
     width: auto;
     height: 3em;

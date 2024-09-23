@@ -83,7 +83,7 @@ namespace DokkanDaily.Services
             return output;
         }
 
-        public Challenge CreateChallengeModel()
+        public Challenge GetDailyChallenge()
         {
             DailyType dailyType = GetRandomDailyType();
             Event todaysEvent = GetRandomStage();

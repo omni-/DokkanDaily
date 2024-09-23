@@ -23,6 +23,6 @@ namespace DokkanDaily.Services
 
         Leader GetRandomLeader(Tier minTier);
 
-        Challenge CreateChallengeModel();
+        Challenge GetDailyChallenge();
     }
 }

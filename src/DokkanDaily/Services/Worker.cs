@@ -1,11 +1,16 @@
-﻿using DokkanDaily.Helpers;
+﻿using DokkanDaily.Constants;
+using DokkanDaily.Helpers;
+using DokkanDaily.Models.Database;
+using DokkanDaily.Repository;
 
 namespace DokkanDaily.Services;
 
-public class DailyResetService(IAzureBlobService azureBlobService, ILogger<DailyResetService> logger) : BackgroundService
+public class Worker(
+    IResetService resetService, 
+    ILogger<Worker> logger) : BackgroundService
 {
-    private readonly ILogger<DailyResetService> _logger = logger;
-    private readonly IAzureBlobService _azureBlobService = azureBlobService;
+    private readonly ILogger<Worker> _logger = logger;
+    private readonly IResetService _resetService = resetService;
 
     private static DateTime GetNextDateTime(DateTime currentDateTime, TimeOnly time)
     {
@@ -27,21 +32,15 @@ public class DailyResetService(IAzureBlobService azureBlobService, ILogger<Daily
             _logger.LogInformation("Starting daily reset...");
             try
             {
-                //hacky, but better than having a random second reset
-                Environment.SetEnvironmentVariable("DOTNET_DokkanDailySettings__SeedOffset", "0");
-
-                // delete old clears
-                await _azureBlobService.PruneContainers(30);
-
-                _logger.LogInformation("Reset complete.");
+                await _resetService.DoReset();
             }
             catch { }
         }
     }
 
-    private async Task WaitUntilNextScheduledTime(CancellationToken ct)
+    protected virtual async Task WaitUntilNextScheduledTime(CancellationToken ct)
     {
-        var schedule = new TimeOnly[] { new(0, 0) }; 
+        var schedule = new TimeOnly[] { new(23, 59) }; 
         var currentDateTime = DateTime.UtcNow;
         var nextScheduledTime = schedule
             .Select(record => GetNextDateTime(currentDateTime, record))

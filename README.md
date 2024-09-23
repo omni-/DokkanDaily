@@ -1,10 +1,9 @@
 # DokkanDaily
 Wordle-esque daily challenge for DBZ: Dokkan Battle.
 
+https://www.dokkandle.net
 
 TODO:
-* OCR! (library research in progress)
-	- Call into JS EasyOCR?
 * UI improvements
 	- Fit screen better
 	- smoother/smaller images
@@ -12,9 +11,7 @@ TODO:
 * Login
 * GUESS THE UNIT!
 * Patch scraper to look for the dokkan awaken arrow and filter out TURs of LRs
-* TESTS
+* More daily challenges
 
 IDEAS:
-* Unit DB tool?
-* More daily challenges
 * Run the scraper as a job? Rewrite it natively?
