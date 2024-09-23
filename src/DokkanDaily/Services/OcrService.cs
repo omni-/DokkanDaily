@@ -10,9 +10,8 @@ namespace DokkanDaily.Services
         public OcrService() 
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                TesseractEnviornment.CustomSearchPath = $"./wwwroot/lib";
+                TesseractEnviornment.CustomSearchPath = $"{AppDomain.CurrentDomain.BaseDirectory}/wwwroot/lib";
         }
-
         public ClearMetadata ProcessImage(MemoryStream imageStream)
         {
             byte[] arr = imageStream.ToArray();

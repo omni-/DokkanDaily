@@ -28,10 +28,16 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Update="wwwroot\lib\libleptonica-1.82.0.so">
+    <Content Update="wwwroot\lib\x64\libleptonica-1.82.0.so">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\lib\libtesseract50.so">
+    <Content Update="wwwroot\lib\x64\libtesseract50.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\lib\x86\libleptonica-1.82.0.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\lib\x86\libtesseract50.so">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
