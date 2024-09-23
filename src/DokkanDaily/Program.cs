@@ -16,10 +16,11 @@ namespace DokkanDaily
                 .AddRazorComponents()
                 .AddInteractiveServerComponents();
 
-            builder.Services.AddHostedService<DailyResetService>();
+            builder.Services.AddHostedService<Worker>();
 
             builder.Services.AddSingleton<ILeaderboardService, LeaderboardService>();
 
+            builder.Services.AddTransient<IResetService, ResetService>();
             builder.Services.AddTransient<IRngHelperService, RngHelperService>();
             builder.Services.AddTransient<IAzureBlobService, AzureBlobService>();
             builder.Services.AddTransient<IOcrService, OcrService>();
