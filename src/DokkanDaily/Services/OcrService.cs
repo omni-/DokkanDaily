@@ -12,6 +12,7 @@ namespace DokkanDaily.Services
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 TesseractEnviornment.CustomSearchPath = $"./wwwroot/lib";
         }
+
         public ClearMetadata ProcessImage(MemoryStream imageStream)
         {
             byte[] arr = imageStream.ToArray();
