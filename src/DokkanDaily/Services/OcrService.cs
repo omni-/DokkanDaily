@@ -1,11 +1,17 @@
 ﻿using DokkanDaily.Constants;
 using DokkanDaily.Models;
+using System.Runtime.InteropServices;
 using Tesseract;
 
 namespace DokkanDaily.Services
 {
     public class OcrService : IOcrService
     {
+        public OcrService() 
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                TesseractEnviornment.CustomSearchPath = $"{AppDomain.CurrentDomain.BaseDirectory}/wwwroot/lib";
+        }
         public ClearMetadata ProcessImage(MemoryStream imageStream)
         {
             byte[] arr = imageStream.ToArray();

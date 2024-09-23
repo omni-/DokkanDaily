@@ -37,7 +37,7 @@ jobs:
       run: msbuild /m /t:Rebuild /p:Configuration=Release ./src/DokkanDailyDB /p:OutputPath=../../Dacpac
       
     - name: Publish Artifacts (Database)
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: database
         path: Dacpac/${{ env.DACPAC_NAME }}    
@@ -60,7 +60,7 @@ jobs:
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
       
     - name: Download artifact (Database)
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: database
         path: src/DokkanDailyDB/Dacpac
@@ -79,7 +79,7 @@ jobs:
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
       
     - name: Publish Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
@@ -100,7 +100,7 @@ jobs:
             - 'src'
             
     - name: Download artifact from build job
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} 
@@ -119,7 +119,7 @@ jobs:
     needs: build
     steps:
     - name: Download artifact (Database)
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: database
         path: .
