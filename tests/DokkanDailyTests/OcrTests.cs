@@ -1,24 +1,24 @@
 ﻿using DokkanDaily.Services;
 using System.Diagnostics;
 
-namespace DokkanDailyTests
+[SetUpFixture]
+public class SetupTrace
 {
-    [SetUpFixture]
-    public class SetupTrace
+    [OneTimeSetUp]
+    public void StartTest()
     {
-        [OneTimeSetUp]
-        public void StartTest()
-        {
-            Trace.Listeners.Add(new ConsoleTraceListener());
-        }
-
-        [OneTimeTearDown]
-        public void EndTest()
-        {
-            Trace.Flush();
-        }
+        Trace.Listeners.Add(new ConsoleTraceListener());
     }
 
+    [OneTimeTearDown]
+    public void EndTest()
+    {
+        Trace.Flush();
+    }
+}
+
+namespace DokkanDailyTests
+{
     [TestFixture]
     public class OcrTests
     {
