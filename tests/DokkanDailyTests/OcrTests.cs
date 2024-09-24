@@ -6,20 +6,33 @@ namespace DokkanDailyTests
     [TestFixture]
     public class OcrTests
     {
+        private TextWriterTraceListener _traceListener;
+
         [SetUp]
         public void SetUp()
         {
-            // Find the TraceSource defined in the library
-            var traceSource = new TraceSource("Tesseract");
+            // Create a listener that writes to the TestContext output (captured by NUnit)
+            _traceListener = new TextWriterTraceListener(TestContext.Out);
 
-            // Add a ConsoleTraceListener so the output is written to the console, which NUnit captures
-            traceSource.Listeners.Add(new ConsoleTraceListener());
+            // Add the listener to the global Trace.Listeners collection
+            Trace.Listeners.Add(_traceListener);
 
-            // Optionally, set the source's event level (to capture all events)
-            traceSource.Switch = new SourceSwitch("sourceSwitch", "Verbose")
+            // Optionally, you can set the default level of tracing to capture all events
+            Trace.AutoFlush = true;
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            // Remove the listener after each test
+            Trace.Listeners.Remove(_traceListener);
+
+            // Clean up the listener after the test to avoid any resource leaks
+            if (_traceListener != null)
             {
-                Level = SourceLevels.All
-            };
+                _traceListener.Flush();
+                _traceListener.Close();
+            }
         }
 
         [Test]

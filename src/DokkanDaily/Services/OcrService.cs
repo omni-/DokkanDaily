@@ -25,7 +25,6 @@ namespace DokkanDaily.Services
             byte[] arr = imageStream.ToArray();
 
             using var engine = new TesseractEngine(@"./wwwroot/tessdata", "eng", EngineMode.LstmOnly);
-            engine.SetVariable("log_level", 0);
 
             engine.DefaultPageSegMode = PageSegMode.SparseText;
             using var img = Pix.LoadFromMemory(arr).Scale(2.0f, 2.0f);
