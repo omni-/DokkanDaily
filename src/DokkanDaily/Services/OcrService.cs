@@ -12,7 +12,7 @@ namespace DokkanDaily.Services
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                TesseractEnviornment.CustomSearchPath = $"{AppDomain.CurrentDomain.BaseDirectory}/wwwroot/lib";
+                TesseractEnviornment.CustomSearchPath = $"{AppDomain.CurrentDomain.BaseDirectory}wwwroot/lib";
                 Console.WriteLine($"TesseractEnviornment.CustomSearchPath: '{TesseractEnviornment.CustomSearchPath}'");
                 foreach (var item in Directory.EnumerateFileSystemEntries($"{TesseractEnviornment.CustomSearchPath}/x64").ToImmutableSortedSet())
                 {
