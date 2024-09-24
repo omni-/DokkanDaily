@@ -1,27 +1,27 @@
 ﻿using DokkanDaily.Services;
 using System.Diagnostics;
 
-[SetUpFixture]
-public class SetupTrace
-{
-    [OneTimeSetUp]
-    public void StartTest()
-    {
-        Trace.Listeners.Add(new ConsoleTraceListener());
-    }
-
-    [OneTimeTearDown]
-    public void EndTest()
-    {
-        Trace.Flush();
-    }
-}
-
 namespace DokkanDailyTests
 {
     [TestFixture]
     public class OcrTests
     {
+        [SetUp]
+        public void SetUp()
+        {
+            // Find the TraceSource defined in the library
+            var traceSource = new TraceSource("Tesseract");
+
+            // Add a ConsoleTraceListener so the output is written to the console, which NUnit captures
+            traceSource.Listeners.Add(new ConsoleTraceListener());
+
+            // Optionally, set the source's event level (to capture all events)
+            traceSource.Switch = new SourceSwitch("sourceSwitch", "Verbose")
+            {
+                Level = SourceLevels.All
+            };
+        }
+
         [Test]
         public void BasicOcrTest()
         {
