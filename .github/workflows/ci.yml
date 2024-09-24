@@ -60,7 +60,7 @@ jobs:
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
 
     - name: dump out
-      run: find "${{ env.WORKING_DIRECTORY }}" -iname '*.so' && exit 1
+      run: find "${{ env.WORKING_DIRECTORY }}" -iname '*.so'
       
     # - name: Download artifact (Database)
     #   uses: actions/download-artifact@v4

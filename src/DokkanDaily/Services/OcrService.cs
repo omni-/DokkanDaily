@@ -1,5 +1,6 @@
 ﻿using DokkanDaily.Constants;
 using DokkanDaily.Models;
+using System.Collections.Immutable;
 using System.Runtime.InteropServices;
 using Tesseract;
 
@@ -10,7 +11,14 @@ namespace DokkanDaily.Services
         public OcrService() 
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
                 TesseractEnviornment.CustomSearchPath = $"{AppDomain.CurrentDomain.BaseDirectory}/wwwroot/lib";
+                Console.WriteLine($"TesseractEnviornment.CustomSearchPath: '{TesseractEnviornment.CustomSearchPath}'");
+                foreach (var item in Directory.EnumerateFileSystemEntries($"{TesseractEnviornment.CustomSearchPath}/x64").ToImmutableSortedSet())
+                {
+                    Console.WriteLine($"'{item}'");
+                }
+            }
         }
         public ClearMetadata ProcessImage(MemoryStream imageStream)
         {
