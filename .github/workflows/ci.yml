@@ -60,6 +60,9 @@ jobs:
             libleptonica-dev \
             libtesseract-dev \
         && sudo rm -rf /var/lib/apt/lists/*
+        sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
+        sudo ln -s /usr/lib/x86_64-linux-gnu/liblept.so.5 /usr/lib/x86_64-linux-gnu/libleptonica-1.82.0.so
+        sudo ln -s /usr/lib/x86_64-linux-gnu/libtesseract.so.5 /usr/lib/x86_64-linux-gnu/libtesseract50.so
         
     - name: Restore
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
@@ -132,10 +135,10 @@ jobs:
       run: |
         docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }} \
         --build-arg AzureAccountName="${{ vars.AZURE_ACCOUNT_NAME }}" \
-        --build-arg AzureConnectionString="${{ secrets.BLOB_CONNECTION_STRING }}"\
-        --build-arg BlobContainerName="${{ vars.BLOB_CONTAINER_NAME }}"\
-        --build-arg BlobKey="${{ secrets.BLOB_KEY }}"\
-        --build-arg SeedOffset="${{ vars.SEED_OFFSET }}"\
+        --build-arg AzureConnectionString="${{ secrets.BLOB_CONNECTION_STRING }}" \
+        --build-arg BlobContainerName="${{ vars.BLOB_CONTAINER_NAME }}" \
+        --build-arg BlobKey="${{ secrets.BLOB_KEY }}" \
+        --build-arg SeedOffset="${{ vars.SEED_OFFSET }}" \
         --build-arg SqlServerConnectionString="${{ secrets.SQL_CONNECTION_STRING }}"
         
     - name: Docker push
