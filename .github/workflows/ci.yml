@@ -146,7 +146,7 @@ jobs:
         docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}
         
     - name: Deploy to Azure WebApp
-      # if: github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/master'
       uses: azure/webapps-deploy@v2
       with:
         app-name: DokkanDaily
