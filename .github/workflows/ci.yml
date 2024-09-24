@@ -53,6 +53,14 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
         
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update \
+        && sudo apt-get install -y --allow-unauthenticated \
+            libleptonica-dev \
+            libtesseract-dev \
+        && sudo rm -rf /var/lib/apt/lists/*
+        
     - name: Restore
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
       
@@ -75,14 +83,14 @@ jobs:
     - name: Test
       run: dotnet test ./tests/DokkanDailyTests/DokkanDailyTests.csproj -v n
       
-    - name: Publish
-      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+    # - name: Publish
+      # run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
       
-    - name: Publish Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: webapp
-        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+    # - name: Publish Artifacts
+      # uses: actions/upload-artifact@v4
+      # with:
+        # name: webapp
+        # path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -91,27 +99,58 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Check for source changes
-      id: changes
-      uses: dorny/paths-filter@v3
-      with:
-        filters: |
-          src:
-            - 'src'
+    # - name: Check for source changes
+      # id: changes
+      # uses: dorny/paths-filter@v3
+      # with:
+        # filters: |
+          # src:
+            # - 'src'
             
-    - name: Download artifact from build job
-      uses: actions/download-artifact@v4
+    # - name: Download artifact from build job
+      # uses: actions/download-artifact@v4
+      # with:
+        # name: webapp
+        # path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} 
+        
+    # - name: Deploy to Azure WebApp
+      # if: github.ref == 'refs/heads/master'
+      # uses: azure/webapps-deploy@v2
+      # with:
+        # app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        # publish-profile: ${{ secrets.DokkanDaily20240909223201_703E }}
+        # package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        
+    - name: Docker login
+      uses: azure/docker-login@v1
       with:
-        name: webapp
-        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} 
+        login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+        
+    - name: Docker Build
+      run: |
+        docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }} \
+        --build-arg AzureAccountName="${{ vars.AZURE_ACCOUNT_NAME }}" \
+        --build-arg AzureConnectionString="${{ secrets.BLOB_CONNECTION_STRING }}"\
+        --build-arg BlobContainerName="${{ vars.BLOB_CONTAINER_NAME }}"\
+        --build-arg BlobKey="${{ secrets.BLOB_KEY }}"\
+        --build-arg SeedOffset="${{ vars.SEED_OFFSET }}"\
+        --build-arg SqlServerConnectionString="${{ secrets.SQL_CONNECTION_STRING }}"
+        
+    - name: Docker push
+      run: |
+        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}
         
     - name: Deploy to Azure WebApp
-      if: github.ref == 'refs/heads/master'
+      # if: github.ref == 'refs/heads/master'
       uses: azure/webapps-deploy@v2
       with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.DokkanDaily20240909223201_703E }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        app-name: DokkanDaily
+        publish-profile: ${{ secrets.DOKKANDAILYPUBLISHSETTINGS }}
+        images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}
+
+
       
       
   db-deploy:
