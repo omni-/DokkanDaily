@@ -6,6 +6,7 @@ namespace DokkanDailyTests
     public class OcrTests
     {
         [Test]
+        [Ignore("Github runner cant run this")]
         public void BasicOcrTest()
         {
             OcrService service = new();
