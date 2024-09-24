@@ -13,8 +13,6 @@ permissions:
     contents: read
 
 env:
-  AZURE_WEBAPP_NAME: DokkanDaily20240909223201
-  AZURE_WEBAPP_PACKAGE_PATH: src/DokkanDaily/published
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: src/DokkanDaily
@@ -53,16 +51,16 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
         
-    - name: Install Dependencies
-      run: |
-        sudo apt-get update \
-        && sudo apt-get install -y --allow-unauthenticated \
-            libleptonica-dev \
-            libtesseract-dev \
-        && sudo rm -rf /var/lib/apt/lists/*
-        sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
-        sudo ln -s /usr/lib/x86_64-linux-gnu/liblept.so.5 libleptonica-1.82.0.so
-        sudo ln -s /usr/lib/x86_64-linux-gnu/libtesseract.so.5 libtesseract50.so
+    # - name: Install Dependencies
+      # run: |
+        # sudo apt-get update \
+        # && sudo apt-get install -y --allow-unauthenticated \
+            # libleptonica-dev \
+            # libtesseract-dev \
+        # && sudo rm -rf /var/lib/apt/lists/*
+        # sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
+        # sudo ln -s /usr/lib/x86_64-linux-gnu/liblept.so.5 libleptonica-1.82.0.so
+        # sudo ln -s /usr/lib/x86_64-linux-gnu/libtesseract.so.5 libtesseract50.so
         
     - name: Restore
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
@@ -86,15 +84,6 @@ jobs:
     - name: Test
       run: dotnet test ./tests/DokkanDailyTests/DokkanDailyTests.csproj -v n
       
-    # - name: Publish
-      # run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
-      
-    # - name: Publish Artifacts
-      # uses: actions/upload-artifact@v4
-      # with:
-        # name: webapp
-        # path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-
   deploy:
     runs-on: ubuntu-latest
     permissions: write-all
@@ -110,20 +99,6 @@ jobs:
           # src:
             # - 'src'
             
-    # - name: Download artifact from build job
-      # uses: actions/download-artifact@v4
-      # with:
-        # name: webapp
-        # path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} 
-        
-    # - name: Deploy to Azure WebApp
-      # if: github.ref == 'refs/heads/master'
-      # uses: azure/webapps-deploy@v2
-      # with:
-        # app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        # publish-profile: ${{ secrets.DokkanDaily20240909223201_703E }}
-        # package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-        
     - name: Docker login
       uses: azure/docker-login@v1
       with:
@@ -151,10 +126,7 @@ jobs:
       with:
         app-name: DokkanDaily
         publish-profile: ${{ secrets.DOKKANDAILYPUBLISHSETTINGS }}
-        images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}
-
-
-      
+        images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}  
       
   db-deploy:
     runs-on: windows-latest
