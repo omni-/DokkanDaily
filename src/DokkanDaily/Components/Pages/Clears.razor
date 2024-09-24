@@ -64,12 +64,12 @@
                 {
                     <div class="card">
                         <img style="object-fit: cover;" src="@GetImgPath(attachment)" @onclick="() => OnFileViewClick(attachment)" />
-                        @if (@attachment.Tags.GetTagValueOrDefault(DDConstants.USER_NAME_TAG) != null)
+@*                         @if (@attachment.Tags.GetTagValueOrDefault(DDConstants.USER_NAME_TAG) != null)
                         {
                             <div class="container">
                                 <h4><b>@attachment.Tags.GetTagValueOrDefault(DDConstants.USER_NAME_TAG)</b></h4>
                             </div>
-                        }
+                        } *@
                     </div>
                 }
             }
