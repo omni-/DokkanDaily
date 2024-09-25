@@ -117,6 +117,7 @@ jobs:
         --build-arg SqlServerConnectionString="${{ secrets.SQL_CONNECTION_STRING }}"
         
     - name: Docker push
+      if: github.ref == 'refs/heads/master'
       run: |
         docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}
         
