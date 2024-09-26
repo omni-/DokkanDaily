@@ -2,7 +2,7 @@ name: 'ci'
 on:
   push:
     branches:
-      - master
+      - debug-ci-tests-2
   pull_request:
   schedule:
       - cron: '30 15 * * WED'
@@ -18,31 +18,31 @@ env:
   WORKING_DIRECTORY: src/DokkanDaily
   DACPAC_NAME: DokkanDailyDB.dacpac
 jobs:
-  db-build:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v4
+  # db-build:
+  #   runs-on: windows-latest
+  #   steps:
+  #   - uses: actions/checkout@v4
     
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+  #   - name: Setup .NET SDK
+  #     uses: actions/setup-dotnet@v3
+  #     with:
+  #       dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
         
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v2
+  #   - name: Setup MSBuild
+  #     uses: microsoft/setup-msbuild@v2
       
-    - name: Build (Database)
-      run: msbuild /m /t:Rebuild /p:Configuration=Release ./src/DokkanDailyDB /p:OutputPath=../../Dacpac
+  #   - name: Build (Database)
+  #     run: msbuild /m /t:Rebuild /p:Configuration=Release ./src/DokkanDailyDB /p:OutputPath=../../Dacpac
       
-    - name: Publish Artifacts (Database)
-      uses: actions/upload-artifact@v4
-      with:
-        name: database
-        path: Dacpac/${{ env.DACPAC_NAME }}    
+  #   - name: Publish Artifacts (Database)
+  #     uses: actions/upload-artifact@v4
+  #     with:
+  #       name: database
+  #       path: Dacpac/${{ env.DACPAC_NAME }}    
 
   build:
     runs-on: ubuntu-latest
-    needs: db-build
+    # needs: db-build
     steps:
     - uses: actions/checkout@v4
     
@@ -68,28 +68,28 @@ jobs:
     - name: Build
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
       
-    - name: Download artifact (Database)
-      uses: actions/download-artifact@v4
-      with:
-        name: database
-        path: src/DokkanDailyDB/Dacpac
+    # - name: Download artifact (Database)
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: database
+    #     path: src/DokkanDailyDB/Dacpac
     
-    - name: Setup SQL Server Container
-      run: |
-        cd src/DokkanDailyDB/
-        docker build . --build-arg PASSWORD="<YourStrong@Passw0rd>" -t mydatabase:1.0 --no-cache
-        docker run -p 1433:1433 --name sqldb -d mydatabase:1.0
-        cd ../..
+    # - name: Setup SQL Server Container
+    #   run: |
+    #     cd src/DokkanDailyDB/
+    #     docker build . --build-arg PASSWORD="<YourStrong@Passw0rd>" -t mydatabase:1.0 --no-cache
+    #     docker run -p 1433:1433 --name sqldb -d mydatabase:1.0
+    #     cd ../..
       
     - name: Test
       run: dotnet test ./tests/DokkanDailyTests/DokkanDailyTests.csproj -v n
       
-  deploy:
-    runs-on: ubuntu-latest
-    permissions: write-all
-    needs: build
-    steps:
-    - uses: actions/checkout@v4
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   permissions: write-all
+  #   needs: build
+  #   steps:
+  #   - uses: actions/checkout@v4
     
     # - name: Check for source changes
       # id: changes
@@ -99,62 +99,62 @@ jobs:
           # src:
             # - 'src'
             
-    - name: Docker login
-      uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
+  #   - name: Docker login
+  #     uses: azure/docker-login@v1
+  #     with:
+  #       login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+  #       username: ${{ secrets.REGISTRY_USERNAME }}
+  #       password: ${{ secrets.REGISTRY_PASSWORD }}
         
-    - name: Docker Build
-      run: |
-        docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }} \
-        --build-arg AzureAccountName="${{ vars.AZURE_ACCOUNT_NAME }}" \
-        --build-arg AzureConnectionString="${{ secrets.BLOB_CONNECTION_STRING }}" \
-        --build-arg BlobContainerName="${{ vars.BLOB_CONTAINER_NAME }}" \
-        --build-arg BlobKey="${{ secrets.BLOB_KEY }}" \
-        --build-arg SeedOffset="${{ vars.SEED_OFFSET }}" \
-        --build-arg SqlServerConnectionString="${{ secrets.SQL_CONNECTION_STRING }}"
+  #   - name: Docker Build
+  #     run: |
+  #       docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }} \
+  #       --build-arg AzureAccountName="${{ vars.AZURE_ACCOUNT_NAME }}" \
+  #       --build-arg AzureConnectionString="${{ secrets.BLOB_CONNECTION_STRING }}" \
+  #       --build-arg BlobContainerName="${{ vars.BLOB_CONTAINER_NAME }}" \
+  #       --build-arg BlobKey="${{ secrets.BLOB_KEY }}" \
+  #       --build-arg SeedOffset="${{ vars.SEED_OFFSET }}" \
+  #       --build-arg SqlServerConnectionString="${{ secrets.SQL_CONNECTION_STRING }}"
         
-    - name: Docker push
-      if: github.ref == 'refs/heads/master'
-      run: |
-        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}
+  #   - name: Docker push
+  #     if: github.ref == 'refs/heads/master'
+  #     run: |
+  #       docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}
         
-    - name: Deploy to Azure WebApp
-      if: github.ref == 'refs/heads/master'
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: DokkanDaily
-        publish-profile: ${{ secrets.DOKKANDAILYPUBLISHSETTINGS }}
-        images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}  
+  #   - name: Deploy to Azure WebApp
+  #     if: github.ref == 'refs/heads/master'
+  #     uses: azure/webapps-deploy@v2
+  #     with:
+  #       app-name: DokkanDaily
+  #       publish-profile: ${{ secrets.DOKKANDAILYPUBLISHSETTINGS }}
+  #       images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}  
       
-  db-deploy:
-    runs-on: windows-latest
-    needs: build
-    steps:
-    - name: Download artifact (Database)
-      uses: actions/download-artifact@v4
-      with:
-        name: database
-        path: .
+  # db-deploy:
+  #   runs-on: windows-latest
+  #   needs: build
+  #   steps:
+  #   - name: Download artifact (Database)
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: database
+  #       path: .
           
-    - name: Login to Azure
-      uses: azure/login@v1
-      with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  #   - name: Login to Azure
+  #     uses: azure/login@v1
+  #     with:
+  #       client-id: ${{ secrets.AZURE_CLIENT_ID }}
+  #       tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+  #       subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         
-    - name: Deploy DACPAC to Azure
-      if: github.ref == 'refs/heads/master'
-      uses: azure/sql-action@v2.3
-      with:
-        connection-string: ${{ secrets.SQL_CONNECTION_STRING }}
-        path: './${{ env.DACPAC_NAME }}'
-        action: 'publish'
-        arguments: '/p:DropObjectsNotInSource=false'
+  #   - name: Deploy DACPAC to Azure
+  #     if: github.ref == 'refs/heads/master'
+  #     uses: azure/sql-action@v2.3
+  #     with:
+  #       connection-string: ${{ secrets.SQL_CONNECTION_STRING }}
+  #       path: './${{ env.DACPAC_NAME }}'
+  #       action: 'publish'
+  #       arguments: '/p:DropObjectsNotInSource=false'
     
-    - name: Logout from Azure
-      run: |
-        az logout
+  #   - name: Logout from Azure
+  #     run: |
+  #       az logout

@@ -6,7 +6,6 @@ namespace DokkanDailyTests
     public class OcrTests
     {
         [Test]
-        [Ignore("Can't run on remote")]
         public void BasicOcrTest()
         {
             OcrService service = new();

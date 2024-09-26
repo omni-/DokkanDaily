@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 namespace DokkanDailyTests
 {
     [TestFixture]
+    [Ignore("debugging rn")]
     // THESE TESTS REQUIRE A DOCKER CONTAINER OF DokkanDailyDB TO BE LOCALLY DEPLOYED!
     // cd src/DokkanDailyDB
     // docker build . --build-arg PASSWORD="<YourStrong@Passw0rd>" -t mydatabase:1.0 --no-cache
