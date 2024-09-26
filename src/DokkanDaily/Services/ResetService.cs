@@ -36,7 +36,7 @@ namespace DokkanDaily.Services
                     || !tags.ContainsKey(DDConstants.ITEMLESS_TAG))
                     continue;
 
-                if (!TimeSpan.TryParseExact(tags[DDConstants.CLEAR_TIME_TAG], "h\\'mm\\\"ss\\.f", System.Globalization.CultureInfo.InvariantCulture, out TimeSpan timeSpan))
+                if (!DDHelper.TryParseDokkanTimeSpan(tags[DDConstants.CLEAR_TIME_TAG], out TimeSpan timeSpan))
                     timeSpan = TimeSpan.MaxValue;
 
                 clears.Add(new DbClear()

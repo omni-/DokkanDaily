@@ -1,13 +1,17 @@
 ﻿using DokkanDaily.Constants;
+using DokkanDaily.Helpers;
 using DokkanDaily.Models;
 using Tesseract;
 
 namespace DokkanDaily.Services
 {
-    public class OcrService : IOcrService
+    public class OcrService(ILogger<OcrService> logger) : IOcrService
     {
+        private readonly ILogger<OcrService> _logger = logger;
+
         public ClearMetadata ProcessImage(MemoryStream imageStream)
         {
+            _logger.LogInformation("Beginning OCR analysis...");
             byte[] arr = imageStream.ToArray();
 
             using var engine = new TesseractEngine(@"./wwwroot/tessdata", "eng", EngineMode.LstmOnly);
@@ -23,18 +27,34 @@ namespace DokkanDaily.Services
             bool itemless = false;
 
             int index = split.IndexOf(OcrConstants.ClearTime);
-            if (index != -1 && index + 1 < split.Count)
-                clearTime = split[index + 1];
+            if (index != -1)
+            {
+                for (int i = 1; i < 4; i++)
+                {
+                    if (index + i >= split.Count) break;
+
+                    string tmp = split[index + i]
+                            .Replace('°', '"')
+                            .Replace('*', '"')
+                            .Replace('O', '0');
+
+                    if (DDHelper.TryParseDokkanTimeSpan(tmp, out _))
+                    {
+                        clearTime = tmp;
+                        break;
+                    }
+                }
+            }
 
             index = split.IndexOf(OcrConstants.ItemsUsed);
             if (index != -1 && index + 1 < split.Count)
                 itemless = split[index + 1] == OcrConstants.None;
 
+            _logger.LogInformation("OCR analysis complete.");
+
             return new ClearMetadata()
             {
-                ClearTime = clearTime?
-                    .Replace('°', '"')
-                    .Replace('O', '0'),
+                ClearTime = clearTime,
                 Nickname = split
                     .FirstOrDefault(x => x
                     .StartsWith(OcrConstants.Nickname))?

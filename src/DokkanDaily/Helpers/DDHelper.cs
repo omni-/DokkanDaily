@@ -1,4 +1,5 @@
-﻿using DokkanDaily.Models;
+﻿using DokkanDaily.Constants;
+using DokkanDaily.Models;
 using System.Text.Json;
 
 namespace DokkanDaily.Helpers
@@ -35,6 +36,11 @@ namespace DokkanDaily.Helpers
             if (dictionary == null || !dictionary.TryGetValue(tagName, out string result)) return null;
 
             return result;
+        }
+
+        public static bool TryParseDokkanTimeSpan(string value, out TimeSpan result)
+        {
+            return TimeSpan.TryParseExact(value, "h\\'mm\\\"ss\\.f", System.Globalization.CultureInfo.InvariantCulture, out result);
         }
     }
 }
