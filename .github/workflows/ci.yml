@@ -4,8 +4,8 @@ on:
     branches:
       - debug-ci-tests-2
   pull_request:
-  schedule:
-      - cron: '30 15 * * WED'
+  # schedule:
+  #     - cron: '30 15 * * WED'
   workflow_dispatch:
   
 permissions:
@@ -51,17 +51,6 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
         
-    # - name: Install Dependencies
-      # run: |
-        # sudo apt-get update \
-        # && sudo apt-get install -y --allow-unauthenticated \
-            # libleptonica-dev \
-            # libtesseract-dev \
-        # && sudo rm -rf /var/lib/apt/lists/*
-        # sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
-        # sudo ln -s /usr/lib/x86_64-linux-gnu/liblept.so.5 libleptonica-1.82.0.so
-        # sudo ln -s /usr/lib/x86_64-linux-gnu/libtesseract.so.5 libtesseract50.so
-        
     - name: Restore
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
       
@@ -80,6 +69,17 @@ jobs:
     #     docker build . --build-arg PASSWORD="<YourStrong@Passw0rd>" -t mydatabase:1.0 --no-cache
     #     docker run -p 1433:1433 --name sqldb -d mydatabase:1.0
     #     cd ../..
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update \
+        && sudo apt-get install -y --allow-unauthenticated \
+            libleptonica-dev \
+            libtesseract-dev \
+        && sudo rm -rf /var/lib/apt/lists/*
+        sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
+        sudo ln -s /usr/lib/x86_64-linux-gnu/liblept.so.5 libleptonica-1.82.0.so
+        sudo ln -s /usr/lib/x86_64-linux-gnu/libtesseract.so.5 libtesseract50.so
       
     - name: Test
       run: dotnet test ./tests/DokkanDailyTests/DokkanDailyTests.csproj -v n
