@@ -8,8 +8,7 @@ namespace DokkanDaily.Services
 {
     public class RngHelperService(IOptions<DokkanDailySettings> settings) : IRngHelperService
     {
-        private static readonly int MaxTierDifference = 2;
-        private static readonly int MaxCopies = 6;
+        private static readonly int MaxCopies = 3;
 
         private Random Random => GetDailySeed();
         private readonly DokkanDailySettings Settings = settings.Value;
@@ -23,7 +22,11 @@ namespace DokkanDaily.Services
 
         public DailyType GetRandomDailyType()
         {
-            return DDConstants.DailyTypes[Random.Next(0, DDConstants.DailyTypes.Count)];
+            // link skill challenges are harder and less varied, so they should appear slightly less often
+            var types = new List<DailyType>(DDConstants.DailyTypes);
+            types.Remove(DailyType.LinkSkill);
+            types = [..types.Concat(new List<DailyType>(DDConstants.DailyTypes))];
+            return types[Random.Next(0, types.Count)];
         }
 
         public LinkSkill GetRandomLinkSkill()
@@ -31,9 +34,9 @@ namespace DokkanDaily.Services
             return DDConstants.LinkSkills[Random.Next(0, DDConstants.LinkSkills.Count)];
         }
 
-        public LinkSkill GetRandomLinkSkill(Tier minTier)
+        public LinkSkill GetRandomLinkSkill(Tier tier)
         {
-            var links = CreateSeededCollection(DDConstants.LinkSkills, minTier);
+            var links = CreateSeededCollection(DDConstants.LinkSkills, tier);
             return links[Random.Next(0, links.Count)];
         }
 
@@ -46,9 +49,9 @@ namespace DokkanDaily.Services
         {
             return DDConstants.Categories[Random.Next(0, DDConstants.Categories.Count)];
         }
-        public Category GetRandomCategory(Tier minTier)
+        public Category GetRandomCategory(Tier tier)
         {
-            var cats = CreateSeededCollection(DDConstants.Categories, minTier);
+            var cats = CreateSeededCollection(DDConstants.Categories, tier);
             return cats[Random.Next(0, cats.Count)];
         }
 
@@ -57,9 +60,9 @@ namespace DokkanDaily.Services
             return DDConstants.Leaders[Random.Next(0, DDConstants.Leaders.Count)];
         }
 
-        public Leader GetRandomLeader(Tier minTier)
+        public Leader GetRandomLeader(Tier tier)
         {
-            var leaders = CreateSeededCollection(DDConstants.Leaders, minTier);
+            var leaders = CreateSeededCollection(DDConstants.Leaders, tier);
             return leaders[Random.Next(0, leaders.Count)];
         }
 
@@ -67,16 +70,21 @@ namespace DokkanDaily.Services
         {
             List<T> output = [];
 
-            foreach (T item in input)
+            var tmp = input.Where(x => x.Tier >= tier || (int)x.Tier == (int)tier - 1);
+
+            foreach (T item in tmp)
             {
-                int diff = (int)tier - (int)item.Tier;
-                if (diff < MaxTierDifference)
+                if (item.Tier >= tier)
                 {
-                    diff = Math.Abs(diff);
-                    for (int i = 0; i < MaxCopies - diff; i++)
+                    int diff = (int)item.Tier - (int)tier;
+                    for (int i = 0; i < MaxCopies - diff; i++) 
                     {
                         output.Add(item);
                     }
+                } 
+                else 
+                { 
+                    output.Add(item); 
                 }
             }
 

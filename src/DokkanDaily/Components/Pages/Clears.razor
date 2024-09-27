@@ -131,12 +131,15 @@
     private async void OnUploadSubmit()
     {
         fileLoading = true;
+        string remoteUserAgent = null;
+
+        try { remoteUserAgent = await jsRuntime.InvokeAsync<string>("getUserAgent"); } catch { }
 
         foreach (var file in selectedFiles)
         {
             try
             {
-                var blobUrl = await BlobSvc.UploadToAzureAsync(file.Name, file.ContentType, file, challengeModel);
+                var blobUrl = await BlobSvc.UploadToAzureAsync(file.Name, file.ContentType, file, challengeModel, null, remoteUserAgent);
                 if (blobUrl != null)
                 {
                     FileUploadViewModel fileUploadViewModel = new FileUploadViewModel()

@@ -15,6 +15,11 @@
 <body>
     <Routes />
     <script src="_framework/blazor.web.js"></script>
+    <script>
+        window.getUserAgent = () => {
+            return navigator.userAgent;
+        };
+    </script>
 </body>
 
 </html>

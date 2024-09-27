@@ -32,7 +32,7 @@ jobs:
       uses: microsoft/setup-msbuild@v2
       
     - name: Build (Database)
-      run: msbuild /m /t:Rebuild /p:Configuration=Release ./src/DokkanDailyDB /p:OutputPath=../../Dacpac
+      run: msbuild /m /t:Rebuild /p:Configuration=${{ env.CONFIGURATION }} ./src/DokkanDailyDB /p:OutputPath=../../Dacpac
       
     - name: Publish Artifacts (Database)
       uses: actions/upload-artifact@v4
@@ -58,9 +58,8 @@ jobs:
             # libleptonica-dev \
             # libtesseract-dev \
         # && sudo rm -rf /var/lib/apt/lists/*
-        # sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
-        # sudo ln -s /usr/lib/x86_64-linux-gnu/liblept.so.5 libleptonica-1.82.0.so
-        # sudo ln -s /usr/lib/x86_64-linux-gnu/libtesseract.so.5 libtesseract50.so
+        # sudo mkdir -p "$GITHUB_WORKSPACE"/tests/DokkanDailyTests/bin/${{ env.CONFIGURATION }}/net8.0/x64
+        # sudo ln -s /usr/lib/x86_64-linux-gnu/liblept.so.5 "$GITHUB_WORKSPACE"/tests/DokkanDailyTests/bin/${{ env.CONFIGURATION }}/net8.0/x64/libleptonica-1.82.0.so
         
     - name: Restore
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"

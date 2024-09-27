@@ -7,10 +7,12 @@ namespace DokkanDaily.Services
 {
     public class ResetService(IAzureBlobService azureBlobService,
     IDokkanDailyRepository repository,
+    ILeaderboardService leaderboardService,
     ILogger<ResetService> logger) : IResetService
     {
         private readonly ILogger<ResetService> _logger = logger;
         private readonly IAzureBlobService _azureBlobService = azureBlobService;
+        private readonly ILeaderboardService _leaderboardService = leaderboardService;
         private readonly IDokkanDailyRepository _repository = repository;
 
         public async Task DoReset()
@@ -36,7 +38,7 @@ namespace DokkanDaily.Services
                     || !tags.ContainsKey(DDConstants.ITEMLESS_TAG))
                     continue;
 
-                if (!TimeSpan.TryParseExact(tags[DDConstants.CLEAR_TIME_TAG], "h\\'mm\\\"ss\\.f", System.Globalization.CultureInfo.InvariantCulture, out TimeSpan timeSpan))
+                if (!DDHelper.TryParseDokkanTimeSpan(tags[DDConstants.CLEAR_TIME_TAG], out TimeSpan timeSpan))
                     timeSpan = TimeSpan.MaxValue;
 
                 clears.Add(new DbClear()
@@ -52,11 +54,16 @@ namespace DokkanDaily.Services
 
             clears = clears
                 .GroupBy(x => x.DokkanNickname)
-                .Select(group => group
-                    .MinBy(x => x.ClearTimeSpan))
+                .Select(group => 
+                    group.FirstOrDefault(x => x.IsDailyHighscore) 
+                    ?? group.FirstOrDefault(x => x.ItemlessClear) 
+                    ?? group.MinBy(x => x.ClearTimeSpan))
                 .ToList();
 
             await _repository.InsertDailyClears(clears);
+
+            // force reload leaderboard
+            await _leaderboardService.GetDailyLeaderboard(true);
 
             _logger.LogInformation("Reset complete.");
         }

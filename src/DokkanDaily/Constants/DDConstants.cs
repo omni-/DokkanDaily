@@ -85,7 +85,7 @@ namespace DokkanDaily.Constants
             new("Transcendent Height", "Kefla", Tier.A),
             new("Determination to Protect Universe 11", "Toppo", Tier.S),
             new("Astounding Fusion Power", "Gotenks", Tier.C),
-            new("Indomitable Fighter", "Super Saiyan Gohan (Future)", Tier.S),
+            new("Indomitable Fighter", "Super Saiyan Gohan (Future)", Tier.A),
             new("Greatest Evolution of Power", "Super Saiyan 4 Goku", Tier.A),
             new("All-Out Ultimate Battle", "Super Saiyan Goku & Super Saiyan Vegeta & Super Saiyan Trunks (Teen)", Tier.S),
             new("Exploding Fist", "Super Saiyan 3 Goku", Tier.S),
@@ -212,10 +212,10 @@ namespace DokkanDaily.Constants
             new("9th Anniv.! Anniversary Battle", Tier.A, "ANNI", 9),
             new("Ultimate Red Zone [Dismal Future Edition]", Tier.B, "DF_RZ", 5),
             new("Ultimate Red Zone [Wicked Bloodline Edition]", Tier.C, "WB_RZ", 5),
-            new("Ultimate Red Zone [Movie Edition]", Tier.B, "MOVIE_RZ", 8),
+            new("Ultimate Red Zone [Movie Edition]", Tier.A, "MOVIE_RZ", 8),
             new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.A, "MB_ME", 7),
             new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.A, "MB_ME", 8),
-
+            new("Fearsome Activation! Cell Max", Tier.S, "CELLMAX", 2)
         ];
         #endregion
 
@@ -248,7 +248,7 @@ namespace DokkanDaily.Constants
             new("Full Power", Tier.S),
             new("Fused Fighters", Tier.B),
             new("Fusion", Tier.C),
-            new("Future Saga", Tier.S),
+            new("Future Saga", Tier.A),
             new("Giant Ape Power", Tier.E),
             new("Gifted Warriors", Tier.B),
             new("Ginyu Force", Tier.E),
@@ -339,11 +339,7 @@ namespace DokkanDaily.Constants
             { DokkanType.TEQ, "#008806" }
         }.AsReadOnly();
         public static IReadOnlyList<DailyType> DailyTypes { get; }
-
-        [GeneratedRegex("[^a-zA-Z0-9 -]")]
-        public static partial Regex AlphaNumericRegex();
         #endregion
-
 
         static DDConstants()
         {
