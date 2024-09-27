@@ -36,7 +36,7 @@ namespace DokkanDailyTests
         }
 
         [Test]
-        public void TestHelpers()
+        public void TestGetUnit()
         {
             Assert.DoesNotThrow(() => DDConstants.GetUnit("Tenacious Secret Plan", "Super Vegeta"));
         }

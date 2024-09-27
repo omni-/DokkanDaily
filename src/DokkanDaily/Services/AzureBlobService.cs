@@ -37,13 +37,15 @@ namespace DokkanDaily.Services
             _ocrService = ocrService;
         }
 
-        public async Task<string> UploadToAzureAsync(string strFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null)
+        public async Task<string> UploadToAzureAsync(string userFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null, string userAgent = null)
         {
             try
             {
                 var (container, _) = await GetOrCreate(bucket);
 
-                var blob = container.GetBlobClient(strFileName);
+                string fileName = DDHelper.AddUserAgentToFileName(userFileName, userAgent);
+
+                var blob = container.GetBlobClient(fileName);
 
                 await blob.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
 

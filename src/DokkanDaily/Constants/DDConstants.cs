@@ -339,11 +339,7 @@ namespace DokkanDaily.Constants
             { DokkanType.TEQ, "#008806" }
         }.AsReadOnly();
         public static IReadOnlyList<DailyType> DailyTypes { get; }
-
-        [GeneratedRegex("[^a-zA-Z0-9 -]")]
-        public static partial Regex AlphaNumericRegex();
         #endregion
-
 
         static DDConstants()
         {

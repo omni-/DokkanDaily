@@ -38,10 +38,18 @@ namespace DokkanDaily.Services
                             .Replace('*', '"')
                             .Replace('O', '0');
 
-                    if (DDHelper.TryParseDokkanTimeSpan(tmp, out _))
+                    _logger.LogInformation("Attempting to parse `{Str}` as Dokkan-style TimeSpan...", tmp);
+                    
+                    if (DDHelper.TryParseDokkanTimeSpan(tmp, out TimeSpan t))
                     {
+                        _logger.LogInformation("Success! TimeSpan calculated as {Str}", t.ToString());
+
                         clearTime = tmp;
                         break;
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Failed to parse `{Str}` as Dokkan-style TimeSpan", tmp);
                     }
                 }
             }
@@ -50,16 +58,22 @@ namespace DokkanDaily.Services
             if (index != -1 && index + 1 < split.Count)
                 itemless = split[index + 1] == OcrConstants.None;
 
+            _logger.LogInformation("Calculated itemless run as `{Res}`", itemless);
+
+            string nickname = split
+                .FirstOrDefault(x => x
+                    .StartsWith(OcrConstants.Nickname))
+                ?.Replace(OcrConstants.Nickname, string.Empty)
+                ?.Replace("DBCe", "DBC*");
+
+            _logger.LogInformation("Calculated nickname as `{Nick}`", nickname);
+
             _logger.LogInformation("OCR analysis complete.");
 
             return new ClearMetadata()
             {
                 ClearTime = clearTime,
-                Nickname = split
-                    .FirstOrDefault(x => x
-                    .StartsWith(OcrConstants.Nickname))?
-                    .Replace(OcrConstants.Nickname, string.Empty)?
-                    .Replace("DBCe", "DBC*"),
+                Nickname = nickname,
                 ItemlessClear = itemless
             };
         }
