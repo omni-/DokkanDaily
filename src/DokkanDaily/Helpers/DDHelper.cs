@@ -51,6 +51,8 @@ namespace DokkanDaily.Helpers
 
         public static string AddUserAgentToFileName(string file, string userAgent)
         {
+            if (string.IsNullOrEmpty(userAgent)) return file;
+
             string ext = Path.GetExtension(file);
             string name = Path.GetFileNameWithoutExtension(file);
             string agentPart = string.IsNullOrEmpty(userAgent) ? "" : $"-{AlphaNumericRegex().Replace(userAgent, "")}";
