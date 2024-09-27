@@ -54,11 +54,15 @@ namespace DokkanDaily.Services
                 await fileStream.CopyToAsync(ms);
                 ms.Position = 0;
 
+                _logger.LogInformation("Uploading to `{Container}/{File}`...", container.Name, fileName);
+
                 await blob.UploadAsync(ms, options: new BlobUploadOptions()
                 {
                     HttpHeaders = new BlobHttpHeaders { ContentType = contentType },
                     Tags = new Dictionary<string, string>{ { DDConstants.DATE_TAG, DDHelper.GetUtcNowDateTag() } }
                 });
+
+                _logger.LogInformation("Finished Azure upload.");
 
                 // do OCR analysis, dont block the main thread
                 await Task.Run(async () =>
@@ -74,7 +78,7 @@ namespace DokkanDaily.Services
             }
             catch (Exception ex)
             {
-                _logger?.LogError("Unhandled exception {@Ex}", ex);
+                _logger.LogError("Unhandled exception {@Ex}", ex);
                 throw;
             }
         }
@@ -88,7 +92,7 @@ namespace DokkanDaily.Services
             }
             catch (Exception ex)
             {
-                _logger?.LogError("Unhandled exception {@Ex}", ex);
+                _logger.LogError("Unhandled exception {@Ex}", ex);
             }
         }
 
@@ -115,7 +119,7 @@ namespace DokkanDaily.Services
             }
             catch (Exception ex)
             {
-                _logger?.LogError("Unhandled exception {@Ex}", ex);
+                _logger.LogError("Unhandled exception {@Ex}", ex);
                 throw;
             }
         }
@@ -124,6 +128,8 @@ namespace DokkanDaily.Services
         {
             try
             {
+                _logger.LogInformation("Getting file count by tag `{T}`", tagName);
+
                 var (container, created) = await GetOrCreate(bucket);
 
                 if (created) return 0;
@@ -141,7 +147,7 @@ namespace DokkanDaily.Services
             }
             catch (Exception ex)
             {
-                _logger?.LogError("Unhandled exception {@Ex}", ex);
+                _logger.LogError("Unhandled exception {@Ex}", ex);
                 throw;
             }
         }
@@ -152,6 +158,8 @@ namespace DokkanDaily.Services
 
             try
             {
+                _logger.LogInformation("Getting files by tag `{T}`", tagName);
+
                 var (container, created) = await GetOrCreate(bucket);
                 if (created) return files;
 
@@ -192,6 +200,8 @@ namespace DokkanDaily.Services
             bool created = false;
 
             var container = new BlobContainerClient(_connectionString, bucket ?? TodaysBucketFullName);
+
+            _logger.LogInformation("Requesting container {C}", container);
 
             var createResponse = await container.CreateIfNotExistsAsync();
 
