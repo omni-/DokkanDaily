@@ -1,12 +1,15 @@
+using DokkanDaily.Configuration;
 using DokkanDaily.Constants;
 using DokkanDaily.Helpers;
 using DokkanDaily.Models;
 using DokkanDaily.Models.Database;
+using DokkanDaily.Models.Enums;
 using DokkanDaily.Repository;
 using DokkanDaily.Services;
 using DokkanDailyTests.Infra;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 
 namespace DokkanDailyTests
@@ -39,13 +42,44 @@ namespace DokkanDailyTests
         }
 
         [Test]
+        public void TestRng()
+        {
+            IRngHelperService rngHelperService = new RngHelperService(Options.Create(new DokkanDailySettings()));
+
+            Assert.That(rngHelperService.GetDailySeed(), Is.Not.EqualTo(new RngHelperService(Options.Create(new DokkanDailySettings { SeedOffset = 1 })).GetDailySeed()));
+
+            List<string> leaders = [];
+            List<string> categories = [];
+            List<string> linkSkills = [];
+            List<string> dailyTypes = [];
+
+            Tier t = Tier.S;
+
+            Assert.DoesNotThrow(() =>
+            {
+                for (int i = 0; i < 25; i++)
+                {
+                    rngHelperService = new RngHelperService(Options.Create(new DokkanDailySettings { SeedOffset = i }));
+
+                    leaders.Add(rngHelperService.GetRandomLeader(t).Name);
+                    categories.Add(rngHelperService.GetRandomCategory(t).Name);
+                    linkSkills.Add(rngHelperService.GetRandomLinkSkill(t).Name);
+
+                    rngHelperService.GetRandomStage();
+                    dailyTypes.Add(rngHelperService.GetRandomDailyType().ToString());
+                }
+            });
+        }
+
+        [Test]
         public async Task DailyResetServiceWorks()
         {
             var abMock = mocks.Create<IAzureBlobService>();
             var repoMock = mocks.Create<IDokkanDailyRepository>();
+            var lbMock = mocks.Create<ILeaderboardService>();
             var loggerMock = mocks.Create<ILogger<ResetService>>();
 
-            IResetService tdrs = new ResetService(abMock.Object, repoMock.Object, loggerMock.Object);
+            IResetService tdrs = new ResetService(abMock.Object, repoMock.Object, lbMock.Object, loggerMock.Object);
 
             List<DbClear> actual = [];
 
@@ -60,6 +94,12 @@ namespace DokkanDailyTests
                     }),
                     new MockBlobClient(new Dictionary<string, string>()
                     {
+                        { DDConstants.USER_NAME_TAG, "omni" },
+                        { DDConstants.CLEAR_TIME_TAG, "0'19\"10.8" },
+                        { DDConstants.ITEMLESS_TAG, "false" }
+                    }),
+                    new MockBlobClient(new Dictionary<string, string>()
+                    {
                         { DDConstants.USER_NAME_TAG, "owl" },
                         { DDConstants.CLEAR_TIME_TAG, "0'44\"10.8" },
                         { DDConstants.ITEMLESS_TAG, "false" }
@@ -69,6 +109,12 @@ namespace DokkanDailyTests
                         { DDConstants.USER_NAME_TAG, "owl" },
                         { DDConstants.CLEAR_TIME_TAG, "0'18\"10.8" },
                         { DDConstants.ITEMLESS_TAG, "false" }
+                    }),
+                    new MockBlobClient(new Dictionary<string, string>()
+                    {
+                        { DDConstants.USER_NAME_TAG, "owl" },
+                        { DDConstants.CLEAR_TIME_TAG, "0'48\"10.8" },
+                        { DDConstants.ITEMLESS_TAG, "true" }
                     }),
                     new MockBlobClient(new Dictionary<string, string>()
                     {
@@ -92,6 +138,16 @@ namespace DokkanDailyTests
             ];
             
             actual.Should().BeEquivalentTo(exp);
+
+            lbMock.Verify(x => x.GetDailyLeaderboard(true), Times.Once());
+            lbMock.VerifyNoOtherCalls();
+
+            abMock.Verify(x => x.PruneContainers(It.IsAny<int>()), Times.Once());
+            abMock.Verify(x => x.GetFilesForTag(It.IsAny<string>(), It.IsAny<string>()), Times.Once());
+            abMock.VerifyNoOtherCalls();
+
+            repoMock.Verify(x => x.InsertDailyClears(It.IsAny<IEnumerable<DbClear>>()), Times.Once());
+            repoMock.VerifyNoOtherCalls();
         }
     }
 }

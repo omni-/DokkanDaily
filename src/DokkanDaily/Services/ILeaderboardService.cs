@@ -4,6 +4,6 @@ namespace DokkanDaily.Services
 {
     public interface ILeaderboardService
     {
-        Task<List<LeaderboardUser>> GetDailyLeaderboard();
+        Task<List<LeaderboardUser>> GetDailyLeaderboard(bool force = false);
     }
 }

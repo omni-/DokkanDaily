@@ -7,11 +7,12 @@ namespace DokkanDaily.Services
     {
         private List<LeaderboardUser> leaderboard = [];
         private readonly IDokkanDailyRepository _repository = repository;
-        public async Task<List<LeaderboardUser>> GetDailyLeaderboard()
+        public async Task<List<LeaderboardUser>> GetDailyLeaderboard(bool force = false)
         {
-            if (leaderboard.Count == 0)
+            if (leaderboard.Count == 0 || force)
             {
                 var result = await _repository.GetDailyLeaderboard();
+                leaderboard = [];
 
                 foreach (var user in result)
                 {

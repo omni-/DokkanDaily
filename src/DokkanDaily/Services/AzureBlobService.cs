@@ -173,15 +173,16 @@ namespace DokkanDaily.Services
 
         private Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata)
         {
-
-            return new Dictionary<string, string>()
+            var dict = new Dictionary<string, string>()
             {
-                { DDConstants.DAILY_TYPE_TAG, model.DailyType.ToString() },
-                { DDConstants.EVENT_TAG, model.TodaysEvent.FullName },
-                { DDConstants.USER_NAME_TAG, metadata.Nickname },
-                { DDConstants.ITEMLESS_TAG, metadata.ItemlessClear.ToString() },
-                { DDConstants.CLEAR_TIME_TAG, metadata.ClearTime }
+                { DDConstants.DAILY_TYPE_TAG, model.DailyType.ToString()},
+                { DDConstants.EVENT_TAG, model.TodaysEvent.FullName},
+                { DDConstants.USER_NAME_TAG, metadata?.Nickname ?? ""},
+                { DDConstants.ITEMLESS_TAG, metadata?.ItemlessClear.ToString() ?? ""},
+                { DDConstants.CLEAR_TIME_TAG, metadata?.ClearTime ?? ""}
             };
+
+            return dict.Where(kv => !string.IsNullOrEmpty(kv.Value)).ToDictionary();
         }
 
         private async Task<(BlobContainerClient, bool)> GetOrCreate(string bucket)
