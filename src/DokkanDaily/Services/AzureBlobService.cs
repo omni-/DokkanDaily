@@ -87,29 +87,46 @@ namespace DokkanDaily.Services
         // TODO: test this
         public async Task PruneContainers(int daysToKeep)
         {
-            try
+            if (_settings.FeatureFlags.EnablePruneJob)
             {
-                DateTime today = DateTime.UtcNow;
-                DateTime cutoffDate = today - TimeSpan.FromDays(daysToKeep);
-
-                BlobServiceClient client = new(_connectionString);
-
-                var containerList = client.GetBlobContainers();
-
-                foreach (var container in containerList)
+                try
                 {
-                    string date = string.Join('-', container.Name.Split('-').Skip(2));
+                    DateTime today = DateTime.UtcNow;
+                    DateTime cutoffDate = today - TimeSpan.FromDays(daysToKeep);
 
-                    if(DateTime.TryParse(date, out DateTime parsedDate) && parsedDate < cutoffDate)
+                    BlobServiceClient client = new(_connectionString);
+
+                    var containerList = client.GetBlobContainers();
+
+                    foreach (var container in containerList)
                     {
-                        _logger.LogInformation("Container {C} is older than {Days} old. Deleting...", container.Name, daysToKeep);
-                        await client.DeleteBlobContainerAsync(container.Name);
+                        string date = string.Join('-', container.Name.Split('-').Skip(2));
+
+                        if (DateTime.TryParse(date, out DateTime parsedDate) && parsedDate < cutoffDate)
+                        {
+                            _logger.LogInformation("Container {C} is older than {Days} old. Deleting...", container.Name, daysToKeep);
+
+                            try
+                            {
+                                await client.DeleteBlobContainerAsync(container.Name);
+                            }
+                            catch (RequestFailedException ex)
+                            {
+                                _logger.LogError("Failed to delete container {C}. Exception: `{@Ex}`", container.Name, ex);
+                            }
+
+                            _logger.LogInformation("Container {C} deleted.", container.Name);
+                        }
                     }
                 }
+                catch (Exception ex)
+                {
+                    _logger.LogError("Unhandled exception {@Ex}", ex);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                _logger.LogError("Unhandled exception {@Ex}", ex);
+                _logger.LogInformation("`EnablePruneJob` was not configured or set to false. Skipping Prune Job.");
             }
         }
 
