@@ -2,6 +2,7 @@
 using DokkanDaily.Helpers;
 using DokkanDaily.Models.Database;
 using DokkanDaily.Repository;
+using DokkanDaily.Services.Interfaces;
 
 namespace DokkanDaily.Services;
 
@@ -29,7 +30,6 @@ public class Worker(
             _logger.LogInformation("Waiting until next scheduled time...");
             await WaitUntilNextScheduledTime(stoppingToken);
 
-            _logger.LogInformation("Starting daily reset...");
             try
             {
                 await _resetService.DoReset();

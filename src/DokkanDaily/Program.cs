@@ -2,6 +2,7 @@ using DokkanDaily.Components;
 using DokkanDaily.Configuration;
 using DokkanDaily.Repository;
 using DokkanDaily.Services;
+using DokkanDaily.Services.Interfaces;
 
 namespace DokkanDaily
 {

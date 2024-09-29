@@ -6,6 +6,7 @@ using DokkanDaily.Models.Database;
 using DokkanDaily.Models.Enums;
 using DokkanDaily.Repository;
 using DokkanDaily.Services;
+using DokkanDaily.Services.Interfaces;
 using DokkanDailyTests.Infra;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;

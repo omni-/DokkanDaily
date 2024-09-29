@@ -2,7 +2,7 @@
 using DokkanDaily.Models;
 using Microsoft.AspNetCore.Components.Forms;
 
-namespace DokkanDaily.Services
+namespace DokkanDaily.Services.Interfaces
 {
     public interface IAzureBlobService
     {

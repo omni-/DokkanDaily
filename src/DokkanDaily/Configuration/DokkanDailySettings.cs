@@ -13,5 +13,7 @@
         public string AzureAccountName { get; init; }
 
         public string SqlServerConnectionString { get; init; }
+
+        public FeatureFlags FeatureFlags { get; init; } = new();
     }
 }

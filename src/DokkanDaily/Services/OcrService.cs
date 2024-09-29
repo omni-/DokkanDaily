@@ -1,6 +1,7 @@
 ﻿using DokkanDaily.Constants;
 using DokkanDaily.Helpers;
 using DokkanDaily.Models;
+using DokkanDaily.Services.Interfaces;
 using Tesseract;
 
 namespace DokkanDaily.Services
