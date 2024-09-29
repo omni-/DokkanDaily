@@ -1,7 +1,7 @@
 ﻿using DokkanDaily.Models;
 using DokkanDaily.Models.Enums;
 
-namespace DokkanDaily.Services
+namespace DokkanDaily.Services.Interfaces
 {
     public interface IRngHelperService
     {

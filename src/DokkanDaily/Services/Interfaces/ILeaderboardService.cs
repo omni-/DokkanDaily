@@ -1,6 +1,6 @@
 ﻿using DokkanDaily.Models;
 
-namespace DokkanDaily.Services
+namespace DokkanDaily.Services.Interfaces
 {
     public interface ILeaderboardService
     {

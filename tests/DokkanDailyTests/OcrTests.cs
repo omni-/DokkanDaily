@@ -9,6 +9,7 @@ namespace DokkanDailyTests
     {
         [Test]
         [Ignore("Can't run on remote")]
+        // TODO: Test 9/28 clears to see what went wrong
         public void BasicOcrTest()
         {
             Mock<ILogger<OcrService>> loggerMock = new();

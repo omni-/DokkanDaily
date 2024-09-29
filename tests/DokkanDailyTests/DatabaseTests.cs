@@ -2,7 +2,9 @@
 using DokkanDaily.Models.Database;
 using DokkanDaily.Repository;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Moq;
 
 namespace DokkanDailyTests
 {
@@ -18,6 +20,7 @@ namespace DokkanDailyTests
         [OneTimeSetUp]
         public void OneTimeSetup()
         {
+            Mock<ILogger<DokkanDailyRepository>> mock = new(MockBehavior.Loose);
             SqlConnectionWrapper sqlConnection = new();
 
             IOptions<DokkanDailySettings> options = Options.Create(new DokkanDailySettings() 
@@ -25,7 +28,7 @@ namespace DokkanDailyTests
                 SqlServerConnectionString = "Data Source=.,1433;Initial Catalog=mydatabase;Persist Security Info=True;User ID=SA;Password=<YourStrong@Passw0rd>;TrustServerCertificate=True;"
             });
 
-            repository = new(sqlConnection, options);
+            repository = new(sqlConnection, mock.Object, options);
         }
 
         [Test]

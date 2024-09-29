@@ -2,6 +2,7 @@
 using DokkanDaily.Helpers;
 using DokkanDaily.Models.Database;
 using DokkanDaily.Repository;
+using DokkanDaily.Services.Interfaces;
 
 namespace DokkanDaily.Services
 {
@@ -17,11 +18,14 @@ namespace DokkanDaily.Services
 
         public async Task DoReset()
         {
-            //hacky, but better than having a random second reset
+            _logger.LogInformation("Starting daily reset...");
+
+            // hacky, but better than having a random second reset
             Environment.SetEnvironmentVariable("DOTNET_DokkanDailySettings__SeedOffset", "0");
 
             // delete old clears
-            await _azureBlobService.PruneContainers(30);
+            //_logger.LogInformation("Pruning old containers..."); 
+            //await _azureBlobService.PruneContainers(30);
 
             // upload clears for the day
             var result = await _azureBlobService.GetFilesForTag(DDHelper.GetUtcNowDateTag());
@@ -32,11 +36,12 @@ namespace DokkanDaily.Services
                 var props = await clear.GetPropertiesAsync();
                 var tags = props.Value.Metadata;
 
-                // skip upload in case of missing data
-                if (!tags.ContainsKey(DDConstants.USER_NAME_TAG)
-                    || !tags.ContainsKey(DDConstants.CLEAR_TIME_TAG)
-                    || !tags.ContainsKey(DDConstants.ITEMLESS_TAG))
+                // skip upload in case we don't know who the clear belongs to
+                if (!tags.ContainsKey(DDConstants.USER_NAME_TAG)) // && !tags.ContainsKey(DDConstants.DISCORD_NAME_TAG)
                     continue;
+
+                if (!tags.ContainsKey(DDConstants.ITEMLESS_TAG))
+                    tags.Add(DDConstants.ITEMLESS_TAG, "false");
 
                 if (!DDHelper.TryParseDokkanTimeSpan(tags[DDConstants.CLEAR_TIME_TAG], out TimeSpan timeSpan))
                     timeSpan = TimeSpan.MaxValue;

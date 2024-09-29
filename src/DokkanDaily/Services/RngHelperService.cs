@@ -2,6 +2,7 @@
 using DokkanDaily.Constants;
 using DokkanDaily.Models;
 using DokkanDaily.Models.Enums;
+using DokkanDaily.Services.Interfaces;
 using Microsoft.Extensions.Options;
 
 namespace DokkanDaily.Services

@@ -1,4 +1,4 @@
-﻿namespace DokkanDaily.Services
+﻿namespace DokkanDaily.Services.Interfaces
 {
     public interface IResetService
     {

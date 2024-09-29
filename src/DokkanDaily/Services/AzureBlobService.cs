@@ -7,6 +7,7 @@ using DokkanDaily.Configuration;
 using DokkanDaily.Constants;
 using DokkanDaily.Helpers;
 using DokkanDaily.Models;
+using DokkanDaily.Services.Interfaces;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Options;
 
@@ -83,12 +84,28 @@ namespace DokkanDaily.Services
             }
         }
 
+        // TODO: test this
         public async Task PruneContainers(int daysToKeep)
         {
             try
             {
-                // TODO
-                throw new NotImplementedException();
+                DateTime today = DateTime.UtcNow;
+                DateTime cutoffDate = today - TimeSpan.FromDays(daysToKeep);
+
+                BlobServiceClient client = new(_connectionString);
+
+                var containerList = client.GetBlobContainers();
+
+                foreach (var container in containerList)
+                {
+                    string date = string.Join('-', container.Name.Split('-').Skip(2));
+
+                    if(DateTime.TryParse(date, out DateTime parsedDate) && parsedDate < cutoffDate)
+                    {
+                        _logger.LogInformation("Container {C} is older than {Days} old. Deleting...", container.Name, daysToKeep);
+                        await client.DeleteBlobContainerAsync(container.Name);
+                    }
+                }
             }
             catch (Exception ex)
             {

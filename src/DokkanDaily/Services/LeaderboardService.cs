@@ -1,5 +1,6 @@
 ﻿using DokkanDaily.Models;
 using DokkanDaily.Repository;
+using DokkanDaily.Services.Interfaces;
 
 namespace DokkanDaily.Services
 {

@@ -12,15 +12,19 @@ namespace DokkanDaily.Repository
     public class DokkanDailyRepository : IDokkanDailyRepository
     {
         private ISqlConnectionWrapper SqlConnectionWrapper { get; }
+        private readonly ILogger<DokkanDailyRepository> _logger;
 
-        public DokkanDailyRepository(ISqlConnectionWrapper sqlConnectionWrapper, IOptions<DokkanDailySettings> settings)
+        public DokkanDailyRepository(ISqlConnectionWrapper sqlConnectionWrapper, ILogger<DokkanDailyRepository> logger, IOptions<DokkanDailySettings> settings)
         {
             SqlConnectionWrapper = sqlConnectionWrapper;
             SqlConnectionWrapper.ConnectionString = settings.Value.SqlServerConnectionString;
+            _logger = logger;
         }
 
         public async Task InsertDailyClears(IEnumerable<DbClear> clears)
         {
+            _logger.LogInformation("Begging daily clear insert...");
+
             try 
             {
                 await SqlConnectionWrapper.OpenAsync();
@@ -31,15 +35,18 @@ namespace DokkanDaily.Repository
 
                 await SqlConnectionWrapper.ExecuteAsync(
                     "[Core].[ClearInsert]", dp);
-            } 
+            }
             finally 
             { 
                 SqlConnectionWrapper.Close();
             }
+
+            _logger.LogInformation("Daily clears inserted");
         }
 
         public async Task<IEnumerable<DbLeaderboardResult>> GetDailyLeaderboard()
         {
+            _logger.LogInformation("Getting daily leaderboard...");
             try
             {
                 await SqlConnectionWrapper.OpenAsync();
@@ -51,6 +58,8 @@ namespace DokkanDaily.Repository
                 {
                     results.Add(item);
                 }
+
+                _logger.LogInformation("Daily leaderboad retrieved");
 
                 return results;
             }
