@@ -142,6 +142,7 @@ namespace DokkanDaily.Constants
             new("Boiling Power", "Super Saiyan Goku", Tier.F),
             new("All-Out Super Attack", "Super Saiyan Gohan (Teen)", Tier.S),
             new("Fusion Reborn", "Goku (Angel) & Vegeta (Angel)", Tier.A),
+            new("Pint-Sized Super Warriors", "Super Saiyan Trunks (Kid) & Super Saiyan Goten (Kid)", Tier.B),
             //extreme
             new("Universe-Devastating Combat Power", "Broly", Tier.S),
             new("Surge of Heightened Fighting Spirit", "Super Saiyan Broly", Tier.S),
