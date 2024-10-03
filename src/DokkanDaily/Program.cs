@@ -79,6 +79,11 @@ namespace DokkanDaily
                 return Task.CompletedTask;
             });
 
+            app.MapGet("/auth", async (context) =>
+            {
+                await context.ChallengeAsync("Discord", new AuthenticationProperties { RedirectUri = "/" });
+            });
+
             app.Run();
         }
     }

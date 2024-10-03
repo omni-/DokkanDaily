@@ -1,0 +1,77 @@
+﻿@page "/admin"
+@rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.Components.Authorization
+@using DokkanDaily.Components.Shared
+@using DokkanDaily.Constants
+@using DokkanDaily.Helpers
+@using DokkanDaily.Models;
+@using DokkanDaily.Models.Dto
+@using DokkanDaily.Models.Enums
+@using DokkanDaily.Services.Interfaces
+
+@inject AuthenticationStateProvider authStateProvider;
+@inject IRngHelperService RngSvc
+@inject IAzureBlobService BlobSvc
+@inject IJSRuntime JsRuntime
+@inject NavigationManager NavManager
+
+<PageTitle>Badmin!</PageTitle>
+
+<style>
+	body {
+		background: url('images/misc/wallpaper.jpg') fixed center no-repeat;
+		background-size: cover;
+		text-align: center;
+		margin: 0 auto;
+		overflow: hidden;
+	}
+</style>
+
+<Logo/>
+<Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
+	<Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+		<Authorized>
+			<button>Welcome BADmin</button>
+		</Authorized>
+		<NotAuthorized>
+			<button @onclick="@(()=>NavManager.NavigateTo("/auth", true))">You need to auth</button>
+		</NotAuthorized>
+	</Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+</Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
+
+<Footer />
+
+@code {
+	Challenge todaysChallenge;
+
+	bool Executing { get; set; }
+
+	string typeColor => DDConstants.TypeToHexMap[todaysChallenge.TodaysUnit.DokkanType];
+
+	protected override async Task OnInitializedAsync()
+	{
+		var authState = await authStateProvider.GetAuthenticationStateAsync();
+		var user = authState.User;
+
+		var allowedIn = false;
+		if (user.Claims.Any()) {
+			var claim = user.Claims.FirstOrDefault(c => c.Issuer == "Discord" && c.Type.Contains("identifier"));
+			if (claim.Value == "263499818234675200" || claim.Value == "omni's id")
+			{
+				allowedIn = true;
+			}
+		} 
+		
+		if (!allowedIn) {
+			NavManager.NavigateTo("/", false);
+		}
+
+		base.OnInitialized();
+	}
+
+	void OnClick()
+	{
+		NavManager.NavigateTo("/clears", false);
+	}
+}
