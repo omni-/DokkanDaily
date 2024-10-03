@@ -141,6 +141,8 @@ namespace DokkanDaily.Constants
             new("Battle to Reach the Top", "Super Saiyan Vegeta (GT)", Tier.F),
             new("Boiling Power", "Super Saiyan Goku", Tier.F),
             new("All-Out Super Attack", "Super Saiyan Gohan (Teen)", Tier.S),
+            new("Fusion Reborn", "Goku (Angel) & Vegeta (Angel)", Tier.A),
+            new("Pint-Sized Super Warriors", "Super Saiyan Trunks (Kid) & Super Saiyan Goten (Kid)", Tier.B),
             //extreme
             new("Universe-Devastating Combat Power", "Broly", Tier.S),
             new("Surge of Heightened Fighting Spirit", "Super Saiyan Broly", Tier.S),
@@ -174,7 +176,8 @@ namespace DokkanDaily.Constants
             new("Brief Paternal Moment", "Majin Vegeta", Tier.E),
             new("Unveiling of Power", "Raditz", Tier.F),
             new("Super Warrior Who Destroys All", "Legendary Super Saiyan Broly", Tier.S),
-
+            new("Boiling Evil", "Super Janemba", Tier.S),
+            new("Decisive Strike of Rebellion", "Vegeta", Tier.B)
             // unreleased on global
             // new("Power of an Isolated Iron Wall", "Jiren", Tier.S),
             // new("Bright and Fun Life", "Master Roshi", Tier.A)

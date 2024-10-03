@@ -27,10 +27,14 @@ namespace DokkanDaily.Services
             string clearTime = null;
             bool itemless = false;
 
+
             int index = split.IndexOf(OcrConstants.ClearTime);
+            int toIndex = split.IndexOf(OcrConstants.PersonalBest);
+
             if (index != -1)
             {
-                for (int i = 1; i < 4; i++)
+                int to = toIndex == -1 ? 5 : toIndex - index;
+                for (int i = 1; i < to; i++)
                 {
                     if (index + i >= split.Count) break;
 
@@ -61,11 +65,28 @@ namespace DokkanDaily.Services
 
             _logger.LogInformation("Calculated itemless run as `{Res}`", itemless);
 
-            string nickname = split
+            index = split.IndexOf(OcrConstants.ItemsUsed);
+            if (index != -1 && index + 1 < split.Count)
+                itemless = split[index + 1] == OcrConstants.None;
+
+            _logger.LogInformation("Calculated itemless run as `{Res}`", itemless);
+
+            string candidate = null;
+            string[] split2 = split
                 .FirstOrDefault(x => x
-                    .StartsWith(OcrConstants.Nickname))
-                ?.Replace(OcrConstants.Nickname, string.Empty)
-                ?.Replace("DBCe", "DBC*");
+                    .Contains(OcrConstants.Nickname))
+                ?.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (split2 != null)
+            {
+                if (split2.Length > 1)
+                {
+                    index = split2.ToList().IndexOf(OcrConstants.Nickname) + 1;
+                    candidate = split2[index];
+                }
+            }
+
+            string nickname = candidate?.Replace("DBCe", "DBC*");
 
             _logger.LogInformation("Calculated nickname as `{Nick}`", nickname);
 
