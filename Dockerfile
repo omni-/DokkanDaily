@@ -9,6 +9,8 @@ ARG BlobContainerName
 ARG BlobKey
 ARG SeedOffset
 ARG SqlServerConnectionString
+ARG OAuth2ClientSecret
+ARG OAuth2ClientId
 
 ENV DOTNET_DokkanDailySettings__AzureAccountName=$AzureAccountName
 ENV DOTNET_DokkanDailySettings__AzureBlobConnectionString=$AzureConnectionString
