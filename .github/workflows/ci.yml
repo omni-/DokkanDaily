@@ -113,9 +113,9 @@ jobs:
         --build-arg BlobContainerName="${{ vars.BLOB_CONTAINER_NAME }}" \
         --build-arg BlobKey="${{ secrets.BLOB_KEY }}" \
         --build-arg SeedOffset="${{ vars.SEED_OFFSET }}" \
-        --build-arg OAuth2ClientSecret="${{ secrets.OAUTH_CLIENT_SECRET }}"
-        --build-arg OAuth2ClientId="${{ secrets.OAUTH_CLIENT_ID }}"
-        --build-arg SqlServerConnectionString="${{ secrets.SQL_CONNECTION_STRING }}"
+        --build-arg OAuth2ClientSecret="${{ secrets.OAUTH_CLIENT_SECRET }}" \
+        --build-arg OAuth2ClientId="${{ secrets.OAUTH_CLIENT_ID }}" \
+        --build-arg SqlServerConnectionString="${{ secrets.SQL_CONNECTION_STRING }}" \
         
     - name: Docker push
       if: github.ref == 'refs/heads/master'
