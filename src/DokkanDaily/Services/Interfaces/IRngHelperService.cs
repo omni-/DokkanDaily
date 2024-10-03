@@ -24,5 +24,17 @@ namespace DokkanDaily.Services.Interfaces
         Leader GetRandomLeader(Tier minTier);
 
         Challenge GetDailyChallenge();
-    }
+
+        void Reset();
+
+        void SetDailySeed(int seed);
+
+        void RollDailySeed();
+
+        void OverrideChallenge(DailyType type, Event e, LinkSkill link, Category cat, Leader l);
+
+        void OverrideChallengeType(DailyType type);
+
+		int GetRawSeed();
+	}
 }

@@ -102,3 +102,8 @@ footer > div {
     padding-bottom: .75em;
     padding-right: .5em;
 }
+
+footer button {
+    margin-left: 1vw;
+    margin-bottom: 0.5vw;
+}

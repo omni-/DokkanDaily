@@ -1,0 +1,135 @@
+﻿@page "/admin"
+@rendermode InteractiveServer
+
+@using DokkanDaily.Configuration
+@using Microsoft.AspNetCore.Components.Authorization
+@using DokkanDaily.Components.Shared
+@using DokkanDaily.Constants
+@using DokkanDaily.Helpers
+@using DokkanDaily.Models;
+@using DokkanDaily.Models.Dto
+@using DokkanDaily.Models.Enums
+@using DokkanDaily.Services.Interfaces
+@using Microsoft.Extensions.Options
+@using System.Reflection
+
+@inject AuthenticationStateProvider authStateProvider;
+@inject IRngHelperService RngSvc
+@inject IAzureBlobService BlobSvc
+@inject IJSRuntime JsRuntime
+@inject IResetService ResetSvc
+@inject NavigationManager NavManager
+@inject IOptions<DokkanDailySettings> settings
+
+<PageTitle>Badmin!</PageTitle>
+
+<style>
+	body {
+		background: url('images/misc/wallpaper.jpg') fixed center no-repeat;
+		background-size: cover;
+		text-align: center;
+		margin: 0 auto;
+		overflow: hidden;
+	}
+</style>
+
+<Logo/>
+<Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
+	<Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+		<Authorized>
+			@if (AuthorizedUser)
+			{
+				<div style="color:antiquewhite">
+					<h3 style="padding-top:1vh;">Welcome back, Admin.</h3>
+					<br />
+					<label>Set Seed: <input @bind-value=@Seed /><button style="margin-left:5px" @onclick=SetSeed>Set</button></label>
+					<br />
+					<label>Set Daily Type: <input @bind-value=@DailyType /><button style="margin-left:5px" @onclick=SetDailyType>Set</button></label>
+@* 					<br />
+					<label>Roll Seed: <button style="margin-left:5px" @onclick=RollSeed>Roll</button></label> *@
+					<br />
+					<label>Reset Seed: <button style="margin-left:5px" @onclick=Reset>Reset</button></label>
+					<br />
+					<label>Rerun daily reset: <button style="margin-left:5px" @onclick=Rerun>Rerun Daily Reset</button></label>
+					<br />
+					<label>Dump env: <textarea @bind=@Env /> <button style="margin-left:5px" @onclick=DumpEnv>Dump</button></label>
+				</div>
+			}
+		</Authorized>
+		<NotAuthorized>
+			<p>Unauthorized.</p>
+		</NotAuthorized>
+	</Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+</Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
+
+<Footer />
+
+@code {
+	bool AuthorizedUser { get; set; }
+
+	string Seed { get; set; }
+
+	string Env { get; set; }
+
+	string DailyType { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		var authState = await authStateProvider.GetAuthenticationStateAsync();
+		var user = authState.User;
+
+		AuthorizedUser = false;
+
+		if (user.Claims.Any()) 
+		{
+			var claim = user.Claims.FirstOrDefault(c => c.Issuer == "Discord" && c.Type.Contains("identifier"));
+
+			if (claim.Value == "263499818234675200" || claim.Value == "112089455933792256")
+			{
+				AuthorizedUser = true;
+			}
+		} 
+
+		if (!AuthorizedUser) {
+			NavManager.NavigateTo("/", false);
+		}
+
+		base.OnInitialized();
+	}
+
+	void SetSeed()
+	{
+		RngSvc.SetDailySeed(int.Parse(Seed));
+	}
+
+	void RollSeed()
+	{
+		RngSvc.RollDailySeed();
+	}
+
+	void Reset()
+	{
+		RngSvc.Reset();
+	}
+
+	void Rerun()
+	{
+		ResetSvc.DoReset();
+	}
+
+	void SetDailyType()
+	{
+		RngSvc.OverrideChallengeType(Enum.Parse<DailyType>(DailyType));
+	}
+
+	void DumpEnv()
+	{
+		Env = $"DAILY SEED: {RngSvc.GetRawSeed()}";
+		Type t = settings.Value.GetType();
+		foreach (PropertyInfo prop in t.GetProperties())
+		{
+			var type = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+			Env += $"\r\n{prop.Name}: {prop.GetValue(settings.Value, null)}";
+		}
+	}
+}

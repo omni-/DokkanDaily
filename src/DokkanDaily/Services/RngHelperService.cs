@@ -7,22 +7,69 @@ using Microsoft.Extensions.Options;
 
 namespace DokkanDaily.Services
 {
-    public class RngHelperService(IOptions<DokkanDailySettings> settings) : IRngHelperService
+    public class RngHelperService : IRngHelperService
     {
+        public RngHelperService(IOptions<DokkanDailySettings> settings)
+        {
+            SeedOffset = settings.Value?.SeedOffset ?? 0;
+		}
+
         private static readonly int MaxCopies = 3;
 
         private Random Random => GetDailySeed();
-        private readonly DokkanDailySettings Settings = settings.Value;
+        private static int SeedOffset { get; set; }
+        private static int? SeedOverride { get; set; }
+        public static Challenge ChallengeOverride { get; private set; }
+        public static DailyType? DailyTypeOverride {  get; private set; }
 
         public Random GetDailySeed()
         {
-            var date = DateTime.UtcNow.Date;
-            var seed = (date.Year * 1000 + date.DayOfYear) + Settings.SeedOffset;
-            return new Random(seed);
+            return new Random(GetRawSeed());
         }
+
+        public void OverrideChallenge(DailyType type, Event e, LinkSkill link, Category cat, Leader l)
+        {
+            ChallengeOverride = new(type, e, link, cat, l, DDConstants.GetUnit(l));
+		}
+
+        public void OverrideChallengeType(DailyType type)
+        {
+            DailyTypeOverride = type;
+        }
+
+        public void Reset()
+        {
+            DailyTypeOverride = null;
+            ChallengeOverride = null;
+            SeedOverride = null;
+            SeedOffset = 0;
+        }
+
+        public void SetDailySeed(int seed)
+        {
+            SeedOverride = seed;
+        }
+
+        public void RollDailySeed()
+        {
+            SeedOverride = null;
+            SeedOffset++;
+        }
+
+        public int GetRawSeed()
+        {
+			if (SeedOverride != null) return SeedOverride.Value;
+
+			var date = DateTime.UtcNow.Date;
+			var seed = (date.Year * 1000 + date.DayOfYear) + SeedOffset;
+
+            return seed;
+		}
 
         public DailyType GetRandomDailyType()
         {
+            if (DailyTypeOverride != null) return DailyTypeOverride.Value;
+
             // link skill challenges are harder and less varied, so they should appear slightly less often
             var types = new List<DailyType>(DDConstants.DailyTypes);
             types.Remove(DailyType.LinkSkill);
@@ -94,6 +141,8 @@ namespace DokkanDaily.Services
 
         public Challenge GetDailyChallenge()
         {
+            if (ChallengeOverride != null) return ChallengeOverride;
+
             DailyType dailyType = GetRandomDailyType();
             Event todaysEvent = GetRandomStage();
             LinkSkill linkSkill = GetRandomLinkSkill(todaysEvent.Tier);

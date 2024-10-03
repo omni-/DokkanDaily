@@ -327,10 +327,11 @@ namespace DokkanDaily.Constants
         public static string EVENT_TAG => "event";
         public static string CLEAR_TIME_TAG => "cleartime";
         public static string ITEMLESS_TAG => "itemless";
-        #endregion
+        public static string DISCORD_NAME_TAG => "discordusername";
+		#endregion
 
-        #region Misc.
-        private static readonly List<Unit> unitDB = [];
+		#region Misc.
+		private static readonly List<Unit> unitDB = [];
         public static IReadOnlyList<Unit> UnitDB { get => unitDB.AsReadOnly(); }
 
         public static readonly IReadOnlyDictionary<DokkanType, string> TypeToHexMap = new Dictionary<DokkanType, string>()

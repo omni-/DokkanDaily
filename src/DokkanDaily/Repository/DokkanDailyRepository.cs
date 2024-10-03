@@ -23,7 +23,7 @@ namespace DokkanDaily.Repository
 
         public async Task InsertDailyClears(IEnumerable<DbClear> clears)
         {
-            _logger.LogInformation("Begging daily clear insert...");
+            _logger.LogInformation("Beginning daily clear insert...");
 
             try 
             {
