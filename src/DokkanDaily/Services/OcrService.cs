@@ -2,6 +2,7 @@
 using DokkanDaily.Helpers;
 using DokkanDaily.Models;
 using DokkanDaily.Services.Interfaces;
+using OpenCvSharp;
 using Tesseract;
 
 namespace DokkanDaily.Services
@@ -10,14 +11,45 @@ namespace DokkanDaily.Services
     {
         private readonly ILogger<OcrService> _logger = logger;
 
+        public static void previewImage(String title, Mat image)
+        {
+            Size screenResolution = new Size(2560, 1440); // idk how to actually get this without adding packages
+
+            Size imageSize = image.Size();
+            if (imageSize.Height > screenResolution.Height)
+            {
+                image = image.Clone(); // so we don't modify the image that was passed in
+                // scale down the image if it's bigger than the screen height
+                double scalingFactor = (double)screenResolution.Height / (double)imageSize.Height;
+                scalingFactor *= 0.9; // make it a little smaller than the exact screen height
+                Cv2.Resize(image, image, new Size(), scalingFactor, scalingFactor);
+            }
+
+            Cv2.ImShow(title, image);
+            Cv2.MoveWindow(title, screenResolution.Width / 2 - image.Size().Width / 2, 0);
+            Cv2.WaitKey(0);
+            Cv2.DestroyWindow(title);
+        }
+
         public ClearMetadata ProcessImage(MemoryStream imageStream)
         {
             _logger.LogInformation("Beginning OCR analysis...");
+
             byte[] arr = imageStream.ToArray();
+
+            Mat m = Cv2.ImDecode(arr, ImreadModes.Grayscale);
+            Cv2.Threshold(m, m, 100, 255, ThresholdTypes.Binary);
+            Cv2.Resize(m, m, new Size(), .99f, .99f);
+            Cv2.BitwiseNot(m, m);
+            previewImage("peepee", m);
 
             using var engine = new TesseractEngine(@"./wwwroot/tessdata", "eng", EngineMode.LstmOnly);
             engine.DefaultPageSegMode = PageSegMode.SparseText;
-            using var img = Pix.LoadFromMemory(arr).Scale(2.0f, 2.0f);
+
+            using var img = Pix
+                .LoadFromMemory(m.ImEncode());
+
+            img.Save("C:/users/cooper/downloads/tmp.png");
             using var page = engine.Process(img);
 
             var text = page.GetText();
@@ -28,9 +60,12 @@ namespace DokkanDaily.Services
             bool itemless = false;
 
             int index = split.IndexOf(OcrConstants.ClearTime);
+            int toIndex = split.IndexOf(OcrConstants.PersonalBest);
+
             if (index != -1)
             {
-                for (int i = 1; i < 4; i++)
+                int to = toIndex == -1 ? 5 : toIndex - index;
+                for (int i = 1; i < to; i++)
                 {
                     if (index + i >= split.Count) break;
 
@@ -61,11 +96,22 @@ namespace DokkanDaily.Services
 
             _logger.LogInformation("Calculated itemless run as `{Res}`", itemless);
 
-            string nickname = split
+            string candidate = null;
+            string[] split2 = split
                 .FirstOrDefault(x => x
-                    .StartsWith(OcrConstants.Nickname))
-                ?.Replace(OcrConstants.Nickname, string.Empty)
-                ?.Replace("DBCe", "DBC*");
+                    .Contains(OcrConstants.Nickname))
+                ?.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if(split2 != null)
+            {
+                if (split2.Length > 1)
+                {
+                    index = split2.ToList().IndexOf(OcrConstants.Nickname) + 1;
+                    candidate = split2[index];
+                }    
+            }
+
+            string nickname = candidate?.Replace("DBCe", "DBC*");
 
             _logger.LogInformation("Calculated nickname as `{Nick}`", nickname);
 
