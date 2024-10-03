@@ -8,6 +8,7 @@
         C,
         B,
         A,
-        S
+        S,
+        SPlus
     }
 }

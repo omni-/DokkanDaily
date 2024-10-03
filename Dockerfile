@@ -16,6 +16,8 @@ ENV DOTNET_DokkanDailySettings__AzureBlobContainerName=$BlobContainerName
 ENV DOTNET_DokkanDailySettings__AzureBlobKey=$BlobKey
 ENV DOTNET_DokkanDailySettings__SeedOffset=$SeedOffset
 ENV DOTNET_DokkanDailySettings__SqlServerConnectionString=$SqlServerConnectionString
+ENV DOTNET_DokkanDailySettings__OAuth2ClientSecret=$OAuth2ClientSecret
+ENV DOTNET_DokkanDailySettings__OAuth2ClientId=$OAuth2ClientId
 
 RUN apt-get update \
     && apt-get install -y --allow-unauthenticated \
