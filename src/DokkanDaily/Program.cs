@@ -3,6 +3,8 @@ using DokkanDaily.Configuration;
 using DokkanDaily.Repository;
 using DokkanDaily.Services;
 using DokkanDaily.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace DokkanDaily
 {
@@ -28,9 +30,26 @@ namespace DokkanDaily
             builder.Services.AddTransient<ISqlConnectionWrapper, SqlConnectionWrapper>();
             builder.Services.AddTransient<IDokkanDailyRepository, DokkanDailyRepository>();
 
+            IConfigurationSection configuration = builder.Configuration.GetSection(nameof(DokkanDailySettings));
+
             builder.Services
-                .Configure<DokkanDailySettings>(builder.Configuration.GetSection(nameof(DokkanDailySettings)))
+                .Configure<DokkanDailySettings>(configuration)
                 .AddLogging(builder => builder.AddConsole());
+
+            builder.Services
+                .AddAuthentication(opt =>
+                {
+                    opt.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    opt.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                })
+                .AddCookie()
+                .AddDiscord(opt =>
+                {
+                    opt.AppId = configuration[nameof(DokkanDailySettings.OAuth2ClientId)];
+                    opt.AppSecret = configuration[nameof(DokkanDailySettings.OAuth2ClientSecret)];
+
+                    opt.SaveTokens = true;
+                });
 
             var app = builder.Build();
 

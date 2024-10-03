@@ -14,6 +14,10 @@
 
         public string SqlServerConnectionString { get; init; }
 
+        public string OAuth2ClientSecret { get; init; }
+
+        public string OAuth2ClientId { get; init; }
+
         public FeatureFlags FeatureFlags { get; init; } = new();
     }
 }
