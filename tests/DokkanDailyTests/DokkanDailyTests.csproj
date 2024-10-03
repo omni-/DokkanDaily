@@ -33,9 +33,4 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="Data\Screenshot_20240925_085515_Dokkan.jpg" />
-    <None Remove="Data\Screenshot_20240928-053330-Mozilla50LinuxAndroid10KAppleWebKit53736KHTMLlikeGeckoChrome129000MobileSafari53736.png" />
-  </ItemGroup>
-
 </Project>

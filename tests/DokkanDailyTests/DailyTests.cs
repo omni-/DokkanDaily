@@ -78,9 +78,10 @@ namespace DokkanDailyTests
             var abMock = mocks.Create<IAzureBlobService>();
             var repoMock = mocks.Create<IDokkanDailyRepository>();
             var lbMock = mocks.Create<ILeaderboardService>();
+            var rngMock = mocks.Create<IRngHelperService>();
             var loggerMock = mocks.Create<ILogger<ResetService>>();
 
-            IResetService tdrs = new ResetService(abMock.Object, repoMock.Object, lbMock.Object, loggerMock.Object);
+            IResetService tdrs = new ResetService(abMock.Object, repoMock.Object, lbMock.Object, rngMock.Object, loggerMock.Object);
 
             List<DbClear> actual = [];
 

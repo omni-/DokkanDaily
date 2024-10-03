@@ -7,7 +7,6 @@ TODO:
 * UI improvements
 	- Fit screen better
 	- smoother/smaller images
-* Admin dashboard
 * Login
 * GUESS THE UNIT!
 * Patch scraper to look for the dokkan awaken arrow and filter out TURs of LRs

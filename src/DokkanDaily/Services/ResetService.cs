@@ -9,19 +9,21 @@ namespace DokkanDaily.Services
     public class ResetService(IAzureBlobService azureBlobService,
         IDokkanDailyRepository repository,
         ILeaderboardService leaderboardService,
+        IRngHelperService rngHelperService,
         ILogger<ResetService> logger) : IResetService
     {
         private readonly ILogger<ResetService> _logger = logger;
         private readonly IAzureBlobService _azureBlobService = azureBlobService;
         private readonly ILeaderboardService _leaderboardService = leaderboardService;
         private readonly IDokkanDailyRepository _repository = repository;
+        private readonly IRngHelperService _rngHelperService = rngHelperService;
 
         public async Task DoReset()
         {
             _logger.LogInformation("Starting daily reset...");
 
-            // hacky, but better than having a random second reset
-            Environment.SetEnvironmentVariable("DOTNET_DokkanDailySettings__SeedOffset", "0");
+            // Reset RNGService/seeding
+            _rngHelperService.Reset();
 
             // delete old clears
             await _azureBlobService.PruneContainers(30);
@@ -37,7 +39,7 @@ namespace DokkanDaily.Services
                 var tags = props.Value.Metadata;
 
                 // skip upload in case we don't know who the clear belongs to
-                if (!tags.ContainsKey(DDConstants.USER_NAME_TAG)) // && !tags.ContainsKey(DDConstants.DISCORD_NAME_TAG)
+                if (!tags.ContainsKey(DDConstants.USER_NAME_TAG) && !tags.ContainsKey(DDConstants.DISCORD_NAME_TAG))
                 {
                     _logger.LogWarning("Failed to extract a username and user was not logged in. Skipping clear entirely.");
                     continue;
@@ -57,7 +59,8 @@ namespace DokkanDaily.Services
 
                 clears.Add(new DbClear()
                 {
-                    DokkanNickname = tags[DDConstants.USER_NAME_TAG],
+                    DokkanNickname = tags.TryGetValue(DDConstants.USER_NAME_TAG, out string nickname) ? nickname : null,
+                    DiscordUsername = tags.TryGetValue(DDConstants.DISCORD_NAME_TAG, out string discord) ? discord : null,
                     ClearTime = tags[DDConstants.CLEAR_TIME_TAG],
                     ItemlessClear = bool.Parse(tags[DDConstants.ITEMLESS_TAG]),
                     ClearTimeSpan = timeSpan

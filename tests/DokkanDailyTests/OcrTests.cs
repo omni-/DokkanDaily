@@ -8,7 +8,7 @@ namespace DokkanDailyTests
     public class OcrTests
     {
         [Test]
-        [Ignore("Can't run on remote")]
+        //[Ignore("Can't run on remote")]
         [TestCase("IMG_1907.png", "DBC*omni", "0'11\"53.4", true)]
         [TestCase("Screenshot_20240915-192306.png", "DBC*Owl", "0'10\"01.8", false)]
         [TestCase("Screenshot_20240925_085515_Dokkan.jpg", "SlacksV2", "0'07\"17.1", false)]

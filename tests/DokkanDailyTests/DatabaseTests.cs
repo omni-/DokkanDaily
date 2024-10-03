@@ -1,4 +1,5 @@
-﻿using DokkanDaily.Configuration;
+﻿using Dapper;
+using DokkanDaily.Configuration;
 using DokkanDaily.Models.Database;
 using DokkanDaily.Repository;
 using FluentAssertions;
@@ -15,20 +16,29 @@ namespace DokkanDailyTests
     // docker run -p 1433:1433 --name sqldb -d mydatabase:1.0
     public class DatabaseTests
     {
-        private DokkanDailyRepository repository; 
+        private DokkanDailyRepository repository;
+        private SqlConnectionWrapper wrapper;
 
         [OneTimeSetUp]
         public void OneTimeSetup()
         {
             Mock<ILogger<DokkanDailyRepository>> mock = new(MockBehavior.Loose);
-            SqlConnectionWrapper sqlConnection = new();
+            wrapper = new();
 
             IOptions<DokkanDailySettings> options = Options.Create(new DokkanDailySettings() 
             { 
                 SqlServerConnectionString = "Data Source=.,1433;Initial Catalog=mydatabase;Persist Security Info=True;User ID=SA;Password=<YourStrong@Passw0rd>;TrustServerCertificate=True;"
             });
 
-            repository = new(sqlConnection, mock.Object, options);
+            repository = new(wrapper, mock.Object, options);
+        }
+
+        [SetUp]
+        public async Task Setup()
+        {
+            await wrapper.OpenAsync();
+            await wrapper.ExecuteReaderAsync("delete from Core.StageClear; delete from Core.DokkanDailyUser;", new());
+            await wrapper.CloseAsync();
         }
 
         [Test]
@@ -45,7 +55,7 @@ namespace DokkanDailyTests
                     ItemlessClear = true,
                     ClearTime = "n/a"
                 },
-                new DbClear()
+				new DbClear()
                 {
                     DokkanNickname = "rabs",
                     IsDailyHighscore = false,
@@ -94,6 +104,25 @@ namespace DokkanDailyTests
                 ItemlessClears = 0,
                 TotalClears = 3
             });
-        }
+
+            await repository.InsertDailyClears([new DbClear()
+            {
+                DokkanNickname = "omni",
+                DiscordUsername = "omni",
+                IsDailyHighscore = true,
+                ItemlessClear = true,
+                ClearTime = "n/a"
+            }]);
+			result = await repository.GetDailyLeaderboard();
+			list = result.ToList();
+			list.Should().ContainEquivalentOf(new DbLeaderboardResult()
+			{
+				DokkanNickname = "omni",
+                DiscordUsername = "omni",
+				DailyHighscores = 4,
+				ItemlessClears = 4,
+				TotalClears = 4
+			});
+		}
     }
 }

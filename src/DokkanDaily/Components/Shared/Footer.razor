@@ -1,13 +1,24 @@
 ﻿@inject NavigationManager NavManager
+@inject IJSRuntime JSRuntime
 
 <footer>
     <div>
-        <img style="cursor:pointer" @onclick=OnClick src="images/misc/leaderboard_icon.png" />
+        <img style="cursor:pointer" @onclick="@(() => NavManager.NavigateTo("/leaderboard", false))" src="images/misc/leaderboard_icon.png" />
     </div>
     <div>
         <a href="https://github.com/omni-/DokkanDaily"><img src="images/misc/github.png" /></a>
     </div>
     <p>Time until challenge resets: @hoursToReset hour(s)</p>
+    <Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
+        <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+            <Authorized>
+                <button @onclick=OnClick>Log out</button>
+            </Authorized>
+            <NotAuthorized>
+                <button @onclick="@(()=>NavManager.NavigateTo("/auth", true))">Login with Discord</button>
+            </NotAuthorized>
+        </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+    </Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
 </footer>
 
 @code {
@@ -15,6 +26,7 @@
 
     void OnClick()
     {
-        NavManager.NavigateTo("/leaderboard", false);
+        JSRuntime.InvokeVoidAsync("open", $"{NavManager.BaseUri}deauth", "_blank");
+        NavManager.NavigateTo("/daily", true);
     }
 }

@@ -38,7 +38,7 @@ namespace DokkanDaily.Services
             _ocrService = ocrService;
         }
 
-        public async Task<string> UploadToAzureAsync(string userFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null, string userAgent = null)
+        public async Task<string> UploadToAzureAsync(string userFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null, string userAgent = null, string discordUsername = null)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace DokkanDaily.Services
                 await Task.Run(async () =>
                 {
                     var metadata = _ocrService.ProcessImage(ms);
-                    var tags = BuildTagDict(model, metadata);
+                    var tags = BuildTagDict(model, metadata, discordUsername);
                     await blob.SetMetadataAsync(tags);
 
                 }).ConfigureAwait(false);
@@ -215,15 +215,16 @@ namespace DokkanDaily.Services
             }
         }
 
-        private Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata)
+        private Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata, string discordUsername)
         {
             var dict = new Dictionary<string, string>()
             {
                 { DDConstants.DAILY_TYPE_TAG, model.DailyType.ToString()},
                 { DDConstants.EVENT_TAG, model.TodaysEvent.FullName},
-                { DDConstants.USER_NAME_TAG, metadata?.Nickname ?? ""},
-                { DDConstants.ITEMLESS_TAG, metadata?.ItemlessClear.ToString() ?? ""},
-                { DDConstants.CLEAR_TIME_TAG, metadata?.ClearTime ?? ""}
+                { DDConstants.USER_NAME_TAG, metadata?.Nickname},
+                { DDConstants.ITEMLESS_TAG, metadata?.ItemlessClear.ToString()},
+                { DDConstants.CLEAR_TIME_TAG, metadata?.ClearTime},
+                { DDConstants.DISCORD_NAME_TAG, discordUsername }
             };
 
             return dict.Where(kv => !string.IsNullOrEmpty(kv.Value)).ToDictionary();

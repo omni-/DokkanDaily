@@ -5,6 +5,9 @@ using DokkanDaily.Services;
 using DokkanDaily.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.JSInterop;
 
 namespace DokkanDaily
 {
@@ -82,6 +85,11 @@ namespace DokkanDaily
             app.MapGet("/auth", async (context) =>
             {
                 await context.ChallengeAsync("Discord", new AuthenticationProperties { RedirectUri = "/" });
+            });
+
+            app.MapGet("/deauth", async (context) =>
+            {
+                await context.SignOutAsync();
             });
 
             app.Run();

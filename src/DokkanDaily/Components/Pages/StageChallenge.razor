@@ -35,16 +35,6 @@
 else
 {
     <div class="challenge-box">
-        <Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
-			<Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
-				<Authorized>
-					<button>Already logged in dummy</button>
-				</Authorized>
-				<NotAuthorized>
-					<button @onclick="@(()=>NavManager.NavigateTo("/auth", true))">Discord</button>
-				</NotAuthorized>
-			</Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
-        </Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
         <div style="margin: 0 1em 0 1em">
             @if (todaysChallenge.DailyType == DailyType.LinkSkill)
             {
