@@ -45,9 +45,13 @@ namespace DokkanDailyTests
         [Test]
         public void TestRng()
         {
-            IRngHelperService rngHelperService = new RngHelperService(Options.Create(new DokkanDailySettings()));
+            IRngHelperService rngHelperService = new RngHelperService();
 
-            Assert.That(rngHelperService.GetDailySeed(), Is.Not.EqualTo(new RngHelperService(Options.Create(new DokkanDailySettings { SeedOffset = 1 })).GetDailySeed()));
+            var seed1 = rngHelperService.GetRawSeed();
+            rngHelperService.RollDailySeed();
+            var seed2 = rngHelperService.GetRawSeed();
+
+            Assert.That(seed1, Is.Not.EqualTo(seed2));
 
             List<string> leaders = [];
             List<string> categories = [];
@@ -58,17 +62,14 @@ namespace DokkanDailyTests
 
             Assert.DoesNotThrow(() =>
             {
-                for (int i = 0; i < 25; i++)
-                {
-                    rngHelperService = new RngHelperService(Options.Create(new DokkanDailySettings { SeedOffset = i }));
+                rngHelperService = new RngHelperService();
 
-                    leaders.Add(rngHelperService.GetRandomLeader(t).Name);
-                    categories.Add(rngHelperService.GetRandomCategory(t).Name);
-                    linkSkills.Add(rngHelperService.GetRandomLinkSkill(t).Name);
+                leaders.Add(rngHelperService.GetRandomLeader(t).Name);
+                categories.Add(rngHelperService.GetRandomCategory(t).Name);
+                linkSkills.Add(rngHelperService.GetRandomLinkSkill(t).Name);
 
-                    rngHelperService.GetRandomStage();
-                    dailyTypes.Add(rngHelperService.GetRandomDailyType().ToString());
-                }
+                rngHelperService.GetRandomStage();
+                dailyTypes.Add(rngHelperService.GetRandomDailyType().ToString());
             });
         }
 
@@ -127,8 +128,8 @@ namespace DokkanDailyTests
                 ]);
 
             repoMock
-                .Setup(x => x.InsertDailyClears(It.IsAny<List<DbClear>>()))
-                .Callback<IEnumerable<DbClear>>(x => actual = x.ToList());
+                .Setup(x => x.InsertDailyClears(It.IsAny<List<DbClear>>(), It.IsAny<DateTime>()))
+                .Callback<IEnumerable<DbClear>, DateTime>((x, y) => actual = x.ToList());
 
             await tdrs.DoReset();
 
@@ -145,10 +146,11 @@ namespace DokkanDailyTests
             lbMock.VerifyNoOtherCalls();
 
             abMock.Verify(x => x.PruneContainers(It.IsAny<int>()), Times.Once());
+            abMock.Verify(x => x.GetBucketNameForDate(It.IsAny<string>()));
             abMock.Verify(x => x.GetFilesForTag(It.IsAny<string>(), It.IsAny<string>()), Times.Once());
             abMock.VerifyNoOtherCalls();
 
-            repoMock.Verify(x => x.InsertDailyClears(It.IsAny<IEnumerable<DbClear>>()), Times.Once());
+            repoMock.Verify(x => x.InsertDailyClears(It.IsAny<IEnumerable<DbClear>>(), It.IsAny<DateTime>()), Times.Once());
             repoMock.VerifyNoOtherCalls();
         }
     }

@@ -25,7 +25,7 @@ namespace DokkanDaily.Services
 
         private const int maxFileSize = 1024 * 8192;
 
-        private string TodaysBucketFullName => $"{_containerName}-{DDHelper.GetUtcNowDateTag()}";
+        private string TodaysBucketFullName => GetBucketNameForDate(DDHelper.GetUtcNowDateTag());
 
         public AzureBlobService(IOptions<DokkanDailySettings> settings, ILogger<AzureBlobService> logger, IOcrService ocrService)
         {
@@ -37,6 +37,11 @@ namespace DokkanDaily.Services
             _accountName = _settings.AzureAccountName;
             _ocrService = ocrService;
         }
+
+        public string GetBucketNameForDate(string formattedDateTag)
+        {
+            return $"{_containerName}-{formattedDateTag}";
+		}
 
         public async Task<string> UploadToAzureAsync(string userFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null, string userAgent = null, string discordUsername = null)
         {

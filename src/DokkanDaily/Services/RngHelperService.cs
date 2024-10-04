@@ -9,11 +9,6 @@ namespace DokkanDaily.Services
 {
     public class RngHelperService : IRngHelperService
     {
-        public RngHelperService(IOptions<DokkanDailySettings> settings)
-        {
-            SeedOffset = settings.Value?.SeedOffset ?? 0;
-		}
-
         private static readonly int MaxCopies = 3;
 
         private Random Random => GetDailySeed();
@@ -61,7 +56,7 @@ namespace DokkanDaily.Services
 			if (SeedOverride != null) return SeedOverride.Value;
 
 			var date = DateTime.UtcNow.Date;
-			var seed = (date.Year * 1000 + date.DayOfYear) + SeedOffset;
+			var seed = (date.Year * 1000 + date.DayOfYear) - (SeedOffset * -1);
 
             return seed;
 		}

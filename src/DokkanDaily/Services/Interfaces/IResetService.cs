@@ -2,6 +2,6 @@
 {
     public interface IResetService
     {
-        Task DoReset();
+        Task DoReset(int daysAgo = 0);
     }
 }

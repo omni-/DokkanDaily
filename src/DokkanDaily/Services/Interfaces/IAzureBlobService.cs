@@ -15,5 +15,8 @@ namespace DokkanDaily.Services.Interfaces
         Task PruneContainers(int daysToKeep);
 
         string GetBlobSASTOkenByFile(string fileName);
-    }
+
+        string GetBucketNameForDate(string formattedDateTag);
+
+	}
 }

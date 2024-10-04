@@ -45,12 +45,12 @@
 					<label>Set Seed: <input @bind-value=@Seed /><button style="margin-left:5px" @onclick=SetSeed>Set</button></label>
 					<br />
 					<label>Set Daily Type: <input @bind-value=@DailyType /><button style="margin-left:5px" @onclick=SetDailyType>Set</button></label>
-@* 					<br />
-					<label>Roll Seed: <button style="margin-left:5px" @onclick=RollSeed>Roll</button></label> *@
+					<br />
+					<label>Roll Seed: <button style="margin-left:5px" @onclick=RollSeed>Roll</button></label>
 					<br />
 					<label>Reset Seed: <button style="margin-left:5px" @onclick=Reset>Reset</button></label>
 					<br />
-					<label>Rerun daily reset: <button style="margin-left:5px" @onclick=Rerun>Rerun Daily Reset</button></label>
+					<label>Rerun daily reset: <input @bind-value=@Date /><button style="margin-left:5px" @onclick=Rerun>Rerun Daily Reset</button></label>
 					<br />
 					<label>Dump env: <textarea @bind=@Env /> <button style="margin-left:5px" @onclick=DumpEnv>Dump</button></label>
 				</div>
@@ -72,6 +72,8 @@
 	string Env { get; set; }
 
 	string DailyType { get; set; }
+
+	string Date { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -114,7 +116,10 @@
 
 	void Rerun()
 	{
-		ResetSvc.DoReset();
+		if (!int.TryParse(Date, out int result))
+			ResetSvc.DoReset(1);
+		else
+			ResetSvc.DoReset(result);
 	}
 
 	void SetDailyType()

@@ -21,7 +21,7 @@ namespace DokkanDaily.Repository
             _logger = logger;
         }
 
-        public async Task InsertDailyClears(IEnumerable<DbClear> clears)
+        public async Task InsertDailyClears(IEnumerable<DbClear> clears, DateTime dateOnly)
         {
             _logger.LogInformation("Beginning daily clear insert...");
 
@@ -31,7 +31,7 @@ namespace DokkanDaily.Repository
 
                 DynamicParameters dp = new();
                 dp.Add("Clears", ToDataTable(clears).AsTableValuedParameter());
-                dp.Add("ClearDate", DateTime.UtcNow);
+                dp.Add("ClearDate", dateOnly);
 
                 await SqlConnectionWrapper.ExecuteAsync(
                     "[Core].[ClearInsert]", dp);

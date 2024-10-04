@@ -46,7 +46,10 @@ namespace DokkanDailyTests
         {
             List<DbClear> dbClears = [];
 
-            dbClears.AddRange(
+            DateTime dt = DateTime.UtcNow.Date;
+
+
+			dbClears.AddRange(
             [
                 new DbClear()
                 {
@@ -71,15 +74,15 @@ namespace DokkanDailyTests
                 }
             ]);
 
-            await repository.InsertDailyClears(dbClears);
+            await repository.InsertDailyClears(dbClears, dt);
             var result = await repository.GetDailyLeaderboard();
 
             Assert.That(result, Is.Not.Null);
             var list = result.ToList();
             Assert.That(list, Has.Count.EqualTo(3));
 
-            await repository.InsertDailyClears(dbClears);
-            await repository.InsertDailyClears(dbClears);
+            await repository.InsertDailyClears(dbClears, dt + TimeSpan.FromDays(1));
+            await repository.InsertDailyClears(dbClears, dt + TimeSpan.FromDays(2));
             result = await repository.GetDailyLeaderboard();
 
             list = result.ToList();
@@ -112,13 +115,29 @@ namespace DokkanDailyTests
                 IsDailyHighscore = true,
                 ItemlessClear = true,
                 ClearTime = "n/a"
-            }]);
+            }], dt + TimeSpan.FromDays(3));
 			result = await repository.GetDailyLeaderboard();
 			list = result.ToList();
 			list.Should().ContainEquivalentOf(new DbLeaderboardResult()
 			{
 				DokkanNickname = "omni",
                 DiscordUsername = "omni",
+				DailyHighscores = 4,
+				ItemlessClears = 4,
+				TotalClears = 4
+			});
+			await repository.InsertDailyClears([new DbClear()
+			{
+				DokkanNickname = "omni",
+				DiscordUsername = "omni",
+				IsDailyHighscore = true,
+				ItemlessClear = true,
+				ClearTime = "n/a"
+			}], dt + TimeSpan.FromDays(3));
+			list.Should().ContainEquivalentOf(new DbLeaderboardResult()
+			{
+				DokkanNickname = "omni",
+				DiscordUsername = "omni",
 				DailyHighscores = 4,
 				ItemlessClears = 4,
 				TotalClears = 4

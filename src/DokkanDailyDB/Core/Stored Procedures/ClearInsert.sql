@@ -15,21 +15,32 @@ BEGIN
 		INSERT([DokkanNickname], [DiscordUsername])
 		VALUES(SOURCE.[DokkanNickname], SOURCE.[DiscordUsername]);
 
-	INSERT INTO Core.StageClear (
-		[DokkanDailyUserId],
-		[ItemlessClear],
-		[ClearTime],
-		[ClearDate],
-		[IsDailyHighscore])
-	SELECT
-		DDU.DokkanDailyUserId,
-		C.ItemlessClear,
-		C.ClearTime,
-		@ClearDate,
-		C.IsDailyHighscore
-	FROM @Clears C 
-	INNER JOIN Core.DokkanDailyUser DDU ON
-	 C.DokkanNickname = DDU.DokkanNickname
+	MERGE INTO Core.StageClear AS TARGET
+	USING (
+		SELECT 
+			DDU.DokkanDailyUserId,
+			C.ItemlessClear,
+			C.ClearTime,
+			@ClearDate AS ClearDate,
+			C.IsDailyHighscore 
+		FROM @Clears C 
+		INNER JOIN Core.DokkanDailyUser DDU ON
+		 C.DokkanNickname = DDU.DokkanNickname
+	) AS SOURCE
+	ON (SOURCE.DokkanDailyUserId = TARGET.DokkanDailyUserId AND SOURCE.ClearDate = TARGET.ClearDate)
+	WHEN NOT MATCHED BY TARGET THEN
+		INSERT(
+			[DokkanDailyUserId],
+			[ItemlessClear],
+			[ClearTime],
+			[ClearDate],
+			[IsDailyHighscore])
+		VALUES(
+			SOURCE.DokkanDailyUserId,
+			SOURCE.ItemlessClear,
+			SOURCE.ClearTime,
+			SOURCE.ClearDate,
+			SOURCE.IsDailyHighscore);
 
 RETURN 0
 END
