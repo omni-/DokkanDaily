@@ -28,8 +28,10 @@ namespace DokkanDaily.Services
             // delete old clears
             await _azureBlobService.PruneContainers(30);
 
-            // upload clears for the day
-            string tag = (DateTime.UtcNow - TimeSpan.FromDays(daysAgo)).GetTagFromDate();
+            DateTime date = DateTime.UtcNow - TimeSpan.FromDays(daysAgo);
+
+			// upload clears for the day
+			string tag = date.GetTagFromDate();
             var result = await _azureBlobService.GetFilesForTag(tag, _azureBlobService.GetBucketNameForDate(tag));
             List<DbClear> clears = [];
 
@@ -81,7 +83,7 @@ namespace DokkanDaily.Services
                     ?? group.MinBy(x => x.ClearTimeSpan))
                 .ToList();
 
-            await _repository.InsertDailyClears(clears, DateTime.UtcNow.Date);
+            await _repository.InsertDailyClears(clears, date);
 
             _logger.LogInformation("Daily clears inserted. Updating leaderboard...");
 
