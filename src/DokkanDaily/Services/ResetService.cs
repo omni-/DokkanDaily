@@ -18,7 +18,7 @@ namespace DokkanDaily.Services
         private readonly IDokkanDailyRepository _repository = repository;
         private readonly IRngHelperService _rngHelperService = rngHelperService;
 
-        public async Task DoReset()
+        public async Task DoReset(int daysAgo = 0)
         {
             _logger.LogInformation("Starting daily reset...");
 
@@ -29,7 +29,8 @@ namespace DokkanDaily.Services
             await _azureBlobService.PruneContainers(30);
 
             // upload clears for the day
-            var result = await _azureBlobService.GetFilesForTag(DDHelper.GetUtcNowDateTag());
+            string tag = (DateTime.UtcNow - TimeSpan.FromDays(daysAgo)).GetTagFromDate();
+            var result = await _azureBlobService.GetFilesForTag(tag, _azureBlobService.GetBucketNameForDate(tag));
             List<DbClear> clears = [];
 
             _logger.LogInformation("Processing daily clears...");
