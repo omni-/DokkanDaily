@@ -128,8 +128,8 @@ namespace DokkanDailyTests
                 ]);
 
             repoMock
-                .Setup(x => x.InsertDailyClears(It.IsAny<List<DbClear>>()))
-                .Callback<IEnumerable<DbClear>>(x => actual = x.ToList());
+                .Setup(x => x.InsertDailyClears(It.IsAny<List<DbClear>>(), It.IsAny<DateTime>()))
+                .Callback<IEnumerable<DbClear>, DateTime>((x, y) => actual = x.ToList());
 
             await tdrs.DoReset();
 
@@ -146,10 +146,11 @@ namespace DokkanDailyTests
             lbMock.VerifyNoOtherCalls();
 
             abMock.Verify(x => x.PruneContainers(It.IsAny<int>()), Times.Once());
+            abMock.Verify(x => x.GetBucketNameForDate(It.IsAny<string>()));
             abMock.Verify(x => x.GetFilesForTag(It.IsAny<string>(), It.IsAny<string>()), Times.Once());
             abMock.VerifyNoOtherCalls();
 
-            repoMock.Verify(x => x.InsertDailyClears(It.IsAny<IEnumerable<DbClear>>()), Times.Once());
+            repoMock.Verify(x => x.InsertDailyClears(It.IsAny<IEnumerable<DbClear>>(), It.IsAny<DateTime>()), Times.Once());
             repoMock.VerifyNoOtherCalls();
         }
     }

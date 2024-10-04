@@ -81,7 +81,7 @@ namespace DokkanDaily.Services
                     ?? group.MinBy(x => x.ClearTimeSpan))
                 .ToList();
 
-            await _repository.InsertDailyClears(clears);
+            await _repository.InsertDailyClears(clears, DateTime.UtcNow.Date);
 
             _logger.LogInformation("Daily clears inserted. Updating leaderboard...");
 
