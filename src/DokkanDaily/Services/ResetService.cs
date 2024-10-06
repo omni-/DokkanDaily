@@ -30,8 +30,8 @@ namespace DokkanDaily.Services
 
             DateTime date = DateTime.UtcNow - TimeSpan.FromDays(daysAgo);
 
-			// upload clears for the day
-			string tag = date.GetTagFromDate();
+            // upload clears for the day
+            string tag = date.GetTagFromDate();
             var result = await _azureBlobService.GetFilesForTag(tag, _azureBlobService.GetBucketNameForDate(tag));
             List<DbClear> clears = [];
 
@@ -44,7 +44,7 @@ namespace DokkanDaily.Services
                 // skip upload in case we don't know who the clear belongs to or it was marked invalid
                 if (tags.TryGetValue(DDConstants.INVALID_TAG, out string invalid))
                 {
-					_ = bool.TryParse(invalid, out bool invalidResult);
+                    _ = bool.TryParse(invalid, out bool invalidResult);
                     if (invalidResult) continue;
                 }
                 if (!tags.TryGetValue(DDConstants.USER_NAME_TAG, out _) && !tags.TryGetValue(DDConstants.DISCORD_NAME_TAG, out _))

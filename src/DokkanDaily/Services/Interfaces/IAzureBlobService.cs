@@ -18,5 +18,5 @@ namespace DokkanDaily.Services.Interfaces
 
         string GetBucketNameForDate(string formattedDateTag);
 
-	}
+    }
 }

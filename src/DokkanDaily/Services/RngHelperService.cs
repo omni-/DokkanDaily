@@ -9,9 +9,8 @@ namespace DokkanDaily.Services
 {
     public class RngHelperService : IRngHelperService
     {
-        private static readonly int MaxCopies = 3;
-
         private Random Random => GetDailySeed();
+
         private static int SeedOffset { get; set; }
         private static int? SeedOverride { get; set; }
         public static Challenge ChallengeOverride { get; private set; }
@@ -25,7 +24,7 @@ namespace DokkanDaily.Services
         public void OverrideChallenge(DailyType type, Event e, LinkSkill link, Category cat, Leader l)
         {
             ChallengeOverride = new(type, e, link, cat, l, DDConstants.GetUnit(l));
-		}
+        }
 
         public void OverrideChallengeType(DailyType type)
         {
@@ -53,12 +52,12 @@ namespace DokkanDaily.Services
 
         public int GetRawSeed()
         {
-			if (SeedOverride != null) return SeedOverride.Value;
+            if (SeedOverride != null) return SeedOverride.Value;
 
-			var date = DateTime.UtcNow.Date;
+            var date = DateTime.UtcNow.Date;
             var seed = (date.Year * 1000 + date.DayOfYear) / (SeedOffset + 1);
             return seed;
-		}
+        }
 
         public DailyType GetRandomDailyType()
         {
@@ -112,21 +111,16 @@ namespace DokkanDaily.Services
         {
             List<T> output = [];
 
-            var tmp = input.Where(x => x.Tier >= tier || (int)x.Tier == (int)tier - 1);
-
-            foreach (T item in tmp)
+            foreach (T item in input)
             {
-                if (item.Tier >= tier)
+                int diff = Math.Abs((int)item.Tier - (int)tier);
+
+                if (diff < 2)
                 {
-                    int diff = (int)item.Tier - (int)tier;
-                    for (int i = 0; i < MaxCopies - diff; i++) 
-                    {
+                    output.Add(item);
+
+                    if (diff == 0)
                         output.Add(item);
-                    }
-                } 
-                else 
-                { 
-                    output.Add(item); 
                 }
             }
 

@@ -41,7 +41,7 @@ namespace DokkanDaily.Services
         public string GetBucketNameForDate(string formattedDateTag)
         {
             return $"{_containerName}-{formattedDateTag}";
-		}
+        }
 
         public async Task<string> UploadToAzureAsync(string userFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null, string userAgent = null, string discordUsername = null)
         {
@@ -233,8 +233,8 @@ namespace DokkanDaily.Services
                 { DDConstants.ITEMLESS_TAG, metadata?.ItemlessClear.ToString()},
                 { DDConstants.CLEAR_TIME_TAG, metadata?.ClearTime},
                 { DDConstants.DISCORD_NAME_TAG, discordUsername },
-				{ DDConstants.INVALID_TAG, invalid }
-			};
+                { DDConstants.INVALID_TAG, invalid }
+            };
 
             return dict.Where(kv => !string.IsNullOrEmpty(kv.Value)).ToDictionary();
         }

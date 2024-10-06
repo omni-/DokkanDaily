@@ -35,6 +35,6 @@ namespace DokkanDaily.Services.Interfaces
 
         void OverrideChallengeType(DailyType type);
 
-		int GetRawSeed();
-	}
+        int GetRawSeed();
+    }
 }

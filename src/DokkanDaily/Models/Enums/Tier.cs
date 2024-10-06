@@ -9,6 +9,6 @@
         B,
         A,
         S,
-        SPlus
+        Z
     }
 }
