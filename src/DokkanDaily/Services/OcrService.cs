@@ -22,6 +22,8 @@ namespace DokkanDaily.Services
 
             var text = page.GetText();
 
+            if (!text.Contains(OcrConstants.Clear)) return null;
+
             List<string> split = [.. text.Split('\n', StringSplitOptions.RemoveEmptyEntries)];
 
             string clearTime = null;
