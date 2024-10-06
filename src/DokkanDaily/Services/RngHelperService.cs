@@ -23,7 +23,7 @@ namespace DokkanDaily.Services
         public void OverrideChallenge(DailyType type, Event e, LinkSkill link, Category cat, Leader l)
         {
             ChallengeOverride = new(type, e, link, cat, l, DDConstants.GetUnit(l));
-		}
+        }
 
         public void OverrideChallengeType(DailyType type)
         {
@@ -51,16 +51,16 @@ namespace DokkanDaily.Services
 
         public int GetRawSeed()
         {
-			if (SeedOverride != null) return SeedOverride.Value;
+            if (SeedOverride != null) return SeedOverride.Value;
 
-			var date = DateTime.UtcNow.Date;
+            var date = DateTime.UtcNow.Date;
             var seed = (date.Year * 1000 + date.DayOfYear) / (SeedOffset + 1);
             return seed;
-		}
+        }
 
         public DailyType GetRandomDailyType()
         {
-			if (DailyTypeOverride != null) return DailyTypeOverride.Value;
+            if (DailyTypeOverride != null) return DailyTypeOverride.Value;
 
             // link skill challenges are harder and less varied, so they should appear slightly less often
             var types = new List<DailyType>(DDConstants.DailyTypes);
@@ -108,31 +108,31 @@ namespace DokkanDaily.Services
 
         private static List<T> CreateSeededCollection<T>(IEnumerable<T> input, Tier tier) where T : ITieredObject
         {
-			List<T> output = [];
+            List<T> output = [];
 
-			var tmp = input.Where(x => (int)x.Tier >= ((int)tier - 1));
+            var tmp = input.Where(x => (int)x.Tier >= ((int)tier - 1));
 
-			foreach (T item in tmp)
-			{
-				if (item.Tier >= tier)
-				{
-					int diff = (int)item.Tier - (int)tier;
+            foreach (T item in tmp)
+            {
+                if (item.Tier >= tier)
+                {
+                    int diff = (int)item.Tier - (int)tier;
 
-					if (diff == 2)
-						output.Add(item);
-					else
-						for (int i = 0; i < 2 - diff; i++)
-							output.Add(item);
+                    if (diff == 2)
+                        output.Add(item);
+                    else
+                        for (int i = 0; i < 2 - diff; i++)
+                            output.Add(item);
 
-				}
-				else
-				{
-					output.Add(item);
-				}
-			}
+                }
+                else
+                {
+                    output.Add(item);
+                }
+            }
 
-			return output;
-		}
+            return output;
+        }
 
         public Challenge GetDailyChallenge()
         {

@@ -1,11 +1,10 @@
 ﻿using DokkanDaily.Helpers;
 using DokkanDaily.Models;
 using DokkanDaily.Models.Enums;
-using System.Text.RegularExpressions;
 
 namespace DokkanDaily.Constants
 {
-    public static partial class DDConstants
+    public static class DDConstants
     {
         #region Link Skills
         public static IReadOnlyList<LinkSkill> LinkSkills { get => linkSkills; }
@@ -192,7 +191,7 @@ namespace DokkanDaily.Constants
             new("When Wishes Backfire! Birth of the Shadow Dragons", Tier.F, "ShadowDragons", 1),
             new("When Wishes Backfire! Birth of the Shadow Dragons", Tier.D, "ShadowDragons", 6),
             new("When Wishes Backfire! Birth of the Shadow Dragons", Tier.D, "ShadowDragons", 7),
-			new("When Wishes Backfire! Birth of the Shadow Dragons", Tier.C, "ShadowDragons", 8),
+            new("When Wishes Backfire! Birth of the Shadow Dragons", Tier.C, "ShadowDragons", 8),
             new("Fighting Legend: Goku", Tier.F, "LGE"),
             new("Fighting Legend: Goku [GT Edition]", Tier.F, "LGT"),
             new("Fighting Legend: Vegeta", Tier.F, "LVE"),
@@ -200,9 +199,9 @@ namespace DokkanDaily.Constants
             new("The Devil Awakens", Tier.B, "DevilAwakens", 1),
             new("The Devil Awakens", Tier.B, "DevilAwakens", 2),
             new("The Devil Awakens", Tier.C, "DevilAwakens", 3),
-			new("Supreme Magnificent Battle [Movie Edition]", Tier.C, "SMB_MOVIE", 1),
-			new("Supreme Magnificent Battle [Movie Edition]", Tier.C, "SMB_MOVIE", 2),
-			new("Supreme Magnificent Battle [Movie Edition]", Tier.B, "SMB_MOVIE", 3),
+            new("Supreme Magnificent Battle [Movie Edition]", Tier.C, "SMB_MOVIE", 1),
+            new("Supreme Magnificent Battle [Movie Edition]", Tier.C, "SMB_MOVIE", 2),
+            new("Supreme Magnificent Battle [Movie Edition]", Tier.B, "SMB_MOVIE", 3),
             new("Supreme Magnificent Battle [Movie Edition]", Tier.A, "SMB_MOVIE", 4),
             new("Supreme Magnificent Battle [Movie Edition]", Tier.A, "SMB_MOVIE", 5),
             new("Supreme Magnificent Battle [Movie Edition]", Tier.A, "SMB_MOVIE", 6),
@@ -210,21 +209,21 @@ namespace DokkanDaily.Constants
             new("Supreme Magnificent Battle [Universe Survival Saga]", Tier.B, "SMB_USS", 1),
             new("Supreme Magnificent Battle [Universe Survival Saga]", Tier.A, "SMB_USS", 2),
             new("Supreme Magnificent Battle [Universe Survival Saga]", Tier.A, "SMB_USS", 3),
-			new("Supreme Magnificent Battle [Universe Survival Saga]", Tier.S, "SMB_USS", 4),
-			new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.C, "SMB_DBS", 1),
-			new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.C, "SMB_DBS", 2),
-			new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.C, "SMB_DBS", 3),
-			new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.A, "SMB_DBS", 4),
-			new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.C, "SMB_DBS", 5),
-			new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.C, "SMB_DBS", 6),
-			new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.S, "SMB_DBS", 7),
+            new("Supreme Magnificent Battle [Universe Survival Saga]", Tier.S, "SMB_USS", 4),
+            new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.C, "SMB_DBS", 1),
+            new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.C, "SMB_DBS", 2),
+            new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.C, "SMB_DBS", 3),
+            new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.A, "SMB_DBS", 4),
+            new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.C, "SMB_DBS", 5),
+            new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.C, "SMB_DBS", 6),
+            new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.S, "SMB_DBS", 7),
             new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.S, "SMB_DBS", 8),
             new("Ultimate Red Zone [Majin Buu Saga]", Tier.D, "MBS_RZ", 1),
             new("Ultimate Red Zone [Majin Buu Saga]", Tier.A, "MBS_RZ", 2),
             new("Ultimate Red Zone [Majin Buu Saga]", Tier.A, "MBS_RZ", 3),
-			new("Ultimate Red Zone [Majin Buu Saga]", Tier.S, "MBS_RZ", 4),
-			new("Divine Wrath and Mortal Will", Tier.C, "DWMW", 7),
-			new("Divine Wrath and Mortal Will", Tier.B, "DWMW", 8),
+            new("Ultimate Red Zone [Majin Buu Saga]", Tier.S, "MBS_RZ", 4),
+            new("Divine Wrath and Mortal Will", Tier.C, "DWMW", 7),
+            new("Divine Wrath and Mortal Will", Tier.B, "DWMW", 8),
             new("Divine Wrath and Mortal Will", Tier.B, "DWMW", 9),
             new("Ultimate Red Zone [Movie Edition 2]", Tier.F, "MOVIE2_RZ", 1),
             new("Ultimate Red Zone [Movie Edition 2]", Tier.F, "MOVIE2_RZ", 2),
@@ -368,10 +367,10 @@ namespace DokkanDaily.Constants
         public static string ITEMLESS_TAG => "itemless";
         public static string DISCORD_NAME_TAG => "discordusername";
         public static string INVALID_TAG => "invalidrun";
-		#endregion
+        #endregion
 
-		#region Misc.
-		private static readonly List<Unit> unitDB = [];
+        #region Misc.
+        private static readonly List<Unit> unitDB = [];
         public static IReadOnlyList<Unit> UnitDB { get => unitDB.AsReadOnly(); }
 
         public static readonly IReadOnlyDictionary<DokkanType, string> TypeToHexMap = new Dictionary<DokkanType, string>()
