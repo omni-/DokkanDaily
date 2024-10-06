@@ -41,31 +41,34 @@ namespace DokkanDaily.Services
                 var props = await clear.GetPropertiesAsync();
                 var tags = props.Value.Metadata;
 
-                // skip upload in case we don't know who the clear belongs to
-                if (!tags.ContainsKey(DDConstants.USER_NAME_TAG) && !tags.ContainsKey(DDConstants.DISCORD_NAME_TAG))
+                // skip upload in case we don't know who the clear belongs to or it was marked invalid
+                if (tags.TryGetValue(DDConstants.INVALID_TAG, out string invalid))
+                {
+					_ = bool.TryParse(invalid, out bool invalidResult);
+                    if (invalidResult) continue;
+                }
+                if (!tags.TryGetValue(DDConstants.USER_NAME_TAG, out _) && !tags.TryGetValue(DDConstants.DISCORD_NAME_TAG, out _))
                 {
                     _logger.LogWarning("Failed to extract a username and user was not logged in. Skipping clear entirely.");
                     continue;
                 }
 
-                if (!tags.ContainsKey(DDConstants.ITEMLESS_TAG))
+                if (!tags.TryGetValue(DDConstants.ITEMLESS_TAG, out string itemless))
                 {
                     _logger.LogWarning("`ITEMLESS` tag missing. Defaulting to false.");
-                    tags.Add(DDConstants.ITEMLESS_TAG, "false");
                 }
-
-                if (!DDHelper.TryParseDokkanTimeSpan(tags[DDConstants.CLEAR_TIME_TAG], out TimeSpan timeSpan))
+                ;
+                if (!tags.TryGetValue(DDConstants.CLEAR_TIME_TAG, out string clearTime) || !DDHelper.TryParseDokkanTimeSpan(clearTime, out TimeSpan timeSpan))
                 {
                     _logger.LogWarning("`CLEARTIME` tag missing. Defaulting to TimeSpan.MaxValue.");
                     timeSpan = TimeSpan.MaxValue;
                 }
-
                 clears.Add(new DbClear()
                 {
                     DokkanNickname = tags.TryGetValue(DDConstants.USER_NAME_TAG, out string nickname) ? nickname : null,
                     DiscordUsername = tags.TryGetValue(DDConstants.DISCORD_NAME_TAG, out string discord) ? discord : null,
-                    ClearTime = tags[DDConstants.CLEAR_TIME_TAG],
-                    ItemlessClear = bool.Parse(tags[DDConstants.ITEMLESS_TAG]),
+                    ClearTime = clearTime,
+                    ItemlessClear = bool.Parse(itemless),
                     ClearTimeSpan = timeSpan
                 });
             }

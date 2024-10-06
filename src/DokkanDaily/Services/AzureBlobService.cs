@@ -220,8 +220,11 @@ namespace DokkanDaily.Services
             }
         }
 
-        private Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata, string discordUsername)
+        private static Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata, string discordUsername)
         {
+            string invalid = null;
+            if (metadata == null) invalid = true.ToString();
+
             var dict = new Dictionary<string, string>()
             {
                 { DDConstants.DAILY_TYPE_TAG, model.DailyType.ToString()},
@@ -229,8 +232,9 @@ namespace DokkanDaily.Services
                 { DDConstants.USER_NAME_TAG, metadata?.Nickname},
                 { DDConstants.ITEMLESS_TAG, metadata?.ItemlessClear.ToString()},
                 { DDConstants.CLEAR_TIME_TAG, metadata?.ClearTime},
-                { DDConstants.DISCORD_NAME_TAG, discordUsername }
-            };
+                { DDConstants.DISCORD_NAME_TAG, discordUsername },
+				{ DDConstants.INVALID_TAG, invalid }
+			};
 
             return dict.Where(kv => !string.IsNullOrEmpty(kv.Value)).ToDictionary();
         }

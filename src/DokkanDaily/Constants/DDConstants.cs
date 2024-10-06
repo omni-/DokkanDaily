@@ -328,6 +328,7 @@ namespace DokkanDaily.Constants
         public static string CLEAR_TIME_TAG => "cleartime";
         public static string ITEMLESS_TAG => "itemless";
         public static string DISCORD_NAME_TAG => "discordusername";
+        public static string INVALID_TAG => "invalidrun";
 		#endregion
 
 		#region Misc.

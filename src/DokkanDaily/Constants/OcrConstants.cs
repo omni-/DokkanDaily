@@ -7,5 +7,6 @@
         public static string ItemsUsed => "Items Used";
         public static string PersonalBest => "Personal Best";
         public static string None => "None";
+        public static string Clear => "Clear";
     }
 }
