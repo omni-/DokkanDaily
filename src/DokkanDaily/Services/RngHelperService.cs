@@ -9,8 +9,6 @@ namespace DokkanDaily.Services
 {
     public class RngHelperService : IRngHelperService
     {
-        private static readonly int MaxCopies = 3;
-
         private Random Random => GetDailySeed();
         private static int SeedOffset { get; set; }
         private static int? SeedOverride { get; set; }
@@ -62,7 +60,7 @@ namespace DokkanDaily.Services
 
         public DailyType GetRandomDailyType()
         {
-            if (DailyTypeOverride != null) return DailyTypeOverride.Value;
+			if (DailyTypeOverride != null) return DailyTypeOverride.Value;
 
             // link skill challenges are harder and less varied, so they should appear slightly less often
             var types = new List<DailyType>(DDConstants.DailyTypes);
@@ -110,28 +108,31 @@ namespace DokkanDaily.Services
 
         private static List<T> CreateSeededCollection<T>(IEnumerable<T> input, Tier tier) where T : ITieredObject
         {
-            List<T> output = [];
+			List<T> output = [];
 
-            var tmp = input.Where(x => x.Tier >= tier || (int)x.Tier == (int)tier - 1);
+			var tmp = input.Where(x => (int)x.Tier >= ((int)tier - 1));
 
-            foreach (T item in tmp)
-            {
-                if (item.Tier >= tier)
-                {
-                    int diff = (int)item.Tier - (int)tier;
-                    for (int i = 0; i < MaxCopies - diff; i++) 
-                    {
-                        output.Add(item);
-                    }
-                } 
-                else 
-                { 
-                    output.Add(item); 
-                }
-            }
+			foreach (T item in tmp)
+			{
+				if (item.Tier >= tier)
+				{
+					int diff = (int)item.Tier - (int)tier;
 
-            return output;
-        }
+					if (diff == 2)
+						output.Add(item);
+					else
+						for (int i = 0; i < 2 - diff; i++)
+							output.Add(item);
+
+				}
+				else
+				{
+					output.Add(item);
+				}
+			}
+
+			return output;
+		}
 
         public Challenge GetDailyChallenge()
         {
