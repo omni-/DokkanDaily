@@ -10,6 +10,7 @@ namespace DokkanDaily.Services
     public class RngHelperService : IRngHelperService
     {
         private Random Random => GetDailySeed();
+
         private static int SeedOffset { get; set; }
         private static int? SeedOverride { get; set; }
         public static Challenge ChallengeOverride { get; private set; }
@@ -110,24 +111,16 @@ namespace DokkanDaily.Services
         {
             List<T> output = [];
 
-            var tmp = input.Where(x => (int)x.Tier >= ((int)tier - 1));
-
-            foreach (T item in tmp)
+            foreach (T item in input)
             {
-                if (item.Tier >= tier)
-                {
-                    int diff = (int)item.Tier - (int)tier;
+                int diff = Math.Abs((int)item.Tier - (int)tier);
 
-                    if (diff == 2)
-                        output.Add(item);
-                    else
-                        for (int i = 0; i < 2 - diff; i++)
-                            output.Add(item);
-
-                }
-                else
+                if (diff < 2)
                 {
                     output.Add(item);
+
+                    if (diff == 0)
+                        output.Add(item);
                 }
             }
 
