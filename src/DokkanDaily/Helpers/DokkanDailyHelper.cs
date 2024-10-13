@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace DokkanDaily.Helpers
 {
-    public static partial class DDHelper
+    public static partial class DokkanDailyHelper
     {
         private static readonly JsonSerializerOptions options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
@@ -48,7 +48,6 @@ namespace DokkanDaily.Helpers
             return TimeSpan.TryParseExact(value, "h\\'mm\\\"ss\\.f", System.Globalization.CultureInfo.InvariantCulture, out result);
         }
 
-
         public static string AddUserAgentToFileName(string file, string userAgent)
         {
             if (string.IsNullOrEmpty(userAgent)) return file;
@@ -58,6 +57,16 @@ namespace DokkanDaily.Helpers
             string agentPart = string.IsNullOrEmpty(userAgent) ? "" : $"-{AlphaNumericRegex().Replace(userAgent, "")}";
 
             return $"{name}{agentPart}{ext}";
+        }
+
+        public static Unit GetUnit(string name, string title)
+        {
+            return DokkanConstants.UnitDB.FirstOrDefault(x => x.Name == name && x.Title == title);
+        }
+
+        public static Unit GetUnit(Leader leader)
+        {
+            return DokkanConstants.UnitDB.FirstOrDefault(x => x.Name == leader.Name && x.Title == leader.Title);
         }
     }
 }

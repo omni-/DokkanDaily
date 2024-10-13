@@ -25,7 +25,7 @@ namespace DokkanDaily.Services
 
         private const int maxFileSize = 1024 * 8192;
 
-        private string TodaysBucketFullName => GetBucketNameForDate(DDHelper.GetUtcNowDateTag());
+        private string TodaysBucketFullName => GetBucketNameForDate(DokkanDailyHelper.GetUtcNowDateTag());
 
         public AzureBlobService(IOptions<DokkanDailySettings> settings, ILogger<AzureBlobService> logger, IOcrService ocrService)
         {
@@ -49,7 +49,7 @@ namespace DokkanDaily.Services
             {
                 var (container, _) = await GetOrCreate(bucket);
 
-                string fileName = DDHelper.AddUserAgentToFileName(userFileName, userAgent);
+                string fileName = DokkanDailyHelper.AddUserAgentToFileName(userFileName, userAgent);
 
                 var blob = container.GetBlobClient(fileName);
 
@@ -65,7 +65,7 @@ namespace DokkanDaily.Services
                 await blob.UploadAsync(ms, options: new BlobUploadOptions()
                 {
                     HttpHeaders = new BlobHttpHeaders { ContentType = contentType },
-                    Tags = new Dictionary<string, string>{ { DDConstants.DATE_TAG, DDHelper.GetUtcNowDateTag() } }
+                    Tags = new Dictionary<string, string> { { AzureConstants.DATE_TAG, DokkanDailyHelper.GetUtcNowDateTag() } }
                 });
 
                 _logger.LogInformation("Finished Azure upload.");
@@ -193,7 +193,7 @@ namespace DokkanDaily.Services
 
         public async Task<List<BlobClient>> GetFilesForTag(string tagName, string bucket = null)
         {
-            List <BlobClient> files = [];
+            List<BlobClient> files = [];
 
             try
             {
@@ -227,13 +227,13 @@ namespace DokkanDaily.Services
 
             var dict = new Dictionary<string, string>()
             {
-                { DDConstants.DAILY_TYPE_TAG, model.DailyType.ToString()},
-                { DDConstants.EVENT_TAG, model.TodaysEvent.FullName},
-                { DDConstants.USER_NAME_TAG, metadata?.Nickname},
-                { DDConstants.ITEMLESS_TAG, metadata?.ItemlessClear.ToString()},
-                { DDConstants.CLEAR_TIME_TAG, metadata?.ClearTime},
-                { DDConstants.DISCORD_NAME_TAG, discordUsername },
-                { DDConstants.INVALID_TAG, invalid }
+                { AzureConstants.DAILY_TYPE_TAG, model.DailyType.ToString()},
+                { AzureConstants.EVENT_TAG, model.TodaysEvent.FullName},
+                { AzureConstants.USER_NAME_TAG, metadata?.Nickname},
+                { AzureConstants.ITEMLESS_TAG, metadata?.ItemlessClear.ToString()},
+                { AzureConstants.CLEAR_TIME_TAG, metadata?.ClearTime},
+                { AzureConstants.DISCORD_NAME_TAG, discordUsername },
+                { AzureConstants.INVALID_TAG, invalid }
             };
 
             return dict.Where(kv => !string.IsNullOrEmpty(kv.Value)).ToDictionary();

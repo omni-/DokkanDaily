@@ -1,9 +1,4 @@
 ﻿using DokkanDaily.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DokkanDailyTests
 {
@@ -17,7 +12,7 @@ namespace DokkanDailyTests
         [TestCase("cats.jpg", "", "cats.jpg")]
         public void CanAddAgentToFileName(string file, string agent, string result)
         {
-            string output = DDHelper.AddUserAgentToFileName(file, agent);
+            string output = DokkanDailyHelper.AddUserAgentToFileName(file, agent);
 
             Assert.That(output, Is.EqualTo(result));
         }
@@ -25,7 +20,7 @@ namespace DokkanDailyTests
         [Test]
         public void NullAgentWorks()
         {
-            Assert.That(DDHelper.AddUserAgentToFileName("cats.png", null), Is.EqualTo("cats.png"));
+            Assert.That(DokkanDailyHelper.AddUserAgentToFileName("cats.png", null), Is.EqualTo("cats.png"));
         }
     }
 }

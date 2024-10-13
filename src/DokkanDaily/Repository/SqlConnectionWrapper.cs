@@ -9,10 +9,10 @@ namespace DokkanDaily.Repository
     {
         public SqlConnectionWrapper() : this(new SqlConnection()) { }
 
-        public string ConnectionString 
-        { 
-            get => sqlConnection.ConnectionString; 
-            set => sqlConnection.ConnectionString = value; 
+        public string ConnectionString
+        {
+            get => sqlConnection.ConnectionString;
+            set => sqlConnection.ConnectionString = value;
         }
 
         public int ConnectionTimeout => sqlConnection.ConnectionTimeout;

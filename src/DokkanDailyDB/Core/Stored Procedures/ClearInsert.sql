@@ -4,13 +4,15 @@
 AS
 BEGIN
 
+	-- todo: merge ('foo', null) and (null, 'bar') when receiving ('foo', 'bar')
+
 	MERGE INTO Core.DokkanDailyUser AS TARGET
 	USING @Clears AS SOURCE
-	ON (SOURCE.DokkanNickname = TARGET.DokkanNickname)
-	WHEN MATCHED 
+	ON (SOURCE.DokkanNickname = TARGET.DokkanNickname OR SOURCE.DiscordUsername = TARGET.DiscordUsername)
+	WHEN MATCHED
 	THEN UPDATE 
-		SET TARGET.DokkanNickname = SOURCE.DokkanNickname,
-		TARGET.DiscordUsername = SOURCE.DiscordUsername
+		SET TARGET.DokkanNickname = ISNULL(SOURCE.DokkanNickname, TARGET.DokkanNickname),
+		TARGET.DiscordUsername = ISNULL(SOURCE.DiscordUsername, TARGET.DiscordUsername)
 	WHEN NOT MATCHED BY TARGET THEN
 		INSERT([DokkanNickname], [DiscordUsername])
 		VALUES(SOURCE.[DokkanNickname], SOURCE.[DiscordUsername]);
@@ -26,6 +28,7 @@ BEGIN
 		FROM @Clears C 
 		INNER JOIN Core.DokkanDailyUser DDU ON
 		 C.DokkanNickname = DDU.DokkanNickname
+		 OR C.DiscordUsername = DDU.DiscordUsername
 	) AS SOURCE
 	ON (SOURCE.DokkanDailyUserId = TARGET.DokkanDailyUserId AND SOURCE.ClearDate = TARGET.ClearDate)
 	WHEN NOT MATCHED BY TARGET THEN

@@ -1,4 +1,3 @@
-using DokkanDaily.Configuration;
 using DokkanDaily.Constants;
 using DokkanDaily.Helpers;
 using DokkanDaily.Models;
@@ -10,7 +9,6 @@ using DokkanDaily.Services.Interfaces;
 using DokkanDailyTests.Infra;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Moq;
 
 namespace DokkanDailyTests
@@ -31,7 +29,7 @@ namespace DokkanDailyTests
         {
             IEnumerable<Unit> list = [];
 
-            Assert.DoesNotThrow(() => list = DDHelper.BuildCharacterDb());
+            Assert.DoesNotThrow(() => list = DokkanDailyHelper.BuildCharacterDb());
             Assert.That(list, Is.Not.Null);
             Assert.That(list, Is.Not.Empty);
         }
@@ -39,7 +37,7 @@ namespace DokkanDailyTests
         [Test]
         public void TestGetUnit()
         {
-            Assert.DoesNotThrow(() => DDConstants.GetUnit("Tenacious Secret Plan", "Super Vegeta"));
+            Assert.DoesNotThrow(() => DokkanDailyHelper.GetUnit("Tenacious Secret Plan", "Super Vegeta"));
         }
 
         [Test]
@@ -91,39 +89,39 @@ namespace DokkanDailyTests
                 .ReturnsAsync([
                     new MockBlobClient(new Dictionary<string, string>()
                     {
-                        { DDConstants.USER_NAME_TAG, "omni" },
-                        { DDConstants.CLEAR_TIME_TAG, "0'20\"10.8" },
-                        { DDConstants.ITEMLESS_TAG, "true" }
+                        { AzureConstants.USER_NAME_TAG, "omni" },
+                        { AzureConstants.CLEAR_TIME_TAG, "0'20\"10.8" },
+                        { AzureConstants.ITEMLESS_TAG, "true" }
                     }),
                     new MockBlobClient(new Dictionary<string, string>()
                     {
-                        { DDConstants.USER_NAME_TAG, "omni" },
-                        { DDConstants.CLEAR_TIME_TAG, "0'19\"10.8" },
-                        { DDConstants.ITEMLESS_TAG, "false" }
+                        { AzureConstants.USER_NAME_TAG, "omni" },
+                        { AzureConstants.CLEAR_TIME_TAG, "0'19\"10.8" },
+                        { AzureConstants.ITEMLESS_TAG, "false" }
                     }),
                     new MockBlobClient(new Dictionary<string, string>()
                     {
-                        { DDConstants.USER_NAME_TAG, "owl" },
-                        { DDConstants.CLEAR_TIME_TAG, "0'44\"10.8" },
-                        { DDConstants.ITEMLESS_TAG, "false" }
+                        { AzureConstants.USER_NAME_TAG, "owl" },
+                        { AzureConstants.CLEAR_TIME_TAG, "0'44\"10.8" },
+                        { AzureConstants.ITEMLESS_TAG, "false" }
                     }),
                     new MockBlobClient(new Dictionary<string, string>()
                     {
-                        { DDConstants.USER_NAME_TAG, "owl" },
-                        { DDConstants.CLEAR_TIME_TAG, "0'18\"10.8" },
-                        { DDConstants.ITEMLESS_TAG, "false" }
+                        { AzureConstants.USER_NAME_TAG, "owl" },
+                        { AzureConstants.CLEAR_TIME_TAG, "0'18\"10.8" },
+                        { AzureConstants.ITEMLESS_TAG, "false" }
                     }),
                     new MockBlobClient(new Dictionary<string, string>()
                     {
-                        { DDConstants.USER_NAME_TAG, "owl" },
-                        { DDConstants.CLEAR_TIME_TAG, "0'48\"10.8" },
-                        { DDConstants.ITEMLESS_TAG, "true" }
+                        { AzureConstants.USER_NAME_TAG, "owl" },
+                        { AzureConstants.CLEAR_TIME_TAG, "0'48\"10.8" },
+                        { AzureConstants.ITEMLESS_TAG, "true" }
                     }),
                     new MockBlobClient(new Dictionary<string, string>()
                     {
-                        { DDConstants.USER_NAME_TAG, "rabs" },
-                        { DDConstants.CLEAR_TIME_TAG, "0'30\"10.8" },
-                        { DDConstants.ITEMLESS_TAG, "true" }
+                        { AzureConstants.USER_NAME_TAG, "rabs" },
+                        { AzureConstants.CLEAR_TIME_TAG, "0'30\"10.8" },
+                        { AzureConstants.ITEMLESS_TAG, "true" }
                     }),
                 ]);
 
@@ -133,13 +131,13 @@ namespace DokkanDailyTests
 
             await tdrs.DoReset();
 
-            List<DbClear> exp = 
+            List<DbClear> exp =
             [
                 new() { DokkanNickname = "omni", ClearTime = "0'20\"10.8", IsDailyHighscore = false, ItemlessClear = true, ClearTimeSpan = new TimeSpan(0, 0, 20, 10, 800) },
                 new() { DokkanNickname = "owl", ClearTime = "0'18\"10.8", IsDailyHighscore = true, ItemlessClear = false, ClearTimeSpan = new TimeSpan(0, 0, 18, 10, 800) },
                 new() { DokkanNickname = "rabs", ClearTime = "0'30\"10.8", IsDailyHighscore = false, ItemlessClear = true, ClearTimeSpan = new TimeSpan(0, 0, 30, 10, 800) }
             ];
-            
+
             actual.Should().BeEquivalentTo(exp);
 
             lbMock.Verify(x => x.GetDailyLeaderboard(true), Times.Once());

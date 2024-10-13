@@ -4,7 +4,7 @@ using DokkanDaily.Models.Enums;
 
 namespace DokkanDaily.Constants
 {
-    public static class DDConstants
+    public static class DokkanConstants
     {
         #region Link Skills
         public static IReadOnlyList<LinkSkill> LinkSkills { get => linkSkills; }
@@ -178,6 +178,7 @@ namespace DokkanDaily.Constants
             new("Boiling Evil", "Super Janemba", Tier.S),
             new("Decisive Strike of Rebellion", "Vegeta", Tier.B)
             // unreleased on global
+            // new("Tide-Turning Super Power", "Gohan (Kid)/Piccolo", Tier.A),
             // new("Power of an Isolated Iron Wall", "Jiren", Tier.S),
             // new("Bright and Fun Life", "Master Roshi", Tier.A)
         ];
@@ -236,9 +237,16 @@ namespace DokkanDaily.Constants
             new("Ultimate Red Zone [Movie Edition]", Tier.E, "MOVIE_RZ", 7),
             new("Ultimate Red Zone [Movie Edition]", Tier.A, "MOVIE_RZ", 8),
             new("9th Anniv.! Anniversary Battle", Tier.A, "ANNI", 9),
+            new("Ultimate Red Zone [Dismal Future Edition]", Tier.C, "DF_RZ", 1),
+            new("Ultimate Red Zone [Dismal Future Edition]", Tier.C, "DF_RZ", 2),
+            new("Ultimate Red Zone [Dismal Future Edition]", Tier.C, "DF_RZ", 3),
+            new("Ultimate Red Zone [Dismal Future Edition]", Tier.B, "DF_RZ", 4),
             new("Ultimate Red Zone [Dismal Future Edition]", Tier.B, "DF_RZ", 5),
-            new("Ultimate Red Zone [Dismal Future Edition]", Tier.B, "DF_RZ", 5),
-            new("Ultimate Red Zone [Wicked Bloodline Edition]", Tier.E, "WB_RZ", 5),
+            new("Ultimate Red Zone [Wicked Bloodline Edition]", Tier.D, "WB_RZ", 1),
+            new("Ultimate Red Zone [Wicked Bloodline Edition]", Tier.D, "WB_RZ", 2),
+            new("Ultimate Red Zone [Wicked Bloodline Edition]", Tier.D, "WB_RZ", 3),
+            new("Ultimate Red Zone [Wicked Bloodline Edition]", Tier.D, "WB_RZ", 4),
+            new("Ultimate Red Zone [Wicked Bloodline Edition]", Tier.C, "WB_RZ", 5),
             new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.B, "MB_ME", 1),
             new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.B, "MB_ME", 2),
             new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.B, "MB_ME", 3),
@@ -251,8 +259,8 @@ namespace DokkanDaily.Constants
             new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.Z, "MB_ME", 10),
             new("Fearsome Activation! Cell Max", Tier.B, "CELLMAX", 1),
             new("Fearsome Activation! Cell Max", Tier.Z, "CELLMAX", 2),
-            new("Fighting Spirit of the Saiyans and Pride of the Wicked Bloodline", Tier.C, "FSS_PWB", 5),
-            new("Fighting Spirit of the Saiyans and Pride of the Wicked Bloodline", Tier.D, "FSS_PWB", 6),
+            //new("Fighting Spirit of the Saiyans and Pride of the Wicked Bloodline", Tier.C, "FSS_PWB", 5),
+            //new("Fighting Spirit of the Saiyans and Pride of the Wicked Bloodline", Tier.D, "FSS_PWB", 6),
             new("Dragon Ball Super: Memorable Battles [Movie Edition]", Tier.B, "MB_ME_DBS", 1),
             new("Dragon Ball Super: Memorable Battles [Movie Edition]", Tier.B, "MB_ME_DBS", 2),
             new("Dragon Ball Super: Memorable Battles [Movie Edition]", Tier.A, "MB_ME_DBS", 3),
@@ -312,7 +320,7 @@ namespace DokkanDaily.Constants
             new("Otherworld Warrior", Tier.F),
             new("Peppy Gals", Tier.E),
             new("Planet Namek Saga", Tier.F),
-            new("Planetary Destruction", Tier.D),
+            new("Planetary Destruction", Tier.S),
             new("Potara", Tier.B),
             new("Power Absorption", Tier.B),
             new("Power Beyond Super Saiyan", Tier.S),
@@ -358,22 +366,11 @@ namespace DokkanDaily.Constants
         ];
         #endregion
 
-        #region Internal
-        public static string DATE_TAG => "date";
-        public static string USER_NAME_TAG => "username";
-        public static string DAILY_TYPE_TAG => "dailytype";
-        public static string EVENT_TAG => "event";
-        public static string CLEAR_TIME_TAG => "cleartime";
-        public static string ITEMLESS_TAG => "itemless";
-        public static string DISCORD_NAME_TAG => "discordusername";
-        public static string INVALID_TAG => "invalidrun";
-        #endregion
-
         #region Misc.
         private static readonly List<Unit> unitDB = [];
         public static IReadOnlyList<Unit> UnitDB { get => unitDB.AsReadOnly(); }
 
-        public static readonly IReadOnlyDictionary<DokkanType, string> TypeToHexMap = new Dictionary<DokkanType, string>()
+        public static readonly IReadOnlyDictionary<DokkanType, string> TypeHexMap = new Dictionary<DokkanType, string>()
         {
             { DokkanType.AGL, "#0555D5" },
             { DokkanType.STR, "#C4151E" },
@@ -384,21 +381,11 @@ namespace DokkanDaily.Constants
         public static IReadOnlyList<DailyType> DailyTypes { get; }
         #endregion
 
-        static DDConstants()
+        static DokkanConstants()
         {
             LinkSkillMap = new Dictionary<string, LinkSkill>(linkSkills.Select(x => new KeyValuePair<string, LinkSkill>(x.Name, x)));
             DailyTypes = [DailyType.Category, DailyType.LinkSkill, DailyType.Character];
-            unitDB = DDHelper.BuildCharacterDb().ToList();
-        }
-
-        public static Unit GetUnit(string name, string title)
-        {
-            return unitDB.FirstOrDefault(x => x.Name == name && x.Title == title);
-        }
-
-        public static Unit GetUnit(Leader leader)
-        {
-            return unitDB.FirstOrDefault(x => x.Name == leader.Name && x.Title == leader.Title);
+            unitDB = DokkanDailyHelper.BuildCharacterDb().ToList();
         }
     }
 }

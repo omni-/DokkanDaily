@@ -71,7 +71,7 @@ else
 
     bool Executing { get; set; }
 
-    string typeColor => DDConstants.TypeToHexMap[todaysChallenge.TodaysUnit.DokkanType];
+    string typeColor => DokkanConstants.TypeHexMap[todaysChallenge.TodaysUnit.DokkanType];
 
     int dailyFileCount = 0;
 
@@ -82,7 +82,7 @@ else
         try
         {
             dailyFileCount = await BlobSvc
-                .GetFileCountForTag(DDHelper.GetUtcNowDateTag())
+                .GetFileCountForTag(DokkanDailyHelper.GetUtcNowDateTag())
                 .ConfigureAwait(false);
         }
         catch { }

@@ -5,7 +5,7 @@
     {
         public int Index { get; }
 
-        public DataTableIndex(int index) 
+        public DataTableIndex(int index)
         {
             ArgumentOutOfRangeException.ThrowIfNegative(index);
 

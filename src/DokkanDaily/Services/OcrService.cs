@@ -46,8 +46,8 @@ namespace DokkanDaily.Services
                             .Replace('O', '0');
 
                     _logger.LogInformation("Attempting to parse `{Str}` as Dokkan-style TimeSpan...", tmp);
-                    
-                    if (DDHelper.TryParseDokkanTimeSpan(tmp, out TimeSpan t))
+
+                    if (DokkanDailyHelper.TryParseDokkanTimeSpan(tmp, out TimeSpan t))
                     {
                         _logger.LogInformation("Success! TimeSpan calculated as {Str}", t.ToString());
 
