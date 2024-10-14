@@ -25,7 +25,7 @@ namespace DokkanDaily.Repository
         {
             _logger.LogInformation("Beginning daily clear insert...");
 
-            try 
+            try
             {
                 await SqlConnectionWrapper.OpenAsync();
 
@@ -36,8 +36,8 @@ namespace DokkanDaily.Repository
                 await SqlConnectionWrapper.ExecuteAsync(
                     "[Core].[ClearInsert]", dp);
             }
-            finally 
-            { 
+            finally
+            {
                 SqlConnectionWrapper.Close();
             }
 

@@ -8,8 +8,9 @@ TODO:
 	- Fit screen better
 	- smoother/smaller images
 * GUESS THE UNIT!
-* Patch scraper to look for the dokkan awaken arrow and filter out TURs of LRs
 * More daily challenges
+* Allow merging of username pairs (details in `ClearInsert.sql`)
+* Parse JP clears
 
 IDEAS:
-* Run the scraper as a job? Rewrite it natively?
+* Run the scraper as a job? ~~Rewrite it natively?~~

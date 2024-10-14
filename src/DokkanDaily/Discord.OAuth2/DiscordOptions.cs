@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OAuth;
-using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
 namespace Discord.OAuth2
@@ -24,9 +23,9 @@ namespace Discord.OAuth2
             ClaimActions.MapJsonKey("urn:discord:avatar", "avatar", ClaimValueTypes.String);
             ClaimActions.MapJsonKey("urn:discord:verified", "verified", ClaimValueTypes.Boolean);
         }
-        
+
         /// <summary> Gets or sets the Discord-assigned appId. </summary>
-        public string AppId { get => ClientId; set => ClientId = value; }        
+        public string AppId { get => ClientId; set => ClientId = value; }
         /// <summary> Gets or sets the Discord-assigned app secret. </summary>
         public string AppSecret { get => ClientSecret; set => ClientSecret = value; }
     }

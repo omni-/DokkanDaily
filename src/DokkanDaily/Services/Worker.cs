@@ -1,13 +1,9 @@
-﻿using DokkanDaily.Constants;
-using DokkanDaily.Helpers;
-using DokkanDaily.Models.Database;
-using DokkanDaily.Repository;
-using DokkanDaily.Services.Interfaces;
+﻿using DokkanDaily.Services.Interfaces;
 
 namespace DokkanDaily.Services;
 
 public class Worker(
-    IResetService resetService, 
+    IResetService resetService,
     ILogger<Worker> logger) : BackgroundService
 {
     private readonly ILogger<Worker> _logger = logger;
@@ -40,7 +36,7 @@ public class Worker(
 
     protected virtual async Task WaitUntilNextScheduledTime(CancellationToken ct)
     {
-        var schedule = new TimeOnly[] { new(23, 59) }; 
+        var schedule = new TimeOnly[] { new(23, 59) };
         var currentDateTime = DateTime.UtcNow;
         var nextScheduledTime = schedule
             .Select(record => GetNextDateTime(currentDateTime, record))

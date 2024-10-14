@@ -28,7 +28,7 @@ namespace DokkanDailyTests.Infra
 
             public override string ReasonPhrase => throw new NotImplementedException();
 
-            public override Stream? ContentStream { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            public override Stream ContentStream { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
             public override string ClientRequestId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
             public override void Dispose()
@@ -46,18 +46,18 @@ namespace DokkanDailyTests.Infra
                 throw new NotImplementedException();
             }
 
-            protected override bool TryGetHeader(string name, [NotNullWhen(true)] out string? value)
+            protected override bool TryGetHeader(string name, [NotNullWhen(true)] out string value)
             {
                 throw new NotImplementedException();
             }
 
-            protected override bool TryGetHeaderValues(string name, [NotNullWhen(true)] out IEnumerable<string>? values)
+            protected override bool TryGetHeaderValues(string name, [NotNullWhen(true)] out IEnumerable<string> values)
             {
                 throw new NotImplementedException();
             }
         }
 
-        public override Task<Response<BlobProperties>> GetPropertiesAsync(BlobRequestConditions? conditions = null, CancellationToken cancellationToken = default)
+        public override Task<Response<BlobProperties>> GetPropertiesAsync(BlobRequestConditions conditions = null, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(Response.FromValue<BlobProperties>(BlobsModelFactory.BlobProperties(metadata: Tags), new MockResponse()));
         }
