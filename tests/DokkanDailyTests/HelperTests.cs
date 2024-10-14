@@ -1,4 +1,5 @@
 ﻿using DokkanDaily.Helpers;
+using DokkanDaily.Models;
 
 namespace DokkanDailyTests
 {
@@ -22,5 +23,23 @@ namespace DokkanDailyTests
         {
             Assert.That(DokkanDailyHelper.AddUserAgentToFileName("cats.png", null), Is.EqualTo("cats.png"));
         }
+
+
+        [Test]
+        public void CanBuildCharacterDb()
+        {
+            IEnumerable<Unit> list = [];
+
+            Assert.DoesNotThrow(() => list = DokkanDailyHelper.BuildCharacterDb());
+            Assert.That(list, Is.Not.Null);
+            Assert.That(list, Is.Not.Empty);
+        }
+
+        [Test]
+        public void TestGetUnit()
+        {
+            Assert.DoesNotThrow(() => DokkanDailyHelper.GetUnit("Tenacious Secret Plan", "Super Vegeta"));
+        }
+
     }
 }

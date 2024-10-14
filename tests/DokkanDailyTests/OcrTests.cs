@@ -1,5 +1,6 @@
 ﻿using DokkanDaily.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 
 namespace DokkanDailyTests
@@ -17,7 +18,7 @@ namespace DokkanDailyTests
         public void BasicOcrTest(string filename, string nickname, string cleartime, bool? itemless)
         {
             Mock<ILogger<OcrService>> loggerMock = new();
-            OcrService service = new(loggerMock.Object);
+            OcrService service = new(loggerMock.Object, Options.Create(new DokkanDaily.Configuration.DokkanDailySettings()), new OcrFormatProvider());
             MemoryStream ms = new();
             File.OpenRead(Path.Join("Data", filename)).CopyTo(ms);
             var result = service.ProcessImage(ms);

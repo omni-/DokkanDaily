@@ -2,11 +2,20 @@
 {
     public class OcrConstants
     {
-        public static string Nickname => "Nickname:";
-        public static string ClearTime => "Clear Time";
-        public static string ItemsUsed => "Items Used";
-        public static string PersonalBest => "Personal Best";
-        public static string None => "None";
-        public static string Clear => "Clear";
+        public static string TrainDataPath => @"./wwwroot/tessdata";
+        public static string NicknameEng => "Nickname:";
+        public static string ClearTimeEng => "Clear Time";
+        public static string ItemsUsedEng => "Items Used";
+        public static string PersonalBestEng => "Personal Best";
+        public static string NoneEng => "None";
+        public static string ClearEng => "Clear";
+        public static string NicknameJpn => "使用";
+        public static string ClearTimeJpn => $"{ClearJpn}タイム";
+        public static string ClearTimeJpnAlt => $"{ClearJpnAlt}タイム";
+        public static string ItemsUsedJpn => "使用アイテム";
+        public static string PersonalBestJpn => "自己ベスト";
+        public static string NoneJpn => "なし";
+        public static string ClearJpn => "クリア";
+        public static string ClearJpnAlt => "クりア";
     }
 }
