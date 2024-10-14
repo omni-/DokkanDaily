@@ -77,7 +77,7 @@ namespace DokkanDaily.Services
                     var tags = BuildTagDict(model, metadata, discordUsername);
                     await blob.SetMetadataAsync(tags);
 
-                }).ConfigureAwait(false);
+                });
 
                 var urlString = blob.Uri.ToString();
                 return urlString;
