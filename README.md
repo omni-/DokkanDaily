@@ -5,8 +5,8 @@ https://www.dokkandle.net
 
 TODO:
 * UI improvements
-	- Fit screen better
-	- smoother/smaller images
+    - Fit screen better
+    - smoother/smaller images
 * GUESS THE UNIT!
 * More daily challenges
 * Allow merging of username pairs (details in `ClearInsert.sql`)
