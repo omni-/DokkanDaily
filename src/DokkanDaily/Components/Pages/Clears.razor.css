@@ -68,3 +68,9 @@ button {
     display:flex;
     align-items:flex-start;
 }
+
+.note {
+    font-size: 12px;
+    font-style: italic;
+    color: white;
+}

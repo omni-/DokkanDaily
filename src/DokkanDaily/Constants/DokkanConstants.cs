@@ -176,11 +176,12 @@ namespace DokkanDaily.Constants
             new("Unveiling of Power", "Raditz", Tier.F),
             new("Super Warrior Who Destroys All", "Legendary Super Saiyan Broly", Tier.S),
             new("Boiling Evil", "Super Janemba", Tier.S),
-            new("Decisive Strike of Rebellion", "Vegeta", Tier.B)
+            new("Decisive Strike of Rebellion", "Vegeta", Tier.B),
+            new("Bright and Fun Life", "Master Roshi", Tier.A),
+            new("Tide-Turning Super Power", "Gohan (Kid)/Piccolo", Tier.B),
             // unreleased on global
-            // new("Tide-Turning Super Power", "Gohan (Kid)/Piccolo", Tier.A),
             // new("Power of an Isolated Iron Wall", "Jiren", Tier.S),
-            // new("Bright and Fun Life", "Master Roshi", Tier.A)
+
         ];
         #endregion
 
@@ -197,9 +198,9 @@ namespace DokkanDaily.Constants
             new("Fighting Legend: Goku [GT Edition]", Tier.F, "LGT"),
             new("Fighting Legend: Vegeta", Tier.F, "LVE"),
             new("Fighting Legend: Frieza", Tier.E, "LFE"),
-            new("The Devil Awakens", Tier.B, "DevilAwakens", 1),
-            new("The Devil Awakens", Tier.B, "DevilAwakens", 2),
-            new("The Devil Awakens", Tier.C, "DevilAwakens", 3),
+            new("Tremble with Fear! The Devil Awakens", Tier.B, "DevilAwakens", 1),
+            new("Tremble with Fear! The Devil Awakens", Tier.B, "DevilAwakens", 2),
+            new("Tremble with Fear! The Devil Awakens", Tier.D, "DevilAwakens", 3),
             new("Supreme Magnificent Battle [Movie Edition]", Tier.C, "SMB_MOVIE", 1),
             new("Supreme Magnificent Battle [Movie Edition]", Tier.C, "SMB_MOVIE", 2),
             new("Supreme Magnificent Battle [Movie Edition]", Tier.B, "SMB_MOVIE", 3),
@@ -227,10 +228,10 @@ namespace DokkanDaily.Constants
             new("Divine Wrath and Mortal Will", Tier.B, "DWMW", 8),
             new("Divine Wrath and Mortal Will", Tier.B, "DWMW", 9),
             new("Ultimate Red Zone [Movie Edition 2]", Tier.F, "MOVIE2_RZ", 1),
-            new("Ultimate Red Zone [Movie Edition 2]", Tier.F, "MOVIE2_RZ", 2),
-            new("Ultimate Red Zone [Movie Edition 2]", Tier.F, "MOVIE2_RZ", 3),
-            new("Ultimate Red Zone [Movie Edition 2]", Tier.F, "MOVIE2_RZ", 4),
-            new("Ultimate Red Zone [Movie Edition 2]", Tier.F, "MOVIE2_RZ", 5),
+            new("Ultimate Red Zone [Movie Edition 2]", Tier.E, "MOVIE2_RZ", 2),
+            new("Ultimate Red Zone [Movie Edition 2]", Tier.E, "MOVIE2_RZ", 3),
+            new("Ultimate Red Zone [Movie Edition 2]", Tier.E, "MOVIE2_RZ", 4),
+            new("Ultimate Red Zone [Movie Edition 2]", Tier.E, "MOVIE2_RZ", 5),
             new("Ultimate Red Zone [Movie Edition 2]", Tier.C, "MOVIE2_RZ", 6),
             new("Ultimate Red Zone [Movie Edition 2]", Tier.C, "MOVIE2_RZ", 7),
             new("Ultimate Red Zone [Movie Edition]", Tier.F, "MOVIE_RZ", 6),
@@ -265,6 +266,7 @@ namespace DokkanDaily.Constants
             new("Dragon Ball Super: Memorable Battles [Movie Edition]", Tier.B, "MB_ME_DBS", 2),
             new("Dragon Ball Super: Memorable Battles [Movie Edition]", Tier.A, "MB_ME_DBS", 3),
             new("Dragon Ball Super: Memorable Battles [Movie Edition]", Tier.A, "MB_ME_DBS", 4),
+            new("Heart-Pounding Heroine Battle", Tier.F, "PinkZone", 3)
         ];
         #endregion
 
@@ -319,7 +321,7 @@ namespace DokkanDaily.Constants
             new("Namekians", Tier.F),
             new("Otherworld Warrior", Tier.F),
             new("Peppy Gals", Tier.E),
-            new("Planet Namek Saga", Tier.F),
+            new("Planet Namek Saga", Tier.C),
             new("Planetary Destruction", Tier.S),
             new("Potara", Tier.B),
             new("Power Absorption", Tier.B),
