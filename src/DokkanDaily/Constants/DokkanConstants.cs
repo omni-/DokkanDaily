@@ -266,7 +266,7 @@ namespace DokkanDaily.Constants
             new("Dragon Ball Super: Memorable Battles [Movie Edition]", Tier.B, "MB_ME_DBS", 2),
             new("Dragon Ball Super: Memorable Battles [Movie Edition]", Tier.A, "MB_ME_DBS", 3),
             new("Dragon Ball Super: Memorable Battles [Movie Edition]", Tier.A, "MB_ME_DBS", 4),
-            new("Heart-Pounding Heroine Battle", Tier.F, "PinkZone", 1)
+            new("Heart-Pounding Heroine Battle", Tier.F, "PinkZone", 3)
         ];
         #endregion
 
