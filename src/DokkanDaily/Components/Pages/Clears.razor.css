@@ -72,5 +72,6 @@ button {
 .note {
     font-size: 12px;
     font-style: italic;
-    color: white;
+    color: black;
+    bottom: 10px;
 }
