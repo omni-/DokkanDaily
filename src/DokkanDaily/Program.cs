@@ -5,14 +5,25 @@ using DokkanDaily.Services;
 using DokkanDaily.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Serilog;
+using Serilog.Formatting.Json;
 
 namespace DokkanDaily
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(builder.Configuration)
+                .Enrich.FromLogContext()
+                .WriteTo.Console(new JsonFormatter(renderMessage: true))
+                .WriteTo.Debug()
+                .CreateLogger();
+
+            builder.Host.UseSerilog();
 
             // Add services to the container.
             builder.Services
@@ -35,9 +46,6 @@ namespace DokkanDaily
 
             builder.Services
                 .Configure<DokkanDailySettings>(configuration)
-                .AddLogging(builder => builder.AddConsole());
-
-            builder.Services
                 .AddAuthentication(opt =>
                 {
                     opt.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -71,6 +79,8 @@ namespace DokkanDaily
             app.UseStaticFiles();
             app.UseAntiforgery();
 
+            app.UseSerilogRequestLogging();
+
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
 
@@ -90,7 +100,21 @@ namespace DokkanDaily
                 await context.SignOutAsync();
             });
 
-            app.Run();
+            Log.Information("Starting web host");
+            try
+            {
+                app.Run();
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Host terminated unexpectedly");
+                return 1;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
     }
 }

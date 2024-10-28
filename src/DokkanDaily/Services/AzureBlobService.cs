@@ -245,7 +245,7 @@ namespace DokkanDaily.Services
 
             var container = new BlobContainerClient(_connectionString, bucket ?? TodaysBucketFullName);
 
-            _logger.LogInformation("Requesting container {C}", container);
+            _logger.LogInformation("Requesting container {@C}", container);
 
             var createResponse = await container.CreateIfNotExistsAsync();
 

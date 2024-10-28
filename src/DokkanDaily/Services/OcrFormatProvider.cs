@@ -36,22 +36,12 @@ namespace DokkanDaily.Services
 
         public string TrainDataPath => OcrConstants.TrainDataPath;
 
-        public TesseractEngine TesseractEngine => _jp ? _engineJpn : _engineEng;
-
-        private TesseractEngine _engineEng { get; init; }
-
-        private TesseractEngine _engineJpn { get; init; }
+        public TesseractEngine TesseractEngine => _jp ? new TesseractEngine(TrainDataPath, jpnEngineString, EngineMode.LstmOnly) : new TesseractEngine(TrainDataPath, engEngineString, EngineMode.LstmOnly);
 
         private static string jpnEngineString => "jpn";
 
         private static string engEngineString => "eng";
 
         public string GetText(Page p) => _jp ? p.GetText().Replace(" ", "") : p.GetText();
-
-        public OcrFormatProvider()
-        {
-            _engineEng = new TesseractEngine(TrainDataPath, engEngineString, EngineMode.LstmOnly);
-            _engineJpn = new TesseractEngine(TrainDataPath, jpnEngineString, EngineMode.LstmOnly);
-        }
     }
 }
