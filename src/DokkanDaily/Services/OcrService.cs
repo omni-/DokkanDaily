@@ -143,6 +143,10 @@ namespace DokkanDaily.Services
             {
                 return new(false, null, ex);
             }
+            finally
+            {
+                Provider.TesseractEngine.Dispose();
+            }
         }
     }
 }
