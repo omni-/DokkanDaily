@@ -63,8 +63,9 @@ namespace DokkanDailyTests
             var lbMock = mocks.Create<ILeaderboardService>();
             var rngMock = mocks.Create<IRngHelperService>();
             var loggerMock = mocks.Create<ILogger<ResetService>>();
+            var webhookMock = mocks.Create<DiscordWebhookClient>();
 
-            IResetService tdrs = new ResetService(abMock.Object, repoMock.Object, lbMock.Object, rngMock.Object, loggerMock.Object);
+            IResetService tdrs = new ResetService(abMock.Object, repoMock.Object, lbMock.Object, rngMock.Object, webhookMock.Object, loggerMock.Object);
 
             List<DbClear> actual = [];
 
