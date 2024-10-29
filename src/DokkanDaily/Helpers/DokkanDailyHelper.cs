@@ -86,7 +86,7 @@ namespace DokkanDaily.Helpers
 
         public static WebhookPayload ToWebhookPayload(this Challenge challenge)
         {
-            return new() { Content = $"# Daily Challenge!\r\n{challenge.GetChallengeText(true)}" };
+            return new() { Content = $"# Daily Challenge!\r\n{challenge.GetChallengeText(true)}!" };
         }
     }
 }
