@@ -10,6 +10,7 @@ namespace DokkanDaily.Services
         IDokkanDailyRepository repository,
         ILeaderboardService leaderboardService,
         IRngHelperService rngHelperService,
+        DiscordWebhookClient webhookClient,
         ILogger<ResetService> logger) : IResetService
     {
         private readonly ILogger<ResetService> _logger = logger;
@@ -17,6 +18,7 @@ namespace DokkanDaily.Services
         private readonly ILeaderboardService _leaderboardService = leaderboardService;
         private readonly IDokkanDailyRepository _repository = repository;
         private readonly IRngHelperService _rngHelperService = rngHelperService;
+        private readonly DiscordWebhookClient _webhookClient = webhookClient;
 
         public async Task DoReset(int daysAgo = 0)
         {
@@ -96,6 +98,16 @@ namespace DokkanDaily.Services
             _logger.LogInformation("Leaderboard updated.");
 
             _logger.LogInformation("Reset complete.");
+
+            // send webhook notfication
+            try
+            {
+                await _webhookClient.PostAsync(_rngHelperService.GetDailyChallenge().ToWebhookPayload());
+            }
+            catch(Exception e)
+            {
+                _logger.LogError(e, "Unhandled http exception");
+            }
         }
 
     }

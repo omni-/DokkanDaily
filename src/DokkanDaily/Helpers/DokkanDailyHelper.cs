@@ -1,5 +1,7 @@
 ﻿using DokkanDaily.Constants;
 using DokkanDaily.Models;
+using DokkanDaily.Models.Enums;
+using DokkanDaily.Models.Net;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -67,6 +69,24 @@ namespace DokkanDaily.Helpers
         public static Unit GetUnit(Leader leader)
         {
             return DokkanConstants.UnitDB.FirstOrDefault(x => x.Name == leader.Name && x.Title == leader.Title);
+        }
+
+        public static string GetChallengeText(this Challenge challenge, bool useDiscordFormatting = false)
+        {
+            string star = useDiscordFormatting ? "*" : "";
+            string text = challenge.DailyType switch
+            {
+                DailyType.Character => $"{star}{challenge.Leader.FullName}{star} as the leader",
+                DailyType.Category => $"only units belonging to the {star}{challenge.Category}{star} category",
+                DailyType.LinkSkill => $"only units with the link skill {star}{challenge.LinkSkill}{star}",
+                _ => throw new ArgumentException("Reached unreachable code. Yay!")
+            };
+            return $"Defeat {star}{star}{challenge.TodaysEvent.FullName}{star}{star} using {text}";
+        }
+
+        public static WebhookPayload ToWebhookPayload(this Challenge challenge)
+        {
+            return new() { Content = $"# Daily Challenge!\r\n{challenge.GetChallengeText(true)}" };
         }
     }
 }

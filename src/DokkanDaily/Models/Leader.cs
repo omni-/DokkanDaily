@@ -9,5 +9,7 @@ namespace DokkanDaily.Models
         public string Title { get; init; } = title;
 
         public Tier Tier { get; init; } = t;
+
+        public string FullName => $"[{Title}] {Name}";
     }
 }

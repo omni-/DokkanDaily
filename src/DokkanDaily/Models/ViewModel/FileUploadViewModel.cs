@@ -1,4 +1,4 @@
-﻿namespace DokkanDaily.Models.Dto
+﻿namespace DokkanDaily.Models.ViewModel
 {
     public class FileUploadViewModel
     {
