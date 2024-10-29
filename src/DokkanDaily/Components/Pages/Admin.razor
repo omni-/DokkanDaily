@@ -39,20 +39,22 @@
         <Authorized>
             @if (AuthorizedUser)
             {
-                <div style="color:antiquewhite">
+                <div class="content" style="color:antiquewhite">
                     <h3 style="padding-top:1vh;">Welcome back, Admin.</h3>
-                    <br />
-                    <label>Set Seed: <input @bind-value=@Seed /><button style="margin-left:5px" @onclick=SetSeed>Set</button></label>
-                    <br />
-                    <label>Set Daily Type: <input @bind-value=@DailyType /><button style="margin-left:5px" @onclick=SetDailyType>Set</button></label>
-                    <br />
-                    <label>Roll Seed: <button style="margin-left:5px" @onclick=RollSeed>Roll</button></label>
-                    <br />
-                    <label>Reset Seed: <button style="margin-left:5px" @onclick=Reset>Reset</button></label>
-                    <br />
-                    <label>Rerun daily reset: <input @bind-value=@Date /><button style="margin-left:5px" @onclick=Rerun>Rerun Daily Reset</button></label>
-                    <br />
-                    <label>Dump env: <textarea @bind=@Env /> <button style="margin-left:5px" @onclick=DumpEnv>Dump</button></label>
+                    <div class="settings">
+                        <br />
+                        <label>Current Seed: <input @bind-value=@CurrentSeed /></label>
+                        <br />
+                        <label>Set Seed: <input @bind-value=@Seed /><button style="margin-left:5px" @onclick=SetSeed>Set</button></label>
+                        <br />
+                        <label>Roll Seed: <button style="margin-left:5px" @onclick=RollSeed>Roll</button></label>
+                        <br />
+                        <label>Reset Seed: <button style="margin-left:5px" @onclick=Reset>Reset</button></label>
+                        <br />
+                        <label>Rerun Daily Reset: <input @bind-value=@Date /><button style="margin-left:5px" @onclick=Rerun>Rerun Daily Reset</button></label>
+                        <br />
+                        <label>Set Daily Type: <input @bind-value=@DailyType /><button style="margin-left:5px" @onclick=SetDailyType>Set</button></label>
+                    </div>
                 </div>
             }
         </Authorized>
@@ -69,7 +71,7 @@
 
     string Seed { get; set; }
 
-    string Env { get; set; }
+    string CurrentSeed { get => RngSvc.GetRawSeed().ToString(); set => _ = value; }
 
     string DailyType { get; set; }
 
@@ -125,16 +127,5 @@
     void SetDailyType()
     {
         RngSvc.OverrideChallengeType(Enum.Parse<DailyType>(DailyType));
-    }
-
-    void DumpEnv()
-    {
-        Env = $"DAILY SEED: {RngSvc.GetRawSeed()}";
-        Type t = settings.Value.GetType();
-        foreach (PropertyInfo prop in t.GetProperties())
-        {
-            var type = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
-            Env += $"\r\n{prop.Name}: {prop.GetValue(settings.Value, null)}";
-        }
     }
 }
