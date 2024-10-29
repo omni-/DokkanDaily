@@ -77,8 +77,8 @@ namespace DokkanDaily.Helpers
             string text = challenge.DailyType switch
             {
                 DailyType.Character => $"{star}{challenge.Leader.FullName}{star} as the leader",
-                DailyType.Category => $"only units belonging to the {star}{challenge.Category}{star} category",
-                DailyType.LinkSkill => $"only units with the link skill {star}{challenge.LinkSkill}{star}",
+                DailyType.Category => $"only units belonging to the {star}{challenge.Category.Name}{star} category",
+                DailyType.LinkSkill => $"only units with the link skill {star}{challenge.LinkSkill.Name}{star}",
                 _ => throw new ArgumentException("Reached unreachable code. Yay!")
             };
             return $"Defeat {star}{star}{challenge.TodaysEvent.FullName}{star}{star} using {text}";
