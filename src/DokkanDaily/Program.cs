@@ -19,7 +19,7 @@ namespace DokkanDaily
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(builder.Configuration)
                 .Enrich.FromLogContext()
-                .WriteTo.Console(new JsonFormatter(renderMessage: true))
+                .WriteTo.Console()
                 .WriteTo.Debug()
                 .CreateLogger();
 
