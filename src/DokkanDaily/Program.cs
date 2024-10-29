@@ -6,7 +6,6 @@ using DokkanDaily.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Serilog;
-using Serilog.Formatting.Json;
 
 namespace DokkanDaily
 {

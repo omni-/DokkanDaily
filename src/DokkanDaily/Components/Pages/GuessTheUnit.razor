@@ -1,4 +1,25 @@
-﻿<h3>GuessTheUnit</h3>
+﻿@rendermode InteractiveServer
+
+@using DokkanDaily.Components.Shared
+@using DokkanDaily.Models
+@using DokkanDaily.Services.Interfaces
+
+@inject ILeaderboardService LeaderboardSvc;
+@inject IRngHelperService RngSvc;
+
+<PageTitle>Dokkandle!</PageTitle>
+
+<style>
+    body {
+        background: url('images/misc/wallpaper.jpg') fixed center no-repeat;
+        background-size: cover;
+        text-align: center;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+</style>
+
+<h3>GuessTheUnit</h3>
 
 @code {
 
