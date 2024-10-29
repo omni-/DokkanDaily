@@ -41,6 +41,8 @@ namespace DokkanDaily
             builder.Services.AddTransient<ISqlConnectionWrapper, SqlConnectionWrapper>();
             builder.Services.AddTransient<IDokkanDailyRepository, DokkanDailyRepository>();
 
+            builder.Services.AddHttpClient<DiscordWebhookClient>();
+
             IConfigurationSection configuration = builder.Configuration.GetSection(nameof(DokkanDailySettings));
 
             builder.Services

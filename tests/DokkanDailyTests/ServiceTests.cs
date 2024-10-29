@@ -1,3 +1,4 @@
+using DokkanDaily.Configuration;
 using DokkanDaily.Constants;
 using DokkanDaily.Helpers;
 using DokkanDaily.Models;
@@ -9,6 +10,7 @@ using DokkanDaily.Services.Interfaces;
 using DokkanDailyTests.Infra;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 
 namespace DokkanDailyTests
@@ -63,8 +65,11 @@ namespace DokkanDailyTests
             var lbMock = mocks.Create<ILeaderboardService>();
             var rngMock = mocks.Create<IRngHelperService>();
             var loggerMock = mocks.Create<ILogger<ResetService>>();
+            var loggerMock2 = mocks.Create<ILogger<DiscordWebhookClient>>();
+            var httpMock = mocks.Create<HttpClient>();
+            var webhookMock = mocks.Create<DiscordWebhookClient>(loggerMock2.Object, httpMock.Object, Options.Create<DokkanDailySettings>(new() { WebhookUrl = "http://foo.bar" }));
 
-            IResetService tdrs = new ResetService(abMock.Object, repoMock.Object, lbMock.Object, rngMock.Object, loggerMock.Object);
+            IResetService tdrs = new ResetService(abMock.Object, repoMock.Object, lbMock.Object, rngMock.Object, webhookMock.Object, loggerMock.Object);
 
             List<DbClear> actual = [];
 

@@ -16,6 +16,8 @@
 
         public string OAuth2ClientId { get; init; }
 
+        public string WebhookUrl { get; init; }
+
         public FeatureFlags FeatureFlags { get; init; } = new();
     }
 }
