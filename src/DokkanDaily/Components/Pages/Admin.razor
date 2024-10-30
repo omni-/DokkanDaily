@@ -123,9 +123,9 @@
     void Rerun()
     {
         if (!int.TryParse(Date, out int result))
-            ResetSvc.DoReset(1);
+            ResetSvc.DoReset(1, true);
         else
-            ResetSvc.DoReset(result);
+            ResetSvc.DoReset(result, true);
     }
 
     void SetDailyType()

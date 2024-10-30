@@ -20,12 +20,25 @@ namespace DokkanDaily.Services
         private readonly IRngHelperService _rngHelperService = rngHelperService;
         private readonly DiscordWebhookClient _webhookClient = webhookClient;
 
-        public async Task DoReset(int daysAgo = 0)
+        public async Task DoReset(int daysAgo = 0, bool isAdhoc = false)
         {
             _logger.LogInformation("Starting daily reset...");
 
             // Reset RNGService/seeding
             _rngHelperService.Reset();
+
+            // send webhook notfication
+            if (!isAdhoc)
+            {
+                try
+                {
+                    await _webhookClient.PostAsync(_rngHelperService.GetDailyChallenge().ToWebhookPayload());
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Unhandled http exception");
+                }
+            }
 
             // delete old clears
             await _azureBlobService.PruneContainers(30);
@@ -40,39 +53,46 @@ namespace DokkanDaily.Services
             _logger.LogInformation("Processing daily clears...");
             foreach (var clear in result)
             {
-                var props = await clear.GetPropertiesAsync();
-                var tags = props.Value.Metadata;
+                try
+                {
+                    var props = await clear.GetPropertiesAsync();
+                    var tags = props.Value.Metadata;
 
-                // skip upload in case we don't know who the clear belongs to or it was marked invalid
-                if (tags.TryGetValue(AzureConstants.INVALID_TAG, out string invalid))
-                {
-                    _ = bool.TryParse(invalid, out bool invalidResult);
-                    if (invalidResult) continue;
-                }
-                if (!tags.TryGetValue(AzureConstants.USER_NAME_TAG, out _) && !tags.TryGetValue(AzureConstants.DISCORD_NAME_TAG, out _))
-                {
-                    _logger.LogWarning("Failed to extract a username and user was not logged in. Skipping clear entirely.");
-                    continue;
-                }
+                    // skip upload in case we don't know who the clear belongs to or it was marked invalid
+                    if (tags.TryGetValue(AzureConstants.INVALID_TAG, out string invalid))
+                    {
+                        _ = bool.TryParse(invalid, out bool invalidResult);
+                        if (invalidResult) continue;
+                    }
+                    if (!tags.TryGetValue(AzureConstants.USER_NAME_TAG, out _) && !tags.TryGetValue(AzureConstants.DISCORD_NAME_TAG, out _))
+                    {
+                        _logger.LogWarning("Failed to extract a username and user was not logged in. Skipping clear entirely.");
+                        continue;
+                    }
 
-                if (!tags.TryGetValue(AzureConstants.ITEMLESS_TAG, out string itemless))
-                {
-                    _logger.LogWarning("`ITEMLESS` tag missing. Defaulting to false.");
-                }
+                    if (!tags.TryGetValue(AzureConstants.ITEMLESS_TAG, out string itemless))
+                    {
+                        _logger.LogWarning("`ITEMLESS` tag missing. Defaulting to false.");
+                    }
                 ;
-                if (!tags.TryGetValue(AzureConstants.CLEAR_TIME_TAG, out string clearTime) || !DokkanDailyHelper.TryParseDokkanTimeSpan(clearTime, out TimeSpan timeSpan))
-                {
-                    _logger.LogWarning("`CLEARTIME` tag missing. Defaulting to TimeSpan.MaxValue.");
-                    timeSpan = TimeSpan.MaxValue;
+                    if (!tags.TryGetValue(AzureConstants.CLEAR_TIME_TAG, out string clearTime) || !DokkanDailyHelper.TryParseDokkanTimeSpan(clearTime, out TimeSpan timeSpan))
+                    {
+                        _logger.LogWarning("`CLEARTIME` tag missing. Defaulting to TimeSpan.MaxValue.");
+                        timeSpan = TimeSpan.MaxValue;
+                    }
+                    clears.Add(new DbClear()
+                    {
+                        DokkanNickname = tags.TryGetValue(AzureConstants.USER_NAME_TAG, out string nickname) ? nickname : null,
+                        DiscordUsername = tags.TryGetValue(AzureConstants.DISCORD_NAME_TAG, out string discord) ? discord : null,
+                        ClearTime = clearTime,
+                        ItemlessClear = bool.Parse(itemless),
+                        ClearTimeSpan = timeSpan
+                    });
                 }
-                clears.Add(new DbClear()
+                catch(Exception ex)
                 {
-                    DokkanNickname = tags.TryGetValue(AzureConstants.USER_NAME_TAG, out string nickname) ? nickname : null,
-                    DiscordUsername = tags.TryGetValue(AzureConstants.DISCORD_NAME_TAG, out string discord) ? discord : null,
-                    ClearTime = clearTime,
-                    ItemlessClear = bool.Parse(itemless),
-                    ClearTimeSpan = timeSpan
-                });
+                    _logger.LogError(ex, "Failed to process clear");
+                }
             }
 
             var dailyWinner = clears.MinBy(x => x.ClearTimeSpan);
@@ -98,16 +118,6 @@ namespace DokkanDaily.Services
             _logger.LogInformation("Leaderboard updated.");
 
             _logger.LogInformation("Reset complete.");
-
-            // send webhook notfication
-            try
-            {
-                await _webhookClient.PostAsync(_rngHelperService.GetDailyChallenge().ToWebhookPayload());
-            }
-            catch(Exception e)
-            {
-                _logger.LogError(e, "Unhandled http exception");
-            }
         }
 
     }
