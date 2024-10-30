@@ -86,7 +86,7 @@ namespace DokkanDaily.Helpers
 
         public static WebhookPayload ToWebhookPayload(this Challenge challenge)
         {
-            return new() { Content = $"# Daily Challenge!\r\n{challenge.GetChallengeText(true)}!\r\n\r\n<@&1289820573949497345>\r\n\r\nSite Link: https://dokkandle.net/daily" };
+            return new() { Content = $"# Daily Challenge!\r\n{challenge.GetChallengeText(true)}!\r\n\r\n<@&1289820573949497345>\r\n\r\n*via https://dokkandle.net/daily*" };
         }
     }
 }
