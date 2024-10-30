@@ -43,7 +43,7 @@ namespace DokkanDaily.Services
             return $"{_containerName}-{formattedDateTag}";
         }
 
-        public async Task<string> UploadToAzureAsync(string userFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null, string userAgent = null, string discordUsername = null)
+        public async Task<BlobClient> UploadToAzureAsync(string userFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null, string userAgent = null, string discordUsername = null)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace DokkanDaily.Services
 
                 string fileName = DokkanDailyHelper.AddUserAgentToFileName(userFileName, userAgent);
 
-                var blob = container.GetBlobClient(fileName);
+                BlobClient blob = container.GetBlobClient(fileName);
 
                 await blob.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
 
@@ -79,8 +79,7 @@ namespace DokkanDaily.Services
 
                 });
 
-                var urlString = blob.Uri.ToString();
-                return urlString;
+                return blob;
             }
             catch (Exception ex)
             {
@@ -135,13 +134,13 @@ namespace DokkanDaily.Services
             }
         }
 
-        public string GetBlobSASTOkenByFile(string fileName)
+        public string GetBlobSasTokenByFile(string fileName, string bucket = null)
         {
             try
             {
                 BlobSasBuilder blobSasBuilder = new()
                 {
-                    BlobContainerName = TodaysBucketFullName,
+                    BlobContainerName = bucket ?? TodaysBucketFullName,
                     BlobName = fileName,
                     ExpiresOn = DateTime.UtcNow.AddMinutes(2)
                 };

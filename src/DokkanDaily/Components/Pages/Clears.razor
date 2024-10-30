@@ -59,7 +59,7 @@
             </div>
         }
         <br />
-        <div>
+        <div class="uploads">
             @if (fileUploadViewModels.Count > 0)
             {
                 @foreach (var attachment in fileUploadViewModels)
@@ -133,63 +133,58 @@
     }
     private async void OnUploadSubmit()
     {
-        fileLoading = true;
         string remoteUserAgent = null;
 
         try { remoteUserAgent = await jsRuntime.InvokeAsync<string>("getUserAgent"); } catch { }
-        
+
         var authState = await authStateProvider.GetAuthenticationStateAsync();
         var claim = authState.User.Claims.FirstOrDefault(c => c.Issuer == "Discord" && c.Type.EndsWith("name"));
 
-        foreach (var file in selectedFiles)
+        var file = selectedFiles.FirstOrDefault();
+        if (file == null) return;
+
+        fileLoading = true;
+
+        try
         {
-            try
-            {
-                var blobUrl = await BlobSvc.UploadToAzureAsync(
-                    file.Name, 
-                    file.ContentType, 
-                    file, challengeModel, 
-                    userAgent: remoteUserAgent, 
-                    discordUsername: claim?.Value);
+            var blobClient = await BlobSvc.UploadToAzureAsync(
+                file.Name,
+                file.ContentType,
+                file, challengeModel,
+                userAgent: remoteUserAgent,
+                discordUsername: claim?.Value);
 
-                if (blobUrl != null)
+                FileUploadViewModel fileUploadViewModel = new FileUploadViewModel()
                 {
-                    FileUploadViewModel fileUploadViewModel = new FileUploadViewModel()
-                    {
-                        FileName = file.Name,
-                        FileStorageUrl = blobUrl,
-                        ContentType = file.ContentType
-                    };
+                    FileName = blobClient.Name,
+                    FileStorageUrl = blobClient.Uri.ToString(),
+                    ContentType = file.ContentType
+                };
 
-                    fileUploadViewModels.Add(fileUploadViewModel);
-                    Message = file.Name + " Uploaded!!";
-                }
-                else
-                    warningMessage = defaultWarning;
-            }
-            catch (Exception ex)
-            {
-                warningMessage = ex.Message;
-            }
+                fileUploadViewModels.Add(fileUploadViewModel);
+                Message = file.Name + " Uploaded!!";
+        }
+        catch (Exception ex)
+        {
+            warningMessage = ex.Message;
         }
 
         fileLoading = false;
-
         this.StateHasChanged();
     }
 
     private string GetImgPath(FileUploadViewModel attachment)
     {
-        var sasToken = BlobSvc.GetBlobSASTOkenByFile(attachment.FileName);
+        var sasToken = BlobSvc.GetBlobSasTokenByFile(attachment.FileName);
 
-        return attachment?.FileStorageUrl + "?" + sasToken;
+        return attachment?.FileStorageUrl?.AddSasTokenToUri(sasToken);
     }
 
     private async void OnFileViewClick(FileUploadViewModel attachment)
     {
         try
         {
-            var sasToken = BlobSvc.GetBlobSASTOkenByFile(attachment.FileName);
+            var sasToken = BlobSvc.GetBlobSasTokenByFile(attachment.FileName);
             if (sasToken != null)
             {
                 string fileUrl = attachment.FileStorageUrl + "?" + sasToken;

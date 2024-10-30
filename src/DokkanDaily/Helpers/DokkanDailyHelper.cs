@@ -29,14 +29,10 @@ namespace DokkanDaily.Helpers
         }
 
         public static string GetUtcNowDateTag()
-        {
-            return DateTime.UtcNow.ToString("MM-dd-yyyy");
-        }
+            => DateTime.UtcNow.ToString("MM-dd-yyyy");
 
         public static string GetTagFromDate(this DateTime date)
-        {
-            return date.ToString("MM-dd-yyyy");
-        }
+            => date.ToString("MM-dd-yyyy");
 
         public static string GetTagValueOrDefault(this IDictionary<string, string> dictionary, string tagName)
         {
@@ -46,9 +42,7 @@ namespace DokkanDaily.Helpers
         }
 
         public static bool TryParseDokkanTimeSpan(string value, out TimeSpan result)
-        {
-            return TimeSpan.TryParseExact(value, "h\\'mm\\\"ss\\.f", System.Globalization.CultureInfo.InvariantCulture, out result);
-        }
+            => TimeSpan.TryParseExact(value, "h\\'mm\\\"ss\\.f", System.Globalization.CultureInfo.InvariantCulture, out result);
 
         public static string AddUserAgentToFileName(string file, string userAgent)
         {
@@ -62,14 +56,10 @@ namespace DokkanDaily.Helpers
         }
 
         public static Unit GetUnit(string name, string title)
-        {
-            return DokkanConstants.UnitDB.FirstOrDefault(x => x.Name == name && x.Title == title);
-        }
+            => DokkanConstants.UnitDB.FirstOrDefault(x => x.Name == name && x.Title == title);
 
         public static Unit GetUnit(Leader leader)
-        {
-            return DokkanConstants.UnitDB.FirstOrDefault(x => x.Name == leader.Name && x.Title == leader.Title);
-        }
+            => DokkanConstants.UnitDB.FirstOrDefault(x => x.Name == leader.Name && x.Title == leader.Title);
 
         public static string GetChallengeText(this Challenge challenge, bool useDiscordFormatting = false)
         {
@@ -84,9 +74,10 @@ namespace DokkanDaily.Helpers
             return $"Defeat {star}{star}{challenge.TodaysEvent.FullName}{star}{star} using {text}";
         }
 
-        public static WebhookPayload ToWebhookPayload(this Challenge challenge)
-        {
-            return new() { Content = $"# Daily Challenge!\r\n{challenge.GetChallengeText(true)}!\r\n\r\n<@&1289820573949497345>\r\n\r\n*via https://dokkandle.net/daily*" };
-        }
+        public static WebhookPayload ToWebhookPayload(this Challenge challenge) 
+            => new() { Content = $"# Daily Challenge!\r\n{challenge.GetChallengeText(true)}!\r\n\r\n<@&1289820573949497345>\r\n\r\n*via https://dokkandle.net/daily*" };
+
+        public static string AddSasTokenToUri(this string uri, string sasToken) 
+            => $"{uri}?{sasToken}";
     }
 }

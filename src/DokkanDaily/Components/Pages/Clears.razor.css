@@ -75,3 +75,8 @@ button {
     color: black;
     bottom: 10px;
 }
+
+.uploads {
+    max-height:70vh;
+    overflow-y:scroll;
+}
