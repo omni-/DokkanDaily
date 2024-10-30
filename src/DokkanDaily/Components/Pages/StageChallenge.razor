@@ -46,7 +46,7 @@ else
             }
             @if (todaysChallenge.DailyType == DailyType.Character)
             {
-                <p class="challenge-text"><b>Challenge!</b> build a team using <img style="width:3em;height:auto;" src="@todaysChallenge.TodaysUnit.ImageURL" /> <b style="color:@typeColor">[@todaysChallenge.Leader.Title] @todaysChallenge.Leader.Name</b> as the Leader and defeat <b>@todaysChallenge.TodaysEvent.Name</b>, <b>Stage @todaysChallenge.TodaysEvent.Stage</b>!</p>
+                <p class="challenge-text"><b>Challenge!</b> build a team using <img style="width:3em;height:auto;" src="@todaysChallenge.TodaysUnit.ImageURL" /> <b style="color:@typeColor">[@todaysChallenge.Leader.Title] @todaysChallenge.Leader.Name</b> as the Leader and defeat <b>@todaysChallenge.TodaysEvent.Name</b>, <b>Stage @todaysChallenge.TodaysEvent.Stage</b>!<div class="challenge-text friend-text">(Only one required - you may use a Friend Unit)</div></p>
             }
             @if (todaysChallenge.TodaysEvent != null && todaysChallenge.TodaysEvent.WallpaperImagePath != null)
             {

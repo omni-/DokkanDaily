@@ -79,6 +79,7 @@ namespace DokkanDaily.Services
                     {
                         _logger.LogWarning("`CLEARTIME` tag missing. Defaulting to TimeSpan.MaxValue.");
                         timeSpan = TimeSpan.MaxValue;
+                        clearTime = "99'99\"99.9";
                     }
                     clears.Add(new DbClear()
                     {
@@ -100,15 +101,23 @@ namespace DokkanDaily.Services
 
             _logger.LogInformation("Calculated {@Clear} to be the fastest today.", dailyWinner);
 
-            clears = clears
-                .GroupBy(x => x.DokkanNickname)
-                .Select(group =>
-                    group.FirstOrDefault(x => x.IsDailyHighscore)
-                    ?? group.FirstOrDefault(x => x.ItemlessClear)
-                    ?? group.MinBy(x => x.ClearTimeSpan))
-                .ToList();
+            try
+            {
+                clears = clears
+                    .GroupBy(x => x.DokkanNickname)
+                    .Select(group =>
+                        group.FirstOrDefault(x => x.IsDailyHighscore)
+                        ?? group.FirstOrDefault(x => x.ItemlessClear)
+                        ?? group.MinBy(x => x.ClearTimeSpan))
+                    .ToList();
 
-            await _repository.InsertDailyClears(clears, date);
+                await _repository.InsertDailyClears(clears, date);
+            }
+            catch(Exception e)
+            {
+                _logger.LogError(e, "Unhandled exception while inserting daily clears");
+                throw;
+            }
 
             _logger.LogInformation("Daily clears inserted. Updating leaderboard...");
 
