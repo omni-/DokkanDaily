@@ -8,16 +8,13 @@ namespace DokkanDaily.Services
 {
     public class RngHelperService : IRngHelperService
     {
-        // new up random before each use so as not to get weird/varying results
-        private Random Random => GetDailySeededRandom();
-        private Random OverriddenRandom(DateTime? dateOverride) => dateOverride == null ? null : GetDailySeededRandom(dateOverride);
-
         private static int SeedOffset { get; set; }
         private static int? SeedOverride { get; set; }
         public static Challenge ChallengeOverride { get; private set; }
         public static DailyType? DailyTypeOverride { get; private set; }
 
-        private Random GetDailySeededRandom(DateTime? dateOverride = null)
+        // new up random before each use so as not to get weird/varying results
+        private static Random GetDailySeededRandom(DateTime? dateOverride = null)
         {
             return new Random(GetRawSeed(dateOverride));
         }
@@ -52,7 +49,7 @@ namespace DokkanDaily.Services
         }
 
         public int GetRawSeed() => GetRawSeed(null);
-        private int GetRawSeed(DateTime? dateOverride)
+        private static int GetRawSeed(DateTime? dateOverride)
         {
             if (SeedOverride != null) return SeedOverride.Value;
 
@@ -62,9 +59,9 @@ namespace DokkanDaily.Services
         }
 
         public DailyType GetRandomDailyType() => GetRandomDailyType(null);
-        private DailyType GetRandomDailyType(DateTime? dateOverride)
+        private static DailyType GetRandomDailyType(DateTime? dateOverride)
         {
-            Random random = OverriddenRandom(dateOverride) ?? Random;
+            Random random = GetDailySeededRandom(dateOverride);
             if (DailyTypeOverride != null) return DailyTypeOverride.Value;
 
             // link skill challenges are harder and less varied, so they should appear slightly less often
@@ -75,53 +72,53 @@ namespace DokkanDaily.Services
         }
 
         public LinkSkill GetRandomLinkSkill() => GetRandomLinkSkill(null);
-        private LinkSkill GetRandomLinkSkill(DateTime? dateOverride = null)
+        private static LinkSkill GetRandomLinkSkill(DateTime? dateOverride = null)
         {
-            Random random = OverriddenRandom(dateOverride) ?? Random;
+            Random random = GetDailySeededRandom(dateOverride);
             return DokkanConstants.LinkSkills[random.Next(0, DokkanConstants.LinkSkills.Count)];
         }
 
         public LinkSkill GetRandomLinkSkill(Tier tier) => GetRandomLinkSkill(tier, null);
-        private LinkSkill GetRandomLinkSkill(Tier tier, DateTime? dateOverride = null)
+        private static LinkSkill GetRandomLinkSkill(Tier tier, DateTime? dateOverride = null)
         {
-            Random random = OverriddenRandom(dateOverride) ?? Random;
+            Random random = GetDailySeededRandom(dateOverride);
             var links = CreateSeededCollection(DokkanConstants.LinkSkills, tier);
             return links[random.Next(0, links.Count)];
         }
 
         public Event GetRandomStage() => GetRandomStage(null);
-        private Event GetRandomStage(DateTime? dateOverride = null)
+        private static Event GetRandomStage(DateTime? dateOverride = null)
         {
-            Random random = OverriddenRandom(dateOverride) ?? Random;
+            Random random = GetDailySeededRandom(dateOverride);
             return DokkanConstants.Events[random.Next(0, DokkanConstants.Events.Count)];
         }
 
         public Category GetRandomCategory() => GetRandomCategory(null);
-        private Category GetRandomCategory(DateTime? dateOverride = null)
+        private static Category GetRandomCategory(DateTime? dateOverride = null)
         {
-            Random random = OverriddenRandom(dateOverride) ?? Random;
+            Random random = GetDailySeededRandom(dateOverride);
             return DokkanConstants.Categories[random.Next(0, DokkanConstants.Categories.Count)];
         }
 
         public Category GetRandomCategory(Tier tier) => GetRandomCategory(tier, null);
-        private Category GetRandomCategory(Tier tier, DateTime? dateOverride = null)
+        private static Category GetRandomCategory(Tier tier, DateTime? dateOverride = null)
         {
-            Random random = OverriddenRandom(dateOverride) ?? Random;
+            Random random = GetDailySeededRandom(dateOverride);
             var cats = CreateSeededCollection(DokkanConstants.Categories, tier);
             return cats[random.Next(0, cats.Count)];
         }
 
         public Leader GetRandomLeader() => GetRandomLeader(null);
-        private Leader GetRandomLeader(DateTime? dateOverride = null)
+        private static Leader GetRandomLeader(DateTime? dateOverride = null)
         {
-            Random random = OverriddenRandom(dateOverride) ?? Random;
+            Random random = GetDailySeededRandom(dateOverride);
             return DokkanConstants.Leaders[random.Next(0, DokkanConstants.Leaders.Count)];
         }
 
         public Leader GetRandomLeader(Tier tier) => GetRandomLeader(tier, null);
-        private Leader GetRandomLeader(Tier tier, DateTime? dateOverride = null)
+        private static Leader GetRandomLeader(Tier tier, DateTime? dateOverride = null)
         {
-            Random random = OverriddenRandom(dateOverride) ?? Random;
+            Random random = GetDailySeededRandom(dateOverride);
             var leaders = CreateSeededCollection(DokkanConstants.Leaders, tier);
             return leaders[random.Next(0, leaders.Count)];
         }
@@ -147,7 +144,8 @@ namespace DokkanDaily.Services
         }
 
         public Challenge GetDailyChallenge() => GetDailyChallenge(null);
-        private Challenge GetDailyChallenge(DateTime? dateOverride = null)
+        public Challenge GetDailyChallenge(DateTime dateOverride) => GetDailyChallenge(dateOverride);
+        private static Challenge GetDailyChallenge(DateTime? dateOverride = null)
         {
             if (ChallengeOverride != null) return ChallengeOverride;
 

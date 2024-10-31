@@ -23,6 +23,8 @@ namespace DokkanDaily.Services.Interfaces
 
         Challenge GetDailyChallenge();
 
+        Challenge GetDailyChallenge(DateTime dateOverride);
+
         Challenge GetTomorrowsChallenge();
 
         void Reset();
