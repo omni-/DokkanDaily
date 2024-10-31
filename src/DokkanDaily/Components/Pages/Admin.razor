@@ -57,7 +57,9 @@
                         <br />
                         <label>Set Daily Type: <input @bind-value=@DailyType /><button style="margin-left:5px" @onclick=SetDailyType>Set</button></label>
                         <br />
-                        <label>Send Webhook Message: <button style="margin-left:5px" @onclick=SendWebhook>Send</button></label>
+                        <label>Send Daily via Webhook: <button style="margin-left:5px" @onclick=SendWebhook>Send</button></label>
+                        <br />
+                        <label>Send Announcement: <input @bind-value=@Announcement /><button style="margin-left:5px" @onclick=SendWebhookCustom>Send</button><input style="margin-left:5px" @bind=@AddRolePing type="checkbox" /></label>
                     </div>
                 </div>
             }
@@ -80,6 +82,10 @@
     string DailyType { get; set; }
 
     string Date { get; set; }
+
+    string Announcement { get; set; }
+
+    bool AddRolePing { get; set; } = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -136,5 +142,11 @@
     async Task SendWebhook()
     {
         await WebhookSvc.PostAsync(RngSvc.GetDailyChallenge().ToWebhookPayload());
+    }
+
+    async Task SendWebhookCustom()
+    {
+        string addText = AddRolePing ? $"\r\n{InternalConstants.DokkandleDbcRole}" : "";
+        await WebhookSvc.PostAsync(new() { Content = $"{Announcement}{addText}" });
     }
 }

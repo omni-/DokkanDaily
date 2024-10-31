@@ -32,7 +32,7 @@ namespace DokkanDaily.Services
             {
                 try
                 {
-                    await _webhookClient.PostAsync(_rngHelperService.GetDailyChallenge().ToWebhookPayload());
+                    await _webhookClient.PostAsync(_rngHelperService.GetTomorrowsChallenge().ToWebhookPayload());
                 }
                 catch (Exception e)
                 {

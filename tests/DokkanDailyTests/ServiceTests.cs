@@ -1,7 +1,5 @@
 using DokkanDaily.Configuration;
 using DokkanDaily.Constants;
-using DokkanDaily.Helpers;
-using DokkanDaily.Models;
 using DokkanDaily.Models.Database;
 using DokkanDaily.Models.Enums;
 using DokkanDaily.Repository;
