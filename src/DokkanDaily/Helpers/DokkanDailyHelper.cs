@@ -75,7 +75,7 @@ namespace DokkanDaily.Helpers
         }
 
         public static WebhookPayload ToWebhookPayload(this Challenge challenge) 
-            => new() { Content = $"# Daily Challenge!\r\n{challenge.GetChallengeText(true)}!\r\n\r\n<@&1289820573949497345>\r\n\r\n*via https://dokkandle.net/daily*" };
+            => new() { Content = $"# Daily Challenge!\r\n{challenge.GetChallengeText(true)}!\r\n\r\n{InternalConstants.DokkandleDbcRole}\r\n\r\n*via https://dokkandle.net/daily*" };
 
         public static string AddSasTokenToUri(this string uri, string sasToken) 
             => $"{uri}?{sasToken}";

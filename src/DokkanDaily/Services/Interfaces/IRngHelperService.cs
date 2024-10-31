@@ -5,8 +5,6 @@ namespace DokkanDaily.Services.Interfaces
 {
     public interface IRngHelperService
     {
-        Random GetDailySeed();
-
         Event GetRandomStage();
 
         DailyType GetRandomDailyType();
@@ -24,6 +22,10 @@ namespace DokkanDaily.Services.Interfaces
         Leader GetRandomLeader(Tier minTier);
 
         Challenge GetDailyChallenge();
+
+        Challenge GetDailyChallenge(DateTime dateOverride);
+
+        Challenge GetTomorrowsChallenge();
 
         void Reset();
 
