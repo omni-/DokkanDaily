@@ -71,11 +71,11 @@ namespace DokkanDaily.Services
                 _logger.LogInformation("Finished Azure upload.");
 
                 // do OCR analysis, dont block the main thread
-                await Task.Run(async () =>
+                _ = Task.Run(() =>
                 {
                     var metadata = _ocrService.ProcessImage(ms);
                     var tags = BuildTagDict(model, metadata, discordUsername);
-                    await blob.SetMetadataAsync(tags);
+                    blob.SetMetadataAsync(tags);
 
                 });
 
