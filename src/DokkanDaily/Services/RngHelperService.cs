@@ -116,6 +116,28 @@ namespace DokkanDaily.Services
         }
 
         public Leader GetRandomLeader(Tier tier) => GetRandomLeader(tier, null);
+
+        public Challenge GetTomorrowsChallenge() => GetChallenge((DateTime.UtcNow + TimeSpan.FromDays(1)).Date);
+
+        public Challenge GetDailyChallenge() => GetChallenge(null);
+
+        public Challenge GetDailyChallenge(DateTime dateOverride) => GetChallenge(dateOverride);
+
+        private static Challenge GetChallenge(DateTime? dateOverride = null)
+        {
+            if (ChallengeOverride != null) return ChallengeOverride;
+
+            DailyType dailyType = GetRandomDailyType(dateOverride);
+            Event todaysEvent = GetRandomStage(dateOverride);
+            LinkSkill linkSkill = GetRandomLinkSkill(todaysEvent.Tier, dateOverride);
+            Category category = GetRandomCategory(todaysEvent.Tier, dateOverride);
+            Leader leader = GetRandomLeader(todaysEvent.Tier, dateOverride);
+
+            Unit todaysUnit = DokkanDailyHelper.GetUnit(leader);
+
+            return new(dailyType, todaysEvent, linkSkill, category, leader, todaysUnit);
+        }
+
         private static Leader GetRandomLeader(Tier tier, DateTime? dateOverride = null)
         {
             Random random = GetDailySeededRandom(dateOverride);
@@ -141,28 +163,6 @@ namespace DokkanDaily.Services
             }
 
             return output;
-        }
-
-        public Challenge GetDailyChallenge() => GetDailyChallenge(null);
-        public Challenge GetDailyChallenge(DateTime dateOverride) => GetDailyChallenge(dateOverride);
-        private static Challenge GetDailyChallenge(DateTime? dateOverride = null)
-        {
-            if (ChallengeOverride != null) return ChallengeOverride;
-
-            DailyType dailyType = GetRandomDailyType(dateOverride);
-            Event todaysEvent = GetRandomStage(dateOverride);
-            LinkSkill linkSkill = GetRandomLinkSkill(todaysEvent.Tier, dateOverride);
-            Category category = GetRandomCategory(todaysEvent.Tier, dateOverride);
-            Leader leader = GetRandomLeader(todaysEvent.Tier, dateOverride);
-
-            Unit todaysUnit = DokkanDailyHelper.GetUnit(leader);
-
-            return new(dailyType, todaysEvent, linkSkill, category, leader, todaysUnit);
-        }
-
-        public Challenge GetTomorrowsChallenge()
-        {
-            return GetDailyChallenge((DateTime.UtcNow + TimeSpan.FromDays(1)).Date);
         }
     }
 }

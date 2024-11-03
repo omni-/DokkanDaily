@@ -1,5 +1,6 @@
 using DokkanDaily.Configuration;
 using DokkanDaily.Constants;
+using DokkanDaily.Models;
 using DokkanDaily.Models.Database;
 using DokkanDaily.Models.Enums;
 using DokkanDaily.Repository;
@@ -46,6 +47,13 @@ namespace DokkanDailyTests
             {
                 rngHelperService = new RngHelperService();
 
+                rngHelperService.RollDailySeed();
+
+                rngHelperService.GetRawSeed();
+
+                rngHelperService.GetTomorrowsChallenge();
+                rngHelperService.GetDailyChallenge();
+
                 leaders.Add(rngHelperService.GetRandomLeader(t).Name);
                 categories.Add(rngHelperService.GetRandomCategory(t).Name);
                 linkSkills.Add(rngHelperService.GetRandomLinkSkill(t).Name);
@@ -56,7 +64,7 @@ namespace DokkanDailyTests
         }
 
         [Test]
-        public async Task TestDailyResetService()
+        public void TestDailyResetService()
         {
             var abMock = mocks.Create<IAzureBlobService>();
             var repoMock = mocks.Create<IDokkanDailyRepository>();
@@ -116,9 +124,14 @@ namespace DokkanDailyTests
                 .Setup(x => x.InsertDailyClears(It.IsAny<List<DbClear>>(), It.IsAny<DateTime>()))
                 .Callback<IEnumerable<DbClear>, DateTime>((x, y) => actual = x.ToList());
 
-            await tdrs.DoReset();
+            rngMock
+                .Setup(x => x.GetTomorrowsChallenge())
+                .Returns(new Challenge(DailyType.Character, new("foo", Tier.D, "LGE"), new("bar", Tier.D), new("baz", Tier.D), new("quz", "", Tier.D), new()));
 
-            List<DbClear> exp =
+            Assert.DoesNotThrowAsync(() => tdrs.DoReset());
+
+
+            List <DbClear> exp =
             [
                 new() { DokkanNickname = "omni", ClearTime = "0'20\"10.8", IsDailyHighscore = false, ItemlessClear = true, ClearTimeSpan = new TimeSpan(0, 0, 20, 10, 800) },
                 new() { DokkanNickname = "owl", ClearTime = "0'18\"10.8", IsDailyHighscore = true, ItemlessClear = false, ClearTimeSpan = new TimeSpan(0, 0, 18, 10, 800) },
