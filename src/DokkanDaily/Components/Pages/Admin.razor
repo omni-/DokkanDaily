@@ -147,6 +147,6 @@
     async Task SendWebhookCustom()
     {
         string addText = AddRolePing ? $"\r\n{InternalConstants.DokkandleDbcRole}" : "";
-        await WebhookSvc.PostAsync(new() { Content = $"{Announcement}{addText}" });
+        await WebhookSvc.PostAsync($"{Announcement}{addText}");
     }
 }

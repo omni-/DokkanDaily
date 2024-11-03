@@ -1,5 +1,5 @@
 ﻿using DokkanDaily.Configuration;
-using DokkanDaily.Models.Net;
+using DokkanDaily.Models;
 using Microsoft.Extensions.Options;
 
 namespace DokkanDaily.Services
@@ -17,12 +17,40 @@ namespace DokkanDaily.Services
             _httpClient.BaseAddress = new Uri(settings.Value.WebhookUrl);
         }
 
-        public async Task PostAsync(WebhookPayload payload)
+        public async Task PostAsync(WebhookMessage message)
         {
-            _logger.LogInformation("Sending webhooks request {@Req}", payload);
+            await Post(message.Message, message.FilePath);
+        }
 
-            string s = null;
-            await _httpClient.PostAsJsonAsync(s, payload, new CancellationToken());
+        public async Task PostAsync(string message)
+        {
+            await Post(message);
+        }
+
+        async Task Post(string message, string filePath = null)
+        {
+            _logger.LogInformation("Sending webhooks request: {Msg}", message);
+            try
+            {
+                MultipartFormDataContent content = new()
+                {
+                    { new StringContent(message), "content" }
+                };
+                if (!string.IsNullOrEmpty(filePath))
+                {
+                    try
+                    {
+                        var bytes = File.ReadAllBytes($@"./wwwroot/{filePath}");
+                        content.Add(new ByteArrayContent(bytes, 0, bytes.Length), "image", "image.png");
+                    } catch (Exception e) { _logger.LogError(e, "Failed to add file to MultiPartFormData request"); }
+                }
+                await _httpClient.PostAsync((string)null, content, new CancellationToken());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unhandled error while sending webhooks request");
+                throw;
+            }
         }
     }
 }

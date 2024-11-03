@@ -36,7 +36,8 @@ namespace DokkanDaily.Services
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, "Unhandled http exception");
+                    _logger.LogError(e, "Unhandled exception while posting message");
+                    throw;
                 }
             }
 
