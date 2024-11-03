@@ -54,6 +54,10 @@ namespace DokkanDailyTests
                 rngHelperService.GetTomorrowsChallenge();
                 rngHelperService.GetDailyChallenge();
 
+                rngHelperService.SetDailySeed(9);
+
+                rngHelperService.Reset();
+
                 leaders.Add(rngHelperService.GetRandomLeader(t).Name);
                 categories.Add(rngHelperService.GetRandomCategory(t).Name);
                 linkSkills.Add(rngHelperService.GetRandomLinkSkill(t).Name);

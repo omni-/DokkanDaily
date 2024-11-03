@@ -38,8 +38,11 @@ namespace DokkanDaily.Services
                 };
                 if (!string.IsNullOrEmpty(filePath))
                 {
-                    var bytes = File.ReadAllBytes($@"./wwwroot/{filePath}");
-                    content.Add(new ByteArrayContent(bytes, 0, bytes.Length), "image", "image.png");
+                    try
+                    {
+                        var bytes = File.ReadAllBytes($@"./wwwroot/{filePath}");
+                        content.Add(new ByteArrayContent(bytes, 0, bytes.Length), "image", "image.png");
+                    } catch (Exception e) { _logger.LogError(e, "Failed to add file to MultiPartFormData request"); }
                 }
                 await _httpClient.PostAsync((string)null, content, new CancellationToken());
             }
