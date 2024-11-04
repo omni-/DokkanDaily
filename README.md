@@ -1,16 +1,20 @@
 # DokkanDaily
-Wordle-esque daily challenge for DBZ: Dokkan Battle.
+*Daily challenges for the hit mobile game Dragon Ball Z: Dokkan Battle.*
 
-https://www.dokkandle.net
+[>> SITE LINK <<](https://www.dokkandle.net)
 
-TODO:
-* UI improvements
-    - Fit screen better
-* GUESS THE UNIT!
-* More daily challenges
-* Allow merging of username pairs (details in `ClearInsert.sql`)
-* Parse JP clears
+### Coming Soon
+* Full support of JP clears
+* Guess the Unit challenge
+
+### Feedback/Suggestions
+Please submit an [Issue](https://github.com/omni-/DokkanDaily/issues) if you have feedback or suggestions!
+
+Or, if you're more technically inclined, [Submit a Pull Request](https://github.com/omni-/DokkanDaily/pulls) *(no promises on merging!)*
+
+### Nerdy stuff
+__Project TODO List:__
+* Allow merging of username pairs (details in [`ClearInsert.sql`](https://github.com/omni-/DokkanDaily/blob/master/src/DokkanDailyDB/Core/Stored%20Procedures/ClearInsert.sql))
 * Improve ENG OCR
-
-IDEAS:
-* Run the scraper as a job? ~~Rewrite it natively?~~
+* Support multiple webhook destinations
+* Set up modified scraper as an azure job/Script updating character json (github actions?)
