@@ -30,7 +30,7 @@ public class Worker(
             {
                 await _resetService.DoReset();
             }
-            catch(Exception e) { _logger.LogError(e, "Unhandled exception while attempting to invoke reset service"); }
+            catch (Exception e) { _logger.LogError(e, "Unhandled exception while attempting to invoke reset service"); }
         }
     }
 

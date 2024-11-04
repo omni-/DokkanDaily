@@ -9,7 +9,7 @@ namespace DokkanDaily.Services
         private readonly ILogger<DiscordWebhookClient> _logger;
 
         private readonly HttpClient _httpClient;
-        public DiscordWebhookClient(ILogger<DiscordWebhookClient> logger, HttpClient httpClient, IOptions<DokkanDailySettings> settings) 
+        public DiscordWebhookClient(ILogger<DiscordWebhookClient> logger, HttpClient httpClient, IOptions<DokkanDailySettings> settings)
         {
             _logger = logger;
             _httpClient = httpClient;
@@ -42,7 +42,8 @@ namespace DokkanDaily.Services
                     {
                         var bytes = File.ReadAllBytes($@"./wwwroot/{filePath}");
                         content.Add(new ByteArrayContent(bytes, 0, bytes.Length), "image", "image.png");
-                    } catch (Exception e) { _logger.LogError(e, "Failed to add file to MultiPartFormData request"); }
+                    }
+                    catch (Exception e) { _logger.LogError(e, "Failed to add file to MultiPartFormData request"); }
                 }
                 await _httpClient.PostAsync((string)null, content, new CancellationToken());
             }

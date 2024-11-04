@@ -135,7 +135,7 @@ namespace DokkanDailyTests
             Assert.DoesNotThrowAsync(() => tdrs.DoReset());
 
 
-            List <DbClear> exp =
+            List<DbClear> exp =
             [
                 new() { DokkanNickname = "omni", ClearTime = "0'20\"10.8", IsDailyHighscore = false, ItemlessClear = true, ClearTimeSpan = new TimeSpan(0, 0, 20, 10, 800) },
                 new() { DokkanNickname = "owl", ClearTime = "0'18\"10.8", IsDailyHighscore = true, ItemlessClear = false, ClearTimeSpan = new TimeSpan(0, 0, 18, 10, 800) },
