@@ -307,7 +307,7 @@ namespace DokkanDaily.Constants
             new("GT Bosses", Tier.D),
             new("Heavenly Events", Tier.E),
             new("Hybrid Saiyans", Tier.S),
-            new("Inuman Deeds", Tier.C),
+            new("Inhuman Deeds", Tier.C),
             new("Joined Forces", Tier.A),
             new("Kamehameha", Tier.S),
             new("Legendary Existence", Tier.B),
