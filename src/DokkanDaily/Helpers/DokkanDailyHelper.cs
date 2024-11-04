@@ -8,7 +8,7 @@ namespace DokkanDaily.Helpers
 {
     public static partial class DokkanDailyHelper
     {
-        private static readonly JsonSerializerOptions options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        private static readonly JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
 
 
         [GeneratedRegex("[^a-zA-Z0-9-]")]
@@ -73,13 +73,13 @@ namespace DokkanDaily.Helpers
             return $"Defeat {star}{star}{challenge.TodaysEvent.FullName}{star}{star} using {text}";
         }
 
-        public static WebhookMessage ToWebhookPayload(this Challenge challenge) => new() 
-        { 
-            Message = $"# Daily Challenge!\r\n{challenge.GetChallengeText(true)}!\r\n\r\n{InternalConstants.DokkandleDbcRole}\r\n\r\n*via https://dokkandle.net/daily*", 
+        public static WebhookMessage ToWebhookPayload(this Challenge challenge) => new()
+        {
+            Message = $"# Daily Challenge!\r\n{challenge.GetChallengeText(true)}!\r\n\r\n{InternalConstants.DokkandleDbcRole}\r\n\r\n*via https://dokkandle.net/daily*",
             FilePath = challenge.TodaysEvent?.WallpaperImagePath
         };
 
-        public static string AddSasTokenToUri(this string uri, string sasToken) 
+        public static string AddSasTokenToUri(this string uri, string sasToken)
             => $"{uri}?{sasToken}";
     }
 }

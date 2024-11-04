@@ -130,13 +130,13 @@ namespace DokkanDaily.Services
 
                 _logger.LogInformation("OCR analysis complete.");
 
-                return new(true, 
+                return new(true,
                     new()
                     {
                         ClearTime = clearTime,
                         Nickname = nickname,
                         ItemlessClear = itemless
-                    }, 
+                    },
                 null);
             }
             catch (Exception ex)

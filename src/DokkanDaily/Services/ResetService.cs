@@ -91,7 +91,7 @@ namespace DokkanDaily.Services
                         ClearTimeSpan = timeSpan
                     });
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     _logger.LogError(ex, "Failed to process clear");
                 }
@@ -114,7 +114,7 @@ namespace DokkanDaily.Services
 
                 await _repository.InsertDailyClears(clears, date);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError(e, "Unhandled exception while inserting daily clears");
                 throw;

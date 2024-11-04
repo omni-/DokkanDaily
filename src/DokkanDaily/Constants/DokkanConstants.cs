@@ -10,7 +10,7 @@ namespace DokkanDaily.Constants
         public static IReadOnlyList<LinkSkill> LinkSkills { get => linkSkills; }
         public static IReadOnlyDictionary<string, LinkSkill> LinkSkillMap { get; }
 
-        private static List<LinkSkill> linkSkills =
+        private static readonly List<LinkSkill> linkSkills =
         [
             new("All in the Family", Tier.S),
             new("Android Assault", Tier.C),
@@ -67,7 +67,7 @@ namespace DokkanDaily.Constants
         #region Leaders
         public static IReadOnlyList<Leader> Leaders { get => leaders; }
 
-        private static List<Leader> leaders =
+        private static readonly List<Leader> leaders =
         [
             //super
             new("Newfound Power Beyond the Ultimate", "Gohan (Beast)", Tier.S),
@@ -142,6 +142,7 @@ namespace DokkanDaily.Constants
             new("All-Out Super Attack", "Super Saiyan Gohan (Teen)", Tier.S),
             new("Fusion Reborn", "Goku (Angel) & Vegeta (Angel)", Tier.A),
             new("Pint-Sized Super Warriors", "Super Saiyan Trunks (Kid) & Super Saiyan Goten (Kid)", Tier.B),
+            new("Bright and Fun Life", "Master Roshi", Tier.A),
             //extreme
             new("Universe-Devastating Combat Power", "Broly", Tier.S),
             new("Surge of Heightened Fighting Spirit", "Super Saiyan Broly", Tier.S),
@@ -177,8 +178,7 @@ namespace DokkanDaily.Constants
             new("Super Warrior Who Destroys All", "Legendary Super Saiyan Broly", Tier.S),
             new("Boiling Evil", "Super Janemba", Tier.S),
             new("Decisive Strike of Rebellion", "Vegeta", Tier.B),
-            new("Bright and Fun Life", "Master Roshi", Tier.A),
-            new("Tide-Turning Super Power", "Gohan (Kid)/Piccolo", Tier.B),
+            new("Terrifying Super Namekian", "Lord Slug", Tier.A)
             // unreleased on global
             // new("Power of an Isolated Iron Wall", "Jiren", Tier.S),
 
@@ -188,7 +188,7 @@ namespace DokkanDaily.Constants
         #region Events
         public static IReadOnlyList<Event> Events { get => events; }
 
-        private static List<Event> events =
+        private static readonly List<Event> events =
         [
             new("When Wishes Backfire! Birth of the Shadow Dragons", Tier.F, "ShadowDragons", 1),
             new("When Wishes Backfire! Birth of the Shadow Dragons", Tier.D, "ShadowDragons", 6),
@@ -273,7 +273,7 @@ namespace DokkanDaily.Constants
         #region Categories
         public static IReadOnlyList<Category> Categories { get => categories; }
 
-        private static List<Category> categories =
+        private static readonly List<Category> categories =
         [
             new("Accelerated Battle", Tier.A),
             new("All-Out Struggle", Tier.A),
@@ -288,7 +288,7 @@ namespace DokkanDaily.Constants
             new("Connected Hope", Tier.C),
             new("Corroded Body and Mind", Tier.E),
             new("Crossover", Tier.C),
-            new("DB Saga", Tier.C),
+            new("DB Saga", Tier.B),
             new("Defenders of Justice", Tier.D),
             new("Dragon Ball Heroes", Tier.C),
             new("Earthlings", Tier.F),
@@ -307,10 +307,10 @@ namespace DokkanDaily.Constants
             new("GT Bosses", Tier.D),
             new("Heavenly Events", Tier.E),
             new("Hybrid Saiyans", Tier.S),
-            new("Inuman Deeds", Tier.D),
+            new("Inuman Deeds", Tier.C),
             new("Joined Forces", Tier.A),
             new("Kamehameha", Tier.S),
-            new("Legendary Existence", Tier.C),
+            new("Legendary Existence", Tier.B),
             new("Low-Class Warrior", Tier.D),
             new("Majin Buu Saga", Tier.S),
             new("Majin Power", Tier.S),
@@ -343,12 +343,12 @@ namespace DokkanDaily.Constants
             new("Storied Figures", Tier.D),
             new("Super Bosses", Tier.S),
             new("Super Heroes", Tier.S),
-            new("Super Saiyan 2", Tier.E),
+            new("Super Saiyan 2", Tier.F),
             new("Super Saiyan 3", Tier.B),
             new("Super Saiyans", Tier.S),
             new("Sworn Enemies", Tier.D),
-            new("Target: Goku", Tier.D),
-            new("Team Bardock", Tier.E),
+            new("Target: Goku", Tier.E),
+            new("Team Bardock", Tier.F),
             new("Terrifying Conquerors", Tier.C),
             new("Time Limit", Tier.A),
             new("Time Travelers", Tier.A),

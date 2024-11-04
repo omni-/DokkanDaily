@@ -28,6 +28,9 @@
     padding: 2em .5em 1em .5em;
     background-color: #EFCFA7;
     border: solid;
+    max-width:60vw;
+    min-width:40vw;
+    max-height:70vh;
 }
 
 .challenge-text img {
