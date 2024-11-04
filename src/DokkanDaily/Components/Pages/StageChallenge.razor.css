@@ -28,8 +28,8 @@
     padding: 2em .5em 1em .5em;
     background-color: #EFCFA7;
     border: solid;
-    max-width:60vw;
-    min-width:40vw;
+    max-width:80vw;
+    min-width:70vw;
     max-height:70vh;
 }
 
@@ -41,6 +41,10 @@
 
 @media only screen and (max-height: 890px) {
     .challenge-box {
-        font-size: 0.85rem
+        font-size: 0.85rem;
     }
+}
+
+.clear-box {
+    margin-bottom: 2vh;
 }
