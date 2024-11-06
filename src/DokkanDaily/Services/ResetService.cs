@@ -120,7 +120,7 @@ namespace DokkanDaily.Services
                 throw;
             }
 
-            _logger.LogInformation("Daily clears inserted. Updating leaderboard...");
+            _logger.LogInformation("Updating leaderboard...");
 
             // force reload leaderboard
             await _leaderboardService.GetDailyLeaderboard(true);

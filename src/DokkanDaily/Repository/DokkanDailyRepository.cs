@@ -31,7 +31,7 @@ namespace DokkanDaily.Repository
 
                 DynamicParameters dp = new();
                 dp.Add("Clears", ToDataTable(clears).AsTableValuedParameter());
-                dp.Add("ClearDate", dateOnly);
+                dp.Add("ClearDate", dateOnly.Date);
 
                 await SqlConnectionWrapper.ExecuteAsync(
                     "[Core].[ClearInsert]", dp);
