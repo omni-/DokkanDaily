@@ -57,6 +57,14 @@
                         <br />
                         <label>Set Daily Type: <input @bind-value=@DailyType /><button style="margin-left:5px" @onclick=SetDailyType>Set</button></label>
                         <br />
+                        <label>Set Stage: <input @bind-value=@DailyType /><button style="margin-left:5px" @onclick=SetStage>Set</button></label>
+                        <br />
+                        <label>Set Unit: <input @bind-value=@DailyType /><button style="margin-left:5px" @onclick=SetUnit>Set</button></label>
+                        <br />
+                        <label>Set Link: <input @bind-value=@DailyType /><button style="margin-left:5px" @onclick=SetLinkSkill>Set</button></label>
+                        <br />
+                        <label>Set Category: <input @bind-value=@DailyType /><button style="margin-left:5px" @onclick=SetDailyType>Set</button></label>
+                        <br />
                         <label>Send Daily via Webhook: <button style="margin-left:5px" @onclick=SendWebhook>Send</button></label>
                         <br />
                         <label>Send Announcement: <textarea @bind=@Announcement /><button style="margin-left:5px" @onclick=SendWebhookCustom>Send</button><input style="margin-left:5px" @bind=@AddRolePing type="checkbox" /></label>
@@ -137,6 +145,26 @@
     void SetDailyType()
     {
         RngSvc.OverrideChallengeType(Enum.Parse<DailyType>(DailyType));
+    }
+
+    void SetStage()
+    {
+
+    }
+
+    void SetUnit()
+    {
+
+    }
+
+    void SetLinkSkill()
+    {
+
+    }
+
+    void SetCategory()
+    {
+        
     }
 
     async Task SendWebhook()
