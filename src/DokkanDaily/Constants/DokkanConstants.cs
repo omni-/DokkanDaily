@@ -282,7 +282,7 @@ namespace DokkanDaily.Constants
             new("Artificial Life Forms", Tier.B),
             new("Battle of Fate", Tier.S),
             new("Battle of Wits", Tier.E),
-            new("Bond of Friendship", Tier.F),
+            new("Bond of Friendship", Tier.B),
             new("Bond of Master and Disciple", Tier.S),
             new("Bond of Parent and Child", Tier.S),
             new("Connected Hope", Tier.C),

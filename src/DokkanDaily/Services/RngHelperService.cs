@@ -54,7 +54,8 @@ namespace DokkanDaily.Services
             if (SeedOverride != null) return SeedOverride.Value;
 
             var date = dateOverride ?? DateTime.UtcNow.Date;
-            var seed = (date.Year * 1000 + date.DayOfYear) / (SeedOffset + 1);
+
+            var seed = (date.Year * 10000) + (date.DayOfYear * 10) + (SeedOffset);
             return seed;
         }
 
