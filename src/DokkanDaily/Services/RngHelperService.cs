@@ -120,7 +120,7 @@ namespace DokkanDaily.Services
 
         public Challenge GetTomorrowsChallenge() => GetChallenge((DateTime.UtcNow + TimeSpan.FromDays(1)).Date);
 
-        public Challenge GetDailyChallenge() => GetChallenge(null);
+        public Challenge GetDailyChallenge() => GetChallenge((DateTime.UtcNow + TimeSpan.FromDays(4)).Date);
 
         public Challenge GetDailyChallenge(DateTime dateOverride) => GetChallenge(dateOverride);
 
