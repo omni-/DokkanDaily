@@ -8,8 +8,16 @@ namespace DokkanDailyTests
     [TestFixture]
     public class OcrTests
     {
+        [OneTimeSetUp]
+        public void Setup()
+        {
+            if (Environment.GetEnvironmentVariable("CI") == "true")
+            {
+                Assert.Ignore("Skipping OCR tests as they currently can't run on remote");
+            }
+        }
+
         [Test]
-        [Ignore("Can't run on remote")]
         [TestCase("IMG_1907.png", "DBC*omni", "0'11\"53.4", true)]
         [TestCase("Screenshot_20240915-192306.png", "DBC*Owl", "0'10\"01.8", false)]
         [TestCase("Screenshot_20240925_085515_Dokkan.jpg", "SlacksV2", "0'07\"17.1", false)]
