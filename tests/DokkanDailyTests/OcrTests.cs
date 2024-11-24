@@ -37,7 +37,7 @@ namespace DokkanDailyTests
 
         private static IEnumerable<TestCaseData> GetImageTestCases()
         {
-            string[] imageExtensions = new []{ ".png", ".jpg" };
+            string[] imageExtensions = new []{ ".png", ".jpg", ".jpeg" };
             foreach (string imagePath in Directory
                 .EnumerateFiles(GetDataDirectory(), "*", SearchOption.AllDirectories)
                 .Where(file => imageExtensions.Contains(Path.GetExtension(file).ToLower()))
