@@ -30,6 +30,8 @@ namespace DokkanDailyTests
 
         private class SnapshotData
         {
+            public string[] Categories { get; set; } = [];
+
             public string? Nickname { get; set; }
             public string? ClearTime { get; set; }
             public bool? ItemlessClear { get; set; }
@@ -46,6 +48,15 @@ namespace DokkanDailyTests
                 TestCaseData testCase = new TestCaseData(imagePath)
                     .SetName(Path.GetFileNameWithoutExtension(imagePath))
                     .SetProperty("filePath", imagePath);
+
+                SnapshotData? snapshot = SnapshotHelper<SnapshotData>.LoadSnapshot(imagePath);
+                if (snapshot != null)
+                {
+                    foreach (string category in snapshot.Categories)
+                    {
+                        testCase.SetCategory(category);
+                    }
+                }
 
                 yield return testCase;
             }
