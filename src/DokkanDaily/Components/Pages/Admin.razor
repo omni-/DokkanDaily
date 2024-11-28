@@ -119,19 +119,19 @@
         base.OnInitialized();
     }
 
-    void SetSeed()
+    async Task SetSeed()
     {
-        RngSvc.SetDailySeed(int.Parse(Seed));
+        await RngSvc.SetDailySeed(int.Parse(Seed));
     }
 
-    void RollSeed()
+    async Task RollSeed()
     {
-        RngSvc.RollDailySeed();
+        await RngSvc.RollDailySeed();
     }
 
-    void Reset()
+    async Task Reset()
     {
-        RngSvc.Reset();
+        await RngSvc.Reset();
     }
 
     void Rerun()
@@ -164,12 +164,13 @@
 
     void SetCategory()
     {
-        
+
     }
 
     async Task SendWebhook()
     {
-        await WebhookSvc.PostAsync(RngSvc.GetDailyChallenge().ToWebhookPayload());
+        var chall = await RngSvc.GetDailyChallenge();
+        await WebhookSvc.PostAsync(chall.ToWebhookPayload());
     }
 
     async Task SendWebhookCustom()

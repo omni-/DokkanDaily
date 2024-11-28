@@ -6,7 +6,7 @@ using DokkanDaily.Services.Interfaces;
 
 namespace DokkanDaily.Services
 {
-    public class RngHelperService : IRngHelperService
+    public class RngHelperService
     {
         private static int SeedOffset { get; set; }
         private static int? SeedOverride { get; set; }
@@ -19,7 +19,7 @@ namespace DokkanDaily.Services
             return new Random(GetRawSeed(dateOverride));
         }
 
-        public void OverrideChallenge(DailyType type, Event e, LinkSkill link, Category cat, Leader l)
+        public void OverrideChallenge(DailyType type, Stage e, LinkSkill link, Category cat, Leader l)
         {
             ChallengeOverride = new(type, e, link, cat, l, DokkanDailyHelper.GetUnit(l));
         }
@@ -59,7 +59,7 @@ namespace DokkanDaily.Services
             return seed;
         }
 
-        public DailyType GetRandomDailyType() => GetRandomDailyType(null);
+        public DailyType GetTodaysDailyType() => GetRandomDailyType(null);
         private static DailyType GetRandomDailyType(DateTime? dateOverride)
         {
             Random random = GetDailySeededRandom(dateOverride);
@@ -87,11 +87,11 @@ namespace DokkanDaily.Services
             return links[random.Next(0, links.Count)];
         }
 
-        public Event GetRandomStage() => GetRandomStage(null);
-        private static Event GetRandomStage(DateTime? dateOverride = null)
+        public Stage GetRandomStage() => GetRandomStage(null);
+        private static Stage GetRandomStage(DateTime? dateOverride = null)
         {
             Random random = GetDailySeededRandom(dateOverride);
-            return DokkanConstants.Events[random.Next(0, DokkanConstants.Events.Count)];
+            return DokkanConstants.Stages[random.Next(0, DokkanConstants.Stages.Count)];
         }
 
         public Category GetRandomCategory() => GetRandomCategory(null);
@@ -129,7 +129,7 @@ namespace DokkanDaily.Services
             if (ChallengeOverride != null) return ChallengeOverride;
 
             DailyType dailyType = GetRandomDailyType(dateOverride);
-            Event todaysEvent = GetRandomStage(dateOverride);
+            Stage todaysEvent = GetRandomStage(dateOverride);
             LinkSkill linkSkill = GetRandomLinkSkill(todaysEvent.Tier, dateOverride);
             Category category = GetRandomCategory(todaysEvent.Tier, dateOverride);
             Leader leader = GetRandomLeader(todaysEvent.Tier, dateOverride);

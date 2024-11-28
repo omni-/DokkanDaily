@@ -20,7 +20,7 @@
     }
 </style>
 
-<Logo dailyType="@RngSvc.GetRandomDailyType().ToString()" />
+<Logo dailyType="@RngSvc.GetTodaysDailyType()?.ToString()" />
 
 <div class="container leaderboard text-center">
     @if (leaderboard != null)

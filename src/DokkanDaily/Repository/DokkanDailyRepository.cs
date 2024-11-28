@@ -1,10 +1,12 @@
 ﻿using Dapper;
+using DokkanDaily.Components.Pages;
 using DokkanDaily.Configuration;
 using DokkanDaily.Helpers;
 using DokkanDaily.Models.Database;
 using DokkanDaily.Repository.Attributes;
 using FastMember;
 using Microsoft.Extensions.Options;
+using System;
 using System.Data;
 
 namespace DokkanDaily.Repository
@@ -62,6 +64,27 @@ namespace DokkanDaily.Repository
                 _logger.LogInformation("Daily leaderboad retrieved");
 
                 return results;
+            }
+            finally
+            {
+                SqlConnectionWrapper.Close();
+            }
+        }
+
+        public async Task<IEnumerable<DbChallenge>> GetChallengeList(DateTime cutoff)
+        {
+            _logger.LogInformation("Getting challenge list...");
+            try
+            {
+                await SqlConnectionWrapper.OpenAsync();
+
+                List<DbLeaderboardResult> results = [];
+
+                DynamicParameters dp = new();
+                dp.Add("CutoffDateUTC", cutoff);
+
+                return await SqlConnectionWrapper.QueryAsync<DbChallenge>(
+                    "[Core].[DailyChallengeListGet]", dp);
             }
             finally
             {

@@ -28,7 +28,7 @@ namespace DokkanDailyTests
         [Test]
         public void TestRngService()
         {
-            IRngHelperService rngHelperService = new RngHelperService();
+            IRngHelperService rngHelperService = new RngHelperServiceV2(mocks.Create<IDokkanDailyRepository>().Object);
 
             var seed1 = rngHelperService.GetRawSeed();
             rngHelperService.RollDailySeed();
@@ -41,29 +41,19 @@ namespace DokkanDailyTests
             List<string> linkSkills = [];
             List<string> dailyTypes = [];
 
-            Tier t = Tier.S;
-
             Assert.DoesNotThrow(() =>
             {
-                rngHelperService = new RngHelperService();
-
                 rngHelperService.RollDailySeed();
 
                 rngHelperService.GetRawSeed();
 
-                rngHelperService.GetTomorrowsChallenge();
                 rngHelperService.GetDailyChallenge();
 
                 rngHelperService.SetDailySeed(9);
 
                 rngHelperService.Reset();
 
-                leaders.Add(rngHelperService.GetRandomLeader(t).Name);
-                categories.Add(rngHelperService.GetRandomCategory(t).Name);
-                linkSkills.Add(rngHelperService.GetRandomLinkSkill(t).Name);
-
-                rngHelperService.GetRandomStage();
-                dailyTypes.Add(rngHelperService.GetRandomDailyType().ToString());
+                dailyTypes.Add(rngHelperService.GetTodaysDailyType().ToString());
             });
         }
 
@@ -129,8 +119,8 @@ namespace DokkanDailyTests
                 .Callback<IEnumerable<DbClear>, DateTime>((x, y) => actual = x.ToList());
 
             rngMock
-                .Setup(x => x.GetTomorrowsChallenge())
-                .Returns(new Challenge(DailyType.Character, new("foo", Tier.D, "LGE"), new("bar", Tier.D), new("baz", Tier.D), new("quz", "", Tier.D), new()));
+                .Setup(x => x.UpdateDailyChallenge())
+                .ReturnsAsync(new Challenge(DailyType.Character, new("foo", Tier.D, "LGE"), new("bar", Tier.D), new("baz", Tier.D), new("quz", "", Tier.D), new()));
 
             Assert.DoesNotThrowAsync(() => tdrs.DoReset());
 

@@ -28,7 +28,7 @@
 
 <Logo dailyType="@todaysChallenge.DailyType.ToString()" />
 
-@if(Executing)
+@if (Executing)
 {
     <BusySpinner />
 }
@@ -38,15 +38,15 @@ else
         <div style="margin: 0 1em 0 1em">
             @if (todaysChallenge.DailyType == DailyType.LinkSkill)
             {
-                <p class="challenge-text"><b>Challenge!</b> defeat <b>@todaysChallenge.TodaysEvent.Name</b>, <b>Stage @todaysChallenge.TodaysEvent.Stage</b> using only units that have the Link Skill <div class="dokkan-link-wrapper"><div class="dokkan-link"><div class="text">@todaysChallenge.LinkSkill.Name</div></div></div><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
+                <p class="challenge-text"><b>Challenge!</b> defeat <b>@todaysChallenge.TodaysEvent.Name</b>, <b>Stage @todaysChallenge.TodaysEvent.StageNumber</b> using only units that have the Link Skill <div class="dokkan-link-wrapper"><div class="dokkan-link"><div class="text">@todaysChallenge.LinkSkill.Name</div></div></div><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
             }
             @if (todaysChallenge.DailyType == DailyType.Category)
             {
-                <p class="challenge-text"><b>Challenge!</b> defeat <b>@todaysChallenge.TodaysEvent.Name</b>, <b>Stage @todaysChallenge.TodaysEvent.Stage</b> using only units belonging to:<br /><img src="@todaysChallenge.Category.ImageURL" /><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
+                <p class="challenge-text"><b>Challenge!</b> defeat <b>@todaysChallenge.TodaysEvent.Name</b>, <b>Stage @todaysChallenge.TodaysEvent.StageNumber</b> using only units belonging to:<br /><img src="@todaysChallenge.Category.ImageURL" /><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
             }
             @if (todaysChallenge.DailyType == DailyType.Character)
             {
-                <p class="challenge-text"><b>Challenge!</b> build a team using <img style="width:3em;height:auto;" src="@todaysChallenge.TodaysUnit.ImageURL" /> <b style="color:@typeColor">[@todaysChallenge.Leader.Title] @todaysChallenge.Leader.Name</b> as the Leader and defeat <b>@todaysChallenge.TodaysEvent.Name</b>, <b>Stage @todaysChallenge.TodaysEvent.Stage</b>!<div class="challenge-text friend-text">(Only one required - you may use a Friend Unit)</div></p>
+                <p class="challenge-text"><b>Challenge!</b> build a team using <img style="width:3em;height:auto;" src="@todaysChallenge.TodaysUnit.ImageURL" /> <b style="color:@typeColor">[@todaysChallenge.Leader.Title] @todaysChallenge.Leader.Name</b> as the Leader and defeat <b>@todaysChallenge.TodaysEvent.Name</b>, <b>Stage @todaysChallenge.TodaysEvent.StageNumber</b>!<div class="challenge-text friend-text">(Only one required - you may use a Friend Unit)</div></p>
             }
             @if (todaysChallenge.TodaysEvent != null && todaysChallenge.TodaysEvent.WallpaperImagePath != null)
             {
@@ -77,7 +77,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        todaysChallenge = RngSvc.GetDailyChallenge();
+        todaysChallenge = await RngSvc.GetDailyChallenge();
 
         try
         {

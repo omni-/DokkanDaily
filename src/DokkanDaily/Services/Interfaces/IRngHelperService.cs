@@ -5,35 +5,19 @@ namespace DokkanDaily.Services.Interfaces
 {
     public interface IRngHelperService
     {
-        Event GetRandomStage();
+        DailyType? GetTodaysDailyType();
 
-        DailyType GetRandomDailyType();
+        Task<Challenge> GetDailyChallenge();
 
-        LinkSkill GetRandomLinkSkill();
+        Task<Challenge> UpdateDailyChallenge();
 
-        LinkSkill GetRandomLinkSkill(Tier minTier);
+        Task SetDailySeed(int seed);
 
-        Category GetRandomCategory();
+        Task RollDailySeed();
 
-        Category GetRandomCategory(Tier minTier);
+        Task Reset();
 
-        Leader GetRandomLeader();
-
-        Leader GetRandomLeader(Tier minTier);
-
-        Challenge GetDailyChallenge();
-
-        Challenge GetDailyChallenge(DateTime dateOverride);
-
-        Challenge GetTomorrowsChallenge();
-
-        void Reset();
-
-        void SetDailySeed(int seed);
-
-        void RollDailySeed();
-
-        void OverrideChallenge(DailyType type, Event e, LinkSkill link, Category cat, Leader l);
+        void OverrideChallenge(DailyType type, Stage e, LinkSkill link, Category cat, Leader l);
 
         void OverrideChallengeType(DailyType type);
 

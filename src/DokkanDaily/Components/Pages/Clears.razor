@@ -27,7 +27,7 @@
 </style>
 <div style="height:100vh;">
 
-    <Logo dailyType="@RngSvc.GetRandomDailyType().ToString()" />
+    <Logo dailyType="@RngSvc.GetTodaysDailyType()?.ToString()" />
 
     @if (warningMessage.Length > 0)
     {
@@ -101,7 +101,7 @@
     {
         try
         {
-            challengeModel = RngSvc.GetDailyChallenge();
+            challengeModel = await RngSvc.GetDailyChallenge();
 
             fileUploadViewModels = await Task.Run(async () =>
             {
