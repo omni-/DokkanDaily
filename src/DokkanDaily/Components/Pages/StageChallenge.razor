@@ -26,9 +26,9 @@
     }
 </style>
 
-<Logo dailyType="@todaysChallenge.DailyType.ToString()" />
+<Logo dailyType="@todaysChallenge?.DailyType.ToString()" />
 
-@if (Executing)
+@if (Executing || todaysChallenge is null)
 {
     <BusySpinner />
 }

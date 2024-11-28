@@ -32,10 +32,10 @@ namespace DokkanDaily
             builder.Services.AddHostedService<Worker>();
 
             builder.Services.AddSingleton<ILeaderboardService, LeaderboardService>();
+            builder.Services.AddSingleton<IRngHelperService, RngHelperServiceV2>();
 
             builder.Services.AddTransient<OcrFormatProvider>();
             builder.Services.AddTransient<IResetService, ResetService>();
-            builder.Services.AddTransient<IRngHelperService, RngHelperServiceV2>();
             builder.Services.AddTransient<IAzureBlobService, AzureBlobService>();
             builder.Services.AddTransient<IOcrService, OcrService>();
             builder.Services.AddTransient<ISqlConnectionWrapper, SqlConnectionWrapper>();

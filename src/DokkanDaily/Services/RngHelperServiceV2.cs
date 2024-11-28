@@ -9,6 +9,7 @@ namespace DokkanDaily.Services
 {
     public class RngHelperServiceV2 : IRngHelperService
     {
+        private static DateTime Now => DateTime.UtcNow;
         private static Challenge Challenge = null;
         private static int Seed;
         private readonly IDokkanDailyRepository dokkanDailyRepository;
@@ -16,7 +17,7 @@ namespace DokkanDaily.Services
         public RngHelperServiceV2(IDokkanDailyRepository repository)
         {
             dokkanDailyRepository = repository;
-            Seed = CalcSeed(DateTime.UtcNow);
+            Seed = CalcSeed(Now);
         }
 
         public async Task<Challenge> GetDailyChallenge()
@@ -117,7 +118,7 @@ namespace DokkanDaily.Services
 
         public async Task Reset()
         {
-            Seed = CalcSeed(DateTime.UtcNow);
+            Seed = CalcSeed(Now);
             Challenge = await CalcChallenge();
         }
 
@@ -135,7 +136,7 @@ namespace DokkanDaily.Services
 
         public async Task<Challenge> UpdateDailyChallenge()
         {
-            Seed = CalcSeed(DateTime.UtcNow - TimeSpan.FromDays(1));
+            Seed = CalcSeed(Now + TimeSpan.FromDays(1));
             Challenge = await CalcChallenge();
             return Challenge;
         }
