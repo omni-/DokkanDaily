@@ -7,6 +7,8 @@ namespace DokkanDaily.Repository
     {
         Task InsertDailyClears(IEnumerable<DbClear> clears, DateTime dateOnly);
 
+        Task InsertChallenge(Challenge challenge);
+
         Task<IEnumerable<DbChallenge>> GetChallengeList(DateTime cutoff);
 
         Task<IEnumerable<DbLeaderboardResult>> GetDailyLeaderboard();

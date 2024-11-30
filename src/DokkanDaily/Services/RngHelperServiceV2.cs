@@ -112,7 +112,6 @@ namespace DokkanDaily.Services
             return Challenge?.DailyType;
         }
 
-
         public int GetRawSeed()
         {
             return Seed;

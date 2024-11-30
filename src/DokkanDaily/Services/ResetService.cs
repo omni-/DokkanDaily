@@ -24,6 +24,9 @@ namespace DokkanDaily.Services
         {
             _logger.LogInformation("Starting daily reset...");
 
+            // get this for later
+            var todaysChallenge = await _rngHelperService.GetDailyChallenge();
+
             // Reset RNGService/seeding
             var tomorrowsChallenge = await _rngHelperService.UpdateDailyChallenge();
 
@@ -117,6 +120,16 @@ namespace DokkanDaily.Services
             catch (Exception e)
             {
                 _logger.LogError(e, "Unhandled exception while inserting daily clears");
+                throw;
+            }
+
+            try
+            {
+                await _repository.InsertChallenge(todaysChallenge);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Unhandled exception while inserting daily challenge");
                 throw;
             }
 

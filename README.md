@@ -4,12 +4,12 @@ Wordle-esque daily challenge for DBZ: Dokkan Battle.
 https://www.dokkandle.net
 
 TODO:
+* Parse JP clears
+* Announcement banner
 * UI improvements
-    - Fit screen better
 * GUESS THE UNIT!
 * More daily challenges
 * Allow merging of username pairs (details in `ClearInsert.sql`)
-* Parse JP clears
 * Improve ENG OCR
 
 IDEAS:

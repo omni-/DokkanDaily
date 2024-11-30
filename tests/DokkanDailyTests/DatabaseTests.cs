@@ -1,6 +1,9 @@
 ﻿using Dapper;
 using DokkanDaily.Configuration;
+using DokkanDaily.Constants;
+using DokkanDaily.Models;
 using DokkanDaily.Models.Database;
+using DokkanDaily.Models.Enums;
 using DokkanDaily.Repository;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -37,7 +40,7 @@ namespace DokkanDailyTests
         public async Task Setup()
         {
             await wrapper.OpenAsync();
-            await wrapper.ExecuteReaderAsync("delete from Core.StageClear; delete from Core.DokkanDailyUser;", new());
+            await wrapper.ExecuteReaderAsync("delete from Core.StageClear; delete from Core.DokkanDailyUser; delete from Core.DailyChallenge;", new());
             await wrapper.CloseAsync();
         }
 
@@ -88,6 +91,15 @@ namespace DokkanDailyTests
             //result = await repository.GetDailyLeaderboard();
             //list = result.ToList();
             //Assert.That(list, Has.Count.EqualTo(1), "the clears should be bound to one user");
+        }
+
+        [Test]
+        public async Task DatabaseCanRecordAndReturnChallengeList()
+        {
+            await repository.InsertChallenge(new(DailyType.Character, new Stage("foo", Tier.F, "fakepath"), new("a", Tier.F), new("b", Tier.F), new("bar", "baz", Tier.F), null));
+            var result = await repository.GetChallengeList(DateTime.UtcNow - TimeSpan.FromDays(2));
+            var match = result.FirstOrDefault(x => x.DailyTypeName == "Character" && x.Category == null && x.Stage == 1 && x.Event == "foo" && x.LeaderFullName == "[bar] baz" && x.LinkSkill == null);
+            Assert.That(match, Is.Not.Null, "Could not find matching record in db result");
         }
 
         [Test]
