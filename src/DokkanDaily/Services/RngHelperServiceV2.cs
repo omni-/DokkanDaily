@@ -13,9 +13,11 @@ namespace DokkanDaily.Services
         private static Challenge Challenge = null;
         private static int Seed;
         private readonly IDokkanDailyRepository dokkanDailyRepository;
+        private readonly ILogger<RngHelperServiceV2> _logger;
 
-        public RngHelperServiceV2(IDokkanDailyRepository repository)
+        public RngHelperServiceV2(IDokkanDailyRepository repository, ILogger<RngHelperServiceV2> logger)
         {
+            _logger = logger;
             dokkanDailyRepository = repository;
             Seed = CalcSeed(Now);
         }
@@ -35,20 +37,30 @@ namespace DokkanDaily.Services
             Random r = new(Seed);
 
             // first, get recent challenge history
-            DateTime cutoffDate = DateTime.UtcNow - TimeSpan.FromDays(InternalConstants.ChallengeRepeatLimitDays);
-            var dbChallenges = await dokkanDailyRepository.GetChallengeList(cutoffDate);
+            List<Challenge> recentChallenges;
 
-            List<Challenge> recentChallenges = dbChallenges.Select(x =>
+            try
             {
-                DailyType type = Enum.Parse<DailyType>(x.DailyTypeName);
-                Stage stage = DokkanConstants.Stages.First(y => y.Name == x.Event && y.StageNumber == x.Stage);
-                Leader leader = DokkanConstants.Leaders.First(y => y.FullName == x.LeaderFullName);
-                LinkSkill skill = DokkanConstants.LinkSkillMap[x.LinkSkill];
-                Category category = DokkanConstants.Categories.First(y => y.Name == x.Category);
-                Unit unit = DokkanDailyHelper.GetUnit(leader);
+                DateTime cutoffDate = DateTime.UtcNow - TimeSpan.FromDays(InternalConstants.ChallengeRepeatLimitDays);
+                var dbChallenges = await dokkanDailyRepository.GetChallengeList(cutoffDate);
 
-                return new Challenge(type, stage, skill, category, leader, unit);
-            }).ToList();
+                recentChallenges = dbChallenges.Select(x =>
+                {
+                    DailyType type = Enum.Parse<DailyType>(x.DailyTypeName);
+                    Stage stage = DokkanConstants.Stages.First(y => y.Name == x.Event && y.StageNumber == x.Stage);
+                    Leader leader = DokkanConstants.Leaders.First(y => y.FullName == x.LeaderFullName);
+                    LinkSkill skill = DokkanConstants.LinkSkillMap[x.LinkSkill];
+                    Category category = DokkanConstants.Categories.First(y => y.Name == x.Category);
+                    Unit unit = DokkanDailyHelper.GetUnit(leader);
+
+                    return new Challenge(type, stage, skill, category, leader, unit);
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Encountered exception while trying to get recent challenges");
+                recentChallenges = [];
+            }
 
             // filter out things we've done recently
             var stages = DokkanConstants.Stages

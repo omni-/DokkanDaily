@@ -17,12 +17,12 @@ namespace DokkanDaily.Services
             _httpClient.BaseAddress = new Uri(settings.Value.WebhookUrl);
         }
 
-        public async Task PostAsync(WebhookMessage message)
+        public async virtual Task PostAsync(WebhookMessage message)
         {
             await Post(message.Message, message.FilePath);
         }
 
-        public async Task PostAsync(string message)
+        public async virtual Task PostAsync(string message)
         {
             await Post(message);
         }
