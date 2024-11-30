@@ -22,13 +22,13 @@ namespace DokkanDailyTests
         [SetUp]
         public void Setup()
         {
-            mocks = new(MockBehavior.Loose);
+            mocks = new(MockBehavior.Strict);
         }
 
         [Test]
         public void TestRngService()
         {
-            IRngHelperService rngHelperService = new RngHelperService();
+            IRngHelperService rngHelperService = new RngHelperServiceV2(mocks.Create<IDokkanDailyRepository>().Object, mocks.Create<ILogger<RngHelperServiceV2>>().Object);
 
             var seed1 = rngHelperService.GetRawSeed();
             rngHelperService.RollDailySeed();
@@ -41,29 +41,19 @@ namespace DokkanDailyTests
             List<string> linkSkills = [];
             List<string> dailyTypes = [];
 
-            Tier t = Tier.S;
-
             Assert.DoesNotThrow(() =>
             {
-                rngHelperService = new RngHelperService();
-
                 rngHelperService.RollDailySeed();
 
                 rngHelperService.GetRawSeed();
 
-                rngHelperService.GetTomorrowsChallenge();
                 rngHelperService.GetDailyChallenge();
 
                 rngHelperService.SetDailySeed(9);
 
                 rngHelperService.Reset();
 
-                leaders.Add(rngHelperService.GetRandomLeader(t).Name);
-                categories.Add(rngHelperService.GetRandomCategory(t).Name);
-                linkSkills.Add(rngHelperService.GetRandomLinkSkill(t).Name);
-
-                rngHelperService.GetRandomStage();
-                dailyTypes.Add(rngHelperService.GetRandomDailyType().ToString());
+                dailyTypes.Add(rngHelperService.GetTodaysDailyType().ToString());
             });
         }
 
@@ -74,9 +64,9 @@ namespace DokkanDailyTests
             var repoMock = mocks.Create<IDokkanDailyRepository>();
             var lbMock = mocks.Create<ILeaderboardService>();
             var rngMock = mocks.Create<IRngHelperService>();
-            var loggerMock = mocks.Create<ILogger<ResetService>>();
-            var loggerMock2 = mocks.Create<ILogger<DiscordWebhookClient>>();
-            var httpMock = mocks.Create<HttpClient>();
+            var loggerMock = mocks.Create<ILogger<ResetService>>(MockBehavior.Loose);
+            var loggerMock2 = mocks.Create<ILogger<DiscordWebhookClient>>(MockBehavior.Loose);
+            var httpMock = mocks.Create<HttpClient>(MockBehavior.Loose);
             var webhookMock = mocks.Create<DiscordWebhookClient>(loggerMock2.Object, httpMock.Object, Options.Create<DokkanDailySettings>(new() { WebhookUrl = "http://foo.bar" }));
 
             IResetService tdrs = new ResetService(abMock.Object, repoMock.Object, lbMock.Object, rngMock.Object, webhookMock.Object, loggerMock.Object);
@@ -123,14 +113,26 @@ namespace DokkanDailyTests
                         { AzureConstants.ITEMLESS_TAG, "true" }
                     }),
                 ]);
+            abMock.Setup(x => x.PruneContainers(30)).Returns(Task.CompletedTask);
+            abMock.Setup(x => x.GetBucketNameForDate(It.IsAny<string>())).Returns(It.IsAny<string>());
 
             repoMock
                 .Setup(x => x.InsertDailyClears(It.IsAny<List<DbClear>>(), It.IsAny<DateTime>()))
+                .Returns(Task.CompletedTask)
                 .Callback<IEnumerable<DbClear>, DateTime>((x, y) => actual = x.ToList());
 
+            repoMock.Setup(x => x.InsertChallenge(It.IsAny<Challenge>())).Returns(Task.CompletedTask);
+
             rngMock
-                .Setup(x => x.GetTomorrowsChallenge())
-                .Returns(new Challenge(DailyType.Character, new("foo", Tier.D, "LGE"), new("bar", Tier.D), new("baz", Tier.D), new("quz", "", Tier.D), new()));
+                .Setup(x => x.UpdateDailyChallenge())
+                .ReturnsAsync(new Challenge(DailyType.Character, new("foo", Tier.D, "LGE"), new("bar", Tier.D), new("baz", Tier.D), new("quz", "", Tier.D), new()));
+            rngMock
+                .Setup(x => x.GetDailyChallenge())
+                .ReturnsAsync(new Challenge(DailyType.Character, new("foo", Tier.D, "LGE"), new("bar", Tier.D), new("baz", Tier.D), new("quz", "", Tier.D), new()));
+
+            lbMock.Setup(x => x.GetDailyLeaderboard(It.IsAny<bool>())).Returns(Task.FromResult<List<LeaderboardUser>>([]));
+
+            webhookMock.Setup(x => x.PostAsync(It.IsAny<WebhookMessage>())).Returns(Task.CompletedTask);
 
             Assert.DoesNotThrowAsync(() => tdrs.DoReset());
 
@@ -144,16 +146,23 @@ namespace DokkanDailyTests
 
             actual.Should().BeEquivalentTo(exp);
 
-            lbMock.Verify(x => x.GetDailyLeaderboard(true), Times.Once());
+            rngMock.Verify(x => x.GetDailyChallenge(), Times.Once);
+            rngMock.Verify(x => x.UpdateDailyChallenge(), Times.Once);
+            rngMock.VerifyNoOtherCalls();
+
+            lbMock.Verify(x => x.GetDailyLeaderboard(true), Times.Once);
             lbMock.VerifyNoOtherCalls();
 
-            abMock.Verify(x => x.PruneContainers(It.IsAny<int>()), Times.Once());
+            abMock.Verify(x => x.PruneContainers(It.IsAny<int>()), Times.Once);
             abMock.Verify(x => x.GetBucketNameForDate(It.IsAny<string>()));
-            abMock.Verify(x => x.GetFilesForTag(It.IsAny<string>(), It.IsAny<string>()), Times.Once());
+            abMock.Verify(x => x.GetFilesForTag(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             abMock.VerifyNoOtherCalls();
 
-            repoMock.Verify(x => x.InsertDailyClears(It.IsAny<IEnumerable<DbClear>>(), It.IsAny<DateTime>()), Times.Once());
+            repoMock.Verify(x => x.InsertDailyClears(It.IsAny<IEnumerable<DbClear>>(), It.IsAny<DateTime>()), Times.Once);
+            repoMock.Verify(x => x.InsertChallenge(It.IsAny<Challenge>()), Times.Once);
             repoMock.VerifyNoOtherCalls();
+
+            webhookMock.Verify(x => x.PostAsync(It.IsAny<WebhookMessage>()), Times.Once);
         }
     }
 }

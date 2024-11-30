@@ -18,3 +18,4 @@ __Project TODO List:__
 * Improve ENG OCR
 * Support multiple webhook destinations
 * Set up modified scraper as an azure job/Script updating character json (github actions?)
+* Announcement banner

@@ -1,10 +1,14 @@
 ﻿using Dapper;
+using DokkanDaily.Components.Pages;
 using DokkanDaily.Configuration;
 using DokkanDaily.Helpers;
+using DokkanDaily.Models;
 using DokkanDaily.Models.Database;
+using DokkanDaily.Models.Enums;
 using DokkanDaily.Repository.Attributes;
 using FastMember;
 using Microsoft.Extensions.Options;
+using System;
 using System.Data;
 
 namespace DokkanDaily.Repository
@@ -69,6 +73,27 @@ namespace DokkanDaily.Repository
             }
         }
 
+        public async Task<IEnumerable<DbChallenge>> GetChallengeList(DateTime cutoff)
+        {
+            _logger.LogInformation("Getting challenge list...");
+            try
+            {
+                await SqlConnectionWrapper.OpenAsync();
+
+                List<DbLeaderboardResult> results = [];
+
+                DynamicParameters dp = new();
+                dp.Add("CutoffDateUTC", cutoff);
+
+                return await SqlConnectionWrapper.QueryAsync<DbChallenge>(
+                    "[Core].[DailyChallengeListGet]", dp);
+            }
+            finally
+            {
+                SqlConnectionWrapper.Close();
+            }
+        }
+
         private DataTable ToDataTable<T>(IEnumerable<T> values) where T : class
         {
             Type type = typeof(T);
@@ -91,6 +116,42 @@ namespace DokkanDaily.Repository
             dt.Load(reader);
 
             return dt;
+        }
+
+        public async Task InsertChallenge(Challenge challenge)
+        {
+            _logger.LogInformation("Getting challenge list...");
+            try
+            {
+                await SqlConnectionWrapper.OpenAsync();
+
+                List<DbLeaderboardResult> results = [];
+
+                DynamicParameters dp = new();
+                dp.Add("Event", challenge.TodaysEvent.Name);
+                dp.Add("Stage", challenge.TodaysEvent.StageNumber);
+                dp.Add("Date", DateTime.UtcNow.Date);
+                dp.Add("DailyTypeName", challenge.DailyType.ToString());
+                switch(challenge.DailyType)
+                {
+                    case DailyType.Character:
+                        dp.Add("LeaderFullName", challenge.Leader.FullName);
+                        break;
+                    case DailyType.Category:
+                        dp.Add("Category", challenge.Category.Name);
+                        break;
+                    case DailyType.LinkSkill:
+                        dp.Add("LinkSkill", challenge.LinkSkill.Name);
+                        break;
+                }
+
+                await SqlConnectionWrapper.ExecuteAsync(
+                    "[Core.[DailyInsert]", dp);
+            }
+            finally
+            {
+                SqlConnectionWrapper.Close();
+            }
         }
     }
 }

@@ -151,7 +151,7 @@ namespace DokkanDaily.Constants
             new("Infinite Sanctuary", "Fusion Zamasu", Tier.A),
             new("Mastery of the Power of Rage", "Goku Black (Super Saiyan Rosé)", Tier.A),
             new("Beautiful Final View", "Frieza (1st Form)", Tier.A),
-            new("Death Match for World Domination", "Piccolo Jr. (Giant Form)", Tier.A),
+            new("Death Match for World Domination", "Piccolo Jr. (Giant Form)", Tier.B),
             new("Invincible Absorption", "Majin Buu (Gotenks)", Tier.A),
             new("Split Into Good and Evil", "Majin Buu (Good)/Majin Buu (Pure Evil)", Tier.A),
             new("Terrifying Phantom Majin", "Hirudegarn", Tier.S),
@@ -186,18 +186,35 @@ namespace DokkanDaily.Constants
         #endregion
 
         #region Events
-        public static IReadOnlyList<Event> Events { get => events; }
+        public static IReadOnlyList<string> Events { get => events; }
+        private static List<string> events =
+        [
+            "When Wishes Backfire! Birth of the Shadow Dragons",
+            "Fighting Legend: Frieza",
+            "Tremble with Fear! The Devil Awakens",
+            "Supreme Magnificent Battle [Movie Edition]",
+            "Supreme Magnificent Battle [Universe Survival Saga]",
+            "Supreme Magnificent Battle [Dragon Ball Super Edition]",
+            "Ultimate Red Zone [Majin Buu Saga]",
+            "Divine Wrath and Mortal Will",
+            "Ultimate Red Zone [Movie Edition]",
+            "Ultimate Red Zone [Movie Edition 2]",
+            "9th Anniv.! Anniversary Battle",
+            "Ultimate Red Zone [Dismal Future Edition]",
+            "Ultimate Red Zone [Wicked Bloodline Edition]",
+            "Fearsome Activation! Cell Max",
+            "Heart-Pounding Heroine Battle"
+        ];
 
-        private static readonly List<Event> events =
+        public static IReadOnlyList<Stage> Stages { get => stages; }
+
+        private static readonly List<Stage> stages =
         [
             new("When Wishes Backfire! Birth of the Shadow Dragons", Tier.F, "ShadowDragons", 1),
             new("When Wishes Backfire! Birth of the Shadow Dragons", Tier.D, "ShadowDragons", 6),
             new("When Wishes Backfire! Birth of the Shadow Dragons", Tier.D, "ShadowDragons", 7),
             new("When Wishes Backfire! Birth of the Shadow Dragons", Tier.C, "ShadowDragons", 8),
-            new("Fighting Legend: Goku", Tier.F, "LGE"),
-            new("Fighting Legend: Goku [GT Edition]", Tier.F, "LGT"),
-            new("Fighting Legend: Vegeta", Tier.F, "LVE"),
-            new("Fighting Legend: Frieza", Tier.E, "LFE"),
+            new("Fighting Legend: Frieza", Tier.F, "LFE"),
             new("Tremble with Fear! The Devil Awakens", Tier.B, "DevilAwakens", 1),
             new("Tremble with Fear! The Devil Awakens", Tier.B, "DevilAwakens", 2),
             new("Tremble with Fear! The Devil Awakens", Tier.D, "DevilAwakens", 3),
@@ -234,9 +251,14 @@ namespace DokkanDaily.Constants
             new("Ultimate Red Zone [Movie Edition 2]", Tier.E, "MOVIE2_RZ", 5),
             new("Ultimate Red Zone [Movie Edition 2]", Tier.C, "MOVIE2_RZ", 6),
             new("Ultimate Red Zone [Movie Edition 2]", Tier.C, "MOVIE2_RZ", 7),
+            new("Ultimate Red Zone [Movie Edition]", Tier.F, "MOVIE_RZ", 3),
+            new("Ultimate Red Zone [Movie Edition]", Tier.F, "MOVIE_RZ", 4),
+            new("Ultimate Red Zone [Movie Edition]", Tier.F, "MOVIE_RZ", 5),
             new("Ultimate Red Zone [Movie Edition]", Tier.F, "MOVIE_RZ", 6),
             new("Ultimate Red Zone [Movie Edition]", Tier.E, "MOVIE_RZ", 7),
             new("Ultimate Red Zone [Movie Edition]", Tier.A, "MOVIE_RZ", 8),
+            new("9th Anniv.! Anniversary Battle", Tier.F, "ANNI", 7),
+            new("9th Anniv.! Anniversary Battle", Tier.C, "ANNI", 8),
             new("9th Anniv.! Anniversary Battle", Tier.A, "ANNI", 9),
             new("Ultimate Red Zone [Dismal Future Edition]", Tier.C, "DF_RZ", 1),
             new("Ultimate Red Zone [Dismal Future Edition]", Tier.C, "DF_RZ", 2),
@@ -248,14 +270,14 @@ namespace DokkanDaily.Constants
             new("Ultimate Red Zone [Wicked Bloodline Edition]", Tier.D, "WB_RZ", 3),
             new("Ultimate Red Zone [Wicked Bloodline Edition]", Tier.D, "WB_RZ", 4),
             new("Ultimate Red Zone [Wicked Bloodline Edition]", Tier.C, "WB_RZ", 5),
-            new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.B, "MB_ME", 1),
-            new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.B, "MB_ME", 2),
-            new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.B, "MB_ME", 3),
-            new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.B, "MB_ME", 4),
-            new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.B, "MB_ME", 5),
-            new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.B, "MB_ME", 6),
-            new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.A, "MB_ME", 7),
-            new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.A, "MB_ME", 8),
+            new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.A, "MB_ME", 1),
+            new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.A, "MB_ME", 2),
+            new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.A, "MB_ME", 3),
+            new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.A, "MB_ME", 4),
+            new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.A, "MB_ME", 5),
+            new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.S, "MB_ME", 6),
+            new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.S, "MB_ME", 7),
+            new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.S, "MB_ME", 8),
             new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.Z, "MB_ME", 9),
             new("Dragon Ball Z: Memorable Battles [Movie Edition]", Tier.Z, "MB_ME", 10),
             new("Fearsome Activation! Cell Max", Tier.B, "CELLMAX", 1),
@@ -319,7 +341,7 @@ namespace DokkanDaily.Constants
             new("Movie Bosses", Tier.S),
             new("Movie Heroes", Tier.S),
             new("Namekians", Tier.F),
-            new("Otherworld Warrior", Tier.F),
+            new("Otherworld Warriors", Tier.F),
             new("Peppy Gals", Tier.C),
             new("Planet Namek Saga", Tier.C),
             new("Planetary Destruction", Tier.S),

@@ -2,11 +2,11 @@
 
 namespace DokkanDaily.Models
 {
-    public class Challenge(DailyType dailyType, Event todaysEvent, LinkSkill linkSkill, Category category, Leader leader, Unit todaysUnit)
+    public class Challenge(DailyType dailyType, Stage todaysEvent, LinkSkill linkSkill, Category category, Leader leader, Unit todaysUnit)
     {
-        public DailyType DailyType { get; init; } = dailyType;
+        public DailyType DailyType { get; set; } = dailyType;
 
-        public Event TodaysEvent { get; init; } = todaysEvent;
+        public Stage TodaysEvent { get; init; } = todaysEvent;
 
         public LinkSkill LinkSkill { get; init; } = linkSkill;
 

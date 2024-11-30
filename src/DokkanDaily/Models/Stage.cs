@@ -2,11 +2,11 @@
 
 namespace DokkanDaily.Models
 {
-    public class Event(string name, Tier d, string path, int stage = 1) : ITieredObject
+    public class Stage(string name, Tier d, string path, int stage = 1) : ITieredObject
     {
         public string Name { get; init; } = name;
 
-        public string FullName => $"{Name}, Stage {Stage}";
+        public string FullName => $"{Name}, Stage {StageNumber}";
 
         public Tier Tier { get; init; } = d;
 
@@ -16,6 +16,6 @@ namespace DokkanDaily.Models
 
         public string BannerImagePath => $"images/events/{folder}/banner.png";
 
-        public int Stage { get; init; } = stage;
+        public int StageNumber { get; init; } = stage;
     }
 }

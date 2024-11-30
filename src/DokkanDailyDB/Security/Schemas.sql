@@ -1,3 +1,7 @@
 ﻿CREATE SCHEMA [Core]
   AUTHORIZATION [dbo];
 GO
+
+CREATE SCHEMA [RefData]
+  AUTHORIZATION [dbo];
+GO
