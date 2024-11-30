@@ -121,8 +121,13 @@ namespace DokkanDailyTests
                 .Returns(Task.CompletedTask)
                 .Callback<IEnumerable<DbClear>, DateTime>((x, y) => actual = x.ToList());
 
+            repoMock.Setup(x => x.InsertChallenge(It.IsAny<Challenge>())).Returns(Task.CompletedTask);
+
             rngMock
                 .Setup(x => x.UpdateDailyChallenge())
+                .ReturnsAsync(new Challenge(DailyType.Character, new("foo", Tier.D, "LGE"), new("bar", Tier.D), new("baz", Tier.D), new("quz", "", Tier.D), new()));
+            rngMock
+                .Setup(x => x.GetDailyChallenge())
                 .ReturnsAsync(new Challenge(DailyType.Character, new("foo", Tier.D, "LGE"), new("bar", Tier.D), new("baz", Tier.D), new("quz", "", Tier.D), new()));
 
             lbMock.Setup(x => x.GetDailyLeaderboard(It.IsAny<bool>())).Returns(Task.FromResult<List<LeaderboardUser>>([]));
@@ -141,6 +146,10 @@ namespace DokkanDailyTests
 
             actual.Should().BeEquivalentTo(exp);
 
+            rngMock.Verify(x => x.GetDailyChallenge(), Times.Once);
+            rngMock.Verify(x => x.UpdateDailyChallenge(), Times.Once);
+            rngMock.VerifyNoOtherCalls();
+
             lbMock.Verify(x => x.GetDailyLeaderboard(true), Times.Once);
             lbMock.VerifyNoOtherCalls();
 
@@ -150,6 +159,7 @@ namespace DokkanDailyTests
             abMock.VerifyNoOtherCalls();
 
             repoMock.Verify(x => x.InsertDailyClears(It.IsAny<IEnumerable<DbClear>>(), It.IsAny<DateTime>()), Times.Once);
+            repoMock.Verify(x => x.InsertChallenge(It.IsAny<Challenge>()), Times.Once);
             repoMock.VerifyNoOtherCalls();
 
             webhookMock.Verify(x => x.PostAsync(It.IsAny<WebhookMessage>()), Times.Once);
