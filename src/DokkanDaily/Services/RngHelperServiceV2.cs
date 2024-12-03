@@ -48,10 +48,10 @@ namespace DokkanDaily.Services
                 {
                     DailyType type = Enum.Parse<DailyType>(x.DailyTypeName);
                     Stage stage = DokkanConstants.Stages.First(y => y.Name == x.Event && y.StageNumber == x.Stage);
-                    Leader leader = DokkanConstants.Leaders.First(y => y.FullName == x.LeaderFullName);
-                    LinkSkill skill = DokkanConstants.LinkSkillMap[x.LinkSkill];
-                    Category category = DokkanConstants.Categories.First(y => y.Name == x.Category);
-                    Unit unit = DokkanDailyHelper.GetUnit(leader);
+                    Leader leader = x.LeaderFullName == null ? null : DokkanConstants.Leaders.First(y => y.FullName == x.LeaderFullName);
+                    LinkSkill skill = x.LinkSkill == null ? null : DokkanConstants.LinkSkillMap[x.LinkSkill];
+                    Category category = x.Category == null ? null : DokkanConstants.Categories.First(y => y.Name == x.Category);
+                    Unit unit = x.LeaderFullName == null ? null : DokkanDailyHelper.GetUnit(leader);
 
                     return new Challenge(type, stage, skill, category, leader, unit);
                 }).ToList();

@@ -27,14 +27,14 @@ namespace DokkanDaily.Services
             // get this for later
             var todaysChallenge = await _rngHelperService.GetDailyChallenge();
 
-            // Reset RNGService/seeding
-            var tomorrowsChallenge = await _rngHelperService.UpdateDailyChallenge();
-
-            // send webhook notfication
             if (!isAdhoc)
             {
                 try
                 {
+                    // Reset RNGService/seeding
+                    var tomorrowsChallenge = await _rngHelperService.UpdateDailyChallenge();
+
+                    // send webhook notfication
                     await _webhookClient.PostAsync(tomorrowsChallenge.ToWebhookPayload());
                 }
                 catch (Exception e)
