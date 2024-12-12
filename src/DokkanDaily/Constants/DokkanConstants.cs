@@ -143,6 +143,8 @@ namespace DokkanDaily.Constants
             new("Fusion Reborn", "Goku (Angel) & Vegeta (Angel)", Tier.A),
             new("Pint-Sized Super Warriors", "Super Saiyan Trunks (Kid) & Super Saiyan Goten (Kid)", Tier.B),
             new("Bright and Fun Life", "Master Roshi", Tier.A),
+            new("Solitary Iron Wall of Power", "Jiren", Tier.S),
+            new("Audacious Finish", "Super Saiyan 3 Gotenks", Tier.S),
             //extreme
             new("Universe-Devastating Combat Power", "Broly", Tier.S),
             new("Surge of Heightened Fighting Spirit", "Super Saiyan Broly", Tier.S),
@@ -178,10 +180,8 @@ namespace DokkanDaily.Constants
             new("Super Warrior Who Destroys All", "Legendary Super Saiyan Broly", Tier.S),
             new("Boiling Evil", "Super Janemba", Tier.S),
             new("Decisive Strike of Rebellion", "Vegeta", Tier.B),
-            new("Terrifying Super Namekian", "Lord Slug", Tier.A)
-            // unreleased on global
-            // new("Power of an Isolated Iron Wall", "Jiren", Tier.S),
-
+            new("Terrifying Super Namekian", "Lord Slug", Tier.A),
+            new("Application of Skills and Intelligence", "Majin Buu (Ultimate Gohan)", Tier.S)
         ];
         #endregion
 
@@ -229,6 +229,8 @@ namespace DokkanDaily.Constants
             new("Supreme Magnificent Battle [Universe Survival Saga]", Tier.A, "SMB_USS", 2),
             new("Supreme Magnificent Battle [Universe Survival Saga]", Tier.A, "SMB_USS", 3),
             new("Supreme Magnificent Battle [Universe Survival Saga]", Tier.S, "SMB_USS", 4),
+            new("Supreme Magnificent Battle [Universe Survival Saga]", Tier.S, "SMB_USS", 5),
+            new("Supreme Magnificent Battle [Universe Survival Saga]", Tier.Z, "SMB_USS", 6),
             new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.C, "SMB_DBS", 1),
             new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.C, "SMB_DBS", 2),
             new("Supreme Magnificent Battle [Dragon Ball Super Edition]", Tier.C, "SMB_DBS", 3),
