@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [Core.[DailyInsert] 
+﻿CREATE PROCEDURE [Core].[DailyInsert] 
   @Event VARCHAR(50),
   @Stage INT,
   @Date DATETIME2(2),

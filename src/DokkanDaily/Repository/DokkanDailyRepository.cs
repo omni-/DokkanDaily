@@ -146,7 +146,7 @@ namespace DokkanDaily.Repository
                 }
 
                 await SqlConnectionWrapper.ExecuteAsync(
-                    "[Core.[DailyInsert]", dp);
+                    "[Core].[DailyInsert]", dp);
             }
             finally
             {

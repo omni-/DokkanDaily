@@ -454,7 +454,8 @@
             "Defenders of Justice",
             "Bond of Parent and Child",
             "Earth-Bred Fighters",
-            "Power of Wishes"
+            "Power of Wishes",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green LR"
@@ -673,6 +674,71 @@
         "transformations": []
     },
     {
+        "name": "Super Saiyan 3 Gotenks",
+        "title": "Audacious Finish",
+        "maxLevel": 150,
+        "maxSALevel": 20,
+        "rarity": "LR",
+        "class": "Super",
+        "type": "TEQ",
+        "cost": 77,
+        "id": "13002",
+        "imageURL": "/wiki/Majin_Buu_Saga",
+        "leaderSkill": "\"Majin Buu Saga\" Category Ki +3 and HP, ATK & DEF +200%",
+        "superAttack": "Greatly raises ATK & DEF for 1 turn[1] and causes colossal damage to enemy",
+        "ultraSuperAttack": "Greatly raises ATK & DEF for 1 turn[1], causes mega-colossal damage to enemy and greatly lowers DEF[2]",
+        "passive": "Ki +7 and ATK & DEF +200%; plus an additional DEF +77% when receiving an attack and after receiving an attack, plus an additional ATK +77% within the same turn; reduces damage received by 22% for 5 turns from the character's entry turn; plus an additional DEF +77% and reduces damage received by 33% when there is another \"Final Trump Card\" Category ally on the team; randomly changes Ki Spheres of a certain Type to  Ki Spheres; plus an additional Ki +1 per Ki Sphere obtained; plus an additional ATK & DEF +100% when Ki is 12 or more; plus an additional ATK +77% and launches an additional Super Attack when Ki is 18 or more; plus an additional ATK +77% and performs a critical hit when attacking when activating the Active Skill or when Ki is 24; high chance[3] of an additional DEF +777% within the same turn when receiving a Super Attack; reduces damage received by 44% temporarily and counters with ferocious power when receiving a Ki Blast Super Attack",
+        "activeSkill": "Massively raises ATK temporarily[4] and causes ultimate damage to enemy; DEF +77% for 1 turn",
+        "activeSkillCondition": "Can be activated after the character receives an attack 3 or more times in battle, or when there is another \"Final Trump Card\" Category ally attacking in the same turn starting from the 4th turn from the start of battle (once only)",
+        "links": [
+            "Super Saiyan",
+            "Fused Fighter",
+            "Over in a Flash",
+            "Kamehameha",
+            "The Innocents",
+            "Fierce Battle",
+            "Legendary Power"
+        ],
+        "categories": [
+            "Fusion",
+            "Hybrid Saiyans",
+            "Majin Buu Saga",
+            "Super Saiyan 3",
+            "Youth",
+            "Kamehameha",
+            "Final Trump Card",
+            "Special Pose",
+            "Rapid Growth",
+            "Saviors",
+            "Connected Hope",
+            "Gifted Warriors",
+            "Heavenly Events",
+            "Time Limit",
+            "Mastered Evolution",
+            "Entrusted Will",
+            "Power Beyond Super Saiyan",
+            "Fused Fighters",
+            "Earth-Bred Fighters"
+        ],
+        "kiMeter": [
+            "KiMeter 2 Green LR"
+        ],
+        "baseHP": 4799,
+        "maxLevelHP": 15838,
+        "freeDupeHP": 17838,
+        "rainbowHP": 20438,
+        "baseAttack": 4654,
+        "maxLevelAttack": 15360,
+        "freeDupeAttack": 17360,
+        "rainbowAttack": 20760,
+        "baseDefence": 3183,
+        "maxDefence": 10506,
+        "freeDupeDefence": 12506,
+        "rainbowDefence": 15506,
+        "kiMultiplier": "12 Ki Multiplier is 150%; 24 Ki Multiplier is 200%; SA Lv.20 raises SA Multiplier by an additional 30%",
+        "transformations": []
+    },
+    {
         "name": "Super Saiyan Vegeta",
         "title": "Awakened Saiyan Blood",
         "maxLevel": 150,
@@ -768,7 +834,8 @@
             "Battle of Fate",
             "Bond of Parent and Child",
             "Earth-Bred Fighters",
-            "Super Heroes"
+            "Super Heroes",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 3 Green LR"
@@ -840,7 +907,8 @@
             "Power Beyond Super Saiyan",
             "Bond of Parent and Child",
             "Earth-Bred Fighters",
-            "Tournament Participants"
+            "Tournament Participants",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 3 Green LR"
@@ -1105,7 +1173,8 @@
             "Saiyan Saga",
             "Bond of Parent and Child",
             "Earth-Bred Fighters",
-            "Uncontrollable Power"
+            "Uncontrollable Power",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green LR"
@@ -1396,7 +1465,8 @@
             "Gifted Warriors",
             "Planetary Destruction",
             "Saiyan Saga",
-            "Earth-Bred Fighters"
+            "Earth-Bred Fighters",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 3 Green LR"
@@ -2141,7 +2211,8 @@
             "Heavenly Events",
             "Sworn Enemies",
             "Worldwide Chaos",
-            "Uncontrollable Power"
+            "Uncontrollable Power",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green LR"
@@ -2165,7 +2236,7 @@
         "name": "Krillin & Gohan (Kid)",
         "title": "Dilemma on the Battlefield",
         "maxLevel": 150,
-        "maxSALevel": 20,
+        "maxSALevel": 25,
         "rarity": "LR",
         "class": "Super",
         "type": "AGL",
@@ -2173,11 +2244,17 @@
         "id": "12294",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/e/e4/Card_1022940_thumb_apng.png/revision/latest?cb=20210915172248&format=original",
         "leaderSkill": "\"Rapid Growth\" Category Ki +4 and HP, ATK & DEF +130%;or Type Ki +4 and HP, ATK & DEF +100%",
+        "ezaLeaderSkill": "\"Rapid Growth\" Category Ki +4 and HP, ATK & DEF +150%;or Type Ki +4 and HP, ATK & DEF +100%",
         "superAttack": "Raises ATK & DEF for 1 turn[1] and causes colossal damage to enemy",
-        "ultraSuperAttack": "Greatly raises ATK & DEF for 1 turn[2] and causes mega-colossal damage to enemy",
-        "passive": "ATK & DEF +130% and medium chance[3] of evading enemy's attack (including Super Attack); plus an additional Ki +1 per Ki Sphere obtained; plus an additional ATK +50% when performing a Super Attack; launches an additional attack that has a high chance[4] of becoming a Super Attack when Ki is 24; changes into a battle suit when conditions are met",
+        "ezaSuperAttack": "Raises ATK & DEF[2] and causes colossal damage to enemy",
+        "ultraSuperAttack": "Greatly raises ATK & DEF for 1 turn[3] and causes mega-colossal damage to enemy",
+        "ezaUltraSuperAttack": "Greatly raises ATK & DEF[4] and causes mega-colossal damage to enemy",
+        "passive": "ATK & DEF +130% and medium chance[5] of evading enemy's attack (including Super Attack); plus an additional Ki +1 per Ki Sphere obtained; plus an additional ATK +50% when performing a Super Attack; launches an additional attack that has a high chance[6] of becoming a Super Attack when Ki is 24; changes into a battle suit when conditions are met",
+        "ezaPassive": "ATK & DEF +170% and medium chance[7] of evading enemy's attack (including Super Attack); plus an additional Ki +1 per Ki Sphere obtained, plus another additional Ki +1 if it is a Rainbow Ki Sphere; plus an additional ATK & DEF +50% and chance of evading enemy's attack (including Super Attack) +20% when performing a Super Attack; plus an additional ATK +50% and launches an additional attack that has a high chance[8] of becoming a Super Attack when Ki is 18 or more; launches an additional Super Attack plus an additional chance of evading enemy's attack (including Super Attack) +20% when Ki is 24; changes into a battle suit when conditions are met",
         "activeSkill": "Ki +24 for 1 turn",
         "activeSkillCondition": "Can be activated starting from the 3rd turn from the start of battle (once only)",
+        "ezaActiveSkill": "Ki +24 for 1 turn",
+        "ezaActiveSkillCondition": "Can be activated starting from the 3rd turn from the start of battle (once only)",
         "links": [
             "Kamehameha",
             "Solid Support",
@@ -2218,8 +2295,11 @@
                 "transformedClass": "Super",
                 "transformedType": "AGL",
                 "transformedSuperAttack": "Raises ATK & DEF for 1 turn[1] and causes colossal damage to enemy",
-                "transformedUltraSuperAttack": "Greatly raises ATK & DEF for 1 turn[2] and causes mega-colossal damage to enemy",
-                "transformedPassive": "ATK & DEF +150% and medium chance[3] of evading enemy's attack (including Super Attack); plus an additional Ki +1 per Ki Sphere obtained, plus another additional Ki +1 if it is a  Ki Sphere; plus an additional ATK +58% and chance[3] of evading enemy's attack (including Super Attack) +30% when performing a Super Attack; launches an additional attack that has a great chance of becoming a Super Attack when Ki is 24",
+                "transformedEZASuperAttack": "Greatly raises ATK and raises DEF for 1 turn[2] and causes colossal damage to enemy",
+                "transformedUltraSuperAttack": "Greatly raises ATK & DEF for 1 turn[3] and causes mega-colossal damage to enemy",
+                "transformedEZAUltraSuperAttack": "Massively raises ATK and greatly raises DEF for 1 turn[4] and causes colossal damage to enemy",
+                "transformedPassive": "ATK & DEF +150% and medium chance[5] of evading enemy's attack (including Super Attack); plus an additional Ki +1 per Ki Sphere obtained, plus another additional Ki +1 if it is a  Ki Sphere; plus an additional ATK +58% and chance[5] of evading enemy's attack (including Super Attack) +30% when performing a Super Attack; launches an additional attack that has a great chance of becoming a Super Attack when Ki is 24",
+                "transformedEZAPassive": "ATK & DEF +200% and high chance[6] of evading enemy's attack (including Super Attack); plus an additional Ki +2 per Ki Sphere obtained, plus another additional Ki +1 if it is a Rainbow Ki Sphere; plus an additional ATK & DEF +58% and chance of evading enemy's attack (including Super Attack) +20% when performing a Super Attack; plus an additional ATK +77% and launches an additional attack that has a great chance[7] of becoming a Super Attack when Ki is 18 or more; launches an additional Super Attack and chance of performing a critical hit +30% when Ki is 24",
                 "transformedActiveSkill": "Ki +24 for 1 turn",
                 "transformedActiveSkillCondition": "Can be activated starting from the 3rd turn from the start of battle (once only)",
                 "transformedLinks": [
@@ -2697,7 +2777,8 @@
             "Terrifying Conquerors",
             "Inhuman Deeds",
             "Corroded Body and Mind",
-            "Uncontrollable Power"
+            "Uncontrollable Power",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green LR"
@@ -2839,7 +2920,8 @@
             "Fused Fighters",
             "Earth-Bred Fighters",
             "Super Heroes",
-            "Power of Wishes"
+            "Power of Wishes",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green LR"
@@ -3292,7 +3374,8 @@
             "Power Beyond Super Saiyan",
             "Bond of Parent and Child",
             "Earth-Bred Fighters",
-            "Tournament Participants"
+            "Tournament Participants",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green LR"
@@ -3330,7 +3413,7 @@
         "ultraSuperAttack": "Greatly raises ATK & DEF for 1 turn[2] and causes mega-colossal damage to enemy",
         "ezaUltraSuperAttack": "Greatly raises DEF[3], greatly raises ATK for 1 turn[4] and causes mega-colossal damage to enemy",
         "passive": "ATK & DEF +59%; plus an additional ATK & DEF +59% when performing a Super Attack; all allies' Ki +2 and ATK & DEF +30%; plus an additional Ki +3 and ATK +59% when attacking Extreme Class enemies",
-        "ezaPassive": "Ki +2 and ATK & DEF +159%; plus an additional ATK & DEF +59 when performing a Super Attack; guards all attacks as the 1st attacker in a turn; reduces damage received by 30% for 3 turns from the character's entry turn; launches an additional Super Attack within the same turn after receiving an attack; plus an additional ATK & DEF +10% with each attack received (up to 30%); chance of performing a critical hit +15% per Super Class ally on the team (up to 59%); all allies' Ki +3 and ATK & DEF +40%; plus an additional Ki +3 and ATK & DEF +59% when attacking Extreme Class enemies or as the 1st attacker in a turn",
+        "ezaPassive": "Ki +2 and ATK & DEF +159%; plus an additional ATK & DEF +59% when performing a Super Attack; guards all attacks as the 1st attacker in a turn; reduces damage received by 30% for 3 turns from the character's entry turn; launches an additional Super Attack within the same turn after receiving an attack; plus an additional ATK & DEF +10% with each attack received (up to 30%); chance of performing a critical hit +15% per Super Class ally on the team (up to 59%); all allies' Ki +3 and ATK & DEF +40%; plus an additional Ki +3 and ATK & DEF +59% when attacking Extreme Class enemies or as the 1st attacker in a turn",
         "activeSkill": "Raises ATK temporarily[5] and causes ultimate damage to enemy",
         "activeSkillCondition": "Can be activated starting from the 5th turn from start of battle (once only)",
         "ezaActiveSkill": "Raises ATK temporarily[5] and causes ultimate damage to enemy",
@@ -4059,6 +4142,7 @@
             "Legendary Power"
         ],
         "categories": [
+            "Majin Buu Saga",
             "Super Saiyan 3",
             "Pure Saiyans",
             "Full Power",
@@ -4341,7 +4425,8 @@
             "Connected Hope",
             "GT Heroes",
             "Fused Fighters",
-            "Earth-Bred Fighters"
+            "Earth-Bred Fighters",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green LR"
@@ -4616,7 +4701,8 @@
             "Connected Hope",
             "Entrusted Will",
             "Bond of Parent and Child",
-            "Earth-Bred Fighters"
+            "Earth-Bred Fighters",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green LR"
@@ -4810,7 +4896,8 @@
             "Time Limit",
             "Sworn Enemies",
             "Worldwide Chaos",
-            "Uncontrollable Power"
+            "Uncontrollable Power",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green LR"
@@ -5359,7 +5446,8 @@
             "Entrusted Will",
             "Bond of Parent and Child",
             "Earth-Bred Fighters",
-            "Power of Wishes"
+            "Power of Wishes",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green LR"
@@ -5869,7 +5957,8 @@
             "Battle of Fate",
             "Bond of Parent and Child",
             "Earth-Bred Fighters",
-            "Super Heroes"
+            "Super Heroes",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green LR"
@@ -6080,7 +6169,8 @@
             "Accelerated Battle",
             "Worldwide Chaos",
             "Battle of Fate",
-            "Power of Wishes"
+            "Power of Wishes",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green LR"
@@ -6109,7 +6199,7 @@
                 "transformedUltraSuperAttack": "Greatly raises ATK & DEF for 1 turn[2] and causes mega-colossal damage to enemy",
                 "transformedEZAUltraSuperAttack": "Massively raises ATK & DEF for 1 turn[3], causes mega-colossal damage to enemy and lowers ATK[4]",
                 "transformedPassive": "ATK +6666 per Ki Sphere obtained; reduces damage received by 66% for 5 turns from start of turn; reduces damage received by 50% with 5 or more Ki Spheres obtained starting from the 6th turn; randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres",
-                "transformedEZAPassive": "• Recovers 59% HP (once only); Ki +6 and DEF +100%; randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres; ATK +66% per Ki Sphere obtained; high chance[5] of performing a critical hit, plus an additional chance of performing a critical hit +6% per  Ki Sphere obtained (count starts from the 4th Ki Sphere), with 3 or more  Ki Spheres obtained; reduces damage received by 66% for 6 turns from the character's entry turn; reduces damage received by 10% per Ki Sphere obtained (up to 66%) starting from the 7th turn from the character's entry turn; DEF +100% as the 1st attacker in a turn; launches an additional attack that has a high chance[6] of becoming a Super Attack and chance of evading enemy's attack (including Super Attack) +30% as the 2nd or 3rd attacker in a turn; plus an additional DEF +66% and chance of evading enemy's attack (including Super Attack) +30% when all allies attacking in the same turn are Extreme Class",
+                "transformedEZAPassive": "Recovers 59% HP (once only); Ki +6 and DEF +100%; randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres; ATK +66% per Ki Sphere obtained; high chance[5] of performing a critical hit, plus an additional chance of performing a critical hit +6% per  Ki Sphere obtained (count starts from the 4th Ki Sphere), with 3 or more  Ki Spheres obtained; reduces damage received by 66% for 6 turns from the character's entry turn; reduces damage received by 10% per Ki Sphere obtained (up to 66%) starting from the 7th turn from the character's entry turn; DEF +100% as the 1st attacker in a turn; launches an additional attack that has a high chance[6] of becoming a Super Attack and chance of evading enemy's attack (including Super Attack) +30% as the 2nd or 3rd attacker in a turn; plus an additional DEF +66% and chance of evading enemy's attack (including Super Attack) +30% when all allies attacking in the same turn are Extreme Class",
                 "transformedLinks": [
                     "Revival",
                     "Thirst for Conquest",
@@ -6231,99 +6321,6 @@
         "rainbowDefence": 11660,
         "kiMultiplier": "12 Ki Multiplier is 140%; 24 Ki Multiplier is 200%; SA Lv.20 raises SA Multiplier by an additional 30%",
         "transformations": []
-    },
-    {
-        "name": "Jiren",
-        "title": "Power of an Isolated Iron Wall",
-        "maxLevel": 150,
-        "maxSALevel": 20,
-        "rarity": "LR",
-        "class": "Super",
-        "type": "AGL",
-        "cost": 77,
-        "id": "12909",
-        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/f/f9/Card_1029090_thumb_apng.png/revision/latest?cb=20240717090816&format=original",
-        "leaderSkill": "\"Universe 11\" Category Ki +4 and HP, ATK & DEF +200%;or\"Universe Survival Saga\" Category Ki +3 and HP, ATK & DEF +200%",
-        "superAttack": "Raises ATK & DEF for 1 turn[1] and causes colossal damage to enemy",
-        "ultraSuperAttack": "Greatly raises ATK & DEF for 1 turn[2] and causes mega-colossal damage with a high chance[3] of stunning the enemy",
-        "passive": "Ki +8 and ATK & DEF +350%; disables the action of the enemy hit by the character's attack once within the turn for 1 turn from the character's entry turn; reduces damage received by 50%; plus an additional ATK & DEF +50% when attacking; plus an additional ATK +100%, great chance[4] of performing a critical hit and an additional damage reduction of 11% as the 2nd or 3rd attacker in a turn",
-        "links": [
-            "Supreme Warrior",
-            "Shocking Speed",
-            "Infighter",
-            "Godly Power",
-            "Tournament of Power",
-            "Fierce Battle",
-            "Legendary Power"
-        ],
-        "categories": [
-            "Universe Survival Saga",
-            "Realm of Gods",
-            "Full Power",
-            "Transformation Boost",
-            "Universe 11",
-            "Space-Traveling Warriors",
-            "Powerful Comeback",
-            "Defenders of Justice",
-            "Battle of Fate",
-            "Tournament Participants",
-            "Super Bosses"
-        ],
-        "kiMeter": [
-            "KiMeter 2 Green LR"
-        ],
-        "baseHP": 5443,
-        "maxLevelHP": 17963,
-        "freeDupeHP": 19963,
-        "rainbowHP": 22563,
-        "baseAttack": 4731,
-        "maxLevelAttack": 15615,
-        "freeDupeAttack": 17615,
-        "rainbowAttack": 20615,
-        "baseDefence": 2765,
-        "maxDefence": 9125,
-        "freeDupeDefence": 11125,
-        "rainbowDefence": 14525,
-        "kiMultiplier": "12 Ki Multiplier is 150%; 24 Ki Multiplier is 200%; SA Lv.20 raises SA Multiplier by an additional 30%",
-        "transformations": [
-            {
-                "transformedName": "Jiren",
-                "transformedID": "42910",
-                "transformedClass": "Super",
-                "transformedType": "AGL",
-                "transformedSuperAttack": "-",
-                "transformedPassive": "Unable to attack; DEF +350%; all allies' Ki +3; reduces damage received by 50%, plus an additional damage reduction of 11% per Ki Sphere obtained; plus an additional DEF +100% when receiving an attack; randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres; all allies' ATK +70% (self excluded) for 2 turns when the character is the 2nd or 3rd to obtain Ki Spheres in a turn",
-                "transformedLinks": [
-                    "Supreme Warrior",
-                    "Cold Judgment",
-                    "Infighter",
-                    "Godly Power",
-                    "Tournament of Power",
-                    "Fierce Battle",
-                    "Legendary Power"
-                ],
-                "transformedImageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/1/18/Card_4029100_thumb_apng.png/revision/latest?cb=20240717090921&format=original"
-            },
-            {
-                "transformedName": "Jiren (Full Power)",
-                "transformedID": "42911",
-                "transformedClass": "Super",
-                "transformedType": "AGL",
-                "transformedSuperAttack": "Greatly raises ATK and raises DEF for 1 turn[1] and causes colossal damage to enemy",
-                "transformedUltraSuperAttack": "Massively raises ATK and raises DEF for 1 turn[2], causes mega-colossal damage and stuns the enemy",
-                "transformedPassive": "Ki +11 and ATK & DEF +400%; reduces damage received by 60%; foresees enemy's Super Attack plus an additional damage reduction of 11% for 1 turn from the character's entry turn; plus an additional ATK & DEF +111% when attacking; great chance[3] of performing a critical hit, plus an additional chance of performing a critical hit +11% with each Super Attack performed; plus an additional ATK +50%, attacks guaranteed to hit and performs a critical hit when Ki is 24; plus an additional ATK +50% with each Super Attack received",
-                "transformedLinks": [
-                    "Supreme Warrior",
-                    "Shocking Speed",
-                    "Infighter",
-                    "Godly Power",
-                    "Tournament of Power",
-                    "Fierce Battle",
-                    "Legendary Power"
-                ],
-                "transformedImageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/d/d7/Card_4029110_thumb_apng.png/revision/latest?cb=20240717091006&format=original"
-            }
-        ]
     },
     {
         "name": "Super Saiyan God SS Vegeta & Super Saiyan Trunks (Future)",
@@ -6684,7 +6681,7 @@
         "leaderSkill": "\"Connected Hope\" or \"Bond of Master and Disciple\" Category Ki +4 and HP, ATK & DEF +150%",
         "superAttack": "Raises ATK & DEF for 1 turn[1] and causes colossal damage to enemy",
         "ultraSuperAttack": "Greatly raises DEF for 1 turn[2] and causes mega-colossal damage to enemy",
-        "passive": "ATK & DEF +150%; randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres when HP is 58% or more; plus an additional DEF +58%, chance of peforming a critical hit and reduces damage received by 8% with 5 or more Ki Spheres obtained; plus an additional ATK +58%, an additional chance of performing a critical hit and an additional damage reduction of 8% with 5 or more  Ki Spheres obtained; launches an additional Super Attack with 8 or more Ki Spheres obtained",
+        "passive": "ATK & DEF +150%; randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres when HP is 58% or more; plus an additional DEF +58%, chance of peforming a critical hit +8% and reduces damage received by 8% with 5 or more Ki Spheres obtained; plus an additional ATK +58%, an additional chance of performing a critical hit +8% and an additional damage reduction of 8% with 5 or more  Ki Spheres obtained; launches an additional Super Attack with 8 or more Ki Spheres obtained",
         "activeSkill": "Exchanges with another character; Can be activated when HP is 58% or less starting from the 3rd turn from start of battle (once only)",
         "links": [
             "Saiyan Warrior Race",
@@ -6730,7 +6727,7 @@
                 "transformedType": "AGL",
                 "transformedSuperAttack": "Greatly raises ATK for 1 turn[1] and causes colossal damage to enemy",
                 "transformedUltraSuperAttack": "Greatly raises ATK for 1 turn[1] and causes mega-colossal damage to enemy",
-                "transformedPassive": "Ki +8 for 5 turns from start of turn; ATK +258%; launches an additional Super Attack with 8 or more Ki Spheres obtained; foresees enemy's Super Attack when HP is 58% or less;  revives with 85% HP recovered when the character is KO'd[2] (once only); Ki +5, DEF +58% and reduces damage received by 58% for the rest of the battle when Revival Skill is activated",
+                "transformedPassive": "Ki +8 for 5 turns from the character's entry turn; ATK +258%; launches an additional Super Attack with 8 or more Ki Spheres obtained; foresees enemy's Super Attack when HP is 58% or less;  revives with 85% HP recovered when the character is KO'd[2] (once only); Ki +5, DEF +58% and reduces damage received by 58% for the rest of battle when the Revival Skill is activated",
                 "transformedLinks": [
                     "Super Saiyan",
                     "The Saiyan Lineage",
@@ -7386,6 +7383,99 @@
         "rainbowDefence": 15775,
         "kiMultiplier": "12 Ki Multiplier is 140%; 24 Ki Multiplier is 200%; SA Lv.20 raises SA Multiplier by an additional 30%",
         "transformations": []
+    },
+    {
+        "name": "Jiren",
+        "title": "Solitary Iron Wall of Power",
+        "maxLevel": 150,
+        "maxSALevel": 20,
+        "rarity": "LR",
+        "class": "Super",
+        "type": "AGL",
+        "cost": 77,
+        "id": "12909",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/f/f9/Card_1029090_thumb_apng.png/revision/latest?cb=20241210144818&format=original",
+        "leaderSkill": "\"Universe 11\" Category Ki +4 and HP, ATK & DEF +200%;or\"Universe Survival Saga\" Category Ki +3 and HP, ATK & DEF +200%",
+        "superAttack": "Raises ATK & DEF for 1 turn[1] and causes colossal damage to enemy",
+        "ultraSuperAttack": "Greatly raises ATK & DEF for 1 turn[2] and causes mega-colossal damage with a high chance[3] of stunning the enemy",
+        "passive": "Ki +8 and ATK & DEF +350%; disables the attacked enemy's action once within the turn (once only) for 1 turn from the character's entry turn; reduces damage received by 50%; plus an additional ATK & DEF +50% when attacking; plus an additional ATK +100%, great chance[4] of performing a critical hit and an additional damage reduction of 11% as the 2nd or 3rd attacker in a turn",
+        "links": [
+            "Supreme Warrior",
+            "Shocking Speed",
+            "Infighter",
+            "Godly Power",
+            "Tournament of Power",
+            "Fierce Battle",
+            "Legendary Power"
+        ],
+        "categories": [
+            "Universe Survival Saga",
+            "Realm of Gods",
+            "Full Power",
+            "Transformation Boost",
+            "Universe 11",
+            "Space-Traveling Warriors",
+            "Powerful Comeback",
+            "Defenders of Justice",
+            "Battle of Fate",
+            "Tournament Participants",
+            "Super Bosses"
+        ],
+        "kiMeter": [
+            "KiMeter 2 Green LR"
+        ],
+        "baseHP": 5443,
+        "maxLevelHP": 17963,
+        "freeDupeHP": 19963,
+        "rainbowHP": 22563,
+        "baseAttack": 4731,
+        "maxLevelAttack": 15615,
+        "freeDupeAttack": 17615,
+        "rainbowAttack": 20615,
+        "baseDefence": 2765,
+        "maxDefence": 9125,
+        "freeDupeDefence": 11125,
+        "rainbowDefence": 14525,
+        "kiMultiplier": "12 Ki Multiplier is 150%; 24 Ki Multiplier is 200%; SA Lv.20 raises SA Multiplier by an additional 30%",
+        "transformations": [
+            {
+                "transformedName": "Jiren",
+                "transformedID": "42910",
+                "transformedClass": "Super",
+                "transformedType": "AGL",
+                "transformedSuperAttack": "-",
+                "transformedPassive": "Unable to attack; DEF +350%; all allies' Ki +3; reduces damage received by 50% and with each Ki Sphere obtained, plus an additional damage reduction of 11%; plus an additional DEF +100% when receiving an attack; randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres; all allies' ATK +70% (self excluded) for 2 turns when the character is the 2nd or 3rd to obtain Ki Spheres in a turn",
+                "transformedLinks": [
+                    "Supreme Warrior",
+                    "Cold Judgment",
+                    "Infighter",
+                    "Godly Power",
+                    "Tournament of Power",
+                    "Fierce Battle",
+                    "Legendary Power"
+                ],
+                "transformedImageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/1/18/Card_4029100_thumb_apng.png/revision/latest?cb=20241210144728&format=original"
+            },
+            {
+                "transformedName": "Jiren (Full Power)",
+                "transformedID": "42911",
+                "transformedClass": "Super",
+                "transformedType": "AGL",
+                "transformedSuperAttack": "Greatly raises ATK and raises DEF for 1 turn[1] and causes colossal damage to enemy",
+                "transformedUltraSuperAttack": "Massively raises ATK and raises DEF for 1 turn[2], causes mega-colossal damage and stuns the enemy",
+                "transformedPassive": "Ki +11 and ATK & DEF +400%; reduces damage received by 60%; plus an additional damage reduction of 11% and foresees enemy's Super Attack for 1 turn from the character's entry turn; plus an additional ATK & DEF +111% when attacking; great chance[3] of performing a critical hit and with each Super Attack performed, plus an additional chance of performing a critical hit +11%; plus an additional ATK +50%, attacks guaranteed to hit and performs a critical hit when Ki is 24; plus an additional ATK +50% with each Super Attack received",
+                "transformedLinks": [
+                    "Supreme Warrior",
+                    "Shocking Speed",
+                    "Infighter",
+                    "Godly Power",
+                    "Tournament of Power",
+                    "Fierce Battle",
+                    "Legendary Power"
+                ],
+                "transformedImageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/d/d7/Card_4029110_thumb_apng.png/revision/latest?cb=20241210143558&format=original"
+            }
+        ]
     },
     {
         "name": "Super Saiyan Goku",
@@ -8182,7 +8272,8 @@
             "Connected Hope",
             "Entrusted Will",
             "Bond of Parent and Child",
-            "Earth-Bred Fighters"
+            "Earth-Bred Fighters",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green LR"
@@ -8203,7 +8294,7 @@
         "transformations": [
             {
                 "transformedName": "Piccolo",
-                "transformedID": "12970",
+                "transformedID": "402971",
                 "transformedClass": "Super",
                 "transformedType": "TEQ",
                 "transformedSuperAttack": "Raises ATK & DEF[1] and causes colossal damage to enemy",
@@ -8833,6 +8924,57 @@
                 "transformedImageURL": "https://vignette.wikia.nocookie.net/dbz-dokkanbattle/images/7/70/Card_4017970_thumb_apng.png/revision/latest?cb=20200130104641&format=original"
             }
         ]
+    },
+    {
+        "name": "Anilaza",
+        "title": "Ultimate Colossal Fighter of Universe 3",
+        "maxLevel": 150,
+        "maxSALevel": 20,
+        "rarity": "LR",
+        "class": "Extreme",
+        "type": "STR",
+        "cost": 99,
+        "id": "12955",
+        "imageURL": "/wiki/Super_Bosses",
+        "leaderSkill": "\"Super Bosses\" Category Ki +3 and HP, ATK & DEF +130%",
+        "superAttack": "Greatly raises DEF for 1 turn[1] and causes colossal damage to enemy",
+        "ultraSuperAttack": "Greatly raises ATK & DEF for 1 turn[2] and causes mega-colossal damage to enemy; raises Extreme Class' allies DEF by 30% for 1 turn",
+        "passive": "Activates the Entrance Animation (once only) and Ki +3, ATK & DEF +130% and forsees enemy Super Attack for 3 turns from the character's entry turn when there is another \"Final Trump Card\" or \"Super Bosses\" Category ally on the team upon the character's entry; Ki +3 and ATK & DEF +130%; plus an additional Ki +3 and reduces damage received by 30% when HP is 30% or more at start of turn; randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres; launches an additional attack that has a high chance[3] of becoming a Super Attack with 3 or more  Ki Spheres obtained; launches an additional Super Attack with 5 or more  Ki Spheres obtained; plus an additional ATK & DEF +130% and reduces damage received by 30% as the 1st attacker in a turn; plus an additional ATK & DEF +30% when performing a Super Attack, high chance[4] of launching an additional Super Attack and attacks effective against all Types as the 2nd or 3rd attacker in a turn",
+        "activeSkill": "Causes ultimate damage to enemy; Ki +24 and ATK & DEF +30% for 1 turn",
+        "activeSkillCondition": "Can be activated when there is a \"Tournament Participants\" Category enemy starting from the 3rd turn from the character's entry turn, or starting from the 5th turn from the character's entry turn (once only)",
+        "links": [
+            "Mechanical Menaces",
+            "Infighter",
+            "Big Bad Bosses",
+            "Tough as Nails",
+            "Fused Fighter",
+            "Legendary Power",
+            "Tournament of Power"
+        ],
+        "categories": [
+            "Universe Survival Saga",
+            "Final Trump Card",
+            "Fused Fighters",
+            "Tournament Participants",
+            "Super Bosses"
+        ],
+        "kiMeter": [
+            "KiMeter 3 Green LR"
+        ],
+        "baseHP": 5136,
+        "maxLevelHP": 16950,
+        "freeDupeHP": 18950,
+        "rainbowHP": 21950,
+        "baseAttack": 3507,
+        "maxLevelAttack": 11576,
+        "freeDupeAttack": 13576,
+        "rainbowAttack": 16976,
+        "baseDefence": 2153,
+        "maxDefence": 7105,
+        "freeDupeDefence": 9105,
+        "rainbowDefence": 11705,
+        "kiMultiplier": "12 Ki Multiplier is 150%; 24 Ki Multiplier is 200%; SA Lv.20 raises SA Multiplier by an additional 30%",
+        "transformations": []
     },
     {
         "name": "Super Baby 2 (Giant Ape)",
@@ -9542,7 +9684,8 @@
         "categories": [
             "Majin Buu Saga",
             "Joined Forces",
-            "Terrifying Conquerors"
+            "Terrifying Conquerors",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 3 Green LR"
@@ -9657,7 +9800,8 @@
             "Joined Forces",
             "Terrifying Conquerors",
             "Inhuman Deeds",
-            "Worldwide Chaos"
+            "Worldwide Chaos",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 3 Green LR"
@@ -9803,6 +9947,53 @@
         ]
     },
     {
+        "name": "Grand Supreme Kai",
+        "title": "A God Praying for Peace",
+        "maxLevel": 120,
+        "maxSALevel": 10,
+        "rarity": "UR",
+        "class": "Super",
+        "type": "STR",
+        "cost": 40,
+        "id": "13018",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/3/3d/Card_1030180_thumb.png/revision/latest?cb=20241129052315",
+        "leaderSkill": "\"Majin Buu Saga\" Category Ki +3 and HP, ATK & DEF +130%",
+        "superAttack": "Greatly raises ATK & DEF for 1 turn[1], causes supreme damage to enemy and seals Super Attack",
+        "passive": "Ki +1 (up to +4) and ATK & DEF +50% (up to 200%) per Super Class ally (self excluded) on the team; plus an additional ATK & DEF +200% when attacking; plus an additional DEF +100% within the same turn after receiving an attack; high chance[2] of guarding all attacks; guards all attacks and launches an additional attack that has a great chance[3] of becoming a Super Attack when there is another \"Majin Buu Saga\" Category ally attacking in the same turn; \"Majin Buu Saga\" or \"Potara\" Category allies' Ki +1 and ATK & DEF +40%, plus an additional Ki +1 and ATK & DEF +20% for characters who also belong to the \"Realm of Gods\" Category; plus an additional ATK +200% and performs a critical hit when there is a \"Majin Power\" Category enemy",
+        "links": [
+            "Master of Magic",
+            "Cold Judgment",
+            "More Than Meets the Eye",
+            "Telekinesis",
+            "Godly Power",
+            "Supreme Power",
+            "Fierce Battle"
+        ],
+        "categories": [
+            "Majin Buu Saga",
+            "Realm of Gods",
+            "Potara",
+            "Storied Figures"
+        ],
+        "kiMeter": [
+            "KiMeter 2 Green"
+        ],
+        "baseHP": 2871,
+        "maxLevelHP": 9475,
+        "freeDupeHP": 11475,
+        "rainbowHP": 14475,
+        "baseAttack": 2740,
+        "maxLevelAttack": 9043,
+        "freeDupeAttack": 11043,
+        "rainbowAttack": 14443,
+        "baseDefence": 1433,
+        "maxDefence": 4731,
+        "freeDupeDefence": 6731,
+        "rainbowDefence": 9331,
+        "kiMultiplier": "12 Ki Multiplier is 140%; ",
+        "transformations": []
+    },
+    {
         "name": "Gowasu & Zamasu",
         "title": "A Lesson in Good and Evil",
         "maxLevel": 140,
@@ -9851,58 +10042,6 @@
         "maxDefence": 5193,
         "freeDupeDefence": 7193,
         "rainbowDefence": 9793,
-        "kiMultiplier": "12 Ki Multiplier is 140%; ",
-        "transformations": []
-    },
-    {
-        "name": "Hit",
-        "title": "A Mission With Universe 6's Survival at Stake",
-        "maxLevel": 120,
-        "maxSALevel": 10,
-        "rarity": "UR",
-        "class": "Extreme",
-        "type": "PHY",
-        "cost": 32,
-        "id": "12912",
-        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/4/49/Card_1029120_thumb.png/revision/latest?cb=20240627152658",
-        "leaderSkill": " Type Ki +3 and HP, ATK & DEF +50%",
-        "superAttack": "Raises DEF for 1 turn[1] and causes supreme damage to enemy with a medium chance[2] of stunning the enemy",
-        "passive": "ATK & DEF +166%; changes  Ki Spheres to  Ki Spheres; launches an additional attack that has a 66% chance of becoming a Super Attack with a  Ki Sphere obtained; high chance[3] of evading enemy's attack (including Super Attack); plus an additional ATK & DEF +166% and chance of evading enemy's attack (including Super Attack) +16% when Ki is 12; plus an additional ATK & DEF +66% with each attack performed within the same turn; chance of evading enemy's attack (including Super Attack) +6% with each Super Attack performed within the same turn; counters with tremendous power upon evading an attack; medium chance[4] of stunning the attacked enemy",
-        "links": [
-            "Infighter",
-            "Experienced Fighters",
-            "Cold Judgment",
-            "Tournament of Power",
-            "Warriors of Universe 6",
-            "Shocking Speed",
-            "Shattering the Limit"
-        ],
-        "categories": [
-            "Universe Survival Saga",
-            "Universe 6",
-            "Target: Goku",
-            "Rapid Growth",
-            "Space-Traveling Warriors",
-            "Legendary Existence",
-            "Accelerated Battle",
-            "Tournament Participants",
-            "Super Bosses"
-        ],
-        "kiMeter": [
-            "KiMeter 2 Green"
-        ],
-        "baseHP": 2663,
-        "maxLevelHP": 8789,
-        "freeDupeHP": 9989,
-        "rainbowHP": 12029,
-        "baseAttack": 2547,
-        "maxLevelAttack": 8406,
-        "freeDupeAttack": 9606,
-        "rainbowAttack": 11406,
-        "baseDefence": 880,
-        "maxDefence": 2904,
-        "freeDupeDefence": 4104,
-        "rainbowDefence": 5664,
         "kiMultiplier": "12 Ki Multiplier is 140%; ",
         "transformations": []
     },
@@ -10606,8 +10745,11 @@
         "id": "12326",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/e/e5/Card_1023260_thumb.png/revision/latest?cb=20211124093254",
         "leaderSkill": "\"Crossover\" Category Ki +3 and HP, ATK & DEF +150%",
+        "ezaLeaderSkill": "\"Crossover\" Category Ki +3 and HP, ATK & DEF +170%",
         "superAttack": "Raises ATK for 1 turn[1] and causes supreme damage with a high chance of stunning the enemy[2]",
-        "passive": "ATK & DEF +140%; \"Dragon Ball Heroes\" Category allies Ki +3 and ATK & DEF +40%; high chance[3] of performing a critical hit; high chance[4] of evading enemy's attack (including Super Attack); plus an additional DEF +50% within the same turn with each attack evaded (including Super Attack); plus an additional ATK & DEF +50% per \"Dragon Ball Heroes\" Category ally (self excluded) attacking in the same turn",
+        "ezaSuperAttack": "Greatly raises ATK & DEF[3] for 1 turn and causes supreme damage with a high chance of stunning the enemy[4]",
+        "passive": "ATK & DEF +140%; \"Dragon Ball Heroes\" Category allies Ki +3 and ATK & DEF +40%; high chance[5] of performing a critical hit; high chance[6] of evading enemy's attack (including Super Attack); plus an additional DEF +50% within the same turn with each attack evaded (including Super Attack); plus an additional ATK & DEF +50% per \"Dragon Ball Heroes\" Category ally (self excluded) attacking in the same turn",
+        "ezaPassive": "ATK & DEF +140%; plus an additional ATK & DEF +70% when performing a Super Attack; \"Crossover\" Category allies' Ki +3 and ATK & DEF +40%, plus an additional ATK & DEF +20% for \"Dragon Ball Heroes\" allies; great chance[7] of performing a critical hit; great chance[8] of evading enemy's attack (including Super Attack); plus an additional DEF +70% within the same turn with each attack evaded (including Super Attack); all allies' chance of performing a critical hit +15% per \"Crossover\" category ally (self excluded) attacking in the same turn; plus an additional ATK & DEF +70% per \"Dragon Ball Heroes\" Category ally (self excluded) attacking in the same turn",
         "links": [
             "The Innocents",
             "All in the Family",
@@ -11311,8 +11453,11 @@
         "id": "12780",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/8/86/Card_1027800_thumb.png/revision/latest?cb=20231121045607",
         "leaderSkill": "\"Dragon Ball Heroes\" Category Ki +3 and HP, ATK & DEF +50%",
+        "ezaLeaderSkill": "\"Dragon Ball Heroes\" Category Ki +3 and HP, ATK & DEF +77%;or Type Ki +3 and HP, ATK & DEF +50%",
         "superAttack": "Greatly raises ATK for 1 turn[1] and causes supreme damage to enemy",
-        "passive": "ATK & DEF +150%; plus an additional ATK & DEF +100% when performing a Super Attack; medium chance[2] of evading enemy's attack (including Super Attack) as the 2nd or 3rd attacker in a turn; all allies' ATK & DEF +20% when there are another 3 or more Extreme Class allies on the team; plus an additional ATK & DEF +50% when performing a Super Attack, all allies' Ki +1 and ATK & DEF +10% and changes  Ki Spheres to  Ki Spheres when all allies are in the \"Dragon Ball Heroes\" Category",
+        "ezaSuperAttack": "Greatly raises ATK & DEF for 1 turn[2] and causes supreme damage to enemy",
+        "passive": "ATK & DEF +150%; plus an additional ATK & DEF +100% when performing a Super Attack; medium chance[3] of evading enemy's attack (including Super Attack) as the 2nd or 3rd attacker in a turn; all allies' ATK & DEF +20% when there are another 3 or more Extreme Class allies on the team; plus an additional ATK & DEF +50% when performing a Super Attack, all allies' Ki +1 and ATK & DEF +10% and changes  Ki Spheres to  Ki Spheres when all allies are in the \"Dragon Ball Heroes\" Category",
+        "ezaPassive": "ATK & DEF +200%; plus an additional ATK & DEF +150% when performing a Super Attack; high chance[4] of evading enemy's attack (including Super Attack) as the 2nd or 3rd attacker in a turn; plus an additional chance of evading enemy's attack (including Super Attack) +5% (up to 15%) with each attack evaded (including Super Attack); all allies' ATK & DEF +30% when there are another 3 or more Extreme Class allies on the team; all allies' ATK & DEF +15% for 2 turns after the character evades 3 or more attacks (including Super Attack) in battle when there are another 3 or more Extreme Class allies on the team (once only); plus an additional ATK & DEF +100% when performing a Super Attack, all allies' Ki +2 and ATK & DEF +20% and changes  Ki Spheres to  Ki Spheres when all allies are in the \"Dragon Ball Heroes\" or \"Crossover\" Category",
         "links": [
             "Demonic Power",
             "Solid Support",
@@ -11583,6 +11728,79 @@
         ]
     },
     {
+        "name": "Majin Buu (Ultimate Gohan)",
+        "title": "Application of Skills and Intelligence",
+        "maxLevel": 120,
+        "maxSALevel": 10,
+        "rarity": "UR",
+        "class": "Extreme",
+        "type": "TEQ",
+        "cost": 58,
+        "id": "12998",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/8/83/Card_1029980_thumb.png/revision/latest?cb=20241128033000",
+        "leaderSkill": "\"Power Absorption\" or \"Transformation Boost\" Category Ki +3 and HP, ATK & DEF +170%;plus an additional HP, ATK & DEF +30% for characters who also belong to the \"Artificial Life Forms\" or \"Uncontrollable Power\" Category",
+        "superAttack": "Greatly raises ATK & DEF for 1 turn[1] and causes immense damage to enemy",
+        "passive": "Ki +2 and ATK & DEF +200%; guards all attacks; plus an additional ATK & DEF +58% when attacking; plus an additional ATK & DEF +100% and high chance[2] of performing a critical hit for 6 turns from the start of battle; high chance[3] of evading enemy's attack (including Super Attack) and launches an additional attack that has a great chance[4] of becoming a Super Attack starting from the 7th turn from the start of battle; plus an additional ATK & chance of performing a critical hit +50% and Extreme Class allies' Ki +2 and ATK & DEF +50% when there is another \"Power Absorption\" or \"Transformation Boost\" Category ally attacking in the same turn; the more HP remaining when the character receives an attack for the 1st time in a turn, the greater the additional DEF boost received within the turn (up to 150%)",
+        "activeSkill": "Creates the Domain \"Inside Majin Buu\" and transfers the character's consciousness inward for 3 turns; can be activated when all allies attacking in the same turn are \"Power Absorption\" Category characters, or starting from the 6th turn from the start of battle (once only)",
+        "links": [
+            "Majin",
+            "Big Bad Bosses",
+            "Metamorphosis",
+            "Shocking Speed",
+            "Fear and Faith",
+            "The Wall Standing Tall",
+            "Fierce Battle"
+        ],
+        "categories": [
+            "Majin Buu Saga",
+            "Transformation Boost",
+            "Artificial Life Forms",
+            "Final Trump Card",
+            "Majin Power",
+            "Power Absorption",
+            "Sworn Enemies",
+            "Worldwide Chaos",
+            "Uncontrollable Power",
+            "Demonic Power"
+        ],
+        "kiMeter": [
+            "KiMeter 2 Green"
+        ],
+        "baseHP": 4050,
+        "maxLevelHP": 13365,
+        "freeDupeHP": 15365,
+        "rainbowHP": 17965,
+        "baseAttack": 3363,
+        "maxLevelAttack": 11098,
+        "freeDupeAttack": 13098,
+        "rainbowAttack": 16498,
+        "baseDefence": 1991,
+        "maxDefence": 6570,
+        "freeDupeDefence": 8570,
+        "rainbowDefence": 11570,
+        "kiMultiplier": "12 Ki Multiplier is 150%; ",
+        "transformations": [
+            {
+                "transformedName": "Buu (Super)",
+                "transformedID": "42999",
+                "transformedClass": "Extreme",
+                "transformedType": "TEQ",
+                "transformedSuperAttack": "Massively raises ATK[1] and causes immense damage with a high chance of stunning the enemy[2]",
+                "transformedPassive": "Ki +6 and ATK & DEF +300%; plus an additional ATK +100% when attacking; reduces damage received by 70%; changes  Ki Spheres to  Ki Spheres; plus an additional DEF +40% when receiving an attack and chance of performing a critical hit +5% per Ki Sphere obtained; launches an additional Super Attack with 3 or more Ki Spheres obtained and launches another additional Super  Attack with 6 or more Ki Spheres obtained; launches an additional Super Attack when there is a \"Fused Fighters\" Category enemy; recovers 30% HP at the end of turn",
+                "transformedLinks": [
+                    "Majin",
+                    "Big Bad Bosses",
+                    "Metamorphosis",
+                    "Shocking Speed",
+                    "Fear and Faith",
+                    "The Wall Standing Tall",
+                    "Fierce Battle"
+                ],
+                "transformedImageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/5/55/Card_4029990_thumb.png/revision/latest?cb=20241128033006"
+            }
+        ]
+    },
+    {
         "name": "Caulifla",
         "title": "Ambition-Driven Power",
         "maxLevel": 120,
@@ -11631,56 +11849,6 @@
         "maxDefence": 4781,
         "freeDupeDefence": 5981,
         "rainbowDefence": 7781,
-        "kiMultiplier": "12 Ki Multiplier is 140%; ",
-        "transformations": []
-    },
-    {
-        "name": "Champa",
-        "title": "Arranging for Victory and Survival",
-        "maxLevel": 120,
-        "maxSALevel": 10,
-        "rarity": "UR",
-        "class": "Extreme",
-        "type": "STR",
-        "cost": 32,
-        "id": "12929",
-        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/0/00/Card_1029290_thumb.png/revision/latest?cb=20240627171406",
-        "leaderSkill": "\"Universe 6\" Category Ki +3 and HP, ATK & DEF +66%",
-        "superAttack": "Greatly raises ATK for 1 turn[1], causes supreme damage to enemy and greatly lowers DEF[2]",
-        "passive": "Ki +3; great chance[3] of ATK +300%; high chance[4] of an additional ATK +400%; medium chance[5] of an additional ATK +500%; rare chance[6] of an additional ATK +600%; plus an additional DEF +50% per Ki Sphere obtained; plus an additional ATK & DEF +200% when attacking with 3 or more Ki Spheres obtained",
-        "links": [
-            "Godly Power",
-            "Connoisseur",
-            "The Innocents",
-            "More Than Meets the Eye",
-            "Over 9000",
-            "Shocking Speed",
-            "Shattering the Limit"
-        ],
-        "categories": [
-            "Realm of Gods",
-            "Dragon Ball Seekers",
-            "Universe 6",
-            "Siblings' Bond",
-            "Bond of Master and Disciple",
-            "Space-Traveling Warriors",
-            "Planetary Destruction"
-        ],
-        "kiMeter": [
-            "KiMeter 2 Green"
-        ],
-        "baseHP": 2688,
-        "maxLevelHP": 8872,
-        "freeDupeHP": 10072,
-        "rainbowHP": 11872,
-        "baseAttack": 2195,
-        "maxLevelAttack": 7246,
-        "freeDupeAttack": 8446,
-        "rainbowAttack": 10486,
-        "baseDefence": 1306,
-        "maxDefence": 4313,
-        "freeDupeDefence": 5513,
-        "rainbowDefence": 7073,
         "kiMultiplier": "12 Ki Multiplier is 140%; ",
         "transformations": []
     },
@@ -12767,7 +12935,8 @@
             "Entrusted Will",
             "Fused Fighters",
             "Earth-Bred Fighters",
-            "Power of Wishes"
+            "Power of Wishes",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 3 Green"
@@ -13148,7 +13317,7 @@
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/a/a5/Card_1023460_thumb.png/revision/latest?cb=20220331140141",
         "leaderSkill": "\"Battle of Fate\" or \"Accelerated Battle\" Category Ki +3, HP +130% and ATK & DEF +170%",
         "superAttack": "Raises ATK & DEF for 1 turn[1] and causes immense damage with a medium chance of stunning the enemy[2]",
-        "passive": "Ki +2 and ATK & DEF +180%; plus an additional ATK & DEF +50% when performing a Super Attack; launches an additional attack that has a medium chance[3] of becoming a Super Attack; high chance[4] to perform a critical hit",
+        "passive": "Ki +2 and ATK & DEF +180%; plus an additional ATK & DEF +50% when performing a Super Attack; launches an additional attack that has a medium chance[3] of becoming a Super Attack; high chance[4] of performing a critical hit",
         "activeSkill": "Transforms; Can be activated when HP is 77% or less, starting from the 3rd turn from the start of battle (once only)",
         "transformationCondition": "Transforms; Can be activated when HP is 77% or less, starting from the 3rd turn from the start of battle (once only)",
         "links": [
@@ -13200,7 +13369,7 @@
                 "transformedClass": "Super",
                 "transformedType": "PHY",
                 "transformedSuperAttack": "Greatly raises ATK and raises DEF for 1 turn[1] and causes immense damage with a medium chance of stunning the enemy[2]",
-                "transformedPassive": "Ki +3 and ATK & DEF +200%; plus an additional ATK & DEF +50% when performing a Super Attack; launches 2 additional attacks, each of which have a medium chance[3] of becoming a Super Attack; plus an additional ATK +50% when attacking and great chance[4] to perform a critical hit for 6 turns from start of turn; high chance[5] to perform a critical hit starting from the 7th turn",
+                "transformedPassive": "Ki +3 and ATK & DEF +200%; plus an additional ATK & DEF +50% when performing a Super Attack; launches 2 additional attacks, each of which has a medium chance[3] of becoming a Super Attack; plus an additional ATK +50% when attacking and great chance[4] of performing a critical hit for 6 turns from the character's entry turn; high chance[5] of performing a critical hit starting from the 7th turn from the character's entry turn",
                 "transformedLinks": [
                     "Saiyan Warrior Race",
                     "Super Saiyan",
@@ -14751,6 +14920,7 @@
         ],
         "categories": [
             "Hybrid Saiyans",
+            "Majin Buu Saga",
             "Dragon Ball Seekers",
             "Movie Heroes",
             "Vegeta's Family",
@@ -16085,6 +16255,56 @@
         "transformations": []
     },
     {
+        "name": "Champa",
+        "title": "Commands for Securing Victory",
+        "maxLevel": 120,
+        "maxSALevel": 10,
+        "rarity": "UR",
+        "class": "Extreme",
+        "type": "STR",
+        "cost": 32,
+        "id": "12929",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/0/00/Card_1029290_thumb.png/revision/latest?cb=20240627171406",
+        "leaderSkill": "\"Universe 6\" Category Ki +3 and HP, ATK & DEF +66%",
+        "superAttack": "Greatly raises ATK for 1 turn[1], causes supreme damage to enemy and greatly lowers DEF[2]",
+        "passive": "Ki +3; great chance[3] of ATK +300%; high chance[4] of an additional ATK +400%; medium chance[5] of an additional ATK +500%; rare chance[6] of an additional ATK +600%; DEF +50% per Ki Sphere obtained; plus an additional ATK & DEF +200% when attacking with 3 or more Ki Spheres obtained",
+        "links": [
+            "Godly Power",
+            "Connoisseur",
+            "The Innocents",
+            "More Than Meets the Eye",
+            "Over 9000",
+            "Shocking Speed",
+            "Shattering the Limit"
+        ],
+        "categories": [
+            "Realm of Gods",
+            "Dragon Ball Seekers",
+            "Universe 6",
+            "Siblings' Bond",
+            "Bond of Master and Disciple",
+            "Space-Traveling Warriors",
+            "Planetary Destruction"
+        ],
+        "kiMeter": [
+            "KiMeter 2 Green"
+        ],
+        "baseHP": 2688,
+        "maxLevelHP": 8872,
+        "freeDupeHP": 10072,
+        "rainbowHP": 11872,
+        "baseAttack": 2195,
+        "maxLevelAttack": 7246,
+        "freeDupeAttack": 8446,
+        "rainbowAttack": 10486,
+        "baseDefence": 1306,
+        "maxDefence": 4313,
+        "freeDupeDefence": 5513,
+        "rainbowDefence": 7073,
+        "kiMultiplier": "12 Ki Multiplier is 140%; ",
+        "transformations": []
+    },
+    {
         "name": "Pinich",
         "title": "Comrade in the Pursuit of Dreams",
         "maxLevel": 140,
@@ -16408,8 +16628,8 @@
     {
         "name": "Super Saiyan Vegeta (Xeno)",
         "title": "Confrontation with Unknown Enemies",
-        "maxLevel": 120,
-        "maxSALevel": 10,
+        "maxLevel": 140,
+        "maxSALevel": 15,
         "rarity": "UR",
         "class": "Super",
         "type": "INT",
@@ -16417,8 +16637,11 @@
         "id": "12331",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/1/15/Card_1023310_thumb.png/revision/latest?cb=20211124103549",
         "leaderSkill": "\"Vegeta's Family\" Category Ki +3 and HP, ATK & DEF +130%",
+        "ezaLeaderSkill": "\"Vegeta's Family\" Category Ki +3 and HP, ATK & DEF +150%",
         "superAttack": "Greatly raises ATK & DEF[1], causes supreme damage to enemy and lowers ATK[2]",
+        "ezaSuperAttack": "Greatly raises ATK & DEF[3], causes supreme damage to enemy and greatly lowers ATK[4]",
         "passive": "ATK & DEF +120%; plus an additional ATK +100% when there is another \"Vegeta's Family\" Category ally on the team; \"Vegeta's Family\" Category allies' Ki +2 and ATK & DEF +40%",
+        "ezaPassive": "ATK & DEF +150%; guards all attacks and launches an additional Super Attack for 1 turn from the character's entry turn; plus an additional ATK & DEF +150% when there is another \"Vegeta's Family\" or \"Dragon Ball Heroes\" Category ally on the team; \"Vegeta's Family\" Category allies' Ki +3 and ATK & DEF +50%; plus an additional ATK +77% when performing a Super Attack and launches an additional attack that has a high chance of becoming a Super Attack if there is another \"Dragon Ball Heroes\" Category ally attacking in the same turn when attacking or an Extreme Class enemy when attacking",
         "links": [
             "Super Saiyan",
             "Royal Lineage",
@@ -16608,7 +16831,8 @@
             "Power Absorption",
             "Sworn Enemies",
             "Worldwide Chaos",
-            "Uncontrollable Power"
+            "Uncontrollable Power",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green"
@@ -17024,6 +17248,56 @@
         "maxDefence": 5350,
         "freeDupeDefence": 7350,
         "rainbowDefence": 9950,
+        "kiMultiplier": "12 Ki Multiplier is 150%; ",
+        "transformations": []
+    },
+    {
+        "name": "Dark King Demigra (Power of Time Unleashed)",
+        "title": "Creation of a Dark World",
+        "maxLevel": 120,
+        "maxSALevel": 10,
+        "rarity": "UR",
+        "class": "Extreme",
+        "type": "TEQ",
+        "cost": 40,
+        "id": "12993",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/3/31/Card_1029930_thumb.png/revision/latest?cb=20241115170724",
+        "leaderSkill": "\"Demonic Power\" Category Ki +3 and HP, ATK & DEF +130%",
+        "superAttack": "Greatly raises ATK for 1 turn[1] and causes supreme damage to enemy; Extreme Class allies' DEF +30% for 1 turn (self excluded)",
+        "passive": "Ki +2 and ATK & DEF +240%; plus an additional ATK & DEF +120% when performing a Super Attack; high chance[2] of performing a critical hit; reduces damage received by 40%; plus an additional damage reduction of 20% when there is another \"Crossover\" or \"Demonic Power\" Category ally attacking in the same turn; plus an additional damage reduction of 20% before attacking when all allies attacking in the same turn are Extreme Class; plus an additional ATK +40% with each attack received (up to 240%); plus an additional ATK & DEF +120% as the 1st attacker in a turn; Extreme Class allies' ATK +60% and chance of performing a critical hit +24% as the 2nd or 3rd attacker in a turn",
+        "links": [
+            "Brainiacs",
+            "Big Bad Bosses",
+            "Revival",
+            "Master of Magic",
+            "Godly Power",
+            "Fear and Faith",
+            "Fierce Battle"
+        ],
+        "categories": [
+            "Resurrected Warriors",
+            "Realm of Gods",
+            "Time Travelers",
+            "Dragon Ball Heroes",
+            "Crossover",
+            "Storied Figures",
+            "Demonic Power"
+        ],
+        "kiMeter": [
+            "KiMeter 2 Green"
+        ],
+        "baseHP": 2684,
+        "maxLevelHP": 8859,
+        "freeDupeHP": 10859,
+        "rainbowHP": 13459,
+        "baseAttack": 2715,
+        "maxLevelAttack": 8961,
+        "freeDupeAttack": 10961,
+        "rainbowAttack": 14361,
+        "baseDefence": 1558,
+        "maxDefence": 5142,
+        "freeDupeDefence": 7142,
+        "rainbowDefence": 10142,
         "kiMultiplier": "12 Ki Multiplier is 150%; ",
         "transformations": []
     },
@@ -17533,6 +17807,59 @@
         "transformations": []
     },
     {
+        "name": "Fu (Youth) (Dogidogi Fully Absorbed)",
+        "title": "Dark Barrier That Isolates All",
+        "maxLevel": 120,
+        "maxSALevel": 10,
+        "rarity": "UR",
+        "class": "Extreme",
+        "type": "AGL",
+        "cost": 40,
+        "id": "12989",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/d/dc/Card_1029890_thumb.png/revision/latest?cb=20241115170103",
+        "leaderSkill": "\"Time Travelers\" Category Ki +3 and HP, ATK & DEF +130%",
+        "superAttack": "Greatly raises ATK[1], greatly raises DEF for 1 turn[2] and causes supreme damage with a high chance[3] of stunning the enemy",
+        "passive": "Ki +2 and ATK & DEF +150%; plus an additional ATK & DEF +50% and chance of performing a critical hit +20% per \"Crossover\" or \"Time Travelers\" Category ally attacking in the same turn; plus an additional ATK & DEF +100% when performing a Super Attack; launches an additional attack that has a high chance[4] of becoming a Super Attack; launches another additional attack that has a great chance[5] of becoming a Super Attack and reduces damage received by 20% when there is another Extreme Class ally attacking in the same turn or when there is a Super Class enemy; chance of performing a critical hit +20% (up to 40%) and reduces damage received by 20% (up to 40%) within the same turn with each Super Attack performed; high chance[6] of changing all Ki Spheres to  &  Ki Spheres starting from the 5th turn from the start of battle (once only)",
+        "links": [
+            "Demonic Power",
+            "Brainiacs",
+            "Cold Judgment",
+            "Big Bad Bosses",
+            "Godly Power",
+            "Fear and Faith",
+            "Fierce Battle"
+        ],
+        "categories": [
+            "Realm of Gods",
+            "Transformation Boost",
+            "Time Travelers",
+            "Youth",
+            "Dragon Ball Heroes",
+            "Battle of Wits",
+            "Power Absorption",
+            "Crossover",
+            "Accelerated Battle",
+            "Demonic Power"
+        ],
+        "kiMeter": [
+            "KiMeter 2 Green"
+        ],
+        "baseHP": 2404,
+        "maxLevelHP": 7936,
+        "freeDupeHP": 9936,
+        "rainbowHP": 12536,
+        "baseAttack": 2889,
+        "maxLevelAttack": 9536,
+        "freeDupeAttack": 11536,
+        "rainbowAttack": 14536,
+        "baseDefence": 1480,
+        "maxDefence": 4885,
+        "freeDupeDefence": 6885,
+        "rainbowDefence": 10285,
+        "kiMultiplier": "12 Ki Multiplier is 150%; ",
+        "transformations": []
+    },
+    {
         "name": "Masked Saiyan",
         "title": "Dark Intentions",
         "maxLevel": 140,
@@ -17661,6 +17988,64 @@
                 "transformedImageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/b/b1/Card_1008850_thumb_JP.png/revision/latest?cb=20170301160946"
             }
         ]
+    },
+    {
+        "name": "Super Saiyan God SS Goku (Universe Tree Power)",
+        "title": "Darkness-Purging Universe Tree Power",
+        "maxLevel": 120,
+        "maxSALevel": 10,
+        "rarity": "UR",
+        "class": "Super",
+        "type": "STR",
+        "cost": 40,
+        "id": "12995",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/7/73/Card_1029950_thumb.png/revision/latest?cb=20241113173827",
+        "leaderSkill": "\"Dragon Ball Heroes\", \"Kamehameha\" or \"Power Beyond Super Saiyan\" Category Ki +3 and HP, ATK & DEF +170%;plus an additional HP, ATK & DEF +30% for characters who also belong to the \"Crossover\" Category",
+        "superAttack": "Raises ATK & DEF for 1 turn[1], causes immense damage to enemy and medium chance[2] of performing a critical hit for 1 turn",
+        "passive": "Activates the Entrance Animation upon the character's entry (once only) and DEF +200% and launches an additional Super Attack for 4 turns from the character's entry turn; Ki +2 and ATK & DEF +150%; plus an additional ATK +150% when attacking; plus an additional DEF +40% with each attack performed (up to 200%); launches an additional attack that has a great chance[3] of becoming a Super Attack and randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres when there are 3 or more \"Crossover\" Category allies or an ally whose name includes \"Xeno\" on the team; plus an additional ATK +50% for the rest of battle and great chance[4] of guarding all attacks within the same turn with 3 or more Ki Spheres obtained; plus an additional ATK +100% for the rest of battle and guards all attacks within the same turn with 5 or more Ki Spheres obtained; plus an additional ATK +150% for the rest of battle with 7 or more Ki Spheres obtained; plus an additional damage reduction of 40% when guard is activated",
+        "activeSkill": "Massively raises ATK temporarily[5] and causes ultimate damage to enemy; DEF +30% and all attacks become critical hits for 1 turn",
+        "activeSkillCondition": "Can be activated when there is an ally whose name includes \"Xeno\" attacking in the same turn, or starting from the 5th turn from start of battle (once only)",
+        "links": [
+            "Super Saiyan",
+            "Kamehameha",
+            "Shocking Speed",
+            "Warrior Gods",
+            "Godly Power",
+            "Prepared for Battle",
+            "Fierce Battle"
+        ],
+        "categories": [
+            "Realm of Gods",
+            "Pure Saiyans",
+            "Time Travelers",
+            "Goku's Family",
+            "Kamehameha",
+            "Dragon Ball Heroes",
+            "Crossover",
+            "Turtle School",
+            "Bond of Friendship",
+            "Accelerated Battle",
+            "Power Beyond Super Saiyan",
+            "Bond of Parent and Child",
+            "Earth-Bred Fighters"
+        ],
+        "kiMeter": [
+            "KiMeter 2 Green"
+        ],
+        "baseHP": 2622,
+        "maxLevelHP": 8654,
+        "freeDupeHP": 10654,
+        "rainbowHP": 13654,
+        "baseAttack": 2827,
+        "maxLevelAttack": 9331,
+        "freeDupeAttack": 11331,
+        "rainbowAttack": 14731,
+        "baseDefence": 1449,
+        "maxDefence": 4782,
+        "freeDupeDefence": 6782,
+        "rainbowDefence": 9382,
+        "kiMultiplier": "12 Ki Multiplier is 150%; ",
+        "transformations": []
     },
     {
         "name": "Golden Frieza & Sorbet",
@@ -19253,6 +19638,7 @@
         "ezaSuperAttack": "Causes immense damage to enemy and greatly lowers DEF[2]",
         "passive": "ATK +60% at start of turn; Rages when conditions are met",
         "ezaPassive": "ATK & DEF +80% at start of turn; plus an additional ATK +40% for 4 turns after receiving attack; Rages when conditions are met",
+        "superEzaPassive": "Ki +3 and ATK & DEF +160%; plus an additional ATK & DEF +160% and high chance[3] of performing a critical hit when performing a Super Attack; DEF +160% and guards all attacks when there is a \"Movie Bosses\", \"Realm of Gods\" or \"Exploding Rage\" Category ally attacking in the same turn; ATK & DEF +40% (up to 160%) with each attack received; reduces damage received by 30% when HP is 30% or above, plus an additional damage reduction of 30% when HP is 60% or above; great chance[4] of launching an additional Super Attack when HP is 60% or less; Super Class allies' Ki +2 and ATK +30%; Extreme Class allies' Ki +2 and DEF +30%; Rages when conditions are met",
         "links": [
             "Godly Power",
             "Prodigies",
@@ -19298,7 +19684,7 @@
                 "transformedSuperAttack": "Causes extreme damage to enemyCauses supreme damage to enemyImmense damage, high chance to stun the enemy[1]",
                 "transformedEZASuperAttack": "Causes supreme damage to enemyGreatly raises ATK for 1 turn[2] and causes supreme damage to enemyCauses immense damage and stuns the enemy[3]",
                 "transformedPassive": "-",
-                "transformedEZAPassive": "-",
+                "transformedEZAPassive": "",
                 "transformedLinks": [],
                 "transformedImageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/d/d8/Card_4005300_thumb.png/revision/latest?cb=20180119202252"
             }
@@ -19648,8 +20034,8 @@
     {
         "name": "Super Saiyan God Trunks (Xeno)",
         "title": "Divine Warrior Who Protects Space and Time",
-        "maxLevel": 120,
-        "maxSALevel": 10,
+        "maxLevel": 140,
+        "maxSALevel": 15,
         "rarity": "UR",
         "class": "Super",
         "type": "TEQ",
@@ -19657,8 +20043,11 @@
         "id": "12324",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/2/2f/Card_1023240_thumb.png/revision/latest?cb=20211124092746",
         "leaderSkill": "\"Dragon Ball Heroes\" Category Ki +4 and HP, ATK & DEF +170%",
+        "ezaLeaderSkill": "\"Dragon Ball Heroes\" Category Ki +4 and HP, ATK & DEF +180%",
         "superAttack": "Raises ATK & DEF for 1 turn[1], causes immense damage to enemy and seals Super Attack",
-        "passive": "ATK & DEF +30% per \"Dragon Ball Heroes\" Category ally on the team; plus an additional ATK & DEF +100% and high chance[2] of performing a critical hit when performing a Super Attack; randomly changes Ki Spheres of a certain Type to  Ki Spheres when all allies attacking in the same turn are \"Dragon Ball Heroes\" Category characters",
+        "ezaSuperAttack": "Greatly raises ATK & DEF for 1 turn[2], causes immense damage to enemy and seals Super Attack",
+        "passive": "ATK & DEF +30% per \"Dragon Ball Heroes\" Category ally on the team; plus an additional ATK & DEF +100% and high chance[3] of performing a critical hit when performing a Super Attack; randomly changes Ki Spheres of a certain Type to  Ki Spheres when all allies attacking in the same turn are \"Dragon Ball Heroes\" Category characters",
+        "ezaPassive": "Ki +1 and ATK & DEF +50% per \"Dragon Ball Heroes\" or \"Time Travelers\" Category ally on the team (depending on which category has more members); plus an additional ATK & DEF +100% and great chance[4] of performing a critical hit when performing a Super Attack; randomly changes Ki Spheres of a certain Type to  Ki Spheres, plus an additional DEF +50% when performing a Super Attack when all allies attacking in the same turn are \"Dragon Ball Heroes\" or \"Time Travelers\"Category characters; launches 2 additional attacks, each of which has a high chance of becoming a Super Attack when all allies on the team are \"Dragon Ball Heroes\" or \"Time Travelers\" Category allies",
         "links": [
             "Warrior Gods",
             "Super Saiyan",
@@ -20141,7 +20530,7 @@
         "superAttack": "Raises ATK & DEF[1] and causes supreme damage to enemy",
         "ezaSuperAttack": "Greatly raises ATK & DEF[2] and causes supreme damage to enemy",
         "passive": "ATK & DEF +100%; ATK & DEF +100% and reduces damage received by 10% to 77% (the less HP remaining, the greater the reduction) when there is \"Piccolo\" on the team; launches an additional Super Attack and all attacks become critical hits when there is a \"Wicked Bloodline\" Category enemy",
-        "ezaPassive": "ATK & DEF +150%; launches an additional attack that has a great chance[3] of becoming a Super Attack; plus an additional ATK & DEF +150% for 3 turns from the character's entry turn; plus an additional ATK & DEF +150% and reduces damage received by 30% to 77% (the less HP remaining, the greater the reduction) when there is another \"Namekians\" Category ally on the team; all allies' Ki +2 and ATK & DEF +50% when there is an ally whose name includes \"Piccolo\" (Demon King, Buu, etc. excluded) on the team; launches an additional Super Attack and all attacks become critical hits when there is a \"Wicked Bloodline\" or \"Planet Namek Saga\" Category enemy",
+        "ezaPassive": "ATK & DEF +150%; launches an additional attack that has a great chance[3] of becoming a Super Attack; plus an additional ATK & DEF +150% for 3 turns from the character's entry turn; plus an additional ATK & DEF +150% and reduces damage received by 30% to 77% (the less HP remaining, the greater the reduction) when there is \"Piccolo\" on the team or when there is another \"Namekians\" Category ally on the team; all allies' Ki +2 and ATK & DEF +50% when there is an ally whose name includes \"Piccolo\" (Demon King, Buu, etc. excluded) on the team; launches an additional Super Attack and all attacks become critical hits when there is a \"Wicked Bloodline\" or \"Planet Namek Saga\" Category enemy",
         "links": [
             "Namekians",
             "Cold Judgment",
@@ -20154,7 +20543,8 @@
         "categories": [
             "Planet Namek Saga",
             "Namekians",
-            "Connected Hope"
+            "Connected Hope",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green"
@@ -20388,7 +20778,7 @@
         "class": "Extreme",
         "type": "INT",
         "cost": 40,
-        "id": "TBD",
+        "id": "12975",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/5/52/Card_1029750_thumb.png/revision/latest?cb=20241029142805",
         "leaderSkill": "\"Demonic Power\" or \"Joined Forces\" Category Ki +3 and HP, ATK & DEF +130%",
         "superAttack": "Raises DEF for 1 turn[1], causes supreme damage to enemy and seals Super Attack; recovers 6% HP",
@@ -20405,7 +20795,8 @@
         "categories": [
             "Joined Forces",
             "Terrifying Conquerors",
-            "Space-Traveling Warriors"
+            "Space-Traveling Warriors",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green"
@@ -20936,6 +21327,57 @@
         "freeDupeDefence": 7813,
         "rainbowDefence": 10813,
         "kiMultiplier": "12 Ki Multiplier is 145%; ",
+        "transformations": []
+    },
+    {
+        "name": "Warrior in Black (Super Saiyan) (Dark Dragon Ball Boost)",
+        "title": "Enigmatic Fighter",
+        "maxLevel": 120,
+        "maxSALevel": 10,
+        "rarity": "UR",
+        "class": "Super",
+        "type": "PHY",
+        "cost": 40,
+        "id": "13014",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/8/8b/Card_1030140_thumb.png/revision/latest?cb=20241115194701",
+        "leaderSkill": "\"Super Saiyans\" Category Ki +3 and HP, ATK & DEF +130%",
+        "superAttack": "Greatly raises ATK & DEF for 1 turn[1], causes supreme damage to enemy and greatly lowers ATK & DEF[2]",
+        "passive": "Ki +2 and ATK & DEF +150%; medium chance[3] of performing a critical hit; plus an additional ATK & DEF +100% when attacking, plus an additional ATK +150% and chance of performing a critical hit +30% when attacking if the target enemy's HP is 70% or less, plus an additional ATK +150% and chance of performing a critical hit +30% when attacking if the target enemy's HP is 40% or less; plus an additional ATK +50% and launches an additional Super Attack when the target enemy is in \"ATK Down\" status, in \"DEF Down\" status, stunned or the target enemy's Super Attack is sealed; reduces damage received by 40%, plus an additional damage reduction of 15% within the same turn before attack an enemy whose HP is 70% or less, plus an additional damage reduction of 15% within the same turn before attacking an enemy whose HP is 40% or less; plus an additional ATK & DEF +100% and launches an additional Super Attack for the rest of battle after delivering a final blow",
+        "links": [
+            "Saiyan Warrior Race",
+            "Super Saiyan",
+            "Experienced Fighters",
+            "The Saiyan Lineage",
+            "Saiyan Pride",
+            "Prepared for Battle",
+            "Fierce Battle"
+        ],
+        "categories": [
+            "Super Saiyans",
+            "Pure Saiyans",
+            "Dragon Ball Seekers",
+            "Time Travelers",
+            "Goku's Family",
+            "Dragon Ball Heroes",
+            "Crossover",
+            "Bond of Parent and Child"
+        ],
+        "kiMeter": [
+            "KiMeter 2 Green"
+        ],
+        "baseHP": 3026,
+        "maxLevelHP": 9989,
+        "freeDupeHP": 11989,
+        "rainbowHP": 15389,
+        "baseAttack": 2740,
+        "maxLevelAttack": 9043,
+        "freeDupeAttack": 11043,
+        "rainbowAttack": 14043,
+        "baseDefence": 1355,
+        "maxDefence": 4473,
+        "freeDupeDefence": 6473,
+        "rainbowDefence": 9073,
+        "kiMultiplier": "12 Ki Multiplier is 140%; ",
         "transformations": []
     },
     {
@@ -21997,7 +22439,8 @@
             "Entrusted Will",
             "Bond of Parent and Child",
             "Earth-Bred Fighters",
-            "Power of Wishes"
+            "Power of Wishes",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 3 Green"
@@ -22205,6 +22648,7 @@
             "Fierce Battle"
         ],
         "categories": [
+            "Majin Buu Saga",
             "Super Saiyan 3",
             "Pure Saiyans",
             "Full Power",
@@ -22542,7 +22986,8 @@
             "Bond of Master and Disciple",
             "Bond of Friendship",
             "Bond of Parent and Child",
-            "Earth-Bred Fighters"
+            "Earth-Bred Fighters",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 3 Green"
@@ -22684,9 +23129,9 @@
         "cost": 58,
         "id": "12311",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/8/8c/Card_1023110_thumb.png/revision/latest?cb=20220225075318",
-        "leaderSkill": "\"Entrusted Will\" or \"Android/Cell Saga\" Category Ki +3 and HP +130% and ATK & DEF +170%",
+        "leaderSkill": "\"Entrusted Will\" or \"Android/Cell Saga\" Category Ki +3, HP +130% and ATK & DEF +170%",
         "superAttack": "Raises DEF for 1 turn[1] and causes immense damage to enemy",
-        "passive": "ATK & DEF +100%; plus an additional ATK & DEF +100% when attacking; great chance[2] of launching up to 2 additional attacks; launches another additional attack that has a great chance[3] of becoming a Super Attack every time the character attacks 3 times in battle (up to once within the turn)",
+        "passive": "ATK & DEF +100%; plus an additional ATK & DEF +100% when attacking; great chance[2] of launching up to 2 additional attacks; launches another additional attack that has a great chance[3] of becoming a Super Attack every time the character attacks 3 times in battle (up to once within a turn)",
         "activeSkill": "Transforms; stuns a single targeted enemy and seals that enemy's Super Attack for 1 turn",
         "activeSkillCondition": "Can be activated performing 6 or more attacks in battle (once only)",
         "links": [
@@ -22735,7 +23180,7 @@
                 "transformedClass": "Super",
                 "transformedType": "AGL",
                 "transformedSuperAttack": "Greatly raises ATK & DEF for 1 turn[1] and causes immense damage to enemy",
-                "transformedPassive": "ATK & DEF +100% and great chance[2] to perform a critical hit; performs a critical hit (once only) plus an additional ATK & DEF +100% when performing a Super Attack; plus an additional ATK +50% when the target enemy is in \"ATK Down\" status or in \"DEF Down\" status; plus an additional ATK +50% when the target enemy is stunned or the target enemy's Super Attack is sealed; high chance[3] to stun the attacked enemy for 2 turns when all allies attacking in the same turn are \"Android/Cell Saga\" Category characters",
+                "transformedPassive": "ATK & DEF +100% and great chance[2] of performing a critical hit; performs a critical hit (once only) plus an additional ATK & DEF +100% when performing a Super Attack; plus an additional ATK +50% when the target enemy is in \"ATK Down\" or \"DEF Down\" status; plus an additional ATK +50% when the target enemy is stunned or the target enemy's Super Attack is sealed; high chance[3] of stunning the attacked enemy for 2 turns when all allies attacking in the same turn are \"Androids/Cell Saga\" Category characters",
                 "transformedLinks": [
                     "Messenger from the Future",
                     "Cold Judgment",
@@ -23234,8 +23679,8 @@
     {
         "name": "Super Saiyan Goku (Xeno)",
         "title": "Fierce Battle for Space and Time",
-        "maxLevel": 120,
-        "maxSALevel": 10,
+        "maxLevel": 140,
+        "maxSALevel": 15,
         "rarity": "UR",
         "class": "Super",
         "type": "PHY",
@@ -23243,8 +23688,11 @@
         "id": "12330",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/5/59/Card_1023300_thumb.png/revision/latest?cb=20211124103446",
         "leaderSkill": "\"Goku's Family\" Category Ki +3 and HP, ATK & DEF +130%",
+        "ezaLeaderSkill": "\"Goku's Family\" Category Ki +3 and HP, ATK & DEF +150%",
         "superAttack": "Greatly raises ATK & DEF[1] and causes supreme damage with a high chance of stunning the enemy[2]",
+        "ezaSuperAttack": "Greatly raises ATK & DEF[3] and causes supreme damage with a great chance of stunning the enemy[4]",
         "passive": "ATK & DEF +120%; plus an additional ATK +100% when there is another \"Goku's Family\" Category ally on the team; \"Goku's Family\" Category allies' Ki +2 and ATK & DEF +40%",
+        "ezaPassive": "ATK & DEF +150%; reduces damage received by 50% and launches an additional Super Attack for 1 turn from the character's entry turn; plus an additional ATK & DEF +150% when there is another \"Goku's Family\" or \"Dragon Ball Heroes\" Category ally on the team; \"Goku's Family\" Category allies' Ki +3 and ATK & DEF +50%; plus an additional ATK +77% when performing a Super Attack and launches an additional attack that has a high chance of becoming a Super Attack if there is another \"Dragon Ball Heroes\" Category ally attacking in the same turn when attacking or an Extreme Class enemy when attacking",
         "links": [
             "Super Saiyan",
             "The Saiyan Lineage",
@@ -24062,7 +24510,8 @@
             "Worldwide Chaos",
             "Battle of Fate",
             "Earth-Bred Fighters",
-            "Tournament Participants"
+            "Tournament Participants",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 3 Green"
@@ -24493,6 +24942,7 @@
             "Fierce Battle"
         ],
         "categories": [
+            "Majin Buu Saga",
             "Movie Heroes",
             "Kamehameha",
             "Earthlings",
@@ -24608,7 +25058,8 @@
             "Bond of Master and Disciple",
             "Bond of Parent and Child",
             "Earth-Bred Fighters",
-            "Super Heroes"
+            "Super Heroes",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 3 Green"
@@ -25567,7 +26018,7 @@
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/0/0f/Card_1023360_thumb.png/revision/latest?cb=20220127083350",
         "leaderSkill": "\"Worldwide Chaos\" or \"Future Saga\" Category Ki +3 and HP, ATK & DEF +170%",
         "superAttack": "Raises ATK & DEF for 1 turn[1], causes immense damage to enemy and seals Super Attack",
-        "passive": "ATK +170% & DEF +180%; randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres; plus an additional ATK & DEF +35% per  Ki Sphere obtained; plus an additional ATK +18% & DEF +17% per Ki Sphere obtained ( Ki Spheres excluded); plus an additional ATK +70% with 7 or more Ki Spheres obtained and an additional DEF +80% with 8 or more Ki Spheres obtained; plus an additional Ki +1 per  Ki Sphere obtained; launches an additional Super Attack when HP is 35% or less when attacking; nullifies Ki Blast Super Attacks directed at the character for the duration of that turn if HP is 35% or more when receiving an attack",
+        "passive": "ATK +170% and DEF +180%; randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres; plus an additional ATK & DEF +35% per  Ki Sphere obtained; plus an additional ATK +18% & DEF +17% per Ki Sphere obtained ( Ki Spheres excluded); plus an additional ATK +70% with 7 or more Ki Spheres obtained and an additional DEF +80% with 8 or more Ki Spheres obtained; plus an additional Ki +1 per  Ki Sphere obtained; launches an additional Super Attack if HP is 35% or less when attacking; nullifies Ki Blast Super Attacks directed at the character for the duration of that turn if HP is 35% or more when receiving an attack",
         "activeSkill": "Delays a single targeted enemy's attack for 1 turn",
         "activeSkillCondition": "Can be activated when facing only 1 enemy, whose HP is 35% or more, or when facing 3 or more enemies (once only)",
         "links": [
@@ -25697,7 +26148,8 @@
             "Majin Power",
             "Battle of Wits",
             "Power Absorption",
-            "Crossover"
+            "Crossover",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 3 Green"
@@ -28842,8 +29294,8 @@
     {
         "name": "Super Saiyan 2 Vegeta",
         "title": "Indomitable Fighting Spirit",
-        "maxLevel": 120,
-        "maxSALevel": 10,
+        "maxLevel": 140,
+        "maxSALevel": 15,
         "rarity": "UR",
         "class": "Super",
         "type": "TEQ",
@@ -28851,8 +29303,11 @@
         "id": "11742",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/0/0b/Card_1017420_thumb.png/revision/latest?cb=20200507075715",
         "leaderSkill": "\"Super Saiyan 2\" Category Ki +3 and HP, ATK & DEF +170%;or\"Resurrected Warriors\" Category Ki +3 and HP, ATK & DEF +150%",
+        "ezaLeaderSkill": "\"Super Saiyan 2\" or \"Resurrected Warriors\" Category Ki +3 and HP, ATK & DEF +170%",
         "superAttack": "Raises DEF for 1 turn[1] and causes immense damage to enemy",
+        "ezaSuperAttack": "Raises ATK & DEF for 1 turn[2] and causes immense damage to enemy",
         "passive": "ATK & DEF +100%; plus an additional ATK boost by up to 60% (the more HP remaining, the greater the ATK boost) and an additional DEF boost by up to 60% (the less HP remaining, the greater the DEF boost); ATK & DEF +30% when attacking with 3 or more Ki Spheres obtained; receives a boost from Babidi's sorcery when conditions are met",
+        "ezaPassive": "Ki +2 and ATK & DEF +150%; reduces damage received by 30%; plus an additional ATK boost by up to 120% (the more HP remaining, the greater the ATK boost) and if HP is 50% or more, great chance[3] of launching an additional Super Attack; plus an additional DEF boost by up to 120% (the less HP remaining, the greater the DEF boost) and if HP is 50% or less, guards all attacks; randomly changes Ki Spheres of a certain Type to  Ki Spheres when there is another \"Majin Buu Saga\" Category ally attacking in the same turn or a \"Majin Buu Saga\" Category enemy; plus an additional damage reduction of 20% with a  Ki Sphere obtained; ATK & DEF +120% when attacking with 3 or more Ki Spheres obtained; receives a boost from Babidi's sorcery when conditions are met",
         "links": [
             "Saiyan Warrior Race",
             "Super Saiyan",
@@ -28898,7 +29353,9 @@
                 "transformedClass": "Extreme",
                 "transformedType": "TEQ",
                 "transformedSuperAttack": "Greatly raises DEF for 1 turn[1] and causes immense damage with a high chance of stunning the enemy[2]",
+                "transformedEZASuperAttack": "Greatly raises ATK & DEF for 1 turn[3] and causes immense damage with a great chance[4] of stunning the enemy",
                 "transformedPassive": "ATK & DEF +120%; plus an additional ATK boost by up to 77% (the more HP remaining, the greater the ATK boost) and an additional DEF boost by up to 77% (the less HP remaining, the greater the DEF boost); attacks effective against all Types with 3 or more Ki Spheres obtained; guards all attacks with 6 or more Ki Spheres obtained",
+                "transformedEZAPassive": "Ki +3 and ATK & DEF +200%; reduces damage received by 33%; plus an additional ATK boost by up to 150% (the more HP remaining, the greater the ATK boost) and if HP is 50% or more, launches an additional Super Attack; plus an additional DEF boost by up to 150% (the less HP remaining, the greater the DEF boost) and if HP is 50% or less, guards all attacks; randomly changes Ki Spheres of a certain Type to  Ki Spheres when there is another \"Majin Buu Saga\" Category ally attacking in the same turn or a \"Majin Buu Saga\" Category enemy; plus an additional damage reduction of 33% with a  Ki Sphere obtained; ATK & DEF +130% when attacking and attacks effective against all Types with 3 or more Ki Spheres obtained; ATK & DEF +66% when attacking and guards all attacks with 6 or more Ki Spheres obtained",
                 "transformedLinks": [
                     "Saiyan Warrior Race",
                     "Super Saiyan",
@@ -29034,8 +29491,8 @@
     {
         "name": "Dark King Mechikabura (Power of Time Unleashed)",
         "title": "Infinite Power of Darkness",
-        "maxLevel": 120,
-        "maxSALevel": 10,
+        "maxLevel": 140,
+        "maxSALevel": 15,
         "rarity": "UR",
         "class": "Extreme",
         "type": "AGL",
@@ -29043,8 +29500,11 @@
         "id": "12319",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/f/f7/Card_1023190_thumb.png/revision/latest?cb=20211124093024",
         "leaderSkill": "\"Crossover\" Category Ki +3 and HP, ATK & DEF +130%",
+        "ezaLeaderSkill": "\"Crossover\" Category Ki +3 and HP, ATK & DEF +150%",
         "superAttack": "Raises ATK[1], causes supreme damage to enemy and lowers ATK & DEF[2]",
+        "ezaSuperAttack": "Greatly raises ATK[3], greatly raises DEF for 1 turn[4], causes supreme damage to enemy and lowers ATK & DEF[5]",
         "passive": "ATK & DEF +150%; plus an additional ATK & DEF +80% when performing a Super Attack; plus an additional ATK & DEF +20% per Ki Sphere obtained; plus an additional ATK & DEF +80% with 2 or more  Ki Spheres obtained; plus an additional ATK +80% with 2 or more  or  Ki Spheres obtained; plus an additional DEF +80% with 2 or more  or  Ki Spheres obtained; recovers 8% HP per  Ki Sphere obtained",
+        "ezaPassive": "ATK & DEF +200%; plus an additional ATK & DEF +100% when performing a Super Attack; randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres; plus an additional ATK & DEF +25% per Ki Sphere obtained; plus an additional ATK & DEF +100% with 2 or more  Ki Spheres obtained; plus an additional ATK +100% with 2 or more  or  Ki Spheres obtained; plus an additional DEF +100% with 2 or more  or  Ki Spheres obtained; recovers 10% HP and reduces damage received by 10% per  Ki Sphere obtained; launches an additional Super Attack with 2 or more  Ki Spheres obtained",
         "links": [
             "Fear and Faith",
             "Brainiacs",
@@ -29062,7 +29522,8 @@
             "Dragon Ball Heroes",
             "Crossover",
             "Storied Figures",
-            "Power of Wishes"
+            "Power of Wishes",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 3 Green"
@@ -30421,57 +30882,6 @@
         "transformations": []
     },
     {
-        "name": "Saonel & Pirina",
-        "title": "Life Entrusted by Compatriots",
-        "maxLevel": 120,
-        "maxSALevel": 10,
-        "rarity": "UR",
-        "class": "Super",
-        "type": "TEQ",
-        "cost": 32,
-        "id": "12928",
-        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/5/55/Card_1029280_thumb.png/revision/latest?cb=20240627164635",
-        "leaderSkill": "\"Namekians\" Category Ki +4 and HP, ATK & DEF +66%",
-        "superAttack": "Raises ATK & DEF for 1 turn[1], causes supreme damage to enemy and raises all allies' ATK by 30% for 1 turn",
-        "passive": "Ki +1 and ATK & DEF +50% per \"Universe 6\" or \"Namekians\" Category allies on the team (depending on which Category has more members); plus an additional ATK & DEF +100% when attacking; launches an additional attack that has a great chance[2] of becoming a Super Attack when there is another \"Universe 6\" Category ally attacking in the same turn; recovers 10% HP at the end of turn when there is another \"Namekians\" Category ally attacking in the same turn; guards all attacks when all allies attacking in the same turn are \"Universe 6\" or \"Namekians\" Category characters",
-        "links": [
-            "Tough as Nails",
-            "Cold Judgment",
-            "Tournament of Power",
-            "Namekians",
-            "Warriors of Universe 6",
-            "Hero",
-            "Shattering the Limit"
-        ],
-        "categories": [
-            "Universe Survival Saga",
-            "Namekians",
-            "Joined Forces",
-            "Universe 6",
-            "All-Out Struggle",
-            "Entrusted Will",
-            "Fused Fighters",
-            "Tournament Participants"
-        ],
-        "kiMeter": [
-            "KiMeter 2 Green"
-        ],
-        "baseHP": 2437,
-        "maxLevelHP": 8126,
-        "freeDupeHP": 9326,
-        "rainbowHP": 10886,
-        "baseAttack": 2486,
-        "maxLevelAttack": 8207,
-        "freeDupeAttack": 9407,
-        "rainbowAttack": 11447,
-        "baseDefence": 1068,
-        "maxDefence": 3526,
-        "freeDupeDefence": 4726,
-        "rainbowDefence": 6526,
-        "kiMultiplier": "12 Ki Multiplier is 140%; ",
-        "transformations": []
-    },
-    {
         "name": "Tien",
         "title": "Life Force Traded for Devastating Power",
         "maxLevel": 120,
@@ -31164,6 +31574,57 @@
         "transformations": []
     },
     {
+        "name": "Saonel & Pirina",
+        "title": "Lives Entrusted by Our Brethren",
+        "maxLevel": 120,
+        "maxSALevel": 10,
+        "rarity": "UR",
+        "class": "Super",
+        "type": "TEQ",
+        "cost": 32,
+        "id": "12928",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/5/55/Card_1029280_thumb.png/revision/latest?cb=20241122144938",
+        "leaderSkill": "\"Namekians\" Category Ki +4 and HP, ATK & DEF +66%",
+        "superAttack": "Raises ATK & DEF for 1 turn[1], causes supreme damage to enemy and raises allies' ATK by 30% for 1 turn",
+        "passive": "Ki +1 and ATK & DEF +50% per \"Universe 6\" or \"Namekians\" Category allies on the team (depending on which Category has more members); plus an additional ATK & DEF +100% when attacking; launches an additional attack that has a great chance[2] of becoming a Super Attack when there is another \"Universe 6\" Category ally attacking in the same turn; recovers 10% HP at the end of turn when there is another \"Namekians\" Category ally attacking in the same turn; guards all attacks when all allies attacking in the same turn are \"Universe 6\" or \"Namekians\" Category characters",
+        "links": [
+            "Tough as Nails",
+            "Cold Judgment",
+            "Tournament of Power",
+            "Namekians",
+            "Warriors of Universe 6",
+            "Hero",
+            "Shattering the Limit"
+        ],
+        "categories": [
+            "Universe Survival Saga",
+            "Namekians",
+            "Joined Forces",
+            "Universe 6",
+            "All-Out Struggle",
+            "Entrusted Will",
+            "Fused Fighters",
+            "Tournament Participants"
+        ],
+        "kiMeter": [
+            "KiMeter 2 Green"
+        ],
+        "baseHP": 2437,
+        "maxLevelHP": 8126,
+        "freeDupeHP": 9326,
+        "rainbowHP": 10886,
+        "baseAttack": 2486,
+        "maxLevelAttack": 8207,
+        "freeDupeAttack": 9407,
+        "rainbowAttack": 11447,
+        "baseDefence": 1068,
+        "maxDefence": 3526,
+        "freeDupeDefence": 4726,
+        "rainbowDefence": 6526,
+        "kiMultiplier": "12 Ki Multiplier is 140%; ",
+        "transformations": []
+    },
+    {
         "name": "Super Saiyan Vegeta (GT)",
         "title": "Lone Guardian",
         "maxLevel": 140,
@@ -31385,6 +31846,53 @@
         "maxDefence": 4423,
         "freeDupeDefence": 6423,
         "rainbowDefence": 9023,
+        "kiMultiplier": "12 Ki Multiplier is 140%; ",
+        "transformations": []
+    },
+    {
+        "name": "Female Warrior in Black",
+        "title": "Love Birthed in Battle",
+        "maxLevel": 120,
+        "maxSALevel": 10,
+        "rarity": "UR",
+        "class": "Extreme",
+        "type": "INT",
+        "cost": 40,
+        "id": "13016",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/6/6b/Card_1030160_thumb.png/revision/latest?cb=20241115235857",
+        "leaderSkill": "\"Crossover\" Category Ki +3 and HP, ATK & DEF +50%",
+        "superAttack": "Causes supreme damage to enemy and raises ATK & DEF for 3 turns[1]",
+        "passive": "ATK & DEF +150%; plus an additional ATK & DEF +100% when performing a Super Attack; all allies' Ki +2 and ATK & DEF +30%; great chance[2] of performing a critical hit plus an additional ATK & DEF +150% when the character is the only \"Crossover\" Category character on the team; plus an additional ATK & DEF +30% with each attack performed (up to 120%) and launches 2 additional attacks, each of which has a medium chance[3] of becoming a Super Attack, when there is another \"Crossover\" Category ally on the team; ATK & DEF +86% for the character and allies whose names include \"Yamcha\" and randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres at start of character's attacking turn when there is an \"Earth-Bred Fighters\" Category ally attacking in the same turn",
+        "links": [
+            "The Innocents",
+            "Battlefield Diva",
+            "Solid Support",
+            "Shocking Speed",
+            "Loyalty",
+            "Shattering the Limit"
+        ],
+        "categories": [
+            "Crossover",
+            "Peppy Gals",
+            "Time Travelers",
+            "Dragon Ball Heroes",
+            "Tournament Participants"
+        ],
+        "kiMeter": [
+            "KiMeter 3 Green"
+        ],
+        "baseHP": 7187,
+        "maxLevelHP": 7712,
+        "freeDupeHP": 8912,
+        "rainbowHP": 10712,
+        "baseAttack": 7485,
+        "maxLevelAttack": 7810,
+        "freeDupeAttack": 9010,
+        "rainbowAttack": 10810,
+        "baseDefence": 3920,
+        "maxDefence": 4189,
+        "freeDupeDefence": 5389,
+        "rainbowDefence": 7189,
         "kiMultiplier": "12 Ki Multiplier is 140%; ",
         "transformations": []
     },
@@ -32181,7 +32689,7 @@
         "type": "AGL",
         "cost": 38,
         "id": "13004",
-        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/3/36/Card_1030040_thumb.png/revision/latest?cb=20241025140608",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/3/36/Card_1030040_thumb.png/revision/latest?cb=20241111230527",
         "leaderSkill": " Type Ki +3 and HP, ATK & DEF +70%",
         "superAttack": "Raises ATK & DEF[1], causes supreme damage to enemy and seals Super Attack",
         "passive": "Ki +2; ATK & DEF +30% per \"Saiyan Saga\" or \"Earth-Bred Fighters\" Category ally on the team; plus an additional ATK & DEF +150% when performing a Super Attack; medium chance[2] of performing a critical hit; plus an additional ATK & DEF +50% and launches an additional attack that has a great chance[3] of becoming a Super Attack when all allies are Super Class; reduces damage received by 20% when there is an ally whose name includes \"Goku\" (Youth, Captain Ginyu, Jr., etc. excluded) on the team",
@@ -32199,7 +32707,8 @@
             "Bond of Master and Disciple",
             "Exploding Rage",
             "Saiyan Saga",
-            "Earth-Bred Fighters"
+            "Earth-Bred Fighters",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 3 Green"
@@ -32283,8 +32792,11 @@
         "id": "11992",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/3/3f/Card_1019920_thumb.png/revision/latest?cb=20210630083539",
         "leaderSkill": " Type Ki +2 and HP, ATK & DEF +70%",
+        "ezaLeaderSkill": " Type Ki +3 and HP, ATK & DEF +100%",
         "superAttack": "Causes supreme damage to enemy and greatly lowers DEF[1]",
-        "passive": "ATK & DEF +120%; Ki +3 and high chance[2] of evading enemy's attack (including Super Attack) when there is an ally or enemy whose name includes \"Goku (Youth)\"; plus an additional ATK +120% & DEF +80% for 5 turns after evading an attack",
+        "ezaSuperAttack": "Raises DEF for 1 turn[2], causes supreme damage to enemy and greatly lowers DEF[1]",
+        "passive": "ATK & DEF +120%; Ki +3 and high chance[3] of evading enemy's attack (including Super Attack) when there is an ally or enemy whose name includes \"Goku (Youth)\"; plus an additional ATK +120% & DEF +80% for 5 turns after evading an attack",
+        "ezaPassive": "ATK & DEF +150%; Ki +3 plus an additional ATK & DEF +150% when there is an ally or enemy whose name includes \"Goku (Youth)\"; high chance[3] of evading enemy's attack (including Super Attack); chance to evade enemy's attack (including Super Attack) +15% for 1 turn from the character's entry turn; chance to evade enemy's attack (including Super Attack) +5% per \"Youth\" Category ally attacking in the same turn; chance to evade enemy's attack (including Super Attack) +5% starting from the turn in which the character evades the 5th attack in battle; chance to evade enemy's attack (including Super Attack) +8% starting from the turn in which the character evades the 8th attack in battle; plus an additional ATK & DEF +150% and high chance[4] of performing a critical hit within the same turn after evading an attack; lowers the attacked enemy's ATK by 30% for 2 turns",
         "links": [
             "Turtle School",
             "Kamehameha",
@@ -32393,6 +32905,7 @@
         "passive": "Ki +2 and ATK & DEF +200%; guards all attacks for 1 turn from the character's entry turn; reduces damage received by 6% per \"Super Bosses\" Category ally on the team (up to 30%); plus an additional damage reduction of 30% before attacking; launches an additional attack per  Ki Sphere obtained; launches an additional attack that has a high chance[2] of becoming a Super Attack; launches an additional Super Attack every time the character attacks 5 or more times in battle (up to once within a turn); launches an additional Super Attack every time the character attacks 10 or more times in battle (up to once within a turn); plus an additional ATK & DEF +30% within the same turn with each attack performed; \"Super Bosses\" Category allies' Ki +2 within the same turn after receiving an attack; great chance[3] of nullifying Ki Blast Super Attacks directed at the character",
         "activeSkill": "Creates the Domain \"City (Future) (Rift in Time)\", raises \"Super Bosses\" Category allies' Ki by 2 and creates the characters clones for 4 turns; can be activated when all allies attacking in the same turn are \"Super Bosses\" Category characters starting from the 4th turn from the start of battle, or starting from the 6th turn from the start of battle (once only)",
         "links": [
+            "Super Saiyan",
             "Big Bad Bosses",
             "Dismal Future",
             "Prepared for Battle",
@@ -32439,6 +32952,7 @@
                 "transformedSuperAttack": "Greatly raises ATK and raises DEF for 1 turn[1], causes immense damage to enemy and greatly lowers DEF[2]",
                 "transformedPassive": "Ki +2 and ATK & DEF +222%; attacks effective against all Types; reduces damage received by 66% before attacking; randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres; launches an additional attack that has a rare chance[3] of becoming a Super Attack per  Ki Sphere obtained; launches an additional attack that has a great chance[4] of becoming a Super Attack; launches an additional Super Attack every time the character attacks 5 or more times in battle (up to once within a turn); launches an additional Super Attack every time the character attacks 10 or more times in battle (up to once within a turn); plus an additional ATK & DEF +33% within the same turn with each attack performed",
                 "transformedLinks": [
+                    "Super Saiyan",
                     "Big Bad Bosses",
                     "Dismal Future",
                     "Prepared for Battle",
@@ -33066,10 +33580,62 @@
         "transformations": []
     },
     {
-        "name": "Super Saiyan Vegeks (Xeno)",
-        "title": "Morale-Lifting Father-Son Fusion",
+        "name": "Hit",
+        "title": "Mission for the Survival of Universe 6",
         "maxLevel": 120,
         "maxSALevel": 10,
+        "rarity": "UR",
+        "class": "Extreme",
+        "type": "PHY",
+        "cost": 32,
+        "id": "12912",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/4/49/Card_1029120_thumb.png/revision/latest?cb=20240627152658",
+        "leaderSkill": " Type Ki +3 and HP, ATK & DEF +50%",
+        "superAttack": "Raises DEF for 1 turn[1] and causes supreme damage with a medium chance[2] of stunning the enemy",
+        "passive": "ATK & DEF +166%; changes  Ki Spheres to  Ki Spheres; launches an additional attack that has a 66% chance of becoming a Super Attack within the same turn with a  Ki Sphere obtained; high chance[3] of evading enemy's attack (including Super Attack); plus an additional ATK & DEF +166% and chance of evading enemy's attack (including Super Attack) +16% when Ki is 12; plus an additional ATK & DEF +66% within the same turn with each attack performed; plus an additional chance of evading enemy's attack (including Super Attack) +6% within the same turn with each Super Attack performed; counters with enormous power after evading an attack; medium chance[4] of stunning the attacked enemy",
+        "links": [
+            "Infighter",
+            "Experienced Fighters",
+            "Cold Judgment",
+            "Tournament of Power",
+            "Warriors of Universe 6",
+            "Shocking Speed",
+            "Shattering the Limit"
+        ],
+        "categories": [
+            "Universe Survival Saga",
+            "Universe 6",
+            "Target: Goku",
+            "Rapid Growth",
+            "Space-Traveling Warriors",
+            "Legendary Existence",
+            "Accelerated Battle",
+            "Tournament Participants",
+            "Super Bosses"
+        ],
+        "kiMeter": [
+            "KiMeter 2 Green"
+        ],
+        "baseHP": 2663,
+        "maxLevelHP": 8789,
+        "freeDupeHP": 9989,
+        "rainbowHP": 12029,
+        "baseAttack": 2547,
+        "maxLevelAttack": 8406,
+        "freeDupeAttack": 9606,
+        "rainbowAttack": 11406,
+        "baseDefence": 880,
+        "maxDefence": 2904,
+        "freeDupeDefence": 4104,
+        "rainbowDefence": 5664,
+        "kiMultiplier": "12 Ki Multiplier is 140%; ",
+        "transformations": []
+    },
+    {
+        "name": "Super Saiyan Vegeks (Xeno)",
+        "title": "Morale-Lifting Father-Son Fusion",
+        "maxLevel": 140,
+        "maxSALevel": 15,
         "rarity": "UR",
         "class": "Super",
         "type": "STR",
@@ -33077,8 +33643,11 @@
         "id": "12327",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/1/1c/Card_1023270_thumb.png/revision/latest?cb=20211124095930",
         "leaderSkill": " Type Ki +3 and HP, ATK & DEF +80%",
+        "ezaLeaderSkill": " Type Ki +3 and HP, ATK & DEF +100%",
         "superAttack": "Raises DEF[1], raises ATK for 1 turn[2] and causes supreme damage to enemy",
+        "ezaSuperAttack": "Greatly raises DEF[3], raises ATK for 1 turn[4] and causes supreme damage to enemy",
         "passive": "ATK & DEF +120%; plus an additional ATK & DEF +100% when performing a Super Attack; chance of performing a critical hit +10% with each Super Attack performed (up to 50%) launches an additional Super Attack when the target enemy is in \"ATK Down\" status, in \"DEF Down\" status, stunned or the target enemy's Super Attack is sealed",
+        "ezaPassive": "ATK & DEF +150%; plus an additional ATK & DEF +150% when performing a Super Attack; plus an additional ATK +30% (up to 150%) and chance of performing a critical hit +20% with each Super Attack performed; Ki +2 and launches an additional attack that has a high chance[5] of becoming a Super Attack when there is another \"Crossover\" or \"Super Saiyans\" Category ally attacking in the same turn; all attacks become critical hits and launches an additional Super Attack when the target enemy is in \"ATK Down\" status, in \"DEF Down\" status, stunned or the target enemy's Super Attack is sealed",
         "links": [
             "Super Saiyan",
             "The Saiyan Lineage",
@@ -33119,8 +33688,8 @@
     {
         "name": "Boujack",
         "title": "Murderous Overlord",
-        "maxLevel": 120,
-        "maxSALevel": 10,
+        "maxLevel": 140,
+        "maxSALevel": 15,
         "rarity": "UR",
         "class": "Extreme",
         "type": "STR",
@@ -33128,9 +33697,13 @@
         "id": "12105",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/b/b8/Card_1021050_thumb.png/revision/latest?cb=20210228003051",
         "leaderSkill": "\"Space-Traveling Warriors\" Category Ki +3 and HP, ATK & DEF +170%;or\"Time Travelers\" Category Ki +3 and HP, ATK & DEF +150%",
+        "ezaLeaderSkill": "\"Space-Traveling Warriors\" or \"Time Travelers\" Category Ki +3 and HP, ATK & DEF +170%",
         "superAttack": "Raises ATK & DEF for 1 turn[1] and causes immense damage to enemy",
+        "ezaSuperAttack": "Greatly raises ATK & DEF for 1 turn[2] and causes immense damage to enemy",
         "passive": "ATK & DEF +100%; \"Space-Traveling Warriors\" Category allies' Ki +2 and ATK & DEF +30% when facing 1 or more enemies, plus an additional ATK & DEF +10% when facing 2 or more enemies, plus an additional ATK & DEF +10% when facing 3 or more enemies",
+        "ezaPassive": "ATK & DEF +150%; Extreme Class allies' ATK & DEF +30%; \"Space-Traveling Warriors\" or \"Inhuman Deeds\" Category allies' Ki +2 and ATK & DEF +30% when facing 1 or more enemies, plus an additional ATK & DEF +15% when facing 2 or more enemies, plus an additional ATK & DEF +15% when facing 3 or more enemies; plus an additional ATK & DEF +30% (up to 120%) when attacking per \"Space-Traveling Warriors\" or \"Inhuman Deeds\" ally (self excluded) on the team (depending on which Category has more members); guards all attack when there are 5 or more \"Space-Traveling Warriors\" or \"Inhuman Deeds\" Category ally on the team",
         "activeSkill": "Transforms; Can be activated when facing only 1 enemy, starting from the 4th turn from the start of battle (once only)",
+        "ezaActiveSkill": "",
         "transformationCondition": "Transforms; Can be activated when facing only 1 enemy, starting from the 4th turn from the start of battle (once only)",
         "links": [
             "The Hera Clan",
@@ -33177,7 +33750,9 @@
                 "transformedClass": "Extreme",
                 "transformedType": "STR",
                 "transformedSuperAttack": "Raises ATK[1] and causes immense damage to enemy",
-                "transformedPassive": "Ki +3 and ATK & DEF +180%; launches an additional attack that has a medium chance[2] of becoming a Super Attack; ATK +30% and DEF +15% when attacking with 3 or more Ki Spheres obtained, plus an additional ATK +30% and DEF +15% when attacking with 6 or more Ki Spheres obtained",
+                "transformedEZASuperAttack": "Greatly raises ATK[2], greatly raises DEF for 1 turn[3] and causes immense damage to enemy",
+                "transformedPassive": "Ki +3 and ATK & DEF +180%; launches an additional attack that has a medium chance[4] of becoming a Super Attack; ATK +30% and DEF +15% when attacking with 3 or more Ki Spheres obtained, plus an additional ATK +30% and DEF +15% when attacking with 6 or more Ki Spheres obtained",
+                "transformedEZAPassive": "ATK & DEF +240% and guards all attacks; launches an additional attack that has a high chance[5] of becoming a Super Attack; randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres; plus an additional ATK & DEF +120% when attacking; ATK +60% and DEF +30% when attacking with 3 or more Ki Spheres obtained, plus an additional ATK +60% and launches an additional attack that has a high chance[6] of becoming a Super Attack when attacking with 6 or more Ki Spheres obtained",
                 "transformedLinks": [
                     "The Hera Clan",
                     "Galactic Warriors",
@@ -35068,7 +35643,8 @@
             "Special Pose",
             "Defenders of Justice",
             "Bond of Parent and Child",
-            "Earth-Bred Fighters"
+            "Earth-Bred Fighters",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green"
@@ -35297,7 +35873,8 @@
             "Storied Figures",
             "Legendary Existence",
             "Power of Wishes",
-            "Uncontrollable Power"
+            "Uncontrollable Power",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 3 Green"
@@ -35511,6 +36088,7 @@
         ],
         "categories": [
             "Hybrid Saiyans",
+            "Majin Buu Saga",
             "Dragon Ball Seekers",
             "Movie Heroes",
             "Goku's Family",
@@ -35573,6 +36151,7 @@
         ],
         "categories": [
             "Hybrid Saiyans",
+            "Majin Buu Saga",
             "Joined Forces",
             "Movie Heroes",
             "Youth",
@@ -35806,7 +36385,8 @@
             "Power Beyond Super Saiyan",
             "Bond of Parent and Child",
             "Earth-Bred Fighters",
-            "Tournament Participants"
+            "Tournament Participants",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green"
@@ -36517,7 +37097,8 @@
             "Bond of Master and Disciple",
             "Mastered Evolution",
             "Bond of Parent and Child",
-            "Earth-Bred Fighters"
+            "Earth-Bred Fighters",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 3 Green"
@@ -36931,8 +37512,8 @@
     {
         "name": "Super Saiyan 3 Gotenks (Xeno)",
         "title": "Power to Overcome Crisis",
-        "maxLevel": 120,
-        "maxSALevel": 10,
+        "maxLevel": 140,
+        "maxSALevel": 15,
         "rarity": "UR",
         "class": "Super",
         "type": "AGL",
@@ -36940,8 +37521,11 @@
         "id": "12328",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/f/f6/Card_1023280_thumb.png/revision/latest?cb=20211124094607",
         "leaderSkill": " Type Ki +3 and HP, ATK & DEF +100%",
+        "ezaLeaderSkill": " Type Ki +3 and HP, ATK & DEF +130%",
         "superAttack": "Raises ATK & DEF for 1 turn[1], causes supreme damage to enemy and lowers ATK & DEF[2]",
+        "ezaSuperAttack": "Greatly raises ATK & DEF for 1 turn[3], causes supreme damage to enemy and lowers ATK & DEF[4]",
         "passive": "ATK & DEF +120%; plus an additional ATK & DEF +30% with each Super Attack performed (up to 120%); launches an additional Super Attack when there is another \"Dragon Ball Heroes\" Category ally attacking in the same turn or when the target enemy is stunned or when the target enemy's Super Attack is sealed",
+        "ezaPassive": "ATK & DEF +150%; plus an additional ATK +150% when performing a Super Attack; plus an additional ATK & DEF +30% with each Super Attack performed (up to 150%); launches 2 additional Super Attacks when there is another \"Crossover\" Category ally attacking in the same turn or when the target enemy is stunned or when the target enemy's Super Attack is sealed; performs a critical hit when there is another \"Super Saiyan 3\" Category ally attacking in the same turn",
         "links": [
             "Super Saiyan",
             "Over in a Flash",
@@ -37660,8 +38244,11 @@
         "id": "12416",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/c/cf/Card_1024160_thumb.png/revision/latest?cb=20220629084845",
         "leaderSkill": " Type Ki +3 and HP, ATK & DEF +90%",
+        "ezaLeaderSkill": " Type Ki +3 and HP, ATK & DEF +120%",
         "superAttack": "Raises ATK for 1 turn[1], causes supreme damage to enemy and seals Super Attack",
-        "passive": "ATK & DEF +150% and high chance[2] of evading enemy's attack (including Super Attack); plus an additional ATK & DEF +100% for 5 turns after evading an attack; performs a critical hit as the 1st attacker in a turn; ATK -50% within the same turn after receiving an attack",
+        "ezaSuperAttack": "Raises ATK for 4 turn[2], greatly raises DEF for 1 turn[3], causes supreme damage to enemy and seals Super Attack",
+        "passive": "ATK & DEF +150% and high chance[4] of evading enemy's attack (including Super Attack); plus an additional ATK & DEF +100% for 5 turns after evading an attack; performs a critical hit as the 1st attacker in a turn; ATK -50% within the same turn after receiving an attack",
+        "ezaPassive": "ATK & DEF +200% and high chance[5] of evading enemy's attack (including Super Attack); plus an additional ATK & DEF +100% and chance to evade enemy's attack (including Super Attack) +20% before receiving an attack; plus an additional ATK & DEF +150% for 5 turns after evading an attack; Ki +3, performs a critical hit and high chance[6] of launching an additional Super Attack as the 1st attacker in a turn; launches an additional Super Attack as the 2nd or 3rd attacker in a turn; plus an additional ATK +100% when the target enemy's Super Attack is sealed",
         "links": [
             "All in the Family",
             "Infighter",
@@ -38670,8 +39257,11 @@
         "id": "12381",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/0/06/Card_1023810_thumb.png/revision/latest?cb=20220309125829",
         "leaderSkill": " Type Ki +2 and HP, ATK & DEF +80%",
+        "ezaLeaderSkill": " Type Ki +3 and HP, ATK & DEF +110%",
         "superAttack": "Causes supreme damage to enemy and raises ATK & DEF by 30% for 3 turns",
+        "ezaSuperAttack": "Causes supreme damage to enemy and raises ATK & DEF by 50% for 3 turns",
         "passive": "ATK & DEF +100%; plus an additional ATK & DEF +80% for 3 turns after receiving attack; high chance[1] of evading enemy's attack (including Super Attack); plus an additional ATK +180% for 3 turns after evading an attack",
+        "ezaPassive": "Ki +3 and ATK & DEF +180%; launches an additional attack that has a medium chance[2] of becoming a Super Attack; plus an additional ATK & DEF +180% for 3 turns after receiving an attack; high chance[1] of evading enemy's attack (including Super Attack); plus an additional ATK +180% for 3 turns and launches an additional attack that has a medium chance[3] of becoming a Super Attack after evading an attack; launches an additional Super Attack when there is another \"Androids\" Category ally on the team",
         "links": [
             "Android Assault",
             "Battlefield Diva",
@@ -40397,8 +40987,8 @@
     {
         "name": "Super Saiyan 2 Goku (Angel)",
         "title": "Rousing Fighting Spirit",
-        "maxLevel": 120,
-        "maxSALevel": 10,
+        "maxLevel": 140,
+        "maxSALevel": 15,
         "rarity": "UR",
         "class": "Super",
         "type": "INT",
@@ -40406,8 +40996,11 @@
         "id": "11741",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/0/01/Card_1017410_thumb.png/revision/latest?cb=20200507075830",
         "leaderSkill": "\"Otherworld Warriors\" Category Ki +3 and HP, ATK & DEF +170%;or\"Super Saiyan 3\" Category Ki +3 and HP, ATK & DEF +150%",
+        "ezaLeaderSkill": "\"Otherworld Warriors\" or \"Super Saiyan 3\" Category Ki +3 and HP, ATK & DEF +170%",
         "superAttack": "Raises ATK for 1 turn[1] and causes immense damage to enemy",
+        "ezaSuperAttack": "Raises ATK & DEF for 1 turn[2] and causes immense damage to enemy",
         "passive": "ATK & DEF +100%; plus an additional DEF boost by up to 60% (the more HP remaining, the greater the DEF boost) and an additional ATK boost by up to 60% (the less HP remaining, the greater the ATK boost); ATK & DEF +30% when attacking with 3 or more Ki Spheres obtained; Transforms when conditions are met",
+        "ezaPassive": "Ki +2 and ATK & DEF +150%; high chance[3] of evading enemy's attack (including Super Attack); plus an additional DEF boost by up to 120% (the more HP remaining, the greater the DEF boost) and if HP is 50% or more, chance of evading enemy's attack (including Super Attack) +20%; plus an additional ATK boost by up to 120% (the less HP remaining, the greater the ATK boost) and if HP is 50% or less, chance of performing a critical hit +20%; randomly changes Ki Spheres of a certain Type to  Ki Spheres when there is another \"Majin Buu Saga\" Category ally attacking in the same turn or a \"Majin Buu Saga\" Category enemy; chance of performing a critical hit +50% with a  Ki Sphere obtained; ATK & DEF +120% when attacking with 3 or more Ki Spheres obtained; Transforms when conditions are met",
         "transformationCondition": "Transforms when facing only 1 enemy, whose HP is 80% or more, starting from the 3rd turn from the start of battle",
         "links": [
             "Saiyan Warrior Race",
@@ -40461,7 +41054,9 @@
                 "transformedClass": "Super",
                 "transformedType": "INT",
                 "transformedSuperAttack": "Greatly raises ATK for 1 turn[1] and causes immense damage with a high chance of stunning the enemy[2]",
+                "transformedEZASuperAttack": "Greatly raises ATK & DEF for 1 turn[3] and causes immense damage with a great chance of stunning the enemy[4]",
                 "transformedPassive": "ATK & DEF +120%; plus an additional DEF boost by up to 77% (the more HP remaining, the greater the DEF boost) and an additional ATK boost by up to 77% (the less HP remaining, the greater the ATK boost); ATK & DEF +33% when attacking and chance of evading enemy's attack (including Super Attack) +33% with 3 or more Ki Spheres obtained; attacks effective against all Types with 6 or more Ki Spheres obtained",
+                "transformedEZAPassive": "Ki +3 and ATK & DEF +200%; high chance[5] of evading enemy's attack (including Super Attack); plus an additional DEF boost by up to 150% (the more HP remaining, the greater the DEF boost) and if HP is 50% or more, chance of evading enemy's attack (including Super Attack) +30%; plus an additional ATK boost by up to 150% (the less HP remaining, the greater the ATK boost) and if HP is 50% or less, chance of performing a critical hit +30%; randomly changes Ki Spheres of a certain Type to  Ki Spheres when there is another \"Majin Buu Saga\" Category ally attacking in the same turn or a \"Majin Buu Saga\" Category enemy; chance of performing a critical hit +70% with a  Ki Sphere obtained; ATK & DEF +133% when attacking with 3 or more Ki Spheres obtained; launches an additional Super Attack and all attacks become critical hits with 6 or more Ki Spheres obtained",
                 "transformedLinks": [
                     "Limit-Breaking Form",
                     "Super Saiyan",
@@ -42265,6 +42860,55 @@
         "freeDupeDefence": 4757,
         "rainbowDefence": 6317,
         "kiMultiplier": "12 Ki Multiplier is 135%; ",
+        "transformations": []
+    },
+    {
+        "name": "Aeos",
+        "title": "Space-Time Selector",
+        "maxLevel": 120,
+        "maxSALevel": 10,
+        "rarity": "UR",
+        "class": "Extreme",
+        "type": "INT",
+        "cost": 40,
+        "id": "12991",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/f/f2/Card_1029910_thumb.png/revision/latest?cb=20241115170155",
+        "leaderSkill": "\"Realm of Gods\" Category Ki +3 and HP, ATK & DEF +130%",
+        "superAttack": "Raises ATK & DEF for 1 turn[1], causes supreme damage to enemy and seals Super Attack",
+        "passive": "ATK & DEF +120%; plus an additional DEF +120% when receiving an attack; DEF +120% if there is another \"Crossover\" Category ally attacking in the same turn and when receiving an attack, plus an additional DEF +120%; all enemies' ATK & DEF -24% and medium chance[2] of stunning all enemies at the start of turn; high chance[3] of evading enemy's attack (including Super Attack); plus an additional chance of evading enemy's attack (including Super Attack) +10% within the same turn and ATK +60% (up to 240%) with each attack evaded (including Super Attack); all allies' Ki +2 and ATK & DEF +40%, plus an additional Ki +1 and ATK & DEF +24% for \"Crossover\" Category characters; recovers 24% HP at the end of the turn in which an attack was received",
+        "links": [
+            "Telekinesis",
+            "More Than Meets the Eye",
+            "Solid Support",
+            "Cold Judgment",
+            "Master of Magic",
+            "Godly Power",
+            "Fierce Battle"
+        ],
+        "categories": [
+            "Realm of Gods",
+            "Potara",
+            "Time Travelers",
+            "Dragon Ball Heroes",
+            "Crossover",
+            "Storied Figures"
+        ],
+        "kiMeter": [
+            "KiMeter 2 Green"
+        ],
+        "baseHP": 2902,
+        "maxLevelHP": 9578,
+        "freeDupeHP": 11578,
+        "rainbowHP": 14578,
+        "baseAttack": 2541,
+        "maxLevelAttack": 8386,
+        "freeDupeAttack": 10386,
+        "rainbowAttack": 13386,
+        "baseDefence": 1666,
+        "maxDefence": 5501,
+        "freeDupeDefence": 7501,
+        "rainbowDefence": 10501,
+        "kiMultiplier": "12 Ki Multiplier is 150%; ",
         "transformations": []
     },
     {
@@ -44389,7 +45033,8 @@
             "Planetary Destruction",
             "Storied Figures",
             "Legendary Existence",
-            "Uncontrollable Power"
+            "Uncontrollable Power",
+            "Demonic Power (Category)"
         ],
         "kiMeter": [
             "KiMeter 2 Green"
@@ -44517,7 +45162,8 @@
             "Dragon Ball Seekers",
             "Terrifying Conquerors",
             "Space-Traveling Warriors",
-            "Power of Wishes"
+            "Power of Wishes",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green"
@@ -45125,7 +45771,8 @@
             "Planetary Destruction",
             "Heavenly Events",
             "Bond of Parent and Child",
-            "Earth-Bred Fighters"
+            "Earth-Bred Fighters",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green"
@@ -45657,7 +46304,8 @@
             "Power Absorption",
             "Mastered Evolution",
             "Bond of Friendship",
-            "Super Heroes"
+            "Super Heroes",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green"
@@ -47350,9 +47998,9 @@
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/0/0d/Card_1025410_thumb.png/revision/latest?cb=20221121035503",
         "leaderSkill": "\"Dragon Ball Heroes\" or \"Time Travelers\" Category Ki +3 and HP, ATK & DEF +170%;plus an additional HP, ATK & DEF +30% for characters who also belong to the \"Crossover\" Category",
         "superAttack": "Raises ATK & DEF for 1 turn[1] and causes immense damage with a medium chance[2] of stunning the enemy",
-        "passive": "ATK & DEF +150%, plus an additional ATK & DEF +50% when performing a Super Attack; guards all attacks for 5 turns from the character's entry turn; plus an additional DEF +50% within the same turn when guard is activated; Extreme Class allies' Ki +1 and ATK & DEF +30%; plus an additional Ki +2 and ATK & DEF +20% for all allies and medium chance[3] of stunning all enemies when all allies attacking in the same turn are Extreme Class \"Crossover\" characters",
-        "activeSkill": "Transforms; Can be activated starting from the 3rd turn from the start of battle if all allies are Extreme Class, or starting from the 5th turn from start of battle if the character receives an attack 5 or more times in battle (once only)",
-        "transformationCondition": "Transforms; Can be activated starting from the 3rd turn from the start of battle if all allies are Extreme Class, or starting from the 5th turn from start of battle if the character receives an attack 5 or more times in battle (once only)",
+        "passive": "ATK & DEF +150%, plus an additional ATK & DEF +50% when performing a Super Attack; guards all attacks for 5 turns from the character's entry turn, plus an additional DEF +50% within the same turn when guard is activated; Extreme Class allies' Ki +1 and ATK & DEF +30%; plus an additional Ki +2 and ATK & DEF +20% for all allies and medium chance[3] of stunning all enemies when all allies attacking in the same turn are Extreme Class \"Crossover\" Category characters",
+        "activeSkill": "Transforms; Can be activated starting from the 3rd turn from the start of battle if all allies are Extreme Class, or starting from the 5th turn from the start of battle if the character receives an attack 5 or more times in battle (once only)",
+        "transformationCondition": "Transforms; Can be activated starting from the 3rd turn from the start of battle if all allies are Extreme Class, or starting from the 5th turn from the start of battle if the character receives an attack 5 or more times in battle (once only)",
         "links": [
             "Brainiacs",
             "Gentleman",
@@ -47396,7 +48044,7 @@
                 "transformedClass": "Extreme",
                 "transformedType": "STR",
                 "transformedSuperAttack": "Greatly raises ATK and raises DEF for 1 turn[1] and causes immense damage with a high chance[2] of stunning the enemy",
-                "transformedPassive": "Guards all attacks for 1 turn from the character's entry turn; Ki +3 and ATK & DEF +200%; plus an additional ATK & DEF +50% when performing a Super Attack; launches an additional Super Attack when all allies are Extreme Class; plus an additional ATK +150% and disables enemy's guard when all allies attacking in the same turn are Extreme Class \"Crossover\" characters; attacks effective against all types when there is a \"Realm of Gods\" Category enemy",
+                "transformedPassive": "Guards all attacks for 1 turn from the character's entry turn; Ki +3 and ATK & DEF +200%, plus an additional ATK & DEF +50% when performing a Super Attack; launches an additional Super Attack when all allies are Extreme Class; plus an additional ATK +150% and disables enemy's guard when all allies attacking in the same turn are Extreme Class \"Crossover\" Category characters; attacks effective against all Types when there is a \"Realm of Gods\" Category enemy",
                 "transformedLinks": [
                     "Brainiacs",
                     "Gentleman",
@@ -47579,6 +48227,7 @@
         "ezaSuperAttack": "Greatly raises ATK[1] and causes immense damage to enemy",
         "passive": "Ki +5, ATK +10000 when Ki is 7 or more",
         "ezaPassive": "Ki +5, ATK +80%, and DEF +40% when Ki is 7 or more",
+        "superEzaPassive": "ATK & DEF +158%; Ki +5 plus an additional ATK & DEF +100% when Ki is 7 or more; plus an additional ATK & DEF +100% when performing a Super Attack; medium chance[2] of performing a critical hit and launches an additional Super Attack when all allies on the team are Super Class; guards all attacks and medium chance[3] of evading enemy's attack (including Super Attack) when the character is 2nd or 3rd to obtain Ki Spheres in a turn; DEF +30% (up to 120%) and chance of performing a critical hit and evading enemy's attack (including Super Attack) +10% (up to 40%) for every Super Attack performed; Super Class allies' ATK & DEF +30% plus an additional ATK & DEF +28% when there is an Extreme Class enemy",
         "links": [
             "Saiyan Warrior Race",
             "The Saiyan Lineage",
@@ -48902,7 +49551,8 @@
             "Defenders of Justice",
             "Bond of Parent and Child",
             "Earth-Bred Fighters",
-            "Power of Wishes"
+            "Power of Wishes",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 3 Green"
@@ -50248,8 +50898,8 @@
     {
         "name": "Super Saiyan 3 Gohanks (Xeno)",
         "title": "Wishing for a Peaceful History",
-        "maxLevel": 120,
-        "maxSALevel": 10,
+        "maxLevel": 140,
+        "maxSALevel": 15,
         "rarity": "UR",
         "class": "Super",
         "type": "INT",
@@ -50257,8 +50907,11 @@
         "id": "12329",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/0/0d/Card_1023290_thumb.png/revision/latest?cb=20211124095702",
         "leaderSkill": " Type Ki +3 and HP, ATK & DEF +100%",
+        "ezaLeaderSkill": " Type Ki +3 and HP, ATK & DEF +130%",
         "superAttack": "Raises ATK & DEF for 1 turn[1], causes supreme damage to enemy and seals Super Attack",
+        "ezaSuperAttack": "Greatly raises ATK & DEF for 1 turn[2], causes supreme damage to enemy and seals Super Attack",
         "passive": "ATK & DEF +120%; plus an additional ATK & DEF +30% with each Super Attack performed (up to 120%); launches an additional Super Attack when there is another \"Dragon Ball Heroes\" Category ally attacking in the same turn or when the target enemy is in \"ATK Down\" or \"DEF Down\" status",
+        "ezaPassive": "ATK & DEF +150%; plus an additional ATK +150% when performing a Super Attack; plus an additional ATK & DEF +30% with each Super Attack performed (up to 150%); launches 2 additional Super Attacks when there is another \"Crossover\" Category ally attacking in the same turn or when the target enemy is in \"ATK Down\" or \"DEF Down\" status; performs a critical hit when there is another \"Super Saiyan 3\" Category ally attacking in the same turn",
         "links": [
             "Super Saiyan",
             "Over in a Flash",
