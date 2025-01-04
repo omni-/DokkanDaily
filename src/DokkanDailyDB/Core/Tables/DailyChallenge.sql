@@ -2,12 +2,12 @@
 (
     [DailyChallengeId] INT NOT NULL IDENTITY(1, 1),
     [DailyTypeId] INT NOT NULL,
-    [Event] VARCHAR(50) NOT NULL,
+    [Event] VARCHAR(100) NOT NULL,
     [Stage] INT NOT NULL,
     [Date] DATETIME2(2) NOT NULL,
-    [LeaderFullName] VARCHAR(50) NULL,
-    [Category] VARCHAR(25) NULL,
-    [LinkSkill] VARCHAR(25) NULL,
+    [LeaderFullName] VARCHAR(100) NULL,
+    [Category] VARCHAR(50) NULL,
+    [LinkSkill] VARCHAR(50) NULL,
 
     CONSTRAINT [DailyChallengePK] PRIMARY KEY CLUSTERED ([DailyChallengeId] ASC),
     CONSTRAINT [DailyChallenge_FK01] FOREIGN KEY([DailyTypeId]) REFERENCES [Core].[Daily]([DailyId]),

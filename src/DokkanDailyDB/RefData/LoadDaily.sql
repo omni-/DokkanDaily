@@ -2,6 +2,8 @@
 AS
 BEGIN
 
+    DELETE FROM [Core].[Daily];
+
     INSERT INTO [Core].[Daily]([DailyTypeName])
     VALUES(
       'Character'), (
