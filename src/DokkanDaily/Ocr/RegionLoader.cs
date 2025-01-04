@@ -1,5 +1,4 @@
-﻿using OpenCvSharp;
-using SixLabors.ImageSharp;
+﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace DokkanDaily.Ocr;
@@ -47,7 +46,7 @@ internal static class RegionLoader
 
     public static Dictionary<string, RelativeRegion> LoadUIRegions()
     {
-        string regionMapPath = Path.Join(Directory.GetCurrentDirectory(), "Ocr/boxes.png");
+        string regionMapPath = "./wwwroot/tessdata/boxes.png";
 
         using Image<Rgba32> regionMap = Image.Load<Rgba32>(regionMapPath);
 
