@@ -9,9 +9,6 @@
 
   <ItemGroup>
     <None Remove="Components\Shared\Footer.razor.css" />
-    <None Update="Ocr\boxes.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
