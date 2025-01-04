@@ -47,8 +47,10 @@ namespace DokkanDaily.Services
                 recentChallenges = dbChallenges.Select(x =>
                 {
                     DailyType type = Enum.Parse<DailyType>(x.DailyTypeName);
-                    Stage stage = DokkanConstants.Stages.First(y => y.Name == x.Event && y.StageNumber == x.Stage);
-                    Leader leader = x.LeaderFullName == null ? null : DokkanConstants.Leaders.First(y => y.FullName == x.LeaderFullName);
+                    // should be == instead of StartsWith here, but i messed up and made the varchar column too small
+                    Stage stage = DokkanConstants.Stages.First(y => y.Name.StartsWith(x.Event) && y.StageNumber == x.Stage);
+                    // same here 
+                    Leader leader = x.LeaderFullName == null ? null : DokkanConstants.Leaders.First(y => y.FullName.StartsWith(x.LeaderFullName));
                     LinkSkill skill = x.LinkSkill == null ? null : DokkanConstants.LinkSkillMap[x.LinkSkill];
                     Category category = x.Category == null ? null : DokkanConstants.Categories.First(y => y.Name == x.Category);
                     Unit unit = x.LeaderFullName == null ? null : DokkanDailyHelper.GetUnit(leader);

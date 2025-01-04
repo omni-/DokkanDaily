@@ -56,7 +56,7 @@
         "name": "Super Saiyan 2 Vegeta (Angel)",
         "title": "A Promise Made to Kakarot",
         "maxLevel": 150,
-        "maxSALevel": 20,
+        "maxSALevel": 25,
         "rarity": "LR",
         "class": "Super",
         "type": "PHY",
@@ -64,11 +64,17 @@
         "id": "12022",
         "imageURL": "https://vignette.wikia.nocookie.net/dbz-dokkanbattle/images/a/a1/Card_1020220_thumb_apng.png/revision/latest?cb=20200916113202&format=original",
         "leaderSkill": "\"Worthy Rivals\" Category Ki +4 and HP, ATK & DEF +150%;or Type Ki +4 and HP, ATK & DEF +100%",
+        "ezaLeaderSkill": "\"Worthy Rivals\" Category Ki +4 and HP, ATK & DEF +170%;or Type Ki +4 and HP, ATK & DEF +100%",
         "superAttack": "Raises DEF for 1 turn[1] and causes colossal damage to enemy",
-        "ultraSuperAttack": "Causes mega-colossal damage to enemy and greatly lowers DEF[2]",
+        "ezaSuperAttack": "Greatly raises DEF for 1 turn[2] and causes colossal damage to enemy",
+        "ultraSuperAttack": "Causes mega-colossal damage to enemy and greatly lowers DEF[3]",
+        "ezaUltraSuperAttack": "Raises ATK & DEF for 1 turn[4], causes mega-colossal damage to enemy and greatly lowers DEF[5]",
         "passive": "ATK & DEF +70%; plus an additional ATK & DEF +4% each time Ki rises by 1 (up to 70%); Ki +3 when the name of an ally who is attacking in the same turn or an enemy includes \"Goku\" (Youth, Captain Ginyu, Jr., etc. excluded); plus an additional Ki +3 when there is a \"Majin Buu Saga\" Category ally whose name includes \"Goku\" attacking in the same turn",
+        "ezaPassive": "Ki +2 and ATK & DEF +200%; plus an additional Ki +2 and ATK +100% for 5 turns from the character's entry turn; plus an additional ATK & DEF +10% each time Ki rises by 1 (up to 180%); guards all attacks and launches an additional Super Attack when Ki is 18 or more; after all allies attacking in the same turn have obtained a Ki Sphere, all allies' DEF +10% (self excluded) per Ki obtained by the character himself (count starts from the 18th Ki); Ki +4 and ATK & DEF +59% when the name of an ally who is attacking in the same turn or an enemy includes \"Goku\" (Youth, Captain Ginyu, Jr., etc. excluded); plus another additional Ki +4 and ATK & DEF +59% when there is a \"Majin Buu Saga\" Category ally whose name includes \"Goku\" attacking in the same turn",
         "activeSkill": "Ki +1, ATK +59% and DEF +78% for 1 turn",
         "activeSkillCondition": "Can be activated when there is a \"Majin Buu Saga\" Category ally whose name includes \"Goku\" attacking in the same turn, starting from the 3rd turn from the start of battle (once only)",
+        "ezaActiveSkill": "Ki +1, ATK +59% and DEF +78% for 1 turn",
+        "ezaActiveSkillCondition": "Can be activated when there is a \"Majin Buu Saga\" Category ally whose name includes \"Goku\" attacking in the same turn, starting from the 3rd turn from the start of battle (once only)",
         "links": [
             "Saiyan Warrior Race",
             "Prodigies",
@@ -683,11 +689,11 @@
         "type": "TEQ",
         "cost": 77,
         "id": "13002",
-        "imageURL": "/wiki/Majin_Buu_Saga",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/7/79/Card_1030020_thumb_apng.png/revision/latest?cb=20241212063408&format=original",
         "leaderSkill": "\"Majin Buu Saga\" Category Ki +3 and HP, ATK & DEF +200%",
         "superAttack": "Greatly raises ATK & DEF for 1 turn[1] and causes colossal damage to enemy",
         "ultraSuperAttack": "Greatly raises ATK & DEF for 1 turn[1], causes mega-colossal damage to enemy and greatly lowers DEF[2]",
-        "passive": "Ki +7 and ATK & DEF +200%; plus an additional DEF +77% when receiving an attack and after receiving an attack, plus an additional ATK +77% within the same turn; reduces damage received by 22% for 5 turns from the character's entry turn; plus an additional DEF +77% and reduces damage received by 33% when there is another \"Final Trump Card\" Category ally on the team; randomly changes Ki Spheres of a certain Type to  Ki Spheres; plus an additional Ki +1 per Ki Sphere obtained; plus an additional ATK & DEF +100% when Ki is 12 or more; plus an additional ATK +77% and launches an additional Super Attack when Ki is 18 or more; plus an additional ATK +77% and performs a critical hit when attacking when activating the Active Skill or when Ki is 24; high chance[3] of an additional DEF +777% within the same turn when receiving a Super Attack; reduces damage received by 44% temporarily and counters with ferocious power when receiving a Ki Blast Super Attack",
+        "passive": "Ki +7 and ATK & DEF +200%; plus an additional DEF +77% when receiving an attack and after receiving an attack, plus an additional ATK +77% within the same turn; reduces damage received by 22% for 5 turns from the character's entry turn; plus an additional DEF +77% and reduces damage received by 33% when there is another \"Final Trump Card\" Category ally on the team; randomly changes Ki Spheres of a certain Type to  Ki Spheres; plus an additional Ki +1 per Ki Sphere obtained; plus an additional ATK & DEF +100% when Ki is 12 or more; plus an additional ATK +77% and launches an additional Super Attack when Ki is 18 or more; plus an additional ATK +77% and performs a critical hit when activating the Active Skill or when Ki is 24; high chance[3] of an additional DEF +777% within the same turn when receiving a Super Attack; reduces damage received by 44% temporarily and counters with ferocious power when receiving a Ki Blast Super Attack",
         "activeSkill": "Massively raises ATK temporarily[4] and causes ultimate damage to enemy; DEF +77% for 1 turn",
         "activeSkillCondition": "Can be activated after the character receives an attack 3 or more times in battle, or when there is another \"Final Trump Card\" Category ally attacking in the same turn starting from the 4th turn from the start of battle (once only)",
         "links": [
@@ -2250,7 +2256,7 @@
         "ultraSuperAttack": "Greatly raises ATK & DEF for 1 turn[3] and causes mega-colossal damage to enemy",
         "ezaUltraSuperAttack": "Greatly raises ATK & DEF[4] and causes mega-colossal damage to enemy",
         "passive": "ATK & DEF +130% and medium chance[5] of evading enemy's attack (including Super Attack); plus an additional Ki +1 per Ki Sphere obtained; plus an additional ATK +50% when performing a Super Attack; launches an additional attack that has a high chance[6] of becoming a Super Attack when Ki is 24; changes into a battle suit when conditions are met",
-        "ezaPassive": "ATK & DEF +170% and medium chance[7] of evading enemy's attack (including Super Attack); plus an additional Ki +1 per Ki Sphere obtained, plus another additional Ki +1 if it is a Rainbow Ki Sphere; plus an additional ATK & DEF +50% and chance of evading enemy's attack (including Super Attack) +20% when performing a Super Attack; plus an additional ATK +50% and launches an additional attack that has a high chance[8] of becoming a Super Attack when Ki is 18 or more; launches an additional Super Attack plus an additional chance of evading enemy's attack (including Super Attack) +20% when Ki is 24; changes into a battle suit when conditions are met",
+        "ezaPassive": "ATK & DEF +170% and medium chance[5] of evading enemy's attack (including Super Attack); plus an additional Ki +1 per Ki Sphere obtained, plus another additional Ki +1 if it is a  Ki Sphere; plus an additional ATK & DEF +50% and chance of evading enemy's attack (including Super Attack) +20% when performing a Super Attack; plus an additional ATK +50% and launches an additional attack that has a high chance[7] of becoming a Super Attack when Ki is 18 or more; launches an additional Super Attack plus an additional chance of evading enemy's attack (including Super Attack) +20% when Ki is 24; changes into a battle suit when conditions are met",
         "activeSkill": "Ki +24 for 1 turn",
         "activeSkillCondition": "Can be activated starting from the 3rd turn from the start of battle (once only)",
         "ezaActiveSkill": "Ki +24 for 1 turn",
@@ -2298,8 +2304,8 @@
                 "transformedEZASuperAttack": "Greatly raises ATK and raises DEF for 1 turn[2] and causes colossal damage to enemy",
                 "transformedUltraSuperAttack": "Greatly raises ATK & DEF for 1 turn[3] and causes mega-colossal damage to enemy",
                 "transformedEZAUltraSuperAttack": "Massively raises ATK and greatly raises DEF for 1 turn[4] and causes colossal damage to enemy",
-                "transformedPassive": "ATK & DEF +150% and medium chance[5] of evading enemy's attack (including Super Attack); plus an additional Ki +1 per Ki Sphere obtained, plus another additional Ki +1 if it is a  Ki Sphere; plus an additional ATK +58% and chance[5] of evading enemy's attack (including Super Attack) +30% when performing a Super Attack; launches an additional attack that has a great chance of becoming a Super Attack when Ki is 24",
-                "transformedEZAPassive": "ATK & DEF +200% and high chance[6] of evading enemy's attack (including Super Attack); plus an additional Ki +2 per Ki Sphere obtained, plus another additional Ki +1 if it is a Rainbow Ki Sphere; plus an additional ATK & DEF +58% and chance of evading enemy's attack (including Super Attack) +20% when performing a Super Attack; plus an additional ATK +77% and launches an additional attack that has a great chance[7] of becoming a Super Attack when Ki is 18 or more; launches an additional Super Attack and chance of performing a critical hit +30% when Ki is 24",
+                "transformedPassive": "ATK & DEF +150% and medium chance[5] of evading enemy's attack (including Super Attack); plus an additional Ki +1 per Ki Sphere obtained, plus another additional Ki +1 if it is a  Ki Sphere; plus an additional ATK +58% and chance of evading enemy's attack (including Super Attack) +30% when performing a Super Attack; launches an additional attack that has a great chance[6]  of becoming a Super Attack when Ki is 24",
+                "transformedEZAPassive": "ATK & DEF +200% and high chance[7] of evading enemy's attack (including Super Attack); plus an additional Ki +2 per Ki Sphere obtained, plus another additional Ki +1 if it is a  Ki Sphere; plus an additional ATK & DEF +58% and chance of evading enemy's attack (including Super Attack) +20% when performing a Super Attack; plus an additional ATK +77% and launches an additional attack that has a great chance[6] of becoming a Super Attack when Ki is 18 or more; launches an additional Super Attack and chance of performing a critical hit +30% when Ki is 24",
                 "transformedActiveSkill": "Ki +24 for 1 turn",
                 "transformedActiveSkillCondition": "Can be activated starting from the 3rd turn from the start of battle (once only)",
                 "transformedLinks": [
@@ -6869,7 +6875,7 @@
         "ultraSuperAttack": "Raises ATK & DEF for 1 turn[1] and causes mega-colossal damage to enemy",
         "ezaUltraSuperAttack": "Raises ATK & DEF for 3 turns[3] and causes mega-colossal damage to enemy",
         "passive": "Ki +3 and ATK +150%; plus an additional Ki +2 and DEF +150% when HP is 30% or more; plus an additional ATK & DEF +50% when attacking; if HP is 29% or less at start of character's attacking turn, revives with 70% HP recovered by exchanging with Goku when the character or an ally attacking in the same turn is KO'd (once only)",
-        "ezaPassive": "Ki +3 and ATK & DEF +180%; plus an additional Ki +4 and reduces damage received by 30% when HP is 30% or more; plus another additional Ki +4 and launches an additional attack that has a high chance[4] of becoming a Super Attack when HP is 50% or more; plus another additional Ki +4 and launches an additional attack that has a great chance[5] of becoming a Super Attack when HP is 70% or more; plus an additional ATK & DEF +150% when attacking; if HP is 50% or less at start of character's attacking turn or starting from the 5th turn from start of battle, revives with 70% HP recovered by exchanging with Goku when the character or an ally attacking in the same turn is KO'd (once only)",
+        "ezaPassive": "Ki +3 and ATK & DEF +180%; plus an additional Ki +4 and reduces damage received by 30% when HP is 30% or more; plus an additional Ki +4 and launches an additional attack that has a high chance[4] of becoming a Super Attack when HP is 50% or more; plus an additional Ki +4 and launches another additional attack that has a great chance[5] of becoming a Super Attack when HP is 70% or more; plus an additional ATK & DEF +150% when attacking; if HP is 50% or less at start of character's attacking turn, or starting from the 5th turn from the start of battle, revives with 70% HP recovered by exchanging with Goku when the character or an ally attacking in the same turn is KO'd (once only)",
         "links": [
             "Brutal Beatdown",
             "Prodigies",
@@ -6917,7 +6923,7 @@
                 "transformedUltraSuperAttack": "Greatly raises ATK & DEF for 1 turn[4] and causes mega-colossal damage to enemy",
                 "transformedEZAUltraSuperAttack": "Greatly raises ATK & DEF for 3 turns[5] and causes mega-colossal damage to enemy",
                 "transformedPassive": "Ki +3 and ATK & DEF +159%; plus an additional ATK & DEF +59% when performing a Super Attack; plus an additional Ki +3 and reduces damage received by 30% when there is an Extreme Class enemy; high chance[6] of performing a critical hit when there is a \"Planet Namek Saga\" Category enemy",
-                "transformedEZAPassive": "Ki +10 and ATK & DEF +200%; plus an additional ATK & DEF +159% when performing a Super Attack; reduces damage received by 30%; high chance[7] of performing a critical hit; plus an additional Ki +5 and ATK +59% when there is an Extreme Class enemy; plus an additional damage reduction of 30% and performs critical hit when there is another \"Planet Namek Saga\" Category ally attacking in the same turn or a \"Planet Namek Saga\" Category enemy",
+                "transformedEZAPassive": "Ki +10 and ATK & DEF +200%; plus an additional ATK & DEF +159% when performing a Super Attack; reduces damage received by 30%; high chance[6] of performing a critical hit; plus an additional Ki +5 and ATK +59% when there is an Extreme Class enemy; plus an additional damage reduction of 30% and performs a critical hit when there is another \"Planet Namek Saga\" Category ally attacking in the same turn or a \"Planet Namek Saga\" Category enemy",
                 "transformedLinks": [
                     "All in the Family",
                     "Kamehameha",
@@ -7398,7 +7404,7 @@
         "leaderSkill": "\"Universe 11\" Category Ki +4 and HP, ATK & DEF +200%;or\"Universe Survival Saga\" Category Ki +3 and HP, ATK & DEF +200%",
         "superAttack": "Raises ATK & DEF for 1 turn[1] and causes colossal damage to enemy",
         "ultraSuperAttack": "Greatly raises ATK & DEF for 1 turn[2] and causes mega-colossal damage with a high chance[3] of stunning the enemy",
-        "passive": "Ki +8 and ATK & DEF +350%; disables the attacked enemy's action once within the turn (once only) for 1 turn from the character's entry turn; reduces damage received by 50%; plus an additional ATK & DEF +50% when attacking; plus an additional ATK +100%, great chance[4] of performing a critical hit and an additional damage reduction of 11% as the 2nd or 3rd attacker in a turn",
+        "passive": "Ki +8 and ATK & DEF +350%; disables the attacked enemy's action once within the turn (once only) for 1 turn from the character's entry turn; reduces damage received by 50%; plus an additional ATK & DEF +50% when attacking; great chance[4] of performing a critical hit plus an additional ATK +100% and an additional damage reduction of 11% as the 2nd or 3rd attacker in a turn",
         "links": [
             "Supreme Warrior",
             "Shocking Speed",
@@ -8935,7 +8941,7 @@
         "type": "STR",
         "cost": 99,
         "id": "12955",
-        "imageURL": "/wiki/Super_Bosses",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/0/0e/Card_1029550_thumb_apng.png/revision/latest?cb=20241212063358&format=original",
         "leaderSkill": "\"Super Bosses\" Category Ki +3 and HP, ATK & DEF +130%",
         "superAttack": "Greatly raises DEF for 1 turn[1] and causes colossal damage to enemy",
         "ultraSuperAttack": "Greatly raises ATK & DEF for 1 turn[2] and causes mega-colossal damage to enemy; raises Extreme Class' allies DEF by 30% for 1 turn",
@@ -10747,9 +10753,9 @@
         "leaderSkill": "\"Crossover\" Category Ki +3 and HP, ATK & DEF +150%",
         "ezaLeaderSkill": "\"Crossover\" Category Ki +3 and HP, ATK & DEF +170%",
         "superAttack": "Raises ATK for 1 turn[1] and causes supreme damage with a high chance of stunning the enemy[2]",
-        "ezaSuperAttack": "Greatly raises ATK & DEF[3] for 1 turn and causes supreme damage with a high chance of stunning the enemy[4]",
-        "passive": "ATK & DEF +140%; \"Dragon Ball Heroes\" Category allies Ki +3 and ATK & DEF +40%; high chance[5] of performing a critical hit; high chance[6] of evading enemy's attack (including Super Attack); plus an additional DEF +50% within the same turn with each attack evaded (including Super Attack); plus an additional ATK & DEF +50% per \"Dragon Ball Heroes\" Category ally (self excluded) attacking in the same turn",
-        "ezaPassive": "ATK & DEF +140%; plus an additional ATK & DEF +70% when performing a Super Attack; \"Crossover\" Category allies' Ki +3 and ATK & DEF +40%, plus an additional ATK & DEF +20% for \"Dragon Ball Heroes\" allies; great chance[7] of performing a critical hit; great chance[8] of evading enemy's attack (including Super Attack); plus an additional DEF +70% within the same turn with each attack evaded (including Super Attack); all allies' chance of performing a critical hit +15% per \"Crossover\" category ally (self excluded) attacking in the same turn; plus an additional ATK & DEF +70% per \"Dragon Ball Heroes\" Category ally (self excluded) attacking in the same turn",
+        "ezaSuperAttack": "Greatly raises ATK & DEF[3] for 1 turn and causes supreme damage with a high chance of stunning the enemy[2]",
+        "passive": "ATK & DEF +140%; \"Dragon Ball Heroes\" Category allies Ki +3 and ATK & DEF +40%; high chance[4] of performing a critical hit; high chance[5] of evading enemy's attack (including Super Attack); plus an additional DEF +50% within the same turn with each attack evaded (including Super Attack); plus an additional ATK & DEF +50% per \"Dragon Ball Heroes\" Category ally (self excluded) attacking in the same turn",
+        "ezaPassive": "ATK & DEF +140%; plus an additional ATK & DEF +70% when performing a Super Attack; \"Crossover\" Category allies' Ki +3 and ATK & DEF +40%, plus an additional ATK & DEF +20% for characters who also belong to the \"Dragon Ball Heroes\" Category; great chance[6] of performing a critical hit; great chance[7] of evading enemy's attack (including Super Attack); plus an additional DEF +70% within the same turn with each attack evaded (including Super Attack); plus an additional ATK & DEF +70% and all allies' chance of performing a critical hit +15% per \"Crossover\" Category ally (self excluded) attacking in the same turn",
         "links": [
             "The Innocents",
             "All in the Family",
@@ -10801,7 +10807,7 @@
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/3/33/Card_1029160_thumb.png/revision/latest?cb=20240730084014",
         "leaderSkill": "\"DB Saga\" Category Ki +3 and HP, ATK & DEF +130%",
         "superAttack": "Raises ATK & DEF by 86% for 1 turn, causes supreme damage to enemy and seals Super Attack",
-        "passive": "ATK & DEF +150%; plus an additional ATK & DEF +186% when performing a Super Attack; high chance[1] of evading enemy's attack (including Super Attack); launches an additional attack that has a high chance[2] of becoming a Super Attack; \"DB Saga\", \"Earth-Bred Fighters\" or \"Peppy Gals\" Category allies' Ki +1 and ATK & DEF +50%; randomly changes 1 Ki Sphere of a certain type to  Ki Spheres when there are another 2 or more \"Earth-Bred Fighters\" Category ally on the team; chance of evading enemy's attack (including Super Attack) +10% before the character receives an attack; chance of evading enemy's attack (including Super Attack) +5% with attack evaded (up to 20%)",
+        "passive": "ATK & DEF +150%; plus an additional ATK & DEF +186% when performing a Super Attack; high chance[1] of evading enemy's attack (including Super Attack); launches an additional attack that has a high chance[2] of becoming a Super Attack; \"DB Saga\", \"Earth-Bred Fighters\" or \"Peppy Gals\" Category allies' Ki +1 and ATK & DEF +50%; randomly changes Ki Spheres of a certain Type to  Ki Spheres when there are another 2 or more \"Earth-Bred Fighters\" Category allies on the team; plus an additional chance of evading enemy's attack (including Super Attack) +10% within the same turn before the character receives an attack; plus an additional chance of evading enemy's attack (including Super Attack) +5% (up to 20%) with each attack evaded (including Super Attack)",
         "links": [
             "Brainiacs",
             "Money Money Money",
@@ -12319,8 +12325,11 @@
         "id": "12794",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/1/14/Card_1027940_thumb.png/revision/latest?cb=20231025034400",
         "leaderSkill": "All Types Ki +3 and HP, ATK & DEF +40%",
+        "ezaLeaderSkill": "All Types Ki +3 and HP, ATK & DEF +70%",
         "superAttack": "Raises DEF for 1 turn[1], causes supreme damage to enemy and seals Super Attack",
-        "passive": "ATK & DEF +560%; ATK & DEF -60% (no more than -300%) and chance of evading enemy's attack (including Super Attack) +10% (up to 50%) with each turn passed; when there is another \"Earthlings\" Category ally attacking in the same turn, Ki +2, medium chance[2] of launching an additional Super Attack and, starting from the 5th turn from start of turn, launches an additional Super Attack; recovers HP with candy[3]",
+        "ezaSuperAttack": "Raises ATK & DEF for 1 turn[2], causes supreme damage to enemy and seals Super Attack",
+        "passive": "ATK & DEF +560%; ATK & DEF -60% (no more than -300%) and chance of evading enemy's attack (including Super Attack) +10% (up to 50%) with each turn passed; when there is another \"Earthlings\" Category ally attacking in the same turn, Ki +2, medium chance[3] of launching an additional Super Attack and, starting from the 5th turn from start of turn, launches an additional Super Attack; recovers HP with candy[4]",
+        "ezaPassive": "Ki +1 and ATK & DEF +560%; ATK & DEF -40% (no more than -200%) and chance of evading enemy's attack (including Super Attack) +15% (up to 75%) with each turn passed; when there is another \"Earthlings\" Category ally attacking in the same turn, plus an additional Ki +2, launches 2 additional attacks, each of which has a medium chance[5] of becoming a Super Attack, and, starting from the 5th turn from the character's entry turn, launches an additional Super Attack; plus an additional ATK +15% (up to 75%) with each Super Attack performed; plus an additional DEF +15% (up to 75%) with each attack evaded (including Super Attack); recovers HP with sweet treats[6]",
         "links": [
             "Flee",
             "More Than Meets the Eye",
@@ -13027,6 +13036,64 @@
         "freeDupeDefence": 5772,
         "rainbowDefence": 7332,
         "kiMultiplier": "12 Ki Multiplier is 135%; ",
+        "transformations": []
+    },
+    {
+        "name": "Super Saiyan Goku (Mini) (DAIMA)",
+        "title": "Battle for the Dragon Balls in the Demon Realm",
+        "maxLevel": 120,
+        "maxSALevel": 10,
+        "rarity": "UR",
+        "class": "Super",
+        "type": "INT",
+        "cost": 58,
+        "id": "13066",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/c/cb/Card_1030660_thumb.png/revision/latest?cb=20241226182218",
+        "leaderSkill": "\"Transformation Boost\" or \"Dragon Ball Seekers\" Category Ki +3 and HP, ATK & DEF +170%,plus an additional HP, ATK & DEF +30% for characters who also belong to the \"Pure Saiyans\" or \"Accelerated Battle\" Category",
+        "superAttack": "Greatly raises ATK & DEF for 3 turns[1] and causes immense damage to enemy; raises allies' ATK by 41% for 2 turns (self excluded)",
+        "passive": "Activates the Entrance Animation upon the character's entry (once only) and reduces damage received by 20% and chance of evading enemy's attack (including Super Attack) +20% for 1 turn from the character's entry turn; Ki +3 and ATK & DEF +200%; reduces damage received by 30%; high chance[2] of evading enemy's attack (including Super Attack); plus an additional DEF +100% and chance of evading enemy's attack (including Super Attack) +20% as the 1st or 2nd attacker in a turn; plus an additional ATK +100% and launches an additional attack that has a high chance[3] of becoming a Super Attack as the 2nd attacker in a turn; plus an additional DEF +200% when receiving an attack; plus an additional ATK +50% (up to 200%) with each attack received or evaded (including Super Attack); starting from the character's next attacking turn after the character evades the 5th attack in battle, or starting from the 6th turn from the character's entry turn, plus an additional ATK +159% and attacks effective against all Types",
+        "activeSkill": "Massively raises ATK temporarily[4] and causes ultimate damage to enemy",
+        "activeSkillCondition": "Can be activated after the character evades 5 or more enemy attacks (including Super Attacks) in battle, or starting from the 6th turn from the character's entry turn (once only)",
+        "links": [
+            "Golden Warrior",
+            "Saiyan Warrior Race",
+            "Super Saiyan",
+            "Kamehameha",
+            "All in the Family",
+            "Prepared for Battle",
+            "Fierce Battle"
+        ],
+        "categories": [
+            "Pure Saiyans",
+            "Transformation Boost",
+            "Dragon Ball Seekers",
+            "Time Travelers",
+            "Goku's Family",
+            "Super Saiyans",
+            "Kamehameha",
+            "Super Saiyan 2",
+            "Turtle School",
+            "Accelerated Battle",
+            "Power Beyond Super Saiyan",
+            "Bond of Parent and Child",
+            "Earth-Bred Fighters"
+        ],
+        "kiMeter": [
+            "KiMeter 2 Green"
+        ],
+        "baseHP": 4272,
+        "maxLevelHP": 14100,
+        "freeDupeHP": 16100,
+        "rainbowHP": 19100,
+        "baseAttack": 3515,
+        "maxLevelAttack": 11600,
+        "freeDupeAttack": 13600,
+        "rainbowAttack": 16600,
+        "baseDefence": 1916,
+        "maxDefence": 6325,
+        "freeDupeDefence": 8325,
+        "rainbowDefence": 11325,
+        "kiMultiplier": "12 Ki Multiplier is 150%; ",
         "transformations": []
     },
     {
@@ -15940,7 +16007,7 @@
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/2/20/Card_1030210_thumb.png/revision/latest?cb=20241021175534",
         "leaderSkill": "\"Bond of Friendship\" Category Ki +3 and HP, ATK & DEF +50%",
         "superAttack": "Greatly raises ATK & DEF for 1 turn[1], causes supreme damage to enemy and greatly lowers DEF[2]",
-        "passive": "Ki +1 and ATK & DEF +200%, great chance[3] of an additional Ki +1 and ATK +200%; plus an additional ATK & DEF +150% when performing a Super Attack; launches an additional attack that has a great chance[4] of becoming a Super Attack; DEF +35% for all allies for 2 turns, plus an additional Ki +2 and reduces damage received by 35% when there is another \"Bond of Friendship\" Category ally attacking in the same turn; recovers 7% HP and medium chance[5] of recovering an additional 7% HP at start of turn; recovers HP with candy[6]",
+        "passive": "Ki +1 and ATK & DEF +200%, great chance[3] of an additional Ki +1 and ATK +200%; plus an additional ATK & DEF +150% when performing a Super Attack; launches an additional attack that has a great chance[4] of becoming a Super Attack; DEF +35% for all allies for 2 turns, plus an additional Ki +2 and reduces damage received by 35% when there is another \"Bond of Friendship\" Category ally attacking in the same turn; recovers 7% HP and high chance[5] of recovering an additional 7% HP at start of turn; recovers HP with sweet treats[6]",
         "links": [
             "Kamehameha",
             "The Innocents",
@@ -16264,7 +16331,7 @@
         "type": "STR",
         "cost": 32,
         "id": "12929",
-        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/0/00/Card_1029290_thumb.png/revision/latest?cb=20240627171406",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/0/00/Card_1029290_thumb.png/revision/latest?cb=20241228214722",
         "leaderSkill": "\"Universe 6\" Category Ki +3 and HP, ATK & DEF +66%",
         "superAttack": "Greatly raises ATK for 1 turn[1], causes supreme damage to enemy and greatly lowers DEF[2]",
         "passive": "Ki +3; great chance[3] of ATK +300%; high chance[4] of an additional ATK +400%; medium chance[5] of an additional ATK +500%; rare chance[6] of an additional ATK +600%; DEF +50% per Ki Sphere obtained; plus an additional ATK & DEF +200% when attacking with 3 or more Ki Spheres obtained",
@@ -16641,7 +16708,7 @@
         "superAttack": "Greatly raises ATK & DEF[1], causes supreme damage to enemy and lowers ATK[2]",
         "ezaSuperAttack": "Greatly raises ATK & DEF[3], causes supreme damage to enemy and greatly lowers ATK[4]",
         "passive": "ATK & DEF +120%; plus an additional ATK +100% when there is another \"Vegeta's Family\" Category ally on the team; \"Vegeta's Family\" Category allies' Ki +2 and ATK & DEF +40%",
-        "ezaPassive": "ATK & DEF +150%; guards all attacks and launches an additional Super Attack for 1 turn from the character's entry turn; plus an additional ATK & DEF +150% when there is another \"Vegeta's Family\" or \"Dragon Ball Heroes\" Category ally on the team; \"Vegeta's Family\" Category allies' Ki +3 and ATK & DEF +50%; plus an additional ATK +77% when performing a Super Attack and launches an additional attack that has a high chance of becoming a Super Attack if there is another \"Dragon Ball Heroes\" Category ally attacking in the same turn when attacking or an Extreme Class enemy when attacking",
+        "ezaPassive": "ATK & DEF +150%; guards all attacks and launches an additional Super Attack for 1 turn from the character's entry turn; plus an additional ATK & DEF +150% when there is another \"Vegeta's Family\" or \"Dragon Ball Heroes\" Category ally on the team; \"Vegeta's Family\" Category allies' Ki +3 and ATK & DEF +50%; plus an additional ATK +77% when performing a Super Attack and launches an additional attack that has a high chance[5] of becoming a Super Attack if there is another \"Dragon Ball Heroes\" Category ally attacking in the same turn when attacking or an Extreme Class enemy when attacking",
         "links": [
             "Super Saiyan",
             "Royal Lineage",
@@ -18534,7 +18601,8 @@
             "Revenge",
             "Heavenly Events",
             "Entrusted Will",
-            "Power of Wishes"
+            "Power of Wishes",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green"
@@ -19638,7 +19706,7 @@
         "ezaSuperAttack": "Causes immense damage to enemy and greatly lowers DEF[2]",
         "passive": "ATK +60% at start of turn; Rages when conditions are met",
         "ezaPassive": "ATK & DEF +80% at start of turn; plus an additional ATK +40% for 4 turns after receiving attack; Rages when conditions are met",
-        "superEzaPassive": "Ki +3 and ATK & DEF +160%; plus an additional ATK & DEF +160% and high chance[3] of performing a critical hit when performing a Super Attack; DEF +160% and guards all attacks when there is a \"Movie Bosses\", \"Realm of Gods\" or \"Exploding Rage\" Category ally attacking in the same turn; ATK & DEF +40% (up to 160%) with each attack received; reduces damage received by 30% when HP is 30% or above, plus an additional damage reduction of 30% when HP is 60% or above; great chance[4] of launching an additional Super Attack when HP is 60% or less; Super Class allies' Ki +2 and ATK +30%; Extreme Class allies' Ki +2 and DEF +30%; Rages when conditions are met",
+        "superEzaPassive": "Ki +3 and ATK & DEF +160%; plus an additional ATK & DEF +160% and high chance[3] of performing a critical hit when performing a Super Attack; plus an additional DEF +160% and guards all attacks when there is another \"Movie Bosses\", \"Realm of Gods\" or \"Exploding Rage\" Category ally attacking in the same turn; plus an additional ATK & DEF +40% with each attack received (up to 160%); reduces damage received by 30% when HP is 30% or more, plus an additional damage reduction of 30% when HP is 60% or more; great chance[4] of launching an additional Super Attack when HP is 60% or less; Super Class allies' Ki +2 and ATK +30%; Extreme Class allies' Ki +2 and DEF +30%; rages when conditions are met",
         "links": [
             "Godly Power",
             "Prodigies",
@@ -20047,7 +20115,7 @@
         "superAttack": "Raises ATK & DEF for 1 turn[1], causes immense damage to enemy and seals Super Attack",
         "ezaSuperAttack": "Greatly raises ATK & DEF for 1 turn[2], causes immense damage to enemy and seals Super Attack",
         "passive": "ATK & DEF +30% per \"Dragon Ball Heroes\" Category ally on the team; plus an additional ATK & DEF +100% and high chance[3] of performing a critical hit when performing a Super Attack; randomly changes Ki Spheres of a certain Type to  Ki Spheres when all allies attacking in the same turn are \"Dragon Ball Heroes\" Category characters",
-        "ezaPassive": "Ki +1 and ATK & DEF +50% per \"Dragon Ball Heroes\" or \"Time Travelers\" Category ally on the team (depending on which category has more members); plus an additional ATK & DEF +100% and great chance[4] of performing a critical hit when performing a Super Attack; randomly changes Ki Spheres of a certain Type to  Ki Spheres, plus an additional DEF +50% when performing a Super Attack when all allies attacking in the same turn are \"Dragon Ball Heroes\" or \"Time Travelers\"Category characters; launches 2 additional attacks, each of which has a high chance of becoming a Super Attack when all allies on the team are \"Dragon Ball Heroes\" or \"Time Travelers\" Category allies",
+        "ezaPassive": "Ki +1 and ATK & DEF +50% per \"Dragon Ball Heroes\" or \"Time Travelers\" Category ally on the team (depending on which Category has more members); plus an additional ATK & DEF +100% and great chance[4] of performing a critical hit when performing a Super Attack; plus an additional DEF +50% when performing a Super Attack and randomly changes Ki Spheres of a certain Type to  Ki Spheres if all allies attacking in the same turn are \"Dragon Ball Heroes\" or \"Time Travelers\" Category characters; launches 2 additional attacks, each of which has a high chance of becoming a Super Attack, if all allies are \"Dragon Ball Heroes\" or \"Time Travelers\" Category characters",
         "links": [
             "Warrior Gods",
             "Super Saiyan",
@@ -20782,7 +20850,7 @@
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/5/52/Card_1029750_thumb.png/revision/latest?cb=20241029142805",
         "leaderSkill": "\"Demonic Power\" or \"Joined Forces\" Category Ki +3 and HP, ATK & DEF +130%",
         "superAttack": "Raises DEF for 1 turn[1], causes supreme damage to enemy and seals Super Attack; recovers 6% HP",
-        "passive": "Ki +2 and ATK & DEF +150%; high chance[2] of evading enemy's attack (including Super Attack); launches an additional attack that has a high chance[3] of becoming a Super Attack; Extreme Class allies' Ki +1 and DEF +30%, plus an additional Ki +1 and ATK & DEF +30% for characters who also belong to the \"Demonic Power\" Category; plus an additional ATK & DEF +40% (up to 200%) and chance of evading enemy's attack (including Super Attack) +4% (up to 20%) with each attack performed; launches an additional attack that has a great chance[4] of becoming a Super Attack starting from the turn in which the character performs the 3rd Super Attack in battle; launches an additional attack that has a high chance[2] of becoming a Super Attack starting from the turn in which the character performs the 6th Super Attack in battle; launches an additional Super Attack if the target enemy is stunned or the target enemy's Super Attack is sealed, or if there is an \"Earth-Bred Fighters\" Category enemy when attacking",
+        "passive": "Ki +2 and ATK & DEF +150%; high chance[2]  of evading enemy's attack (including Super Attack); launches an additional attack that has a high chance[3] of becoming a Super Attack; Extreme Class allies' Ki +1 and DEF +30%, plus an additional Ki +1 and ATK & DEF +30% for characters who also belong to the \"Demonic Power\" Category; plus an additional ATK & DEF +40% (up to 200%) and chance of evading enemy's attack (including Super Attack) +4% (up to 20%) with each attack performed; launches an additional attack that has a great chance[4] of becoming a Super Attack starting from the turn in which the character performs the 3rd Super Attack in battle; launches an additional attack that has a high chance[3] of becoming a Super Attack starting from the turn in which the character performs the 6th Super Attack in battle; launches an additional Super Attack if the target enemy is stunned or the target enemy's Super Attack is sealed, or if there is an \"Earth-Bred Fighters\" Category enemy when attacking",
         "links": [
             "Thirst for Conquest",
             "Demonic Ways",
@@ -21342,7 +21410,7 @@
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/8/8b/Card_1030140_thumb.png/revision/latest?cb=20241115194701",
         "leaderSkill": "\"Super Saiyans\" Category Ki +3 and HP, ATK & DEF +130%",
         "superAttack": "Greatly raises ATK & DEF for 1 turn[1], causes supreme damage to enemy and greatly lowers ATK & DEF[2]",
-        "passive": "Ki +2 and ATK & DEF +150%; medium chance[3] of performing a critical hit; plus an additional ATK & DEF +100% when attacking, plus an additional ATK +150% and chance of performing a critical hit +30% when attacking if the target enemy's HP is 70% or less, plus an additional ATK +150% and chance of performing a critical hit +30% when attacking if the target enemy's HP is 40% or less; plus an additional ATK +50% and launches an additional Super Attack when the target enemy is in \"ATK Down\" status, in \"DEF Down\" status, stunned or the target enemy's Super Attack is sealed; reduces damage received by 40%, plus an additional damage reduction of 15% within the same turn before attack an enemy whose HP is 70% or less, plus an additional damage reduction of 15% within the same turn before attacking an enemy whose HP is 40% or less; plus an additional ATK & DEF +100% and launches an additional Super Attack for the rest of battle after delivering a final blow",
+        "passive": "Ki +2 and ATK & DEF +150%; medium chance[3] of performing a critical hit; plus an additional ATK & DEF +100% when attacking, plus an additional ATK +150% and chance of performing a critical hit +30% when attacking if the target enemy's HP is 70% or less, plus an additional ATK +150% and chance of performing a critical hit +30% when attacking if the target enemy's HP is 40% or less; plus an additional ATK +50% and launches an additional Super Attack when the target enemy is in \"ATK Down\" status, in \"DEF Down\" status, stunned or the target enemy's Super Attack is sealed; reduces damage received by 40%, plus an additional damage reduction of 15% within the same turn before attacking an enemy whose HP is 70% or less, plus an additional damage reduction of 15% within the same turn before attacking an enemy whose HP is 40% or less; plus an additional ATK & DEF +100% and launches an additional Super Attack for the rest of battle after delivering a final blow",
         "links": [
             "Saiyan Warrior Race",
             "Super Saiyan",
@@ -21353,11 +21421,11 @@
             "Fierce Battle"
         ],
         "categories": [
-            "Super Saiyans",
             "Pure Saiyans",
             "Dragon Ball Seekers",
             "Time Travelers",
             "Goku's Family",
+            "Super Saiyans",
             "Dragon Ball Heroes",
             "Crossover",
             "Bond of Parent and Child"
@@ -23692,7 +23760,7 @@
         "superAttack": "Greatly raises ATK & DEF[1] and causes supreme damage with a high chance of stunning the enemy[2]",
         "ezaSuperAttack": "Greatly raises ATK & DEF[3] and causes supreme damage with a great chance of stunning the enemy[4]",
         "passive": "ATK & DEF +120%; plus an additional ATK +100% when there is another \"Goku's Family\" Category ally on the team; \"Goku's Family\" Category allies' Ki +2 and ATK & DEF +40%",
-        "ezaPassive": "ATK & DEF +150%; reduces damage received by 50% and launches an additional Super Attack for 1 turn from the character's entry turn; plus an additional ATK & DEF +150% when there is another \"Goku's Family\" or \"Dragon Ball Heroes\" Category ally on the team; \"Goku's Family\" Category allies' Ki +3 and ATK & DEF +50%; plus an additional ATK +77% when performing a Super Attack and launches an additional attack that has a high chance of becoming a Super Attack if there is another \"Dragon Ball Heroes\" Category ally attacking in the same turn when attacking or an Extreme Class enemy when attacking",
+        "ezaPassive": "ATK & DEF +150%; reduces damage received by 50% and launches an additional Super Attack for 1 turn from the character's entry turn; plus an additional ATK & DEF +150% when there is another \"Goku's Family\" or \"Dragon Ball Heroes\" Category ally on the team; \"Goku's Family\" Category allies' Ki +3 and ATK & DEF +50%; plus an additional ATK +77% when performing a Super Attack and launches an additional attack that has a high chance[5] of becoming a Super Attack if there is another \"Dragon Ball Heroes\" Category ally attacking in the same turn when attacking or an Extreme Class enemy when attacking",
         "links": [
             "Super Saiyan",
             "The Saiyan Lineage",
@@ -26496,6 +26564,78 @@
         "transformations": []
     },
     {
+        "name": "Frieza (Final Form)/Cooler (Final Form)",
+        "title": "Glorious Clan",
+        "maxLevel": 120,
+        "maxSALevel": 10,
+        "rarity": "UR",
+        "class": "Extreme",
+        "type": "PHY",
+        "cost": 32,
+        "id": "12985",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/c/c8/Card_1029850_thumb.png/revision/latest?cb=20241219145328",
+        "leaderSkill": "\"Wicked Bloodline\" Category Ki +3 and HP, ATK & DEF +50%",
+        "superAttack": "Greatly raises ATK[1], greatly raises DEF for 1 turn[2] and causes supreme damage to enemy",
+        "passive": "Ki +2 and ATK & DEF +150%; plus an additional ATK +25% with each turn passed (up to 100%); reduces damage received by 20% when HP is 50% or more; plus an additional ATK +50% and medium chance[3] of performing a critical hit when HP is 80% or less; plus an additional ATK & DEF +150% when performing a Super Attack and if there is another \"Wicked Bloodline\" Category ally, attacking in the same turn, plus an additional ATK & DEF +100% and reduces damage received by 20%; plus an additional Ki +2 and chance of performing a critical hit +50% when all allies attacking in the same turn are Extreme Class",
+        "activeSkill": "Exchanges with another character; can be activated starting from the 5th turn from the character's entry turn, or when HP is 50% or less (once only)",
+        "links": [
+            "Big Bad Bosses",
+            "Universe's Most Malevolent",
+            "Strongest Clan in Space",
+            "Nightmare",
+            "Thirst for Conquest",
+            "Shocking Speed",
+            "Shattering the Limit"
+        ],
+        "categories": [
+            "Transformation Boost",
+            "Wicked Bloodline",
+            "Time Travelers",
+            "Terrifying Conquerors",
+            "Inhuman Deeds",
+            "Space-Traveling Warriors",
+            "Gifted Warriors",
+            "Planetary Destruction",
+            "Sworn Enemies"
+        ],
+        "kiMeter": [
+            "KiMeter 3 Green"
+        ],
+        "baseHP": 2286,
+        "maxLevelHP": 7546,
+        "freeDupeHP": 8746,
+        "rainbowHP": 10786,
+        "baseAttack": 2416,
+        "maxLevelAttack": 7975,
+        "freeDupeAttack": 9175,
+        "rainbowAttack": 10975,
+        "baseDefence": 1231,
+        "maxDefence": 4064,
+        "freeDupeDefence": 5264,
+        "rainbowDefence": 6824,
+        "kiMultiplier": "12 Ki Multiplier is 140%; ",
+        "transformations": [
+            {
+                "transformedName": "Cooler (Final Form)",
+                "transformedID": "42986",
+                "transformedClass": "Extreme",
+                "transformedType": "PHY",
+                "transformedSuperAttack": "Raises ATK & DEF for 4 turns[1] and causes supreme damage to enemy",
+                "transformedPassive": "Ki +2 and ATK & DEF +150%; reduces damage received by 20% and for 1 turn from the character's entry turn, plus an additional damage reduction of 20%; launches 2 additional attacks, each of which has a medium chance[2] of becoming a Super Attack; plus an additional ATK & DEF +200% when performing a Super Attack; plus an additional ATK & DEF +30% and an additional damage reduction of 10% within the same turn with each Super Attack performed; launches an additional Super Attack every time the character performs a Super Attack 3 or more times in battle (up to once within a turn)",
+                "transformedLinks": [
+                    "Big Bad Bosses",
+                    "Universe's Most Malevolent",
+                    "Strongest Clan in Space",
+                    "Nightmare",
+                    "Thirst for Conquest",
+                    "Shocking Speed",
+                    "Shattering the Limit"
+                ],
+                "transformedImageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/e/e8/Card_4029860_thumb.png/revision/latest?cb=20241219145401"
+            }
+        ]
+    },
+    {
         "name": "Hercule",
         "title": "Glorious Strike",
         "maxLevel": 140,
@@ -28712,7 +28852,7 @@
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/3/3a/Card_1029180_thumb.png/revision/latest?cb=20241024131455",
         "leaderSkill": "\"Peppy Gals\" Category or  Type Ki +3 and HP, ATK & DEF +120%",
         "superAttack": "Greatly raises ATK & DEF for 1 turn[1] and causes supreme damage to enemy",
-        "passive": "ATK & DEF +150%; plus an additional ATK & DEF +150% when attacking; high chance[2] of performing a critical hit; reduces damage received by 11%; reduces damage received by an additional 11% and launches an additional Super Attack when there is another \"Peppy Gals\" or \"Universe 11\" Category ally attacking in the same turn; reduces damage received by an additional 11%, foresees Super Attack and plus an additional ATK +300% when attacking when there are another 3 or more \"Peppy Gals\" or \"Universe 11\" allies on the team or when there is an  Type enemy",
+        "passive": "ATK & DEF +150%; plus an additional ATK & DEF +150% when attacking; high chance[2] of performing a critical hit; reduces damage received by 11%; plus an additional damage reduction of 11% and launches an additional Super Attack when there is another \"Peppy Gals\" or \"Universe 11\" Category ally attacking in the same turn; foresees enemy's Super Attack within the character's attacking turn, plus an additional ATK +300% when attacking and an additional damage reduction of 11% if there are another 3 or more \"Peppy Gals\" or \"Universe 11\" Category allies on the team, or if there is a  Type enemy",
         "links": [
             "Supreme Warrior",
             "Signature Pose",
@@ -29504,7 +29644,7 @@
         "superAttack": "Raises ATK[1], causes supreme damage to enemy and lowers ATK & DEF[2]",
         "ezaSuperAttack": "Greatly raises ATK[3], greatly raises DEF for 1 turn[4], causes supreme damage to enemy and lowers ATK & DEF[5]",
         "passive": "ATK & DEF +150%; plus an additional ATK & DEF +80% when performing a Super Attack; plus an additional ATK & DEF +20% per Ki Sphere obtained; plus an additional ATK & DEF +80% with 2 or more  Ki Spheres obtained; plus an additional ATK +80% with 2 or more  or  Ki Spheres obtained; plus an additional DEF +80% with 2 or more  or  Ki Spheres obtained; recovers 8% HP per  Ki Sphere obtained",
-        "ezaPassive": "ATK & DEF +200%; plus an additional ATK & DEF +100% when performing a Super Attack; randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres; plus an additional ATK & DEF +25% per Ki Sphere obtained; plus an additional ATK & DEF +100% with 2 or more  Ki Spheres obtained; plus an additional ATK +100% with 2 or more  or  Ki Spheres obtained; plus an additional DEF +100% with 2 or more  or  Ki Spheres obtained; recovers 10% HP and reduces damage received by 10% per  Ki Sphere obtained; launches an additional Super Attack with 2 or more  Ki Spheres obtained",
+        "ezaPassive": "Ki +1 and ATK & DEF +200%; plus an additional ATK & DEF +100% when performing a Super Attack; randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres; plus an additional ATK & DEF +25% per Ki Sphere obtained; plus an additional ATK & DEF +100% with 2 or more  Ki Spheres obtained; plus an additional ATK +100% with 2 or more  or  Ki Spheres obtained; plus an additional DEF +100% with 2 or more  or  Ki Spheres obtained; recovers 10% HP and reduces damage received by 10% per  Ki Sphere obtained; launches an additional Super Attack with 2 or more  Ki Spheres obtained",
         "links": [
             "Fear and Faith",
             "Brainiacs",
@@ -31604,7 +31744,8 @@
             "All-Out Struggle",
             "Entrusted Will",
             "Fused Fighters",
-            "Tournament Participants"
+            "Tournament Participants",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green"
@@ -31872,10 +32013,10 @@
             "Shattering the Limit"
         ],
         "categories": [
-            "Crossover",
             "Peppy Gals",
             "Time Travelers",
             "Dragon Ball Heroes",
+            "Crossover",
             "Tournament Participants"
         ],
         "kiMeter": [
@@ -33589,7 +33730,7 @@
         "type": "PHY",
         "cost": 32,
         "id": "12912",
-        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/4/49/Card_1029120_thumb.png/revision/latest?cb=20240627152658",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/4/49/Card_1029120_thumb.png/revision/latest?cb=20241226185900",
         "leaderSkill": " Type Ki +3 and HP, ATK & DEF +50%",
         "superAttack": "Raises DEF for 1 turn[1] and causes supreme damage with a medium chance[2] of stunning the enemy",
         "passive": "ATK & DEF +166%; changes  Ki Spheres to  Ki Spheres; launches an additional attack that has a 66% chance of becoming a Super Attack within the same turn with a  Ki Sphere obtained; high chance[3] of evading enemy's attack (including Super Attack); plus an additional ATK & DEF +166% and chance of evading enemy's attack (including Super Attack) +16% when Ki is 12; plus an additional ATK & DEF +66% within the same turn with each attack performed; plus an additional chance of evading enemy's attack (including Super Attack) +6% within the same turn with each Super Attack performed; counters with enormous power after evading an attack; medium chance[4] of stunning the attacked enemy",
@@ -33701,7 +33842,7 @@
         "superAttack": "Raises ATK & DEF for 1 turn[1] and causes immense damage to enemy",
         "ezaSuperAttack": "Greatly raises ATK & DEF for 1 turn[2] and causes immense damage to enemy",
         "passive": "ATK & DEF +100%; \"Space-Traveling Warriors\" Category allies' Ki +2 and ATK & DEF +30% when facing 1 or more enemies, plus an additional ATK & DEF +10% when facing 2 or more enemies, plus an additional ATK & DEF +10% when facing 3 or more enemies",
-        "ezaPassive": "ATK & DEF +150%; Extreme Class allies' ATK & DEF +30%; \"Space-Traveling Warriors\" or \"Inhuman Deeds\" Category allies' Ki +2 and ATK & DEF +30% when facing 1 or more enemies, plus an additional ATK & DEF +15% when facing 2 or more enemies, plus an additional ATK & DEF +15% when facing 3 or more enemies; plus an additional ATK & DEF +30% (up to 120%) when attacking per \"Space-Traveling Warriors\" or \"Inhuman Deeds\" ally (self excluded) on the team (depending on which Category has more members); guards all attack when there are 5 or more \"Space-Traveling Warriors\" or \"Inhuman Deeds\" Category ally on the team",
+        "ezaPassive": "ATK & DEF +150%; Extreme Class allies' ATK & DEF +30%; \"Space-Traveling Warriors\" or \"Inhuman Deeds\" Category allies' Ki +2 and ATK & DEF +30% when facing 1 or more enemies, plus an additional ATK & DEF +15% when facing 2 or more enemies, plus an additional ATK & DEF +15% when facing 3 or more enemies; plus an additional ATK & DEF +30% (up to 120%) when attacking per \"Space-Traveling Warriors\" or \"Inhuman Deeds\" Category ally (self excluded) on the team (depending on which Category has more members); guards all attacks when there are 5 or more \"Space-Traveling Warriors\" or \"Inhuman Deeds\" Category allies on the team",
         "activeSkill": "Transforms; Can be activated when facing only 1 enemy, starting from the 4th turn from the start of battle (once only)",
         "ezaActiveSkill": "",
         "transformationCondition": "Transforms; Can be activated when facing only 1 enemy, starting from the 4th turn from the start of battle (once only)",
@@ -33752,7 +33893,7 @@
                 "transformedSuperAttack": "Raises ATK[1] and causes immense damage to enemy",
                 "transformedEZASuperAttack": "Greatly raises ATK[2], greatly raises DEF for 1 turn[3] and causes immense damage to enemy",
                 "transformedPassive": "Ki +3 and ATK & DEF +180%; launches an additional attack that has a medium chance[4] of becoming a Super Attack; ATK +30% and DEF +15% when attacking with 3 or more Ki Spheres obtained, plus an additional ATK +30% and DEF +15% when attacking with 6 or more Ki Spheres obtained",
-                "transformedEZAPassive": "ATK & DEF +240% and guards all attacks; launches an additional attack that has a high chance[5] of becoming a Super Attack; randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres; plus an additional ATK & DEF +120% when attacking; ATK +60% and DEF +30% when attacking with 3 or more Ki Spheres obtained, plus an additional ATK +60% and launches an additional attack that has a high chance[6] of becoming a Super Attack when attacking with 6 or more Ki Spheres obtained",
+                "transformedEZAPassive": "Ki +3, ATK & DEF +240% and guards all attacks; launches an additional attack that has a high chance[5] of becoming a Super Attack; randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres; plus an additional ATK & DEF +120% when attacking; ATK +60% and DEF +30% when attacking with 3 or more Ki Spheres obtained, plus an additional ATK +60% and launches another additional attack that has a high chance[5] of becoming a Super Attack when attacking with 6 or more Ki Spheres obtained",
                 "transformedLinks": [
                     "The Hera Clan",
                     "Galactic Warriors",
@@ -34446,11 +34587,11 @@
         "cost": 58,
         "id": "12914",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/8/87/Card_1029140_thumb.png/revision/latest?cb=20241023140945",
-        "leaderSkill": "\"Peppy Gals\" Category allies Ki +3 and HP, ATK & DEF +200%;or\"Turtle School\" or \"DB Saga\" Category Ki +3 and HP, ATK & DEF +170% (\"Peppy Gals\" Category characters excluded),plus an additional HP, ATK & DEF +30% for characters who also belong to the \"Bond of Master and Disciple\" or \"Kamehameha\" Category",
+        "leaderSkill": "\"Peppy Gals\" Category allies Ki +3 and HP, ATK & DEF +200%;\"Turtle School\" or \"DB Saga\" Category Ki +3 and HP, ATK & DEF +170% (\"Peppy Gals\" Category characters excluded),plus an additional HP, ATK & DEF +30% for characters who also belong to the \"Bond of Master and Disciple\" or \"Kamehameha\" Category",
         "superAttack": "Raises ATK & DEF for 1 turn[1] and causes immense damage to enemy",
-        "passive": "Activates the Entrance Animation upon the character's entry (once only) and reduces damage received by 30% for 7 turns from the character's entry turn; ATK & DEF +150%; Ki +3, reduces damage received by 20%, plus an additional ATK & DEF +150% when performing a Super Attack and launches an additional Super Attack when there another 2 or more \"Turtle School\" Category allies in the team; plus an additional ATK & DEF +82% per \"Peppy Gals\" Category ally attacking in the same turn; plus an additional ATK +82% and high chance[2] of performing a critical hit when there is an ally whose name includes \"Bulma\" attacking in the same turn; \"Turtle School\" or \"Peppy Gals\" Category allies' Ki +2 and ATK & DEF +50% (self excluded)",
-        "activeSkill": "Recovers 50% HP and all allies' Ki +3 and ATK & DEF +30% for 1 turn",
-        "activeSkillCondition": "Can be activated starting from the 3rd turn from start of battle when HP is 70% or less or can be activated starting from the 5th turn from start of battle (once only)",
+        "passive": "Activates the Entrance Animation upon the character's entry (once only) and reduces damage received by 30% for 7 turns from the character's entry turn; ATK & DEF +150%; plus an additional ATK & DEF +150% and launches an additional Super Attack when performing a Super Attack, Ki +3 and reduces damage received by 20% if there are another 2 or more \"Turtle School\" Category allies on the team; plus an additional ATK & DEF +82% per \"Peppy Gals\" Category ally attacking in the same turn; plus an additional ATK +82% and high chance[2] of performing a critical hit when there is an ally whose name includes \"Bulma\" attacking in the same turn; \"Turtle School\" or \"Peppy Gals\" Category allies' Ki +2 and ATK & DEF +50% (self excluded)",
+        "activeSkill": "Recovers 50% HP and, for 1 turn, all allies' Ki +3 and ATK & DEF +30%",
+        "activeSkillCondition": "Can be activated when HP is 70% or less starting from the 3rd turn from the start of battle, or starting from the 5th turn from the start of battle (once only)",
         "links": [
             "Turtle School",
             "Infighter",
@@ -37525,7 +37666,7 @@
         "superAttack": "Raises ATK & DEF for 1 turn[1], causes supreme damage to enemy and lowers ATK & DEF[2]",
         "ezaSuperAttack": "Greatly raises ATK & DEF for 1 turn[3], causes supreme damage to enemy and lowers ATK & DEF[4]",
         "passive": "ATK & DEF +120%; plus an additional ATK & DEF +30% with each Super Attack performed (up to 120%); launches an additional Super Attack when there is another \"Dragon Ball Heroes\" Category ally attacking in the same turn or when the target enemy is stunned or when the target enemy's Super Attack is sealed",
-        "ezaPassive": "ATK & DEF +150%; plus an additional ATK +150% when performing a Super Attack; plus an additional ATK & DEF +30% with each Super Attack performed (up to 150%); launches 2 additional Super Attacks when there is another \"Crossover\" Category ally attacking in the same turn or when the target enemy is stunned or when the target enemy's Super Attack is sealed; performs a critical hit when there is another \"Super Saiyan 3\" Category ally attacking in the same turn",
+        "ezaPassive": "ATK & DEF +150%; plus an additional ATK +150% when performing a Super Attack; plus an additional ATK & DEF +30% with each Super Attack performed (up to 150%); launches 2 additional Super Attacks when there is another \"Crossover\" Category ally attacking in the same turn, when the target enemy is stunned or when the target enemy's Super Attack is sealed; performs a critical hit when there is another \"Super Saiyan 3\" Category ally attacking in the same turn",
         "links": [
             "Super Saiyan",
             "Over in a Flash",
@@ -38248,7 +38389,7 @@
         "superAttack": "Raises ATK for 1 turn[1], causes supreme damage to enemy and seals Super Attack",
         "ezaSuperAttack": "Raises ATK for 4 turn[2], greatly raises DEF for 1 turn[3], causes supreme damage to enemy and seals Super Attack",
         "passive": "ATK & DEF +150% and high chance[4] of evading enemy's attack (including Super Attack); plus an additional ATK & DEF +100% for 5 turns after evading an attack; performs a critical hit as the 1st attacker in a turn; ATK -50% within the same turn after receiving an attack",
-        "ezaPassive": "ATK & DEF +200% and high chance[5] of evading enemy's attack (including Super Attack); plus an additional ATK & DEF +100% and chance to evade enemy's attack (including Super Attack) +20% before receiving an attack; plus an additional ATK & DEF +150% for 5 turns after evading an attack; Ki +3, performs a critical hit and high chance[6] of launching an additional Super Attack as the 1st attacker in a turn; launches an additional Super Attack as the 2nd or 3rd attacker in a turn; plus an additional ATK +100% when the target enemy's Super Attack is sealed",
+        "ezaPassive": "ATK & DEF +200%; high chance[4] of evading enemy's attack (including Super Attack); plus an additional ATK & DEF +100% and chance of evading enemy's attack (including Super Attack) +20% within the same turn before the character receives an attack; plus an additional ATK & DEF +150% for 5 turns after evading an attack; Ki +3, all attacks become critical hits and launches an additional attack that has a high chance[5] of becoming a Super Attack as the 1st attacker in a turn; launches an additional Super Attack as the 2nd or 3rd attacker in a turn; plus an additional ATK +100% when the target enemy's Super Attack is sealed",
         "links": [
             "All in the Family",
             "Infighter",
@@ -38822,7 +38963,7 @@
         "superAttack": "Causes supreme damage to enemy and raises ATK for 6 turns[1]",
         "ezaSuperAttack": "Greatly raises DEF for 1 turn[2], causes supreme damage to enemy and raises ATK for 6 turns[1]",
         "passive": "ATK & DEF +70%; plus an additional ATK +15% and DEF +10% per  Ki Sphere obtained",
-        "ezaPassive": "ATK & DEF +170%; plus an additional ATK & DEF +17% per Ki Sphere obtained; plus an additional ATK +50% and DEF +20% per  Ki Sphere obtained; plus an additional DEF +50% when attacking; medium chance[3] of evading enemy's attack (including Super Attack); chance of evading enemy's attack (including Super Attack) +17% per  Ki Sphere obtained (up to 50%); launches an additional attack that has a great chance[4] of becoming a Super Attack when there is another \"Representatives of Universe 7\" Category ally attacking in the same turn; performs a critical hit when there is another \"Battle of Wits\" Category ally attacking in the same turn",
+        "ezaPassive": "ATK & DEF +170%; plus an additional ATK & DEF +17% per Ki Sphere obtained; plus an additional ATK +50% and DEF +20% per  Ki Sphere obtained; plus an additional DEF +50% when attacking; medium chance[3]  of evading enemy's attack (including Super Attack); plus an additional chance of evading enemy's attack (including Super Attack) +17% per  Ki Sphere obtained (up to 50%); launches an additional attack that has a great chance[4] of becoming a Super Attack when there is another \"Representatives of Universe 7\" Category ally attacking in the same turn; performs a critical hit when there is another \"Battle of Wits\" Category ally attacking in the same turn",
         "links": [
             "Android Assault",
             "Twin Terrors",
@@ -39261,7 +39402,7 @@
         "superAttack": "Causes supreme damage to enemy and raises ATK & DEF by 30% for 3 turns",
         "ezaSuperAttack": "Causes supreme damage to enemy and raises ATK & DEF by 50% for 3 turns",
         "passive": "ATK & DEF +100%; plus an additional ATK & DEF +80% for 3 turns after receiving attack; high chance[1] of evading enemy's attack (including Super Attack); plus an additional ATK +180% for 3 turns after evading an attack",
-        "ezaPassive": "Ki +3 and ATK & DEF +180%; launches an additional attack that has a medium chance[2] of becoming a Super Attack; plus an additional ATK & DEF +180% for 3 turns after receiving an attack; high chance[1] of evading enemy's attack (including Super Attack); plus an additional ATK +180% for 3 turns and launches an additional attack that has a medium chance[3] of becoming a Super Attack after evading an attack; launches an additional Super Attack when there is another \"Androids\" Category ally on the team",
+        "ezaPassive": "Ki +3 and ATK & DEF +180%; launches an additional attack that has a medium chance[2] of becoming a Super Attack; plus an additional ATK & DEF +180% for 3 turns after receiving an attack; high chance[1] of evading enemy's attack (including Super Attack); plus an additional ATK +180% for 3 turns and launches an additional attack that has a medium chance[2] of becoming a Super Attack after evading an attack; launches an additional Super Attack when there is another \"Androids\" Category ally on the team",
         "links": [
             "Android Assault",
             "Battlefield Diva",
@@ -42875,7 +43016,7 @@
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/f/f2/Card_1029910_thumb.png/revision/latest?cb=20241115170155",
         "leaderSkill": "\"Realm of Gods\" Category Ki +3 and HP, ATK & DEF +130%",
         "superAttack": "Raises ATK & DEF for 1 turn[1], causes supreme damage to enemy and seals Super Attack",
-        "passive": "ATK & DEF +120%; plus an additional DEF +120% when receiving an attack; DEF +120% if there is another \"Crossover\" Category ally attacking in the same turn and when receiving an attack, plus an additional DEF +120%; all enemies' ATK & DEF -24% and medium chance[2] of stunning all enemies at the start of turn; high chance[3] of evading enemy's attack (including Super Attack); plus an additional chance of evading enemy's attack (including Super Attack) +10% within the same turn and ATK +60% (up to 240%) with each attack evaded (including Super Attack); all allies' Ki +2 and ATK & DEF +40%, plus an additional Ki +1 and ATK & DEF +24% for \"Crossover\" Category characters; recovers 24% HP at the end of the turn in which an attack was received",
+        "passive": "ATK & DEF +120%; plus an additional DEF +120% when receiving an attack; plus an additional DEF +120% if there is another \"Crossover\" Category ally attacking in the same turn and when receiving an attack, plus an additional DEF +120%; all enemies' ATK & DEF -24% and medium chance[2] of stunning all enemies at the start of turn; high chance[3] of evading enemy's attack (including Super Attack); plus an additional chance of evading enemy's attack (including Super Attack) +10% within the same turn and an additional ATK +60% (up to 240%) with each attack evaded (including Super Attack); all allies' Ki +2 and ATK & DEF +40%, plus an additional Ki +1 and ATK & DEF +24% for \"Crossover\" Category characters; recovers 24% HP at the end of the turn in which an attack was received",
         "links": [
             "Telekinesis",
             "More Than Meets the Eye",
@@ -44796,7 +44937,7 @@
         "superAttack": "Greatly raises ATK for 1 turn[1], causes supreme damage to enemy and greatly lowers ATK & DEF[2]",
         "ezaSuperAttack": "Greatly raises ATK & DEF for 1 turn[3], causes supreme damage to enemy and greatly lowers ATK & DEF[2]",
         "passive": "Ki +2 and ATK & DEF +140%; plus an additional ATK & DEF +40% when performing a Super Attack; high chance[4] of stunning the attacked enemy; medium chance[5] of Ki +2; medium chance[6] of launching an additional Super Attack; medium chance[7] of evading enemy's attack (including Super Attack); attacks effective against all Types when performing a Super Attack if the target enemy is in \"ATK Down\" status or the target enemy's Super Attack is sealed; performs a critical hit when performing a Super Attack if the target enemy is stunned",
-        "ezaPassive": "Ki +4 and ATK & DEF +140%; plus an additional ATK & DEF +140% when there is another \"Peppy Gals\" Category ally in the team; plus an additional ATK & DEF +140% and great chance[8] of an additional ATK & DEF +40% when performing a Super Attack; great chance[9] of stunning the attacked enemy; high chance[10] of launching an additional Super Attack; high chance[11] of evading enemy's attack (including Super Attack); plus an additional chance of evading enemy's attack +20% when there is a \"Tournament Participants\" Category enemy; plus an additional DEF +40% and attacks effective against all Types when performing a Super Attack if the target enemy is in \"ATK Down\", \"DEF Down\" status or the target enemy's Super Attack is sealed; performs a critical hit and launches an additional Super Attack when performing a Super Attack if the target enemy is stunned",
+        "ezaPassive": "Ki +4 and ATK & DEF +140%; plus an additional ATK & DEF +140% when there is another \"Peppy Gals\" Category ally on the team; plus an additional ATK & DEF +140% and great chance[8] of an additional ATK & DEF +40% when performing a Super Attack; great chance[9] of stunning the attacked enemy; high chance[10] of launching an additional Super Attack; high chance[11] of evading enemy's attack (including Super Attack); chance of evading enemy's attack (including Super Attack) +20% when there is a \"Tournament Participants\" Category enemy; plus an additional DEF +40% and attacks effective against all Types when performing a Super Attack if the target enemy is in \"ATK Down\" status, in \"DEF Down\" status or the target enemy's Super Attack is sealed; attack becomes a critical hit and launches an additional Super Attack when performing a Super Attack if the target enemy is stunned",
         "links": [
             "The Innocents",
             "Flee",
@@ -45143,7 +45284,7 @@
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/8/8c/Card_1029730_thumb.png/revision/latest?cb=20241029135327",
         "leaderSkill": "\"Demonic Power\", \"Inhuman Deeds\" or \"Movie Bosses\" Category Ki +3 and HP, ATK & DEF +170%;plus an additional HP, ATK & DEF +30% for characters who also belong to the \"Terrifying Conquerors\" or \"Space-Traveling Warriors\" Category",
         "superAttack": "Raises ATK & DEF for 1 turn[1] and causes immense damage with a great chance of stunning the enemy[2]",
-        "passive": "Activates the Entrance Animation (once only), ATK +200% and reduces damage received by 33% for the rest of battle and creates the Domain \"Earth Shrouded in Clouds\" for 3 turns from the character's entry turn when there are another 3 or more \"Demonic Power\" Category allies on the team upon the character's entry; Ki +2, ATK & DEF +200% and reduces damage received by 33%; launches an additional attack that has a great chance[3] of becoming a Super Attack; plus an additional ATK & DEF +50% with each attack performed (up to 200%); foresees enemy's Super Attack within the character's attacking turn starting from the turn in which the character receives the 5th attack in battle; recovers 6% HP when HP is 66% or less at the end of turn; recovers 10% HP at the end of the character's attacking turn an all allies' Ki +2 while the Domain \"Earth Shrouded in Clouds\" is active",
+        "passive": "Activates the Entrance Animation (once only), ATK +200% and reduces damage received by 33% for the rest of battle and creates the Domain \"Earth Shrouded in Clouds\" for 3 turns from the character's entry turn when there are another 3 or more \"Demonic Power\" Category allies on the team upon the character's entry; Ki +2, ATK & DEF +200% and reduces damage received by 33%; launches an additional attack that has a great chance[3] of becoming a Super Attack; plus an additional ATK & DEF +50% with each attack performed (up to 200%); foresees enemy's Super Attack within the character's attacking turn starting from the turn in which the character receives the 5th attack in battle; recovers 6% HP when HP is 66% or less at the end of turn; recovers 10% HP at the end of the character's attacking turn and all allies' Ki +2 while the Domain \"Earth Shrouded in Clouds\" is active",
         "activeSkill": "Massively raises ATK temporarily[4] and causes ultimate damage to enemy",
         "activeSkillCondition": "Can be activated when HP is 60% or less, or starting from the 4th turn from start of battle (once only)",
         "links": [
@@ -45156,11 +45297,11 @@
             "Fierce Battle"
         ],
         "categories": [
-            "Inhuman Deeds",
             "Movie Bosses",
             "Namekians",
             "Dragon Ball Seekers",
             "Terrifying Conquerors",
+            "Inhuman Deeds",
             "Space-Traveling Warriors",
             "Power of Wishes",
             "Demonic Power"
@@ -46283,7 +46424,7 @@
         "superAttack": "Causes supreme damage with a medium chance of stunning the enemy[1]",
         "ezaSuperAttack": "Greatly raises ATK for 1 turn[2] and causes supreme damage with a great chance of stunning the enemy[3]",
         "passive": "ATK & DEF +150%; Ki +3, plus an additional ATK & DEF +150% and high chance[4] of evading enemy's attack (including Super Attack) for 7 turns from the character's entry turn",
-        "ezaPassive": "Ki +3 and ATK & DEF +200%; plus an additional ATK & DEF +200%, high chance[5] of performing a critical hit and high chance[4] of evading enemy's attack (including Super Attack) for 7 turns from the character's entry turn; plus an additional ATK, DEF, chance of performing a critical hit and chance of evading enemy's attack (including Super Attack) +10% per \"Representatives of Universe 7\" Category ally attacking in the same turn; plus an additional ATK, DEF and reduces damage received by 7% with each attack evaded (up to 77%)",
+        "ezaPassive": "Ki +3 and ATK & DEF +200%; plus an additional ATK & DEF +200%, high chance[5] of performing a critical hit and high chance[4] of evading enemy's attack (including Super Attack) for 7 turns from the character's entry turn; plus an additional ATK, DEF, chance of performing a critical hit & chance of evading enemy's attack (including Super Attack) +10% per \"Representatives of Universe 7\" Category ally attacking in the same turn; plus an additional ATK & DEF +7% (up to 77%) and reduces damage received by 7% (up to 77%) with each attack evaded (including Super Attack)",
         "links": [
             "The Innocents",
             "Revival",
@@ -47896,7 +48037,7 @@
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/9/9e/Card_1029200_thumb.png/revision/latest?cb=20241024125823",
         "leaderSkill": "\"Peppy Gals\" Category or  Type Ki +3 and HP, ATK & DEF +120%",
         "superAttack": "Greatly raises ATK & DEF for 1 turn[1] and causes supreme damage to enemy",
-        "passive": "ATK & DEF +150%; plus an additional ATK & DEF +150% when attacking; all allies' Ki +3 and ATK & DEF +30%; high chance[2] of evading enemy's attack (including Super Attack); chance of evading enemy's attack (including Super Attack) +20% and launches 2 additional attacks each of which that has a high chance[3] of becoming a Super Attack when there is another \"Peppy Gals\" or \"DB Saga\" Category ally attacking in the same turn; all allies ATK & DEF +30% when there are another 3 or more \"Peppy Gals\" or \"DB Saga\" allies on the team or when there is an  Type enemy",
+        "passive": "ATK & DEF +150%; plus an additional ATK & DEF +150% when attacking; all allies' Ki +3 and ATK & DEF +30%; high chance[2] of evading enemy's attack (including Super Attack); plus an additional chance of evading enemy's attack (including Super Attack) +20% and launches 2 additional attacks, each of which has a high chance[3]  of becoming a Super Attack, when there is another \"Peppy Gals\" or \"DB Saga\" Category ally attacking in the same turn; plus an additional ATK & DEF +30% for all allies if there are another 3 or more \"Peppy Gals\" or \"DB Saga\" Category allies on the team, or if there is an  Type enemy",
         "links": [
             "Brainiacs",
             "Brutal Beatdown",
@@ -48227,7 +48368,7 @@
         "ezaSuperAttack": "Greatly raises ATK[1] and causes immense damage to enemy",
         "passive": "Ki +5, ATK +10000 when Ki is 7 or more",
         "ezaPassive": "Ki +5, ATK +80%, and DEF +40% when Ki is 7 or more",
-        "superEzaPassive": "ATK & DEF +158%; Ki +5 plus an additional ATK & DEF +100% when Ki is 7 or more; plus an additional ATK & DEF +100% when performing a Super Attack; medium chance[2] of performing a critical hit and launches an additional Super Attack when all allies on the team are Super Class; guards all attacks and medium chance[3] of evading enemy's attack (including Super Attack) when the character is 2nd or 3rd to obtain Ki Spheres in a turn; DEF +30% (up to 120%) and chance of performing a critical hit and evading enemy's attack (including Super Attack) +10% (up to 40%) for every Super Attack performed; Super Class allies' ATK & DEF +30% plus an additional ATK & DEF +28% when there is an Extreme Class enemy",
+        "superEzaPassive": "ATK & DEF +158%; Ki +5 plus an additional ATK & DEF +100% when Ki is 7 or more; plus an additional ATK & DEF +100% when performing a Super Attack; launches an additional Super Attack and medium chance[2] of attacks becoming critical hits when all allies are Super Class; guards all attacks and medium chance[3] of evading enemy's attack (including Super Attack) as the 2nd or 3rd attacker in a turn; plus an additional DEF +30% (up to 120%) and chance of performing a critical hit & chance of evading enemy's attack (including Super Attack) +10% (up to 40%) with each Super Attack performed; Super Class allies' ATK & DEF +30% and if there is an Extreme Class enemy, plus an additional ATK & DEF +28%",
         "links": [
             "Saiyan Warrior Race",
             "The Saiyan Lineage",
@@ -48248,7 +48389,8 @@
             "Entrusted Will",
             "Bond of Parent and Child",
             "Earth-Bred Fighters",
-            "Power of Wishes"
+            "Power of Wishes",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green"
@@ -48515,7 +48657,7 @@
         "superAttack": "Causes supreme damage to enemy, lowers ATK[1] and seals Super Attack",
         "ezaSuperAttack": "Greatly raises DEF for 1 turn[2], causes supreme damage to enemy, lowers ATK[1] and seals Super Attack",
         "passive": "ATK & DEF +110%; medium chance[3] of evading enemy's attack (including Super Attack); plus an additional ATK & DEF +11% with each attack performed (up to 44%); \"Universe 11\" Category allies' Ki +3 and ATK & DEF +40%; \"Realm of Gods\", \"Siblings' Bond\" and \"Bond of Master and Disciple\" Category allies' ATK & DEF +20%; randomly changes Ki Spheres of a certain Type to  Ki Spheres when there is another \"Universe 11\" Category ally attacking in the same turn",
-        "ezaPassive": "ATK & DEF +110%; high chance[4] of evading enemy's attack (including Super Attack); plus an additional ATK & DEF +55% with each attack performed (up to 110%); \"Universe 11\" Category allies' Ki +3 and ATK & DEF +50%; \"Realm of Gods\", \"Siblings' Bond\" and \"Bond of Master and Disciple\" Category allies' ATK & DEF +20%; plus an additional chance of evading enemy's attack (including Super Attack) +20% and randomly changes Ki Spheres of a certain Type to  Ki Spheres when there is another \"Universe 11\" or \"Bond of Master and Disciple\" Category ally attacking in the same turn; reduces damage received by 30% when all allies attacking in the same turn are \"Universe 11\" Category characters and if the character is the 3rd to obtain Ki Spheres in a turn, all allies' damage reduction rate +11% (once only)",
+        "ezaPassive": "ATK & DEF +110%; high chancee[4] of evading enemy's attack (including Super Attack); plus an additional ATK & DEF +55% with each attack performed (up to 110%); \"Universe 11\" Category allies' Ki +3 and ATK & DEF +50%; \"Realm of Gods\", \"Siblings' Bond\" and \"Bond of Master and Disciple\" Category allies' ATK & DEF +20%; plus an additional chance of evading enemy's attack (including Super Attack) +20% and randomly changes Ki Spheres of a certain Type to Rainbow Ki Spheres when there is another \"Universe 11\" or \"Bond of Master and Disciple\" Category ally attacking in the same turn; reduces damage received by 30% when all allies attacking in the same turn are \"Universe 11\" Category characters; plus an additional damage reduction of 11% for all allies within the turn as the 3rd attacker in a turn when all allies attacking in the same turn are \"Universe 11\" Category characters (once only)",
         "links": [
             "The Innocents",
             "Brainiacs",
@@ -48672,7 +48814,7 @@
         "superAttack": "Causes supreme damage to enemy and raises DEF by 30% for 6 turns",
         "ezaSuperAttack": "Greatly raises ATK for 1 turn[1], causes supreme damage to enemy and raises DEF by 50% for 6 turns",
         "passive": "ATK & DEF +70%; changes  Ki Spheres to  Ki Spheres; plus an additional ATK +12% and DEF +7% per Ki Sphere obtained",
-        "ezaPassive": "ATK & DEF +180%; changes  Ki Spheres to  Ki Spheres; plus an additional ATK & DEF +30% per Ki Sphere obtained; plus an additional DEF +50% when receiving an attack; medium chance[2] of performing a critical hit; chance of performing a critical hit +18% per  Ki Sphere obtained (up to 50%); launches an additional attack that has a high chance[3] of becoming a Super Attack there is another \"Representatives of Universe 7\" Category ally attacking same turn; reduces damage received by 35% when there is another \"Battle of Wits\" Category ally attacking in the same turn",
+        "ezaPassive": "ATK & DEF +180%; changes  &  Ki Spheres to  Ki Spheres; plus an additional ATK & DEF +30% per Ki Sphere obtained; plus an additional DEF +50% when receiving an attack; medium chance[2] of performing a critical hit; plus an additional chance of performing a critical hit +18% per  Ki Sphere obtained (up to 50%); launches an additional attack that has a high chance[3] of becoming a Super Attack when there is another \"Representatives of Universe 7\" Category ally attacking in the same turn; reduces damage received by 35% when there is another \"Battle of Wits\" Category ally attacking in the same turn",
         "links": [
             "Android Assault",
             "Twin Terrors",
@@ -50022,8 +50164,8 @@
     {
         "name": "Super Saiyan Goten (Kid)",
         "title": "Vigorous Strength",
-        "maxLevel": 120,
-        "maxSALevel": 10,
+        "maxLevel": 140,
+        "maxSALevel": 15,
         "rarity": "UR",
         "class": "Super",
         "type": "TEQ",
@@ -50031,8 +50173,11 @@
         "id": "12178",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/a/af/Card_1021780_thumb.png/revision/latest?cb=20210809081342",
         "leaderSkill": "\"Gifted Warriors\" Category Ki +3 and HP, ATK & DEF +120%",
+        "ezaLeaderSkill": "\"Gifted Warriors\" Category Ki +3 and HP, ATK & DEF +130%",
         "superAttack": "Raises ATK for 1 turn[1] and causes supreme damage to enemy",
+        "ezaSuperAttack": "Raises ATK & DEF for 1 turn[2] and causes supreme damage to enemy",
         "passive": "ATK & DEF +150%; plus an additional ATK & DEF +10% with each attack performed (up to 50%); \"Gifted Warriors\" Category allies' Ki +3 and ATK & DEF +40%",
+        "ezaPassive": "ATK & DEF +180%; plus an additional ATK & DEF +20% with each attack performed (up to 100%); plus an additional ATK & DEF +100% and high chance[3] of evading enemy's attack (including Super Attack) when there is another \"Gifted Warriors\" or \"Siblings' Bond\" Category ally attacking in the same turn; chance of evading enemy's attack (including Super Attack) +20% and high chance[4] of launching an additional Super Attack as the 2nd or 3rd attacker in a turn; \"Gifted Warriors\" or \"Siblings' Bond\" Category allies' Ki +3 and ATK & DEF +60%",
         "links": [
             "The Innocents",
             "Saiyan Warrior Race",
@@ -50743,6 +50888,56 @@
         "transformations": []
     },
     {
+        "name": "Glorio",
+        "title": "Wielder of Thunder Magic",
+        "maxLevel": 120,
+        "maxSALevel": 10,
+        "rarity": "UR",
+        "class": "Super",
+        "type": "PHY",
+        "cost": 58,
+        "id": "13064",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/d/de/Card_1030640_thumb.png/revision/latest?cb=20241226182236",
+        "leaderSkill": "\"Demonic Power\" Category Ki +3 and HP, ATK & DEF +200%;\"Battle of Wits\" or \"Accelerated Battle\" Category Ki +3 and HP, ATK & DEF +170%,plus an additional HP, ATK & DEF +30% for characters who also belong to the \"Dragon Ball Seekers\" Category (\"Demonic Power\" Category characters excluded)",
+        "superAttack": "Greatly raises ATK & DEF for 1 turn[1], causes immense damage to enemy and lowers ATK & DEF[2]; ATK +9% and DEF +6% in battle",
+        "passive": "Activates the Entrance Animation upon the character's entry (once only) and launches an additional attack that has a great chance[3] of becoming a Super Attack for 1 turn from the character's entry turn; Ki +3 and ATK & DEF +200%; launches an additional attack that has a high chance[4] of becoming a Super Attack; high chance[5] of evading enemy's attack (including Super Attack); launches another additional attack that has a great chance[3] of becoming a Super Attack as the 2nd or 3rd attacker in a turn; all allies' Ki +1 and ATK & DEF +50% for 3 turns as the 3rd attacker in a turn; plus an additional ATK & DEF +150% when attacking; plus an additional ATK & DEF +50% within the same turn with each attack performed; plus an additional ATK +30% and chance of evading enemy's attack (including Super Attack) +10% (up to 30%) within the same turn with each Super Attack performed; launches an additional Super Attack every time the character performs a Super Attack 3 or more times in battle (up to once within a turn)",
+        "activeSkill": "Greatly raises ATK temporarily[6], causes ultimate damage to enemy and disables enemy's action once within the turn",
+        "activeSkillCondition": "Can be activated after performing 3 or more Super Attacks in battle (once only)",
+        "links": [
+            "Brainiacs",
+            "Solid Support",
+            "Cold Judgment",
+            "Speedy Retribution",
+            "Shocking Speed",
+            "Master of Magic",
+            "Fierce Battle"
+        ],
+        "categories": [
+            "Dragon Ball Seekers",
+            "Battle of Wits",
+            "Heavenly Events",
+            "Accelerated Battle",
+            "Demonic Power"
+        ],
+        "kiMeter": [
+            "KiMeter 2 Green"
+        ],
+        "baseHP": 4227,
+        "maxLevelHP": 13950,
+        "freeDupeHP": 15950,
+        "rainbowHP": 19350,
+        "baseAttack": 3442,
+        "maxLevelAttack": 11360,
+        "freeDupeAttack": 13360,
+        "rainbowAttack": 16360,
+        "baseDefence": 2030,
+        "maxDefence": 6700,
+        "freeDupeDefence": 8700,
+        "rainbowDefence": 11300,
+        "kiMultiplier": "12 Ki Multiplier is 150%; ",
+        "transformations": []
+    },
+    {
         "name": "Tien",
         "title": "Will to Secure Victory",
         "maxLevel": 120,
@@ -50855,7 +51050,7 @@
         "superAttack": "Causes supreme damage to enemy and greatly raises ATK for 1 turn[1]",
         "ezaSuperAttack": "Massively raises ATK and raises DEF for 1 turn[2], causes supreme damage to enemy and lowers ATK[3]",
         "passive": "ATK & DEF +80% when HP is 80% or below",
-        "ezaPassive": "Ki +1 and ATK & DEF +200%; attacks guaranteed to hit when HP is 80% or less; seals the attacked enemy's Super Attack if HP is 80% or less when attacking; plus an additional ATK & DEF +100% when performing a Super Attack; plus an additional ATK & DEF +100% when there is another \"Representatives of Universe 7\" Category ally attacking in the same turn and if all allies attacking in the same turn are \"Representatives of Universe 7\" characters, guards all attacks; \"Tournament Participants\" Category allies Ki +1 and ATK & DEF +30%, plus a additional Ki +1 and DEF +30% for allies who also belong to the \"Representatives of Universe 7\" Category",
+        "ezaPassive": "Ki +1 and ATK & DEF +200%; attacks guaranteed to hit when HP is 80% or less and if HP is 80% or less when attacking, seals the attacked enemy's Super Attack; plus an additional ATK & DEF +100% when performing a Super Attack; plus an additional ATK & DEF +100% when there is another \"Representatives of Universe 7\" Category ally attacking in the same turn and if all allies attacking in the same turn are \"Representatives of Universe 7\" Category characters, guards all attacks; \"Tournament Participants\" Category allies' Ki +1 and ATK & DEF +30%, plus an additional Ki +1 and DEF +30% for characters who also belong to the \"Representatives of Universe 7\" Category",
         "links": [
             "Namekians",
             "Gaze of Respect",
