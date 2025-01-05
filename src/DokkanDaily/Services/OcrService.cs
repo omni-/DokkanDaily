@@ -1,5 +1,6 @@
 ﻿using DokkanDaily.Configuration;
 using DokkanDaily.Constants;
+using DokkanDaily.Exceptions;
 using DokkanDaily.Models;
 using DokkanDaily.Models.Enums;
 using DokkanDaily.Ocr;
@@ -69,7 +70,7 @@ namespace DokkanDaily.Services
 
                 if (contours.Length <= 0)
                 {
-                    throw new Exception("No contours found in image.");
+                    throw new OcrServiceException("No contours found in image.");
                 }
 
                 var found = (from contour in contours
