@@ -1,10 +1,11 @@
 # DokkanDaily
 *Daily challenges for the hit mobile game Dragon Ball Z: Dokkan Battle.*
 
-[>> SITE LINK <<](https://www.dokkandle.net)
+[>> SITE LINK <<](https://dokkandle.net/daily)
 
-### Coming Soon
-* Full support of JP clears
+### Coming Soon(tm)
+* Announcement banner
+* Hall-of-faming the current leaderboard, implementing a seasonal one
 * Guess the Unit challenge
 
 ### Feedback/Suggestions
@@ -15,7 +16,5 @@ Or, if you're more technically inclined, [Submit a Pull Request](https://github.
 ### Nerdy stuff
 __Project TODO List:__
 * Allow merging of username pairs (details in [`ClearInsert.sql`](https://github.com/omni-/DokkanDaily/blob/master/src/DokkanDailyDB/Core/Stored%20Procedures/ClearInsert.sql))
-* Improve ENG OCR
 * Support multiple webhook destinations
 * Set up modified scraper as an azure job/Script updating character json (github actions?)
-* Announcement banner
