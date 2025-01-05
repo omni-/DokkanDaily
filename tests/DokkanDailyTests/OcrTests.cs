@@ -149,25 +149,25 @@ namespace DokkanDailyTests
                 .Value;
         }
 
-        // [TestCaseSource(nameof(GetImageTestCases))]
-        // [Parallelizable(ParallelScope.Children)]
-        // public void BasicOcrTest(string imagePath)
-        // {
-        //     SnapshotData? snapshot = SnapshotHelper<SnapshotData>.LoadSnapshot(imagePath);
-        //     if (snapshot == null)
-        //     {
-        //         Assert.Ignore("Snapshot not found");
-        //     }
-        //
-        //     ClearMetadata? result = GetProcessedResult(imagePath);
-        //
-        //     Assert.Multiple(() =>
-        //     {
-        //         Assert.That(result?.ItemlessClear, Is.EqualTo(snapshot.ItemlessClear));
-        //         Assert.That(result?.Nickname, Is.EqualTo(snapshot.Nickname));
-        //         Assert.That(result?.ClearTime, Is.EqualTo(snapshot.ClearTime));
-        //     });
-        // }
+        [TestCaseSource(nameof(GetImageTestCases))]
+        [Parallelizable(ParallelScope.Children)]
+        public void EndToEndByImage(string imagePath)
+        {
+            SnapshotData? snapshot = SnapshotHelper<SnapshotData>.LoadSnapshot(imagePath);
+            if (snapshot == null)
+            {
+                Assert.Ignore("Snapshot not found");
+            }
+
+            ClearMetadata? result = GetProcessedResult(imagePath);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result?.ItemlessClear, Is.EqualTo(snapshot.ItemlessClear));
+                Assert.That(result?.Nickname, Is.EqualTo(snapshot.Nickname));
+                Assert.That(result?.ClearTime, Is.EqualTo(snapshot.ClearTime));
+            });
+        }
 
         [TestCaseSource(nameof(GetImageTestCases))]
         [Parallelizable(ParallelScope.Children)]
