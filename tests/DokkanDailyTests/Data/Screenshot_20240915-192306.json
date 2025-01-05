@@ -1,5 +1,7 @@
 {
-  "Categories": [],
+  "Categories": [
+    "clearPB"
+  ],
   "Nickname": "DBC*Owl",
   "ClearTime": "0'10\"01.8",
   "ItemlessClear": false,
