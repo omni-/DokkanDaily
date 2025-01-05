@@ -1,4 +1,5 @@
-﻿using SixLabors.ImageSharp;
+﻿using DokkanDaily.Exceptions;
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace DokkanDaily.Ocr;
@@ -40,7 +41,7 @@ internal static class RegionLoader
         Rectangle? itemlessRegion = foundRegions[knownRegionColors["itemless"]];
         if (nicknameRegion == null || cleartimeRegion == null || itemlessRegion == null)
         {
-            throw new Exception("Failed to find all required regions in the region map.");
+            throw new OcrServiceException("Failed to find all required regions in the region map.");
         }
 
         RelativeRegion normalizedStageClearDetailsRegion = new (
