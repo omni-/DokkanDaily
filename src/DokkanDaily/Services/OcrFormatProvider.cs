@@ -6,7 +6,9 @@ namespace DokkanDaily.Services
 {
     public class OcrFormatProvider
     {
-        private ParsingMode _parsingMode { get; set; }
+        private const string jpnEngineString = "jpn";
+        private const string engEngineString = "eng";
+        private ParsingMode _parsingMode;
 
         public void SetParsingMode(ParsingMode parsingMode) => _parsingMode = parsingMode;
 
@@ -18,18 +20,11 @@ namespace DokkanDaily.Services
 
         public string BoundingBoxImagePath => _jp ? Path.Combine(TrainDataPath, "boxes_jp.png") : Path.Combine(TrainDataPath, "boxes.png");
 
-        public TesseractEngine TesseractEngine => _jp ? new TesseractEngine(TrainDataPath, jpnEngineString, EngineMode.LstmOnly) : new TesseractEngine(TrainDataPath, engEngineString, EngineMode.LstmOnly);
-
-        private static string jpnEngineString => "jpn";
-
-        private static string engEngineString => "eng";
-
-        public string GetText(Page p) => _jp ? p.GetText().Replace(" ", "") : p.GetText();
-
-        public void SetEngineOptions(TesseractEngine engine)
+        public TesseractEngine CreateTesseractEngine()
         {
             if (_jp)
             {
+                var engine = new TesseractEngine(TrainDataPath, jpnEngineString, EngineMode.LstmOnly);
                 engine.SetVariable("chop_enable", true);
                 engine.SetVariable("use_new_state_cost", false);
                 engine.SetVariable("segment_segcost_rating", false);
@@ -38,16 +33,19 @@ namespace DokkanDaily.Services
                 engine.SetVariable("textord_force_make_prop_words", false);
                 engine.SetVariable("edges_max_children_per_outline", 40);
                 engine.SetVariable("preserve_interword_spaces", 1);
+                return engine;
             }
+
+            return new TesseractEngine(TrainDataPath, engEngineString, EngineMode.LstmOnly);
         }
 
-        public bool EnsureValidClearHeader(string clearHeader)
+        public bool IsValidClearHeader(string clearHeader)
         {
             if (_jp)
             {
                 // ocr sucks at kanji :(
-                return clearHeader.Contains(OcrConstants.StageClearDetailsJpnAlt, StringComparison.InvariantCulture) 
-                    || clearHeader.Contains(OcrConstants.StageClearDetailsJpn, StringComparison.InvariantCulture);
+                return clearHeader.StartsWith(OcrConstants.StageClearDetailsJpnAlt, StringComparison.InvariantCulture)
+                    || clearHeader.StartsWith(OcrConstants.StageClearDetailsJpn, StringComparison.InvariantCulture);
             }
 
             return string.Equals(clearHeader, OcrConstants.StageClearDetailsEng, StringComparison.InvariantCulture);

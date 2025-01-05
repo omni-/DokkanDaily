@@ -187,7 +187,7 @@ namespace DokkanDaily.Constants
 
         #region Events
         public static IReadOnlyList<string> Events { get => events; }
-        private static List<string> events =
+        private static readonly List<string> events =
         [
             "When Wishes Backfire! Birth of the Shadow Dragons",
             "Fighting Legend: Frieza",

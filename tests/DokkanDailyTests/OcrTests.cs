@@ -1,6 +1,5 @@
 ﻿#nullable enable
 
-using System.Collections.Concurrent;
 using DokkanDaily.Models;
 using DokkanDaily.Services;
 using Microsoft.Extensions.Logging;
@@ -8,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework.Internal;
+using System.Collections.Concurrent;
 
 namespace DokkanDailyTests
 {
@@ -41,7 +41,7 @@ namespace DokkanDailyTests
 
         private static IEnumerable<TestCaseData> GetImageTestCases()
         {
-            string[] imageExtensions = new []{ ".png", ".jpg", ".jpeg" };
+            string[] imageExtensions = new[] { ".png", ".jpg", ".jpeg" };
             foreach (string imagePath in Directory
                 .EnumerateFiles(GetDataDirectory(), "*", SearchOption.AllDirectories)
                 .Where(file => imageExtensions.Contains(Path.GetExtension(file).ToLower()))

@@ -44,32 +44,32 @@ internal static class RegionLoader
             throw new OcrServiceException("Failed to find all required regions in the region map.");
         }
 
-        RelativeRegion normalizedStageClearDetailsRegion = new (
-            stageClearDetailsRegion.Value.Location.X / (float) regionMap.Size.Width,
-            stageClearDetailsRegion.Value.Location.Y / (float) regionMap.Size.Height,
-            stageClearDetailsRegion.Value.Width / (float) regionMap.Size.Width,
-            stageClearDetailsRegion.Value.Height / (float) regionMap.Size.Height
+        RelativeRegion normalizedStageClearDetailsRegion = new(
+            stageClearDetailsRegion.Value.Location.X / (float)regionMap.Size.Width,
+            stageClearDetailsRegion.Value.Location.Y / (float)regionMap.Size.Height,
+            stageClearDetailsRegion.Value.Width / (float)regionMap.Size.Width,
+            stageClearDetailsRegion.Value.Height / (float)regionMap.Size.Height
         );
 
-        RelativeRegion normalizedNicknameRegion = new (
-            nicknameRegion.Value.Location.X / (float) regionMap.Size.Width,
-            nicknameRegion.Value.Location.Y / (float) regionMap.Size.Height,
-            nicknameRegion.Value.Width / (float) regionMap.Size.Width,
-            nicknameRegion.Value.Height / (float) regionMap.Size.Height
+        RelativeRegion normalizedNicknameRegion = new(
+            nicknameRegion.Value.Location.X / (float)regionMap.Size.Width,
+            nicknameRegion.Value.Location.Y / (float)regionMap.Size.Height,
+            nicknameRegion.Value.Width / (float)regionMap.Size.Width,
+            nicknameRegion.Value.Height / (float)regionMap.Size.Height
         );
 
-        RelativeRegion normalizedCleartimeRegion = new (
-            cleartimeRegion.Value.Location.X / (float) regionMap.Size.Width,
-            cleartimeRegion.Value.Location.Y / (float) regionMap.Size.Height,
-            cleartimeRegion.Value.Width / (float) regionMap.Size.Width,
-            cleartimeRegion.Value.Height / (float) regionMap.Size.Height
+        RelativeRegion normalizedCleartimeRegion = new(
+            cleartimeRegion.Value.Location.X / (float)regionMap.Size.Width,
+            cleartimeRegion.Value.Location.Y / (float)regionMap.Size.Height,
+            cleartimeRegion.Value.Width / (float)regionMap.Size.Width,
+            cleartimeRegion.Value.Height / (float)regionMap.Size.Height
         );
 
-        RelativeRegion normalizedItemlessRegion = new (
-            itemlessRegion.Value.Location.X / (float) regionMap.Size.Width,
-            itemlessRegion.Value.Location.Y / (float) regionMap.Size.Height,
-            itemlessRegion.Value.Width / (float) regionMap.Size.Width,
-            itemlessRegion.Value.Height / (float) regionMap.Size.Height
+        RelativeRegion normalizedItemlessRegion = new(
+            itemlessRegion.Value.Location.X / (float)regionMap.Size.Width,
+            itemlessRegion.Value.Location.Y / (float)regionMap.Size.Height,
+            itemlessRegion.Value.Width / (float)regionMap.Size.Width,
+            itemlessRegion.Value.Height / (float)regionMap.Size.Height
         );
 
         var map = new Dictionary<string, RelativeRegion>

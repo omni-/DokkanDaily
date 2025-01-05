@@ -29,7 +29,7 @@ public static class ShapeUtils
         {
             image = image.Clone(); // so we don't modify the image that was passed in
             // scale down the image if it's bigger than the screen height
-            double scalingFactor = (double) screenResolution.Height / (double) imageSize.Height;
+            double scalingFactor = screenResolution.Height / (double)imageSize.Height;
             scalingFactor *= 0.9; // make it a little smaller than the exact screen height
             Cv2.Resize(image, image, new Size(), scalingFactor, scalingFactor);
         }

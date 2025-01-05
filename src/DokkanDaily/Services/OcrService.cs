@@ -1,5 +1,4 @@
 ﻿using DokkanDaily.Configuration;
-using DokkanDaily.Constants;
 using DokkanDaily.Exceptions;
 using DokkanDaily.Models;
 using DokkanDaily.Models.Enums;
@@ -7,6 +6,7 @@ using DokkanDaily.Ocr;
 using DokkanDaily.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using OpenCvSharp;
+using SixLabors.ImageSharp;
 using Tesseract;
 using Rect = OpenCvSharp.Rect;
 using Size = OpenCvSharp.Size;
@@ -32,7 +32,7 @@ namespace DokkanDaily.Services
             Provider.SetParsingMode(ParsingMode.English);
             var result = TryParse(arr);
             if (result.Success) return result.ClearMetadata;
-            if (result.Error != null) _logger.LogError("Exception encountered during parsing English: {Ex}", result?.Error?.Message);
+            if (result.Error != null) _logger.LogError(result.Error, "Exception encountered during parsing English");
 
             if (_settings.FeatureFlags.EnableJapaneseParsing)
             {
@@ -40,7 +40,7 @@ namespace DokkanDaily.Services
                 Provider.SetParsingMode(ParsingMode.Japanese);
                 result = TryParse(arr);
                 if (result.Success) return result.ClearMetadata;
-                if (result.Error != null) _logger.LogError("Exception encountered during parsing Japanese: {Ex}", result?.Error?.Message);
+                if (result.Error != null) _logger.LogError(result.Error, "Exception encountered during parsing Japanese");
 
                 _logger.LogError("Failed both English and Japanese parse attempts.");
             }
@@ -51,10 +51,7 @@ namespace DokkanDaily.Services
         {
             try
             {
-                var engine = Provider.TesseractEngine;
-                engine.DefaultPageSegMode = PageSegMode.SparseText;
-
-                Provider.SetEngineOptions(engine);
+                var engine = Provider.CreateTesseractEngine();
 
                 using ResourcesTracker t = new();
                 Mat gray = t.NewMat();
@@ -74,12 +71,12 @@ namespace DokkanDaily.Services
                 }
 
                 var found = (from contour in contours
-                    let perimeter = Cv2.ArcLength(contour, true)
-                    let approx = Cv2.ApproxPolyDP(contour, 0.02 * perimeter, true)
-                    where ShapeUtils.IsValidRectangle(approx, 0.8)
-                    let area = Cv2.ContourArea(contour)
-                    orderby area descending
-                    select contour).TakeWhile((points, idx) => Cv2.ContourArea(points) > 1_000).ToArray();
+                             let perimeter = Cv2.ArcLength(contour, true)
+                             let approx = Cv2.ApproxPolyDP(contour, 0.02 * perimeter, true)
+                             where ShapeUtils.IsValidRectangle(approx, 0.8)
+                             let area = Cv2.ContourArea(contour)
+                             orderby area descending
+                             select contour).TakeWhile((points, idx) => Cv2.ContourArea(points) > 1_000).ToArray();
 
                 Rect boundingRect = Cv2.BoundingRect(found[0]);
 
@@ -96,95 +93,104 @@ namespace DokkanDaily.Services
                 var clearTimeRect = ui.GetCleartimeRegion();
                 var itemlessRect = ui.GetItemlessRegion();
 
-                Mat debugImage = t.NewMat();
-                Cv2.CvtColor(binaryBlackOnWhite, debugImage, ColorConversionCodes.GRAY2BGR);
-                Cv2.Rectangle(debugImage, boundingRect, Scalar.Red, 4);
-                Cv2.Rectangle(debugImage, nicknameRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Yellow, 4);
-                Cv2.Rectangle(debugImage, clearTimeRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Green, 4);
-                Cv2.Rectangle(debugImage, itemlessRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Blue, 4);
-                Cv2.Rectangle(debugImage, stageClearDetailsRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Pink, 4);
-                Cv2.DrawContours(debugImage, found, 0, Scalar.Red, 2, LineTypes.Link8);
-                //ShapeUtils.PreviewImage("Debug", debugImage, 5000);
+                // Uncomment to see what the computer sees
+                //Mat debugImage = t.NewMat();
+                //Cv2.CvtColor(binaryBlackOnWhite, debugImage, ColorConversionCodes.GRAY2BGR);
+                //Cv2.Rectangle(debugImage, boundingRect, Scalar.Red, 4);
+                //Cv2.Rectangle(debugImage, nicknameRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Yellow, 4);
+                //Cv2.Rectangle(debugImage, clearTimeRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Green, 4);
+                //Cv2.Rectangle(debugImage, itemlessRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Blue, 4);
+                //Cv2.Rectangle(debugImage, stageClearDetailsRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Pink, 4);
+                //Cv2.DrawContours(debugImage, found, 0, Scalar.Red, 2, LineTypes.Link8);
+                ////ShapeUtils.PreviewImage("Debug", debugImage, 5000);
 
                 // Stage Clear Details
-                Mat stageClearDetailsSection = t.T(binaryBlackOnWhite.SubMat(stageClearDetailsRect.ToCv2Rect().Add(boundingRect.TopLeft)));
-                Cv2.Resize(stageClearDetailsSection, stageClearDetailsSection, new Size(0, 0), scaleFactor, scaleFactor, InterpolationFlags.Linear);
-                Cv2.Dilate(stageClearDetailsSection, stageClearDetailsSection, null, iterations: 1);
-                Pix stageClearDetailsPix = Pix.LoadFromMemory(stageClearDetailsSection.ToBytes());
-                stageClearDetailsPix.XRes = 300;
-                stageClearDetailsPix.YRes = 300;
+                string stageClearDetailsText = ParseStageClearDetails(engine, t, binaryBlackOnWhite, stageClearDetailsRect.ToCv2Rect(), boundingRect, scaleFactor);
 
-                Page stageClearDetailsPage = engine.Process(stageClearDetailsPix, PageSegMode.SingleBlock);
-                string stageClearDetailsText = stageClearDetailsPage.GetText().Trim();
-                stageClearDetailsPage.Dispose();
-
-                if (!Provider.EnsureValidClearHeader(stageClearDetailsText))
+                if (!Provider.IsValidClearHeader(stageClearDetailsText))
                 {
+                    // no error, simply invalid
                     return new ParseResult(false, null, null);
                 }
 
-                // Nickname
-                Mat nicknameSection = t.T(binaryBlackOnWhite.SubMat(nicknameRect.ToCv2Rect().Add(boundingRect.TopLeft)));
-                Cv2.Resize(nicknameSection, nicknameSection, new Size(0, 0), scaleFactor, scaleFactor, InterpolationFlags.Linear);
-                Cv2.Dilate(nicknameSection, nicknameSection, null, iterations: 1);
-                Pix nicknamePix = Pix.LoadFromMemory(nicknameSection.ToBytes());
-                nicknamePix.XRes = 300;
-                nicknamePix.YRes = 300;
+                string nicknameText = ParseNickname(engine, t, binaryBlackOnWhite, nicknameRect.ToCv2Rect(), boundingRect, scaleFactor);
 
-                Page nicknameTextPage = engine.Process(nicknamePix, PageSegMode.SingleBlock);
-                string nicknameText = nicknameTextPage.GetText().Trim();
-                nicknameTextPage.Dispose();
-                if (nicknameText.StartsWith("DBC *")) nicknameText = nicknameText.Replace("DBC *", "DBC*"); // one concession for the OCR
-                if (nicknameText.Length == 0) nicknameText = null;
+                string clearTimeText = ParseClearTime(engine, t, binaryBlackOnWhite, clearTimeRect.ToCv2Rect(), boundingRect, scaleFactor);
 
-                // Cleartime
-                Mat clearTimeSection = t.T(binaryBlackOnWhite.SubMat(clearTimeRect.ToCv2Rect().Add(boundingRect.TopLeft)));
-                Cv2.Resize(clearTimeSection, clearTimeSection, new Size(0, 0), scaleFactor, scaleFactor, InterpolationFlags.Linear);
-                Pix clearTimePix = Pix.LoadFromMemory(clearTimeSection.ToBytes());
-                clearTimePix.XRes = 300;
-                clearTimePix.YRes = 300;
+                bool itemless = ParseItemsUsed(engine, t, binaryBlackOnWhite, itemlessRect.ToCv2Rect(), boundingRect, scaleFactor);
 
-                engine.SetVariable("tessedit_char_whitelist", "0123456789.'\"");
-                Page clearTimeTextPage = engine.Process(clearTimePix, PageSegMode.SingleBlock);
-                string clearTimeText = clearTimeTextPage.GetText().Trim();
-                engine.SetVariable("tessedit_char_whitelist", "");
-                clearTimeTextPage.Dispose();
-                if (clearTimeText.Length == 0) clearTimeText = null;
-
-                // Itemless
-                Mat itemlessSection = t.T(binaryBlackOnWhite.SubMat(itemlessRect.ToCv2Rect().Add(boundingRect.TopLeft)));
-                Cv2.Resize(itemlessSection, itemlessSection, new Size(0, 0), scaleFactor, scaleFactor, InterpolationFlags.Linear);
-                Pix itemlessPix = Pix.LoadFromMemory(itemlessSection.ToBytes());
-                itemlessPix.XRes = 300;
-                itemlessPix.YRes = 300;
-
-                Page itemlessTextPage = engine.Process(itemlessPix, PageSegMode.SingleBlock);
-                string itemlessText = itemlessTextPage.GetText().Trim();
-                itemlessTextPage.Dispose();
-                bool? itemless = itemlessText == Provider.None;
-
-                if (nicknameText == null || clearTimeText == null)
+                return new ParseResult(true, new()
                 {
-                    itemless = null;
-                }
-
-                return new(true,
-                    new()
-                    {
-                        Nickname = nicknameText,
-                        ClearTime = clearTimeText,
-                        ItemlessClear = itemless.Value
-                    },
-                    null);
+                    Nickname = nicknameText,
+                    ClearTime = clearTimeText,
+                    ItemlessClear = itemless
+                }, null);
             }
             catch (Exception ex)
             {
-                return new(false, null, ex);
+                return new ParseResult(false, null, ex);
             }
-            finally
-            {
-                Provider.TesseractEngine.Dispose();
-            }
+        }
+
+        private string ParseStageClearDetails(TesseractEngine engine, ResourcesTracker t, Mat binaryBlackOnWhite, Rect stageClearDetailsRect, Rect boundingRect, float scaleFactor)
+        {
+            Mat stageClearDetailsSection = t.T(binaryBlackOnWhite.SubMat(stageClearDetailsRect.Add(boundingRect.TopLeft)));
+            Cv2.Resize(stageClearDetailsSection, stageClearDetailsSection, new Size(0, 0), scaleFactor, scaleFactor, InterpolationFlags.Linear);
+            Cv2.Dilate(stageClearDetailsSection, stageClearDetailsSection, null, iterations: 1);
+            Pix stageClearDetailsPix = Pix.LoadFromMemory(stageClearDetailsSection.ToBytes());
+            stageClearDetailsPix.XRes = 300;
+            stageClearDetailsPix.YRes = 300;
+
+            using Page stageClearDetailsPage = engine.Process(stageClearDetailsPix, PageSegMode.SingleBlock);
+            return stageClearDetailsPage.GetText().Trim();
+        }
+
+        private string ParseNickname(TesseractEngine engine, ResourcesTracker t, Mat binaryBlackOnWhite, Rect nicknameRect, Rect boundingRect, float scaleFactor)
+        {
+            Mat nicknameSection = t.T(binaryBlackOnWhite.SubMat(nicknameRect.Add(boundingRect.TopLeft)));
+            Cv2.Resize(nicknameSection, nicknameSection, new Size(0, 0), scaleFactor, scaleFactor, InterpolationFlags.Linear);
+            Cv2.Dilate(nicknameSection, nicknameSection, null, iterations: 1);
+            Pix nicknamePix = Pix.LoadFromMemory(nicknameSection.ToBytes());
+            nicknamePix.XRes = 300;
+            nicknamePix.YRes = 300;
+
+            using Page nicknameTextPage = engine.Process(nicknamePix, PageSegMode.SingleBlock);
+            string nicknameText = nicknameTextPage.GetText().Trim();
+            if (nicknameText.StartsWith("DBC *")) nicknameText = nicknameText.Replace("DBC *", "DBC*"); // one concession for the OCR
+            if (nicknameText.Length == 0) nicknameText = null;
+
+            return nicknameText;
+        }
+
+        private string ParseClearTime(TesseractEngine engine, ResourcesTracker t, Mat binaryBlackOnWhite, Rect clearTimeRect, Rect boundingRect, float scaleFactor)
+        {
+            Mat clearTimeSection = t.T(binaryBlackOnWhite.SubMat(clearTimeRect.Add(boundingRect.TopLeft)));
+            Cv2.Resize(clearTimeSection, clearTimeSection, new Size(0, 0), scaleFactor, scaleFactor, InterpolationFlags.Linear);
+            Pix clearTimePix = Pix.LoadFromMemory(clearTimeSection.ToBytes());
+            clearTimePix.XRes = 300;
+            clearTimePix.YRes = 300;
+
+            engine.SetVariable("tessedit_char_whitelist", "0123456789.'\"");
+            using Page clearTimeTextPage = engine.Process(clearTimePix, PageSegMode.SingleBlock);
+            string clearTimeText = clearTimeTextPage.GetText().Trim();
+            engine.SetVariable("tessedit_char_whitelist", "");
+            if (clearTimeText.Length == 0) clearTimeText = null;
+
+            return clearTimeText;
+        }
+
+        public bool ParseItemsUsed(TesseractEngine engine, ResourcesTracker t, Mat binaryBlackOnWhite, Rect itemlessRect, Rect boundingRect, float scaleFactor)
+        {
+            Mat itemlessSection = t.T(binaryBlackOnWhite.SubMat(itemlessRect.Add(boundingRect.TopLeft)));
+            Cv2.Resize(itemlessSection, itemlessSection, new Size(0, 0), scaleFactor, scaleFactor, InterpolationFlags.Linear);
+            Pix itemlessPix = Pix.LoadFromMemory(itemlessSection.ToBytes());
+            itemlessPix.XRes = 300;
+            itemlessPix.YRes = 300;
+
+            using Page itemlessTextPage = engine.Process(itemlessPix, PageSegMode.SingleBlock);
+            string itemlessText = itemlessTextPage.GetText().Trim();
+
+            return itemlessText == Provider.None;
         }
     }
 }
