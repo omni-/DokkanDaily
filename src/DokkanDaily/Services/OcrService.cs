@@ -1,4 +1,5 @@
 ﻿using DokkanDaily.Configuration;
+using DokkanDaily.Constants;
 using DokkanDaily.Models;
 using DokkanDaily.Models.Enums;
 using DokkanDaily.Ocr;
@@ -88,6 +89,7 @@ namespace DokkanDaily.Services
                 // float leftPadding = boundingRect.Width / 2f + boundingRect.Width * 0.04f;
                 // float rightPadding = boundingRect.Width * 0.07f;
                 // Rect clearTimeRect = new Rect(boundingRect.TopLeft.Add(new Point(leftPadding, boundingRect.Height * .29f)), new Size(boundingRect.Width - leftPadding - rightPadding, boundingRect.Height * 0.05f));
+                var stageClearDetailsRect = ui.GetStageClearDetailsRegion();
                 var nicknameRect = ui.GetNicknameRegion();
                 var clearTimeRect = ui.GetCleartimeRegion();
                 var itemlessRect = ui.GetItemlessRegion();
@@ -102,6 +104,22 @@ namespace DokkanDaily.Services
                 Cv2.DrawContours(debugImage, found, 0, Scalar.Red, 2, LineTypes.Link8);
 
                 // ShapeUtils.PreviewImage("Debug", debugImage, 5000);
+
+                // Stage Clear Details
+                Mat stageClearDetailsSection = t.T(binaryBlackOnWhite.SubMat(stageClearDetailsRect.ToCv2Rect().Add(boundingRect.TopLeft)));
+                Cv2.Resize(stageClearDetailsSection, stageClearDetailsSection, new Size(0, 0), scaleFactor, scaleFactor, InterpolationFlags.Linear);
+                Cv2.Dilate(stageClearDetailsSection, stageClearDetailsSection, null, iterations: 1);
+                Pix stageClearDetailsPix = Pix.LoadFromMemory(stageClearDetailsSection.ToBytes());
+                stageClearDetailsPix.XRes = 300;
+                stageClearDetailsPix.YRes = 300;
+
+                Page stageClearDetailsPage = engine.Process(stageClearDetailsPix, PageSegMode.SingleBlock);
+                string stageClearDetailsText = stageClearDetailsPage.GetText().Trim();
+                stageClearDetailsPage.Dispose();
+                if (!string.Equals(stageClearDetailsText.ToUpperInvariant(), OcrConstants.StageClearDetailsEng.ToUpperInvariant(), StringComparison.InvariantCulture))
+                {
+                    return new ParseResult(false, null, null);
+                }
 
                 // Nickname
                 Mat nicknameSection = t.T(binaryBlackOnWhite.SubMat(nicknameRect.ToCv2Rect().Add(boundingRect.TopLeft)));

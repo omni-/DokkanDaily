@@ -3,6 +3,7 @@
     public class OcrConstants
     {
         public static string TrainDataPath => @"./wwwroot/tessdata";
+        public static string StageClearDetailsEng => "Stage Clear Details";
         public static string NicknameEng => "Nickname:";
         public static string ClearTimeEng => "Clear Time";
         public static string ItemsUsedEng => "Items Used";
