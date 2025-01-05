@@ -2,9 +2,9 @@
 
 namespace DokkanDaily.Ocr
 {
-    public class ClearScreenUI(int width, int height)
+    public class ClearScreenUI(int width, int height, string boundingBoxImagePath)
     {
-        private static readonly Dictionary<string, RegionLoader.RelativeRegion> Regions = RegionLoader.LoadUIRegions();
+        private readonly Dictionary<string, RegionLoader.RelativeRegion> Regions = RegionLoader.LoadUIRegions(boundingBoxImagePath);
         public Rectangle GetStageClearDetailsRegion()
         {
             RegionLoader.RelativeRegion normalizedStageClearDetailsRegion = Regions["stageClearDetails"];
