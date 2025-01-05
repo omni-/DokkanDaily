@@ -37,6 +37,7 @@ namespace DokkanDailyTests
             public string? Nickname { get; set; }
             public string? ClearTime { get; set; }
             public bool? ItemlessClear { get; set; }
+            public string? OriginalFilename { get; set; }
         }
 
         private static IEnumerable<TestCaseData> GetImageTestCases()
