@@ -7,7 +7,6 @@ using DokkanDaily.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using OpenCvSharp;
 using Tesseract;
-using Image = SixLabors.ImageSharp.Image;
 using Rect = OpenCvSharp.Rect;
 using Size = OpenCvSharp.Size;
 
@@ -94,15 +93,13 @@ namespace DokkanDaily.Services
                 var clearTimeRect = ui.GetCleartimeRegion();
                 var itemlessRect = ui.GetItemlessRegion();
 
-                Mat debugImage = t.NewMat();
-                Cv2.CvtColor(binaryBlackOnWhite, debugImage, ColorConversionCodes.GRAY2BGR);
-                Cv2.Rectangle(debugImage, boundingRect, Scalar.Red, 4);
-                Cv2.Rectangle(debugImage, nicknameRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Red, 4);
-                Cv2.Rectangle(debugImage, clearTimeRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Green, 4);
-                Cv2.Rectangle(debugImage, itemlessRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Blue, 4);
-
-                Cv2.DrawContours(debugImage, found, 0, Scalar.Red, 2, LineTypes.Link8);
-
+                // Mat debugImage = t.NewMat();
+                // Cv2.CvtColor(binaryBlackOnWhite, debugImage, ColorConversionCodes.GRAY2BGR);
+                // Cv2.Rectangle(debugImage, boundingRect, Scalar.Red, 4);
+                // Cv2.Rectangle(debugImage, nicknameRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Red, 4);
+                // Cv2.Rectangle(debugImage, clearTimeRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Green, 4);
+                // Cv2.Rectangle(debugImage, itemlessRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Blue, 4);
+                // Cv2.DrawContours(debugImage, found, 0, Scalar.Red, 2, LineTypes.Link8);
                 // ShapeUtils.PreviewImage("Debug", debugImage, 5000);
 
                 // Stage Clear Details
@@ -174,103 +171,6 @@ namespace DokkanDaily.Services
                         ItemlessClear = (bool)itemless
                     },
                     null);
-
-                // Mat resizedBinary = t.NewMat();
-                // Cv2.Resize(binary, resizedBinary, new Size(0, 0), scaleFactor, scaleFactor, InterpolationFlags.Linear);
-                //
-                //
-                // using var img = Pix.LoadFromMemory(resizedBinary.ToBytes());
-                // img.XRes = 300;
-                // img.YRes = 300;
-                // using var page = engine.Process(img);
-                //
-                // var text = Provider.GetText(page);
-                //
-                // if (!text.Contains(Provider.Clear) && !text.Contains(Provider.ClearAlt)) return new(false, null, null);
-                //
-                // List<string> split = [.. text.Split('\n', StringSplitOptions.RemoveEmptyEntries)];
-                //
-                // string clearTime = null;
-                // bool itemless = false;
-                //
-                // int index = split.IndexOf(Provider.ClearTime);
-                //
-                // if (index == -1) index = split
-                //         .IndexOf(split
-                //             .FirstOrDefault(x => x
-                //                 .StartsWith(Provider.ClearTimeAlt)));
-                //
-                // int toIndex = split.IndexOf(Provider.PersonalBest);
-                //
-                // if (index != -1)
-                // {
-                //     int to = toIndex == -1 ? 5 : toIndex - index;
-                //     for (int i = 1; i < to; i++)
-                //     {
-                //         if (index + i >= split.Count) break;
-                //
-                //         string tmp = split[index + i]
-                //                 .Replace('°', '"')
-                //                 .Replace('*', '"')
-                //                 .Replace('O', '0');
-                //
-                //         _logger.LogInformation("Attempting to parse `{Str}` as Dokkan-style TimeSpan...", tmp);
-                //
-                //         if (DokkanDailyHelper.TryParseDokkanTimeSpan(tmp, out TimeSpan clearTimeSpan))
-                //         {
-                //             _logger.LogInformation("Success! TimeSpan calculated as {Str}", clearTimeSpan.ToString());
-                //
-                //             clearTime = tmp;
-                //             break;
-                //         }
-                //         else
-                //         {
-                //             _logger.LogWarning("Failed to parse `{Str}` as Dokkan-style TimeSpan", tmp);
-                //         }
-                //     }
-                // }
-                //
-                // index = split.IndexOf(Provider.ItemsUsed);
-                // if (index != -1 && index + 1 < split.Count)
-                //     itemless = split[index + 1] == Provider.None;
-                //
-                // _logger.LogInformation("Calculated itemless run as `{Res}`", itemless);
-                //
-                // index = split.IndexOf(Provider.ItemsUsed);
-                // if (index != -1 && index + 1 < split.Count)
-                //     itemless = split[index + 1] == Provider.None;
-                //
-                // _logger.LogInformation("Calculated itemless run as `{Res}`", itemless);
-                //
-                // string candidate = null;
-                // string[] split2 = split
-                //     .FirstOrDefault(x => x
-                //         .Contains(Provider.Nickname))
-                //     ?.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                //
-                // if (split2 != null)
-                // {
-                //     if (split2.Length > 1)
-                //     {
-                //         index = split2.ToList().IndexOf(Provider.Nickname) + 1;
-                //         candidate = split2[index];
-                //     }
-                // }
-                //
-                // string nickname = candidate?.Replace("DBCe", "DBC*");
-                //
-                // _logger.LogInformation("Calculated nickname as `{Nick}`", nickname);
-                //
-                // _logger.LogInformation("OCR analysis complete.");
-                //
-                // return new(true,
-                //     new()
-                //     {
-                //         ClearTime = clearTime,
-                //         Nickname = nickname,
-                //         ItemlessClear = itemless
-                //     },
-                // null);
             }
             catch (Exception ex)
             {
