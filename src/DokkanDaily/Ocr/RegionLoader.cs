@@ -7,27 +7,30 @@ internal static class RegionLoader
 {
     public record RelativeRegion(float X, float Y, float Width, float Height);
 
-    public static Dictionary<string, RelativeRegion> LoadUIRegions()
+    private static readonly Dictionary<string, Rgba32> knownRegionColors = new()
     {
-        string regionMapPath = "./wwwroot/tessdata/boxes.png";
+        {
+            "stageClearDetails", new Rgba32(255, 255, 0)
+        },
+        {
+            "nickname", new Rgba32(255, 0, 0)
+        },
+        {
+            "cleartime", new Rgba32(0, 255, 0)
+        },
+        {
+            "itemless", new Rgba32(0, 0, 255)
+        }
+    };
+
+    private static readonly Dictionary<string, Dictionary<string, RelativeRegion>> cachedMaps = [];
+
+    public static Dictionary<string, RelativeRegion> LoadUIRegions(string regionMapPath)
+    {
+        if (cachedMaps.TryGetValue(regionMapPath, out Dictionary<string, RelativeRegion> value))
+            return value;
 
         using Image<Rgba32> regionMap = Image.Load<Rgba32>(regionMapPath);
-
-        Dictionary<string, Rgba32> knownRegionColors = new()
-        {
-            {
-                "stageClearDetails", new Rgba32(255, 255, 0)
-            },
-            {
-                "nickname", new Rgba32(255, 0, 0)
-            },
-            {
-                "cleartime", new Rgba32(0, 255, 0)
-            },
-            {
-                "itemless", new Rgba32(0, 0, 255)
-            }
-        };
 
         Dictionary<Rgba32, Rectangle> foundRegions = DetectRegionsByColor(regionMap);
 
@@ -68,21 +71,17 @@ internal static class RegionLoader
             itemlessRegion.Value.Height / (float) regionMap.Size.Height
         );
 
-        return new Dictionary<string, RelativeRegion>
+        var map = new Dictionary<string, RelativeRegion>
         {
-            {
-                "stageClearDetails", normalizedStageClearDetailsRegion
-            },
-            {
-                "nickname", normalizedNicknameRegion
-            },
-            {
-                "cleartime", normalizedCleartimeRegion
-            },
-            {
-                "itemless", normalizedItemlessRegion
-            }
+            { "stageClearDetails", normalizedStageClearDetailsRegion },
+            { "nickname", normalizedNicknameRegion },
+            { "cleartime", normalizedCleartimeRegion },
+            { "itemless", normalizedItemlessRegion }
         };
+
+        cachedMaps[regionMapPath] = map;
+
+        return map;
     }
 
     // Detect rectangles for unique colors in the region map

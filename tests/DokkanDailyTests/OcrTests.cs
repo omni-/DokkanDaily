@@ -103,7 +103,7 @@ namespace DokkanDailyTests
         private ClearMetadata? ProcessImage(string imagePath)
         {
             Mock<ILogger<OcrService>> loggerMock = new();
-            OcrService service = new(loggerMock.Object, Options.Create(new DokkanDaily.Configuration.DokkanDailySettings()), new OcrFormatProvider());
+            OcrService service = new(loggerMock.Object, Options.Create(new DokkanDaily.Configuration.DokkanDailySettings() { FeatureFlags = new() { EnableJapaneseParsing = true } }), new OcrFormatProvider());
             MemoryStream ms = new();
             File.OpenRead(imagePath).CopyTo(ms);
             ClearMetadata? result = service.ProcessImage(ms);

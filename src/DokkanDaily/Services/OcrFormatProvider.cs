@@ -10,31 +10,13 @@ namespace DokkanDaily.Services
 
         public void SetParsingMode(ParsingMode parsingMode) => _parsingMode = parsingMode;
 
-        private Dictionary<string, string> EngDict { get; init; }
-
-        private Dictionary<string, string> JpDict { get; init; }
-
         private bool _jp => _parsingMode == ParsingMode.Japanese;
-
-        public string ParsingModeEngineString => _jp ? jpnEngineString : engEngineString;
-
-        public string Nickname => _jp ? OcrConstants.NicknameJpn : OcrConstants.NicknameEng;
-
-        public string ClearTime => _jp ? OcrConstants.ClearTimeJpn : OcrConstants.ClearTimeEng;
-
-        public string ItemsUsed => _jp ? OcrConstants.ItemsUsedJpn : OcrConstants.ItemsUsedEng;
-
-        public string PersonalBest => _jp ? OcrConstants.PersonalBestJpn : OcrConstants.PersonalBestEng;
 
         public string None => _jp ? OcrConstants.NoneJpn : OcrConstants.NoneEng;
 
-        public string Clear => _jp ? OcrConstants.ClearJpn : OcrConstants.ClearEng;
-
-        public string ClearAlt => OcrConstants.ClearJpnAlt;
-
-        public string ClearTimeAlt => OcrConstants.ClearTimeJpnAlt;
-
         public string TrainDataPath => OcrConstants.TrainDataPath;
+
+        public string BoundingBoxImagePath => _jp ? Path.Combine(TrainDataPath, "boxes_jp.png") : Path.Combine(TrainDataPath, "boxes.png");
 
         public TesseractEngine TesseractEngine => _jp ? new TesseractEngine(TrainDataPath, jpnEngineString, EngineMode.LstmOnly) : new TesseractEngine(TrainDataPath, engEngineString, EngineMode.LstmOnly);
 
@@ -43,5 +25,32 @@ namespace DokkanDaily.Services
         private static string engEngineString => "eng";
 
         public string GetText(Page p) => _jp ? p.GetText().Replace(" ", "") : p.GetText();
+
+        public void SetEngineOptions(TesseractEngine engine)
+        {
+            if (_jp)
+            {
+                engine.SetVariable("chop_enable", true);
+                engine.SetVariable("use_new_state_cost", false);
+                engine.SetVariable("segment_segcost_rating", false);
+                engine.SetVariable("enable_new_segsearch", 0);
+                engine.SetVariable("language_model_ngram_on", 0);
+                engine.SetVariable("textord_force_make_prop_words", false);
+                engine.SetVariable("edges_max_children_per_outline", 40);
+                engine.SetVariable("preserve_interword_spaces", 1);
+            }
+        }
+
+        public bool EnsureValidClearHeader(string clearHeader)
+        {
+            if (_jp)
+            {
+                // ocr sucks at kanji :(
+                return clearHeader.Contains(OcrConstants.StageClearDetailsJpnAlt, StringComparison.InvariantCulture) 
+                    || clearHeader.Contains(OcrConstants.StageClearDetailsJpn, StringComparison.InvariantCulture);
+            }
+
+            return string.Equals(clearHeader, OcrConstants.StageClearDetailsEng, StringComparison.InvariantCulture);
+        }
     }
 }

@@ -53,6 +53,8 @@ namespace DokkanDaily.Services
                 var engine = Provider.TesseractEngine;
                 engine.DefaultPageSegMode = PageSegMode.SparseText;
 
+                Provider.SetEngineOptions(engine);
+
                 using ResourcesTracker t = new();
                 Mat gray = t.NewMat();
                 Cv2.CvtColor(t.T(Mat.FromImageData(arr)), gray, ColorConversionCodes.BGR2GRAY);
@@ -80,7 +82,7 @@ namespace DokkanDaily.Services
 
                 Rect boundingRect = Cv2.BoundingRect(found[0]);
 
-                ClearScreenUI ui = new ClearScreenUI(boundingRect.Width, boundingRect.Height);
+                ClearScreenUI ui = new(boundingRect.Width, boundingRect.Height, Provider.BoundingBoxImagePath);
 
                 float scaleFactor = 1750f / boundingRect.Height;
                 scaleFactor = Math.Clamp(scaleFactor, 0.1f, 2f);
@@ -93,14 +95,15 @@ namespace DokkanDaily.Services
                 var clearTimeRect = ui.GetCleartimeRegion();
                 var itemlessRect = ui.GetItemlessRegion();
 
-                // Mat debugImage = t.NewMat();
-                // Cv2.CvtColor(binaryBlackOnWhite, debugImage, ColorConversionCodes.GRAY2BGR);
-                // Cv2.Rectangle(debugImage, boundingRect, Scalar.Red, 4);
-                // Cv2.Rectangle(debugImage, nicknameRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Red, 4);
-                // Cv2.Rectangle(debugImage, clearTimeRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Green, 4);
-                // Cv2.Rectangle(debugImage, itemlessRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Blue, 4);
-                // Cv2.DrawContours(debugImage, found, 0, Scalar.Red, 2, LineTypes.Link8);
-                // ShapeUtils.PreviewImage("Debug", debugImage, 5000);
+                Mat debugImage = t.NewMat();
+                Cv2.CvtColor(binaryBlackOnWhite, debugImage, ColorConversionCodes.GRAY2BGR);
+                Cv2.Rectangle(debugImage, boundingRect, Scalar.Red, 4);
+                Cv2.Rectangle(debugImage, nicknameRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Yellow, 4);
+                Cv2.Rectangle(debugImage, clearTimeRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Green, 4);
+                Cv2.Rectangle(debugImage, itemlessRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Blue, 4);
+                Cv2.Rectangle(debugImage, stageClearDetailsRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Pink, 4);
+                Cv2.DrawContours(debugImage, found, 0, Scalar.Red, 2, LineTypes.Link8);
+                //ShapeUtils.PreviewImage("Debug", debugImage, 5000);
 
                 // Stage Clear Details
                 Mat stageClearDetailsSection = t.T(binaryBlackOnWhite.SubMat(stageClearDetailsRect.ToCv2Rect().Add(boundingRect.TopLeft)));
@@ -113,7 +116,8 @@ namespace DokkanDaily.Services
                 Page stageClearDetailsPage = engine.Process(stageClearDetailsPix, PageSegMode.SingleBlock);
                 string stageClearDetailsText = stageClearDetailsPage.GetText().Trim();
                 stageClearDetailsPage.Dispose();
-                if (!string.Equals(stageClearDetailsText.ToUpperInvariant(), OcrConstants.StageClearDetailsEng.ToUpperInvariant(), StringComparison.InvariantCulture))
+
+                if (!Provider.EnsureValidClearHeader(stageClearDetailsText))
                 {
                     return new ParseResult(false, null, null);
                 }
@@ -168,7 +172,7 @@ namespace DokkanDaily.Services
                     {
                         Nickname = nicknameText,
                         ClearTime = clearTimeText,
-                        ItemlessClear = (bool)itemless
+                        ItemlessClear = itemless.Value
                     },
                     null);
             }
