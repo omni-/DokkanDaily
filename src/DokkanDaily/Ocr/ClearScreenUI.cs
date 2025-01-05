@@ -5,6 +5,17 @@ namespace DokkanDaily.Ocr
     public class ClearScreenUI(int width, int height)
     {
         private static readonly Dictionary<string, RegionLoader.RelativeRegion> Regions = RegionLoader.LoadUIRegions();
+        public Rectangle GetStageClearDetailsRegion()
+        {
+            RegionLoader.RelativeRegion normalizedStageClearDetailsRegion = Regions["stageClearDetails"];
+            return new Rectangle(
+                (int)(normalizedStageClearDetailsRegion.X * width),
+                (int)(normalizedStageClearDetailsRegion.Y * height),
+                (int)(normalizedStageClearDetailsRegion.Width * width),
+                (int)(normalizedStageClearDetailsRegion.Height * height)
+            );
+        }
+
         public Rectangle GetNicknameRegion()
         {
             RegionLoader.RelativeRegion normalizedNicknameRegion = Regions["nickname"];

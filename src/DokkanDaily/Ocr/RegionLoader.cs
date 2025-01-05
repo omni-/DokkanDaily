@@ -16,6 +16,9 @@ internal static class RegionLoader
         Dictionary<string, Rgba32> knownRegionColors = new()
         {
             {
+                "stageClearDetails", new Rgba32(255, 255, 0)
+            },
+            {
                 "nickname", new Rgba32(255, 0, 0)
             },
             {
@@ -28,6 +31,7 @@ internal static class RegionLoader
 
         Dictionary<Rgba32, Rectangle> foundRegions = DetectRegionsByColor(regionMap);
 
+        Rectangle? stageClearDetailsRegion = foundRegions[knownRegionColors["stageClearDetails"]];
         Rectangle? nicknameRegion = foundRegions[knownRegionColors["nickname"]];
         Rectangle? cleartimeRegion = foundRegions[knownRegionColors["cleartime"]];
         Rectangle? itemlessRegion = foundRegions[knownRegionColors["itemless"]];
@@ -35,6 +39,13 @@ internal static class RegionLoader
         {
             throw new Exception("Failed to find all required regions in the region map.");
         }
+
+        RelativeRegion normalizedStageClearDetailsRegion = new (
+            stageClearDetailsRegion.Value.Location.X / (float) regionMap.Size.Width,
+            stageClearDetailsRegion.Value.Location.Y / (float) regionMap.Size.Height,
+            stageClearDetailsRegion.Value.Width / (float) regionMap.Size.Width,
+            stageClearDetailsRegion.Value.Height / (float) regionMap.Size.Height
+        );
 
         RelativeRegion normalizedNicknameRegion = new (
             nicknameRegion.Value.Location.X / (float) regionMap.Size.Width,
@@ -59,6 +70,9 @@ internal static class RegionLoader
 
         return new Dictionary<string, RelativeRegion>
         {
+            {
+                "stageClearDetails", normalizedStageClearDetailsRegion
+            },
             {
                 "nickname", normalizedNicknameRegion
             },
