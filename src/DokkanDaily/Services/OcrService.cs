@@ -25,7 +25,7 @@ namespace DokkanDaily.Services
 
         public ClearMetadata ProcessImage(MemoryStream imageStream)
         {
-            _logger.LogInformation("Beginning OCR analysis...");
+            _logger.LogInformation("Beginning image processing...");
             byte[] arr = imageStream.ToArray();
 
             _logger.LogInformation("Attempting to parse as English...");
@@ -36,7 +36,7 @@ namespace DokkanDaily.Services
 
             if (_settings.FeatureFlags.EnableJapaneseParsing)
             {
-                _logger.LogInformation("Attempting to parse as Japanese...");
+                _logger.LogInformation("English parsing failed. Attempting to parse as Japanese...");
                 Provider.SetParsingMode(ParsingMode.Japanese);
                 result = TryParse(arr);
                 if (result.Success) return result.ClearMetadata;
