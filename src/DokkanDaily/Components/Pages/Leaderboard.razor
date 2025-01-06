@@ -25,7 +25,10 @@
 <div class="container leaderboard text-center">
     @if (leaderboard != null)
     {
-        <h3>Current Standings:</h3>
+        <i style="float:left" @onclick="decSeason" hidden="@leftArrowHidden" class="arrow oi oi-chevron-left"></i>
+        <i style="float:right" @onclick="incSeason" hidden="@rightArrowHidden" class="arrow oi oi-chevron-right"></i>
+        <h3>@currentStandingsText</h3>
+        <p class="note">@bonusText</p>
         @for (int i = 1; i < leaderboard.Count + 1; i++)
         {
             <p>@i. @GetDisplayName(leaderboard[i - 1]) - @leaderboard[i - 1].TotalScore points</p>
@@ -45,11 +48,35 @@
     string displayText => string.IsNullOrEmpty(errorText) ? "Sorry, there's nothing here yet!" : errorText;
     string errorText;
 
+    async void incSeason()
+    {
+        if (selectedSeason == currentSeason) return;
+        selectedSeason++;
+        leaderboard = await LeaderboardSvc.GetLeaderboardBySeason(selectedSeason);
+        StateHasChanged();
+    }
+    async void decSeason()
+    {
+        if (selectedSeason == 0) return;
+        selectedSeason--;
+        leaderboard = await LeaderboardSvc.GetLeaderboardBySeason(selectedSeason);
+        StateHasChanged();
+    }
+
+    int currentSeason = 0;
+    int selectedSeason = 0;
+    bool leftArrowHidden => selectedSeason <= 0;
+    bool rightArrowHidden => selectedSeason >= currentSeason;
+    string currentStandingsText => selectedSeason == 0 ? "Hall of Fame" : selectedSeason == currentSeason ? $"Current Standings (Season {selectedSeason})" : $"Season {selectedSeason}";
+    string bonusText => selectedSeason == 0 ? "Points from clears submitted prior to the implementation of the Season system" : string.Empty;
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
             leaderboard = await LeaderboardSvc.GetDailyLeaderboard();
+            currentSeason = LeaderboardSvc.GetCurrentSeason();
+            selectedSeason = currentSeason;
         }
         catch(Exception e) { errorText = e.Message; }
     }
