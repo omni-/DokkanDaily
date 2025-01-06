@@ -56,53 +56,85 @@ namespace DokkanDaily.Services
                 using ResourcesTracker t = new();
                 Mat gray = t.NewMat();
                 Cv2.CvtColor(t.T(Mat.FromImageData(arr)), gray, ColorConversionCodes.BGR2GRAY);
-
-                Mat binary = t.NewMat();
-                Cv2.Threshold(gray, binary, 100, 255, ThresholdTypes.Binary);
+                // ShapeUtils.PreviewImage("Gray", gray, 0);
 
                 Mat binaryBlackOnWhite = t.NewMat();
                 Cv2.Threshold(gray, binaryBlackOnWhite, 100, 255, ThresholdTypes.BinaryInv);
+                // ShapeUtils.PreviewImage("binaryBlackOnWhite", binaryBlackOnWhite, 0);
 
-                Cv2.FindContours(binary, out var contours, out var hierarchy, RetrievalModes.External, ContourApproximationModes.ApproxSimple);
+                Mat lineDetectionRegion = binaryBlackOnWhite;
+                Mat edges = t.NewMat();
+                Cv2.Canny(lineDetectionRegion, edges, 150, 200,3, false);
 
-                if (contours.Length <= 0)
+                // Mat debugImageLines = t.NewMat();
+                // Cv2.CvtColor(edges, debugImageLines, ColorConversionCodes.GRAY2BGR);
+                // ShapeUtils.PreviewImage("Canny Lines", debugImageLines, 0);
+                // throw new OcrServiceException("debuggin");
+
+                LineSegmentPoint[] lines = Cv2.HoughLinesP(edges, 1, Math.PI / 180, 500, lineDetectionRegion.Width * 0.35, 0);
+
+                // start extents at the center of our image
+                int left, right, top, bottom;
+                left = right = lineDetectionRegion.Width / 2;
+                top = bottom = lineDetectionRegion.Height / 2;
+
+                foreach (LineSegmentPoint lineSegmentPoint in lines)
                 {
-                    throw new OcrServiceException("No contours found in image.");
+                    // loop over the lines and push out the extents when we find a horizontal or vertical line
+                    bool isHorizontal = false;
+                    bool isVertical = false;
+
+                    int dy = lineSegmentPoint.P2.Y - lineSegmentPoint.P1.Y;
+                    int dx = lineSegmentPoint.P2.X - lineSegmentPoint.P1.X;
+
+                    if (dy == 0) { isHorizontal = true; }
+                    else if (dx == 0) { isVertical = true; }
+
+                    if (isHorizontal) {
+                        if (lineSegmentPoint.P1.Y < top) { top = lineSegmentPoint.P1.Y; }
+                        if (lineSegmentPoint.P1.Y > bottom) { bottom = lineSegmentPoint.P1.Y; }
+                        // Cv2.Line(debugImageLines, lineSegmentPoint.P1, lineSegmentPoint.P2, Scalar.Yellow, 1);
+                    } else if (isVertical) {
+                        if (lineSegmentPoint.P1.X < left) { left = lineSegmentPoint.P1.X; }
+                        if (lineSegmentPoint.P1.X > right) { right = lineSegmentPoint.P1.X; }
+                        // Cv2.Line(debugImageLines, lineSegmentPoint.P1, lineSegmentPoint.P2, Scalar.Blue, 1);
+                    } else {
+                        // Cv2.Line(debugImageLines, lineSegmentPoint.P1, lineSegmentPoint.P2, Scalar.Red, 1);
+                    }
                 }
 
-                var found = (from contour in contours
-                             let perimeter = Cv2.ArcLength(contour, true)
-                             let approx = Cv2.ApproxPolyDP(contour, 0.02 * perimeter, true)
-                             where ShapeUtils.IsValidRectangle(approx, 0.8)
-                             let area = Cv2.ContourArea(contour)
-                             orderby area descending
-                             select contour).TakeWhile((points, idx) => Cv2.ContourArea(points) > 1_000).ToArray();
+                // Cv2.Line(debugImageLines, new OpenCvSharp.Point(left, top), new OpenCvSharp.Point(right, top), Scalar.Green, 2);
+                // Cv2.Line(debugImageLines, new OpenCvSharp.Point(left, bottom), new OpenCvSharp.Point(right, bottom), Scalar.Green, 2);
+                // Cv2.Line(debugImageLines, new OpenCvSharp.Point(left, top), new OpenCvSharp.Point(left, bottom), Scalar.Green, 2);
+                // Cv2.Line(debugImageLines, new OpenCvSharp.Point(right, top), new OpenCvSharp.Point(right, bottom), Scalar.Green, 2);
+                // ShapeUtils.PreviewImage("Lines", debugImageLines, 0);
+                // throw new OcrServiceException("debuggin");
 
-                Rect boundingRect = Cv2.BoundingRect(found[0]);
+                Rect boundingRect = Rect.FromLTRB(left, top, right, bottom);
 
                 ClearScreenUI ui = new(boundingRect.Width, boundingRect.Height, Provider.BoundingBoxImagePath);
 
-                float scaleFactor = 1750f / boundingRect.Height;
+                float scaleFactor = 1855f / boundingRect.Height;
                 scaleFactor = Math.Clamp(scaleFactor, 0.1f, 2f);
 
-                // float leftPadding = boundingRect.Width / 2f + boundingRect.Width * 0.04f;
-                // float rightPadding = boundingRect.Width * 0.07f;
-                // Rect clearTimeRect = new Rect(boundingRect.TopLeft.Add(new Point(leftPadding, boundingRect.Height * .29f)), new Size(boundingRect.Width - leftPadding - rightPadding, boundingRect.Height * 0.05f));
-                var stageClearDetailsRect = ui.GetStageClearDetailsRegion();
-                var nicknameRect = ui.GetNicknameRegion();
-                var clearTimeRect = ui.GetCleartimeRegion();
-                var itemlessRect = ui.GetItemlessRegion();
+                Rectangle stageClearDetailsRect = ui.GetStageClearDetailsRegion();
+                Rectangle nicknameRect = ui.GetNicknameRegion();
+                Rectangle clearTimeRect = ui.GetCleartimeRegion();
+                Rectangle itemlessRect = ui.GetItemlessRegion();
 
                 // Uncomment to see what the computer sees
-                //Mat debugImage = t.NewMat();
-                //Cv2.CvtColor(binaryBlackOnWhite, debugImage, ColorConversionCodes.GRAY2BGR);
-                //Cv2.Rectangle(debugImage, boundingRect, Scalar.Red, 4);
-                //Cv2.Rectangle(debugImage, nicknameRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Yellow, 4);
-                //Cv2.Rectangle(debugImage, clearTimeRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Green, 4);
-                //Cv2.Rectangle(debugImage, itemlessRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Blue, 4);
-                //Cv2.Rectangle(debugImage, stageClearDetailsRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Pink, 4);
-                //Cv2.DrawContours(debugImage, found, 0, Scalar.Red, 2, LineTypes.Link8);
-                ////ShapeUtils.PreviewImage("Debug", debugImage, 5000);
+                // Mat debugImage = t.NewMat();
+                // Cv2.CvtColor(binaryBlackOnWhite, debugImage, ColorConversionCodes.GRAY2BGR);
+                // Cv2.Rectangle(debugImage, boundingRect, Scalar.Red, 2);
+                // Cv2.Rectangle(debugImage, stageClearDetailsRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Pink, 4);
+                // Cv2.Rectangle(debugImage, nicknameRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Yellow, 4);
+                // Cv2.Rectangle(debugImage, clearTimeRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Green, 4);
+                // Cv2.Rectangle(debugImage, itemlessRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Blue, 4);
+                // ShapeUtils.PreviewImage("Debug", debugImage, 0);
+
+                // Uncomment to dump out the detected UI region image
+                // Mat finalRegionToOCRFrom = t.T(Mat.FromImageData(arr)).SubMat(boundingRect);
+                // finalRegionToOCRFrom.SaveImage("newReference.png");
 
                 // Stage Clear Details
                 string stageClearDetailsText = ParseStageClearDetails(engine, t, binaryBlackOnWhite, stageClearDetailsRect.ToCv2Rect(), boundingRect, scaleFactor);
