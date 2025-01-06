@@ -71,13 +71,14 @@
     <Build Include="Security\Schemas.sql" />
     <Build Include="Core\User Defined Types\ClearType.sql" />
     <Build Include="Core\StoredProcedures\ClearInsert.sql" />
-    <Build Include="Core\StoredProcedures\CurrentLeaderboardGet.sql" />
+    <Build Include="Core\StoredProcedures\HallOfFameLeaderboardGet.sql" />
     <Build Include="Core\Tables\DailyChallenge.sql" />
     <Build Include="Core\StoredProcedures\DailyInsert.sql" />
     <Build Include="Core\StoredProcedures\DailyChallengeListGet.sql" />
     <Build Include="Core\Tables\Daily.sql" />
     <Build Include="RefData\LoadDaily.sql" />
     <Build Include="RefData\LoadAllData.sql" />
+    <Build Include="Core\StoredProcedures\LeaderboardGetByDate.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Post-Deployment\Scripts\PostDeployment.sql" />

@@ -70,7 +70,7 @@ namespace DokkanDailyTests
                 }
             ]);
             await repository.InsertDailyClears(dbClears, dt);
-            var result = await repository.GetDailyLeaderboard();
+            var result = await repository.GetLeaderboardByDate(dt);
 
             Assert.That(result, Is.Not.Null, "the repository should return a leaderboard");
             var list = result.ToList();
@@ -99,6 +99,67 @@ namespace DokkanDailyTests
             var result = await repository.GetChallengeList(DateTime.UtcNow - TimeSpan.FromDays(2));
             var match = result.FirstOrDefault(x => x.DailyTypeName == "Character" && x.Category == null && x.Stage == 1 && x.Event == "foo" && x.LeaderFullName == "[bar] baz" && x.LinkSkill == null);
             Assert.That(match, Is.Not.Null, "Could not find matching record in db result");
+        }
+
+        [Test]
+        public async Task DatabaseCanGetHallOfFame()
+        {
+            List<DbClear> dbClears = [];
+
+            DateTime dt = new DateTime(2024, 12, 25);
+            DateTime now = DateTime.UtcNow;
+
+            dbClears.Add(new DbClear()
+            {
+                DokkanNickname = "old clear",
+                IsDailyHighscore = true,
+                ItemlessClear = true,
+                ClearTime = "n/a"
+            });
+
+            await repository.InsertDailyClears(dbClears, dt);
+            await repository.InsertDailyClears([
+                new DbClear()
+                {
+                    DokkanNickname = "omni",
+                    IsDailyHighscore = true,
+                    ItemlessClear = true,
+                    ClearTime = "n/a"
+                },
+                new DbClear()
+                {
+                    DokkanNickname = "rabs",
+                    IsDailyHighscore = false,
+                    ItemlessClear = true,
+                    ClearTime = "n/a"
+                },
+                new DbClear()
+                {
+                    DokkanNickname = "owl",
+                    IsDailyHighscore = false,
+                    ItemlessClear = false,
+                    ClearTime = "n/a"
+                }
+            ], now);
+            var result = await repository.GetHallOfFame();
+
+            Assert.That(result, Is.Not.Null, "the repository should return a HoF");
+            var list = result.ToList();
+            Assert.That(list, Has.Count.EqualTo(1), "the returned HoF should have the correct number of elements");
+
+            await repository.InsertDailyClears(dbClears, dt.AddMonths(-2));
+            await repository.InsertDailyClears(dbClears, dt.AddMonths(-3));
+            result = await repository.GetHallOfFame();
+
+            list = result.ToList();
+
+            list.Should().ContainEquivalentOf(new DbLeaderboardResult()
+            {
+                DokkanNickname = "old clear",
+                DailyHighscores = 3,
+                ItemlessClears = 3,
+                TotalClears = 3
+            }, "the hall of fame should record 3 clears for 'old clear'");
         }
 
         [Test]
@@ -135,7 +196,14 @@ namespace DokkanDailyTests
             ]);
 
             await repository.InsertDailyClears(dbClears, dt);
-            var result = await repository.GetDailyLeaderboard();
+            await repository.InsertDailyClears([new DbClear()
+            {
+                DokkanNickname = "old clear",
+                IsDailyHighscore = true,
+                ItemlessClear = true,
+                ClearTime = "n/a"
+            }], dt.AddMonths(-1));
+            var result = await repository.GetLeaderboardByDate(dt);
 
             Assert.That(result, Is.Not.Null, "the repository should return a leaderboard");
             var list = result.ToList();
@@ -143,7 +211,7 @@ namespace DokkanDailyTests
 
             await repository.InsertDailyClears(dbClears, dt + TimeSpan.FromDays(1));
             await repository.InsertDailyClears(dbClears, dt + TimeSpan.FromDays(2));
-            result = await repository.GetDailyLeaderboard();
+            result = await repository.GetLeaderboardByDate(dt);
 
             list = result.ToList();
             list.Should().ContainEquivalentOf(new DbLeaderboardResult()
@@ -184,7 +252,7 @@ namespace DokkanDailyTests
                 ItemlessClear = true,
                 ClearTime = "n/a"
             }], dt + TimeSpan.FromDays(4));
-            result = await repository.GetDailyLeaderboard();
+            result = await repository.GetLeaderboardByDate(dt);
             list = result.ToList();
             list.Should().ContainEquivalentOf(new DbLeaderboardResult()
             {
