@@ -21,13 +21,16 @@ ENV DOTNET_DokkanDailySettings__SqlServerConnectionString=$SqlServerConnectionSt
 ENV DOTNET_DokkanDailySettings__OAuth2ClientSecret=$OAuth2ClientSecret
 ENV DOTNET_DokkanDailySettings__OAuth2ClientId=$OAuth2ClientId
 ENV DOTNET_DokkanDailySettings__WebhookUrl=$WebhookUrl
-ENV DOTNET_DokkanDailySettings__FeatureFlags__EnableJapaneseParsing=${EnableJapaneseParsing:-True}
+ENV DOTNET_DokkanDailySettings__FeatureFlags__EnableJapaneseParsing=$EnableJpParsing
+ENV LD_LIBRARY_PATH="/lib:/usr/lib:/usr/local/lib"
 
 RUN apt-get update \
     && apt-get install -y --allow-unauthenticated \
         libleptonica-dev \
-        libtesseract-dev \
-    && rm -rf /var/lib/apt/lists/*
+        libtesseract-dev
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
 RUN ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
 WORKDIR /app/x64
 RUN ln -s /usr/lib/x86_64-linux-gnu/liblept.so.5 /app/x64/libleptonica-1.82.0.so
@@ -44,4 +47,6 @@ RUN dotnet publish "src/DokkanDaily/DokkanDaily.csproj" -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
+COPY --from=ghcr.io/shimat/opencvsharp/ubuntu22-dotnet6-opencv4.7.0:20230114 /usr/lib/libOpenCvSharpExtern.so /app/runtimes/linux-x64/native/libOpenCvSharpExtern.so
+COPY --from=ghcr.io/shimat/opencvsharp/ubuntu22-dotnet6-opencv4.7.0:20230114 /lib/x86_64-linux-gnu/ /lib/x86_64-linux-gnu/
 ENTRYPOINT ["dotnet", "DokkanDaily.dll"]

@@ -116,6 +116,7 @@ jobs:
         --build-arg OAuth2ClientId="${{ secrets.OAUTH_CLIENT_ID }}" \
         --build-arg SqlServerConnectionString="${{ secrets.SQL_CONNECTION_STRING }}" \
         --build-arg WebhookUrl="${{ secrets.DBC_WEBHOOKS_URL }}" \
+        --build-arg EnableJpParsing="true"
         
     - name: Docker push
       if: github.ref == 'refs/heads/master'
