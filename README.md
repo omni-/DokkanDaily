@@ -5,7 +5,6 @@
 
 ### Coming Soon(tm)
 * Announcement banner
-* Hall-of-faming the current leaderboard, implementing a seasonal one
 * Guess the Unit challenge
 
 ### Feedback/Suggestions
