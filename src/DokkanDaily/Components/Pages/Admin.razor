@@ -134,12 +134,12 @@
         await RngSvc.Reset();
     }
 
-    void Rerun()
+    async Task Rerun()
     {
         if (!int.TryParse(Date, out int result))
-            ResetSvc.DoReset(1, true);
+            await ResetSvc.DoReset(1, true);
         else
-            ResetSvc.DoReset(result, true);
+            await ResetSvc.DoReset(result, true);
     }
 
     void SetDailyType()
@@ -175,7 +175,6 @@
 
     async Task SendWebhookCustom()
     {
-        string addText = AddRolePing ? $"\r\n{InternalConstants.DokkandleDbcRole}" : "";
-        await WebhookSvc.PostAsync($"{Announcement}{addText}");
+        await WebhookSvc.PostAsync(AddRolePing ? Announcement.AddDokkandleDbcRolePing() : Announcement);
     }
 }

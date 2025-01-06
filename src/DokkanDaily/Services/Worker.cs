@@ -1,4 +1,5 @@
-﻿using DokkanDaily.Services.Interfaces;
+﻿using DokkanDaily.Models.Enums;
+using DokkanDaily.Services.Interfaces;
 
 namespace DokkanDaily.Services;
 
@@ -8,6 +9,12 @@ public class Worker(
 {
     private readonly ILogger<Worker> _logger = logger;
     private readonly IResetService _resetService = resetService;
+
+    private static readonly Dictionary<WorkType, TimeOnly> WorkSchedule = new()
+    { 
+        { WorkType.DailyReset, new(23, 59) },
+        { WorkType.LeaderboardProcessing, new(1, 30) }
+    };  
 
     private static DateTime GetNextDateTime(DateTime currentDateTime, TimeOnly time)
     {
@@ -24,26 +31,30 @@ public class Worker(
         while (!stoppingToken.IsCancellationRequested)
         {
             _logger.LogInformation("Waiting until next scheduled time...");
-            await WaitUntilNextScheduledTime(stoppingToken);
+            WorkType taskToExecute = await WaitUntilNextScheduledTime(stoppingToken);
 
             try
             {
-                await _resetService.DoReset();
+                if (taskToExecute == WorkType.DailyReset)
+                    await _resetService.DoReset();
+                else if (taskToExecute == WorkType.LeaderboardProcessing)
+                    await _resetService.ProcessLeaderboard();
             }
             catch (Exception e) { _logger.LogError(e, "Unhandled exception while attempting to invoke reset service"); }
         }
     }
 
-    protected virtual async Task WaitUntilNextScheduledTime(CancellationToken ct)
+    protected virtual async Task<WorkType> WaitUntilNextScheduledTime(CancellationToken ct)
     {
-        var schedule = new TimeOnly[] { new(23, 59) };
         var currentDateTime = DateTime.UtcNow;
-        var nextScheduledTime = schedule
-            .Select(record => GetNextDateTime(currentDateTime, record))
-            .Min();
+        var nextScheduledTime = WorkSchedule
+            .Select(x => new { Task = x.Key, Time = GetNextDateTime(currentDateTime, x.Value) })
+            .MinBy(record => record.Time);
 
-        var waitTime = nextScheduledTime - currentDateTime;
-        _logger.LogInformation("Will execute work at {NextTime} UTC time in {WaitTime}", nextScheduledTime, waitTime);
+        var waitTime = nextScheduledTime.Time - currentDateTime;
+        _logger.LogInformation("Will execute work at {NextTime} UTC (in {WaitTime})", nextScheduledTime.Time.ToShortTimeString(), waitTime.ToString(@"hh\hmm\m"));
         await Task.Delay(waitTime, ct);
+
+        return nextScheduledTime.Task;
     }
 }
