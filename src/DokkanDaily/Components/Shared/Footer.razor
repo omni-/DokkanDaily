@@ -8,6 +8,9 @@
     <div>
         <a href="https://github.com/omni-/DokkanDaily"><img src="images/misc/github.png" /></a>
     </div>
+    <div>
+        <a href="https://discord.gg/2D426TZtfK"><img src="images/misc/discord.png" /></a>
+    </div>
     <p>Time until challenge resets: @hoursToReset hour(s)</p>
     <Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
         <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
@@ -15,7 +18,7 @@
                 <button @onclick=OnClick>Log out</button>
             </Authorized>
             <NotAuthorized>
-                <button @onclick="@(()=>NavManager.NavigateTo("/auth", true))">Login with Discord</button>
+                <button @onclick="@(()=>NavManager.NavigateTo("/auth", true))">Login</button>
             </NotAuthorized>
         </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
     </Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
