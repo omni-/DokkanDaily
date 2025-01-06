@@ -3,6 +3,7 @@ using DokkanDaily.Helpers;
 using DokkanDaily.Models.Database;
 using DokkanDaily.Repository;
 using DokkanDaily.Services.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace DokkanDaily.Services
 {
@@ -19,6 +20,13 @@ namespace DokkanDaily.Services
         private readonly IDokkanDailyRepository _repository = repository;
         private readonly IRngHelperService _rngHelperService = rngHelperService;
         private readonly DiscordWebhookClient _webhookClient = webhookClient;
+
+        private static readonly Dictionary<int, string> _medalEmojiCharMap = new()
+        {
+            { 0, char.ConvertFromUtf32(0x1F947) }, // 🥇
+            { 1, char.ConvertFromUtf32(0x1F948) }, // 🥈
+            { 2, char.ConvertFromUtf32(0x1F949) }, // 🥉
+        };
 
         public async Task DoReset(int daysAgo = 0, bool isAdhoc = false)
         {
@@ -140,8 +148,29 @@ namespace DokkanDaily.Services
 
             _logger.LogInformation("Leaderboard updated.");
 
-            _logger.LogInformation("Reset complete.");
+            _logger.LogInformation("Reset completed with no fatal errors.");
         }
 
+        public async Task ProcessLeaderboard()
+        {
+            if (DateTime.UtcNow.Day == 1)
+            {
+                _logger.LogInformation("Sending end of season summary to #daily-challenge...");
+                int lastSeason = _leaderboardService.GetCurrentSeason() - 1;
+                var leaderboard = (await _leaderboardService.GetLeaderboardBySeason(lastSeason)).ToList();
+                string payload = $"# Season finish!\r\nSeason **{lastSeason}** has come to a close. Please congratulate the top scorers this season:\r\n\r\n";
+                for (int i = 0; i < 5; i++)
+                {
+                    if (i >= leaderboard.Count) break;
+
+                    payload += $"\t{i switch { 0 or 1 or 2 => _medalEmojiCharMap[i], _ => $" {i + 1}\\." }} {leaderboard[i].GetDisplayName()} - **{leaderboard[i].TotalScore}** points\r\n";
+                }
+                payload += $"\r\nSeason **{lastSeason + 1}** has officially begun. Good luck!\r\n";
+
+                await _webhookClient.PostAsync(payload.AddDokkandleDbcRolePing());
+            }
+            else
+                _logger.LogInformation("Not the first of the month. No work to do.");
+        }
     }
 }

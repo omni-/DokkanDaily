@@ -4,6 +4,7 @@
 @using DokkanDaily.Components.Shared
 @using DokkanDaily.Models
 @using DokkanDaily.Services.Interfaces
+@using DokkanDaily.Helpers;
 
 @inject ILeaderboardService LeaderboardSvc;
 @inject IRngHelperService RngSvc;
@@ -31,7 +32,7 @@
         <p class="note">@bonusText</p>
         @for (int i = 1; i < leaderboard.Count + 1; i++)
         {
-            <p>@i. @GetDisplayName(leaderboard[i - 1]) - @leaderboard[i - 1].TotalScore points</p>
+            <p>@i. @leaderboard[i - 1].GetDisplayName() - @leaderboard[i - 1].TotalScore points</p>
         }
     }
     else
@@ -79,10 +80,5 @@
             selectedSeason = currentSeason;
         }
         catch(Exception e) { errorText = e.Message; }
-    }
-
-    private string GetDisplayName(LeaderboardUser leaderboardUser)
-    {
-        return string.IsNullOrWhiteSpace(leaderboardUser.DiscordUsername) ? leaderboardUser.DokkanNickname : $"{leaderboardUser.DiscordUsername} ({leaderboardUser.DokkanNickname})";
     }
 }

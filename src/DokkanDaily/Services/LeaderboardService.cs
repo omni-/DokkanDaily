@@ -1,4 +1,5 @@
-﻿using DokkanDaily.Models;
+﻿using DokkanDaily.Constants;
+using DokkanDaily.Models;
 using DokkanDaily.Repository;
 using DokkanDaily.Services.Interfaces;
 
@@ -8,9 +9,9 @@ namespace DokkanDaily.Services
     {
         private Dictionary<int, List<LeaderboardUser>> _leaderboards = [];
         private readonly IDokkanDailyRepository _repository = repository;
-        private readonly DateTime Season1StartDate = new(2025, 1, 1);
+        private readonly DateTime _season1Start = InternalConstants.Season1StartDate;
 
-        public int GetCurrentSeason() => ((DateTime.UtcNow.Month - Season1StartDate.Month) + 12 * (DateTime.UtcNow.Year - Season1StartDate.Year)) + 1;
+        public int GetCurrentSeason() => ((DateTime.UtcNow.Month - _season1Start.Month) + 12 * (DateTime.UtcNow.Year - _season1Start.Year)) + 1;
 
         public async Task<List<LeaderboardUser>> GetDailyLeaderboard(bool force = false)
         {
@@ -23,7 +24,7 @@ namespace DokkanDaily.Services
             {
                 var result = season == 0 ? 
                     await _repository.GetHallOfFame() 
-                    : await _repository.GetLeaderboardByDate(Season1StartDate.AddMonths(season - 1));
+                    : await _repository.GetLeaderboardByDate(_season1Start.AddMonths(season - 1));
 
                 leaderboard = [];
 
