@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using DokkanDaily.Components.Pages;
 using DokkanDaily.Configuration;
 using DokkanDaily.Helpers;
 using DokkanDaily.Models;
@@ -8,7 +7,6 @@ using DokkanDaily.Models.Enums;
 using DokkanDaily.Repository.Attributes;
 using FastMember;
 using Microsoft.Extensions.Options;
-using System;
 using System.Data;
 
 namespace DokkanDaily.Repository
@@ -132,7 +130,7 @@ namespace DokkanDaily.Repository
                 dp.Add("Stage", challenge.TodaysEvent.StageNumber);
                 dp.Add("Date", DateTime.UtcNow.Date);
                 dp.Add("DailyTypeName", challenge.DailyType.ToString());
-                switch(challenge.DailyType)
+                switch (challenge.DailyType)
                 {
                     case DailyType.Character:
                         dp.Add("LeaderFullName", challenge.Leader.FullName);

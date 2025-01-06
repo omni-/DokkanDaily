@@ -58,7 +58,7 @@
     <Folder Include="Properties" />
     <Folder Include="Core" />
     <Folder Include="Core\Tables" />
-    <Folder Include="Core\Stored Procedures" />
+    <Folder Include="Core\StoredProcedures" />
     <Folder Include="Core\User Defined Types" />
     <Folder Include="Security" />
     <Folder Include="RefData" />
@@ -70,11 +70,11 @@
     <Build Include="Core\Tables\StageClear.sql" />
     <Build Include="Security\Schemas.sql" />
     <Build Include="Core\User Defined Types\ClearType.sql" />
-    <Build Include="Core\Stored Procedures\ClearInsert.sql" />
-    <Build Include="Core\Stored Procedures\CurrentLeaderboardGet.sql" />
+    <Build Include="Core\StoredProcedures\ClearInsert.sql" />
+    <Build Include="Core\StoredProcedures\CurrentLeaderboardGet.sql" />
     <Build Include="Core\Tables\DailyChallenge.sql" />
-    <Build Include="Core\Stored Procedures\DailyInsert.sql" />
-    <Build Include="Core\Stored Procedures\DailyChallengeListGet.sql" />
+    <Build Include="Core\StoredProcedures\DailyInsert.sql" />
+    <Build Include="Core\StoredProcedures\DailyChallengeListGet.sql" />
     <Build Include="Core\Tables\Daily.sql" />
     <Build Include="RefData\LoadDaily.sql" />
     <Build Include="RefData\LoadAllData.sql" />

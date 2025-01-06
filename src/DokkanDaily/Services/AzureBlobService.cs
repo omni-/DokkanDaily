@@ -74,16 +74,17 @@ namespace DokkanDaily.Services
                 _ = Task.Run(() =>
                 {
                     var metadata = _ocrService.ProcessImage(ms);
+                    _logger.LogInformation("Finished processing image.");
                     var tags = BuildTagDict(model, metadata, discordUsername);
                     blob.SetMetadataAsync(tags);
-
+                    _logger.LogInformation("Finished updating Azure metadata.");
                 });
 
                 return blob;
             }
             catch (Exception ex)
             {
-                _logger.LogError("Unhandled exception {@Ex}", ex);
+                _logger.LogError(ex, "Unhandled exception while uploading to Azure");
                 throw;
             }
         }
@@ -125,7 +126,7 @@ namespace DokkanDaily.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError("Unhandled exception {@Ex}", ex);
+                    _logger.LogError(ex, "Unhandled exception while pruning containers");
                 }
             }
             else
@@ -157,7 +158,7 @@ namespace DokkanDaily.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError("Unhandled exception {@Ex}", ex);
+                _logger.LogError(ex, "Unhandled exception while getting SAS token");
                 throw;
             }
         }
@@ -185,7 +186,7 @@ namespace DokkanDaily.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError("Unhandled exception {@Ex}", ex);
+                _logger.LogError(ex, "Unhandled exception while getting file count from Azure");
                 throw;
             }
         }
@@ -214,7 +215,7 @@ namespace DokkanDaily.Services
             }
             catch (Exception ex)
             {
-                _logger?.LogError("Unhandled exception {@Ex}", ex);
+                _logger.LogError(ex, "Unhandled exception while getting files from Azure");
                 throw;
             }
         }
