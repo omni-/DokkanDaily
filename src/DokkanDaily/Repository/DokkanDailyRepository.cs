@@ -46,31 +46,6 @@ namespace DokkanDaily.Repository
             _logger.LogInformation("Daily clears inserted");
         }
 
-        public async Task<IEnumerable<DbLeaderboardResult>> GetDailyLeaderboard()
-        {
-            _logger.LogInformation("Getting daily leaderboard...");
-            try
-            {
-                await SqlConnectionWrapper.OpenAsync();
-
-                List<DbLeaderboardResult> results = [];
-
-                await foreach (var item in SqlConnectionWrapper.ExecuteAsync<DbLeaderboardResult>(
-                    "[Core].[CurrentLeaderboardGet]", new()))
-                {
-                    results.Add(item);
-                }
-
-                _logger.LogInformation("Daily leaderboad retrieved");
-
-                return results;
-            }
-            finally
-            {
-                SqlConnectionWrapper.Close();
-            }
-        }
-
         public async Task<IEnumerable<DbChallenge>> GetChallengeList(DateTime cutoff)
         {
             _logger.LogInformation("Getting challenge list...");
@@ -145,6 +120,59 @@ namespace DokkanDaily.Repository
 
                 await SqlConnectionWrapper.ExecuteAsync(
                     "[Core].[DailyInsert]", dp);
+            }
+            finally
+            {
+                SqlConnectionWrapper.Close();
+            }
+        }
+
+        public async Task<IEnumerable<DbLeaderboardResult>> GetLeaderboardByDate(DateTime monthAndYear)
+        {
+            _logger.LogInformation("Getting current leaderboard...");
+            try
+            {
+                await SqlConnectionWrapper.OpenAsync();
+
+                List<DbLeaderboardResult> results = [];
+
+                DynamicParameters dp = new();
+                dp.Add("MonthAndYear", monthAndYear);
+
+                await foreach (var item in SqlConnectionWrapper.ExecuteAsync<DbLeaderboardResult>(
+                    "[Core].[LeaderboardGetByDate]", dp))
+                {
+                    results.Add(item);
+                }
+
+                _logger.LogInformation("Daily leaderboad retrieved");
+
+                return results;
+            }
+            finally
+            {
+                SqlConnectionWrapper.Close();
+            }
+        }
+
+        public async Task<IEnumerable<DbLeaderboardResult>> GetHallOfFame()
+        {
+            _logger.LogInformation("Getting Hall of Fame...");
+            try
+            {
+                await SqlConnectionWrapper.OpenAsync();
+
+                List<DbLeaderboardResult> results = [];
+
+                await foreach (var item in SqlConnectionWrapper.ExecuteAsync<DbLeaderboardResult>(
+                    "[Core].[HallOfFameLeaderboardGet]", new()))
+                {
+                    results.Add(item);
+                }
+
+                _logger.LogInformation("HoF retrieved");
+
+                return results;
             }
             finally
             {

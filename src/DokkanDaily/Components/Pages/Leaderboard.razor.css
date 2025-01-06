@@ -12,3 +12,19 @@
     max-height: 70vh;
     max-width:80vw;
 }
+
+.arrow {
+    margin-top: 1vh;
+    cursor: pointer;
+}
+
+.note {
+    font-size: x-small;
+    font-style: italic;
+}
+
+@media(max-width: 420px) {
+    h3 {
+        font-size: larger;
+    }
+}

@@ -6,13 +6,25 @@ namespace DokkanDaily.Services
 {
     public class LeaderboardService(IDokkanDailyRepository repository) : ILeaderboardService
     {
-        private List<LeaderboardUser> leaderboard = [];
+        private Dictionary<int, List<LeaderboardUser>> _leaderboards = [];
         private readonly IDokkanDailyRepository _repository = repository;
+        private readonly DateTime Season1StartDate = new(2025, 1, 1);
+
+        public int GetCurrentSeason() => ((DateTime.UtcNow.Month - Season1StartDate.Month) + 12 * (DateTime.UtcNow.Year - Season1StartDate.Year)) + 1;
+
         public async Task<List<LeaderboardUser>> GetDailyLeaderboard(bool force = false)
         {
-            if (leaderboard.Count == 0 || force)
+            return await GetLeaderboardBySeason(GetCurrentSeason(), force);
+        }
+
+        public async Task<List<LeaderboardUser>> GetLeaderboardBySeason(int season, bool force = false)
+        {
+            if (force || !_leaderboards.TryGetValue(season, out var leaderboard) || leaderboard.Count == 0)
             {
-                var result = await _repository.GetDailyLeaderboard();
+                var result = season == 0 ? 
+                    await _repository.GetHallOfFame() 
+                    : await _repository.GetLeaderboardByDate(Season1StartDate.AddMonths(season - 1));
+
                 leaderboard = [];
 
                 foreach (var user in result)
@@ -27,6 +39,8 @@ namespace DokkanDaily.Services
 
                 leaderboard = [.. leaderboard.OrderByDescending(x => x.TotalScore)];
             }
+
+            _leaderboards[season] = leaderboard;
 
             return leaderboard;
         }

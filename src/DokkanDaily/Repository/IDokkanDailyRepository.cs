@@ -11,6 +11,8 @@ namespace DokkanDaily.Repository
 
         Task<IEnumerable<DbChallenge>> GetChallengeList(DateTime cutoff);
 
-        Task<IEnumerable<DbLeaderboardResult>> GetDailyLeaderboard();
+        Task<IEnumerable<DbLeaderboardResult>> GetLeaderboardByDate(DateTime monthAndYear);
+
+        Task<IEnumerable<DbLeaderboardResult>> GetHallOfFame();
     }
 }

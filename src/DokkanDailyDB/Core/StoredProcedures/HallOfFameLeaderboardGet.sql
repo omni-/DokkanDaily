@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [Core].[CurrentLeaderboardGet]
+﻿CREATE PROCEDURE [Core].[HallOfFameLeaderboardGet]
 AS
 BEGIN
 
@@ -11,6 +11,8 @@ BEGIN
     FROM [Core].[StageClear] C
     INNER JOIN [Core].[DokkanDailyUser] DDU ON
      C.DokkanDailyUserId = DDU.DokkanDailyUserId
+    WHERE
+        C.ClearDate < CAST('1/6/2025 00:00' AS DATETIME2) --date of implementation for improved OCR
     GROUP BY
         DDU.DokkanNickname,
         DDU.DiscordUsername
