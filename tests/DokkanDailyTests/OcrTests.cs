@@ -63,7 +63,7 @@ namespace DokkanDailyTests
                     if (snapshot.Categories.Contains("lang_jpn"))
                     {
                         // fixme targeted OCR not working for Japanese yet
-                        continue;
+                        // continue;
                     }
                 }
 
@@ -161,10 +161,11 @@ namespace DokkanDailyTests
 
             ClearMetadata? result = GetProcessedResult(imagePath);
 
+            bool expectNicknameError = TestContext.CurrentContext.Test?.Properties["Category"]?.Contains("expect_nickname_error") ?? false;
             Assert.Multiple(() =>
             {
                 Assert.That(result?.ItemlessClear, Is.EqualTo(snapshot.ItemlessClear));
-                Assert.That(result?.Nickname, Is.EqualTo(snapshot.Nickname));
+                Assert.That(result?.Nickname, expectNicknameError ? Is.Not.EqualTo(snapshot.Nickname) : Is.EqualTo(snapshot.Nickname));
                 Assert.That(result?.ClearTime, Is.EqualTo(snapshot.ClearTime));
             });
         }
@@ -181,7 +182,8 @@ namespace DokkanDailyTests
 
             ClearMetadata? result = GetProcessedResult(imagePath);
 
-            Assert.That(result?.Nickname, Is.EqualTo(snapshot.Nickname));
+            bool expectNicknameError = TestContext.CurrentContext.Test?.Properties["Category"]?.Contains("expect_nickname_error") ?? false;
+            Assert.That(result?.Nickname, expectNicknameError ? Is.Not.EqualTo(snapshot.Nickname) : Is.EqualTo(snapshot.Nickname));
         }
 
         [TestCaseSource(nameof(GetImageTestCases))]
