@@ -43,7 +43,12 @@ BEGIN
             SOURCE.ItemlessClear,
             SOURCE.ClearTime,
             SOURCE.ClearDate,
-            SOURCE.IsDailyHighscore);
+            SOURCE.IsDailyHighscore)
+     WHEN MATCHED THEN
+     UPDATE SET 
+         TARGET.ItemlessClear = SOURCE.ItemlessClear
+         , TARGET.ClearTime = SOURCE.ClearTime
+         , Target.IsDailyHighscore = SOURCE.IsDailyHighscore;
 
 RETURN 0
 END
