@@ -9,6 +9,7 @@ namespace DokkanDaily.Constants
         #region Link Skills
         public static IReadOnlyList<LinkSkill> LinkSkills { get => linkSkills; }
         public static IReadOnlyDictionary<string, LinkSkill> LinkSkillMap { get; }
+        public static IReadOnlyDictionary<string, Category> CategoryMap { get; }
 
         private static readonly List<LinkSkill> linkSkills =
         [
@@ -410,6 +411,7 @@ namespace DokkanDaily.Constants
         static DokkanConstants()
         {
             LinkSkillMap = new Dictionary<string, LinkSkill>(linkSkills.Select(x => new KeyValuePair<string, LinkSkill>(x.Name, x)));
+            CategoryMap = new Dictionary<string, Category>(categories.Select(x => new KeyValuePair<string, Category>(x.Name, x)));
             DailyTypes = [DailyType.Category, DailyType.LinkSkill, DailyType.Character];
             unitDB = DokkanDailyHelper.BuildCharacterDb().ToList();
         }
