@@ -56,14 +56,14 @@
                         <label>Rerun Daily Reset: <input @bind-value=@Date /><button style="margin-left:5px" @onclick=Rerun>Rerun Daily Reset</button></label>
                         <br />
                         <label>Set Daily Type: <input @bind-value=@DailyType /><button style="margin-left:5px" @onclick=SetDailyType>Set</button></label>
-@*                         <br />
-                        <label>Set Stage: <input @bind-value=@DailyType /><button style="margin-left:5px" @onclick=SetStage>Set</button></label>
                         <br />
-                        <label>Set Unit: <input @bind-value=@DailyType /><button style="margin-left:5px" @onclick=SetUnit>Set</button></label>
+                        <label>Set Stage: <input @bind-value=@Stage /><button style="margin-left:5px" @onclick=SetStage>Set</button></label>
                         <br />
-                        <label>Set Link: <input @bind-value=@DailyType /><button style="margin-left:5px" @onclick=SetLinkSkill>Set</button></label>
+                        <label>Set Unit: <input @bind-value=@Unit /><button style="margin-left:5px" @onclick=SetUnit>Set</button></label>
                         <br />
-                        <label>Set Category: <input @bind-value=@DailyType /><button style="margin-left:5px" @onclick=SetDailyType>Set</button></label> *@
+                        <label>Set Link: <input @bind-value=@LinkSkill /><button style="margin-left:5px" @onclick=SetLinkSkill>Set</button></label>
+                        <br />
+                        <label>Set Category: <input @bind-value=@Category /><button style="margin-left:5px" @onclick=SetCategory>Set</button></label>
                         <br />
                         <label>Send Daily via Webhook: <button style="margin-left:5px" @onclick=SendWebhook>Send</button></label>
                         <br />
@@ -94,6 +94,14 @@
     string Announcement { get; set; }
 
     bool AddRolePing { get; set; } = true;
+
+    string Stage { get; set; }
+
+    string Category { get; set; }
+
+    string LinkSkill { get; set; }
+
+    string Unit { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -147,24 +155,31 @@
         RngSvc.OverrideChallengeType(Enum.Parse<DailyType>(DailyType));
     }
 
-    void SetStage()
+    async Task SetStage()
     {
-
+        var sp = Stage?.Split(", Stage ");
+        var chall = await RngSvc.GetDailyChallenge();
+        RngSvc.OverrideChallenge(chall.DailyType, DokkanConstants.Stages.First(x => x.Name == sp[0] && x.StageNumber == int.Parse(sp[1])), chall.LinkSkill, chall.Category, chall.Leader);
     }
 
-    void SetUnit()
+    async Task SetUnit()
     {
+        var sp = Unit?.Split("] ");
 
+        var chall = await RngSvc.GetDailyChallenge();
+        RngSvc.OverrideChallenge(chall.DailyType, chall.TodaysEvent, chall.LinkSkill, chall.Category, DokkanConstants.Leaders.First(x => x.Name == sp[1] && x.Title == sp[0].Replace("[", "")));
     }
 
-    void SetLinkSkill()
+    async Task SetLinkSkill()
     {
-
+        var chall = await RngSvc.GetDailyChallenge();
+        RngSvc.OverrideChallenge(chall.DailyType, chall.TodaysEvent, DokkanConstants.LinkSkillMap[LinkSkill], chall.Category, chall.Leader);
     }
 
-    void SetCategory()
+    async Task SetCategory()
     {
-
+        var chall = await RngSvc.GetDailyChallenge();
+        RngSvc.OverrideChallenge(chall.DailyType, chall.TodaysEvent, chall.LinkSkill, DokkanConstants.CategoryMap[Category], chall.Leader);
     }
 
     async Task SendWebhook()
