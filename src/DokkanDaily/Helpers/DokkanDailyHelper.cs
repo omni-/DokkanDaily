@@ -1,6 +1,7 @@
 ﻿using DokkanDaily.Constants;
 using DokkanDaily.Models;
 using DokkanDaily.Models.Enums;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -81,5 +82,46 @@ namespace DokkanDaily.Helpers
 
         public static string AddSasTokenToUri(this string uri, string sasToken)
             => $"{uri}?{sasToken}";
+
+        public static string GetDisplayName(this LeaderboardUser leaderboardUser) =>  string.IsNullOrWhiteSpace(leaderboardUser.DiscordUsername) ? leaderboardUser.DokkanNickname : $"{leaderboardUser.DiscordUsername} ({leaderboardUser.DokkanNickname})";
+
+        public static string AddDokkandleDbcRolePing(this string source) => $"{source}\r\n{InternalConstants.DokkandleDbcRole}";
+
+        public static string UnescapeUnicode(string value) => string.IsNullOrWhiteSpace(value) ? value : Regex.Unescape(value);
+
+        public static string EscapeUnicode(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value)) return value;
+
+            StringBuilder sb = new();
+            foreach (char c in value)
+            {
+                if (c > 127)
+                {
+                    // This character is too big for ASCII
+                    string encodedValue = "\\u" + ((int)c).ToString("x4");
+                    sb.Append(encodedValue);
+                }
+                else
+                {
+                    sb.Append(c);
+                }
+            }
+            return sb.ToString();
+        }
+
+        public static string CheckUsername(string username)
+        {
+            if (string.IsNullOrEmpty(username)) return username;
+
+            var sub = InternalConstants.KnownUsernameMap.Keys.FirstOrDefault(x => Regex.IsMatch(username, x));
+
+            if (!string.IsNullOrEmpty(sub))
+            {
+                return InternalConstants.KnownUsernameMap[sub];
+            }
+
+            return username;
+        }
     }
 }
