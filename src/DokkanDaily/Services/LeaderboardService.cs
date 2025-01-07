@@ -1,4 +1,5 @@
 ﻿using DokkanDaily.Constants;
+using DokkanDaily.Helpers;
 using DokkanDaily.Models;
 using DokkanDaily.Repository;
 using DokkanDaily.Services.Interfaces;
@@ -33,7 +34,7 @@ namespace DokkanDaily.Services
                     leaderboard.Add(new()
                     {
                         DiscordUsername = user.DiscordUsername,
-                        DokkanNickname = user.DokkanNickname,
+                        DokkanNickname = DokkanDailyHelper.UnescapeUnicode(user.DokkanNickname),
                         TotalScore = user.TotalClears + user.ItemlessClears + user.DailyHighscores
                     });
                 }
