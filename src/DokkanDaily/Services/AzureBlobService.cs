@@ -7,6 +7,7 @@ using DokkanDaily.Configuration;
 using DokkanDaily.Constants;
 using DokkanDaily.Helpers;
 using DokkanDaily.Models;
+using DokkanDaily.Models.Enums;
 using DokkanDaily.Services.Interfaces;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Options;
@@ -233,7 +234,15 @@ namespace DokkanDaily.Services
                 { AzureConstants.ITEMLESS_TAG, metadata?.ItemlessClear.ToString()},
                 { AzureConstants.CLEAR_TIME_TAG, metadata?.ClearTime},
                 { AzureConstants.DISCORD_NAME_TAG, discordUsername },
-                { AzureConstants.INVALID_TAG, invalid }
+                { AzureConstants.INVALID_TAG, invalid },
+                { AzureConstants.CHALLENGE_TARGET_TAG, model.DailyType switch
+                    {
+                        DailyType.LinkSkill =>  model.LinkSkill.Name,
+                        DailyType.Category => model.Category.Name,
+                        DailyType.Character => model.Leader.FullName,
+                        _ => null
+                    }
+                }
             };
 
             return dict.Where(kv => !string.IsNullOrEmpty(kv.Value)).ToDictionary();
