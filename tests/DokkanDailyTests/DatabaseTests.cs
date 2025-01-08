@@ -75,21 +75,6 @@ namespace DokkanDailyTests
             Assert.That(result, Is.Not.Null, "the repository should return a leaderboard");
             var list = result.ToList();
             Assert.That(list, Has.Count.EqualTo(2), "the returned leaderboard should have the correct number of elements");
-
-            // too hard :(
-
-            //await repository.InsertDailyClears([new DbClear()
-            //{
-            //    DokkanNickname = "omni",
-            //    DiscordUsername = "omni",
-            //    IsDailyHighscore = true,
-            //    ItemlessClear = true,
-            //    ClearTime = "n/a"
-            //}], dt + TimeSpan.FromDays(1));
-
-            //result = await repository.GetDailyLeaderboard();
-            //list = result.ToList();
-            //Assert.That(list, Has.Count.EqualTo(1), "the clears should be bound to one user");
         }
 
         [Test]
@@ -99,6 +84,14 @@ namespace DokkanDailyTests
             var result = await repository.GetChallengeList(DateTime.UtcNow - TimeSpan.FromDays(2));
             var match = result.FirstOrDefault(x => x.DailyTypeName == "Character" && x.Category == null && x.Stage == 1 && x.Event == "foo" && x.LeaderFullName == "[bar] baz" && x.LinkSkill == null);
             Assert.That(match, Is.Not.Null, "Could not find matching record in db result");
+
+            result = await repository.GetChallengeList(null);
+            match = result.FirstOrDefault(x => x.DailyTypeName == "Character" && x.Category == null && x.Stage == 1 && x.Event == "foo" && x.LeaderFullName == "[bar] baz" && x.LinkSkill == null);
+            Assert.That(match, Is.Not.Null, "Could not find matching record in db result");
+
+
+            result = await repository.GetChallengeList(DateTime.UtcNow);
+            Assert.That(result, Is.Empty, "Returned a row when none should be returned");
         }
 
         [Test]

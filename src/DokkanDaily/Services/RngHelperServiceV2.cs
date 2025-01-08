@@ -41,22 +41,28 @@ namespace DokkanDaily.Services
 
             try
             {
-                DateTime cutoffDate = DateTime.UtcNow - TimeSpan.FromDays(InternalConstants.ChallengeRepeatLimitDays);
-                var dbChallenges = await dokkanDailyRepository.GetChallengeList(cutoffDate);
+                // todo: experiment
+                // DateTime cutoffDate = DateTime.UtcNow - TimeSpan.FromDays(InternalConstants.ChallengeRepeatLimitDays);
 
-                recentChallenges = dbChallenges.Select(x =>
-                {
-                    DailyType type = Enum.Parse<DailyType>(x.DailyTypeName);
-                    // should be == instead of StartsWith here, but i messed up and made the varchar column too small
-                    Stage stage = DokkanConstants.Stages.First(y => y.Name.StartsWith(x.Event) && y.StageNumber == x.Stage);
-                    // same here 
-                    Leader leader = x.LeaderFullName == null ? null : DokkanConstants.Leaders.First(y => y.FullName.StartsWith(x.LeaderFullName));
-                    LinkSkill skill = x.LinkSkill == null ? null : DokkanConstants.LinkSkillMap[x.LinkSkill];
-                    Category category = x.Category == null ? null : DokkanConstants.Categories.First(y => y.Name == x.Category);
-                    Unit unit = x.LeaderFullName == null ? null : DokkanDailyHelper.GetUnit(leader);
+                var dbChallenges = await dokkanDailyRepository.GetChallengeList(null);
 
-                    return new Challenge(type, stage, skill, category, leader, unit);
-                }).ToList();
+                recentChallenges = dbChallenges
+                    .Select(x =>
+                    {
+                        DailyType type = Enum.Parse<DailyType>(x.DailyTypeName);
+                        // should be == instead of StartsWith here, but i messed up and made the varchar column too small
+                        Stage stage = DokkanConstants.Stages.First(y => y.Name.StartsWith(x.Event) && y.StageNumber == x.Stage);
+                        // same here 
+                        Leader leader = x.LeaderFullName == null ? null : DokkanConstants.Leaders.First(y => y.FullName.StartsWith(x.LeaderFullName));
+                        LinkSkill skill = x.LinkSkill == null ? null : DokkanConstants.LinkSkillMap[x.LinkSkill];
+                        Category category = x.Category == null ? null : DokkanConstants.Categories.First(y => y.Name == x.Category);
+                        Unit unit = x.LeaderFullName == null ? null : DokkanDailyHelper.GetUnit(leader);
+
+                        return new { Challenge = new Challenge(type, stage, skill, category, leader, unit), x.Date };
+                    })
+                    .OrderByDescending(x => x.Date)
+                    .Select(x => x.Challenge)
+                    .ToList();
             }
             catch (Exception ex)
             {
@@ -67,15 +73,19 @@ namespace DokkanDaily.Services
             // filter out things we've done recently
             var stages = DokkanConstants.Stages
                 .Except(recentChallenges
+                    .Take(InternalConstants.ChallengeRepeatLimitDays)
                     .Select(x => x.TodaysEvent));
             var leaders = DokkanConstants.Leaders
                 .Except(recentChallenges
+                    .Take(50)
                     .Select(x => x.Leader));
             var linkSkills = DokkanConstants.LinkSkills
                 .Except(recentChallenges
+                    .Take(30)
                     .Select(x => x.LinkSkill));
             var categories = DokkanConstants.Categories
                 .Except(recentChallenges
+                    .Take(40)
                     .Select(x => x.Category));
             var events = stages
                 .Select(x => x.Name)

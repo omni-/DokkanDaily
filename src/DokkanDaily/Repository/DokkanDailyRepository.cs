@@ -46,7 +46,7 @@ namespace DokkanDaily.Repository
             _logger.LogInformation("Daily clears inserted");
         }
 
-        public async Task<IEnumerable<DbChallenge>> GetChallengeList(DateTime cutoff)
+        public async Task<IEnumerable<DbChallenge>> GetChallengeList(DateTime? cutoff)
         {
             _logger.LogInformation("Getting challenge list...");
             try
@@ -56,7 +56,7 @@ namespace DokkanDaily.Repository
                 List<DbLeaderboardResult> results = [];
 
                 DynamicParameters dp = new();
-                dp.Add("CutoffDateUTC", cutoff);
+                if (cutoff != null) dp.Add("CutoffDateUTC", cutoff.Value);
 
                 return await SqlConnectionWrapper.QueryAsync<DbChallenge>(
                     "[Core].[DailyChallengeListGet]", dp);

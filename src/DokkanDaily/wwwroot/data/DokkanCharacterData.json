@@ -13374,8 +13374,8 @@
     {
         "name": "Super Saiyan 2 Goku",
         "title": "Battle to Protect Tomorrow",
-        "maxLevel": 120,
-        "maxSALevel": 10,
+        "maxLevel": 140,
+        "maxSALevel": 15,
         "rarity": "UR",
         "class": "Super",
         "type": "PHY",
@@ -13383,9 +13383,13 @@
         "id": "12346",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/a/a5/Card_1023460_thumb.png/revision/latest?cb=20220331140141",
         "leaderSkill": "\"Battle of Fate\" or \"Accelerated Battle\" Category Ki +3, HP +130% and ATK & DEF +170%",
-        "superAttack": "Raises ATK & DEF for 1 turn[1] and causes immense damage with a medium chance of stunning the enemy[2]",
-        "passive": "Ki +2 and ATK & DEF +180%; plus an additional ATK & DEF +50% when performing a Super Attack; launches an additional attack that has a medium chance[3] of becoming a Super Attack; high chance[4] of performing a critical hit",
+        "ezaLeaderSkill": "\"Battle of Fate\" or \"Accelerated Battle\" Category Ki +3 and HP, ATK & DEF +170%",
+        "superAttack": "Raises ATK & DEF for 1 turn[1] and causes immense damage with a medium chance[2] of stunning the enemy",
+        "ezaSuperAttack": "Greatly raises ATK & DEF for 1 turn[3] and causes immense damage with a high chance[4] of stunning the enemy",
+        "passive": "Ki +2 and ATK & DEF +180%; plus an additional ATK & DEF +50% when performing a Super Attack; launches an additional attack that has a medium chance[5] of becoming a Super Attack; high chance[6] of performing a critical hit",
+        "ezaPassive": "Ki +2 and ATK & DEF +200%; plus an additional ATK & DEF +200% when performing a Super Attack; launches an additional attack that has a high chance[7] of becoming a Super Attack; great chance[8] of performing a critical hit; plus an additional Ki +2 and DEF +200% and guards all attacks when HP is 77% or more",
         "activeSkill": "Transforms; Can be activated when HP is 77% or less, starting from the 3rd turn from the start of battle (once only)",
+        "ezaActiveSkill": "",
         "transformationCondition": "Transforms; Can be activated when HP is 77% or less, starting from the 3rd turn from the start of battle (once only)",
         "links": [
             "Saiyan Warrior Race",
@@ -13435,8 +13439,10 @@
                 "transformedID": "42347",
                 "transformedClass": "Super",
                 "transformedType": "PHY",
-                "transformedSuperAttack": "Greatly raises ATK and raises DEF for 1 turn[1] and causes immense damage with a medium chance of stunning the enemy[2]",
-                "transformedPassive": "Ki +3 and ATK & DEF +200%; plus an additional ATK & DEF +50% when performing a Super Attack; launches 2 additional attacks, each of which has a medium chance[3] of becoming a Super Attack; plus an additional ATK +50% when attacking and great chance[4] of performing a critical hit for 6 turns from the character's entry turn; high chance[5] of performing a critical hit starting from the 7th turn from the character's entry turn",
+                "transformedSuperAttack": "Greatly raises ATK and raises DEF for 1 turn[1] and causes immense damage with a medium chance[2] of stunning the enemy",
+                "transformedEZASuperAttack": "Massively raises ATK and greatly raises DEF for 1 turn[3] and causes immense damage with a great chance[4] of stunning the enemy",
+                "transformedPassive": "Ki +3 and ATK & DEF +200%; plus an additional ATK & DEF +50% when performing a Super Attack; launches 2 additional attacks, each of which has a medium chance[5] of becoming a Super Attack; plus an additional ATK +50% when attacking and great chance[6] of performing a critical hit for 6 turns from the character's entry turn; high chance[7] of performing a critical hit starting from the 7th turn from the character's entry turn",
+                "transformedEZAPassive": "Ki +3 and ATK & DEF +300%; plus an additional ATK & DEF +200% when performing a Super Attack; launches 2 additional attacks, each of which has a high chance[8] of becoming a Super Attack; guards all attacks for 1 turn from the character's entry turn; plus an additional Ki +3, ATK +100% and DEF +200% when attacking and great chance[6] of performing a critical hit for 6 turns from the character's entry turn; plus an additional ATK +50% when attacking and high chance[7] of performing a critical hit starting from the 7th turn from the character's entry turn; chance of evading enemy's attack (including Super Attack) +5% (up to 25%) and reduces damage received by 5% (up to 25%) with each Super Attack performed; chance of evading enemy's attack (including Super Attack) +5% (up to 25%) and reduces damage received by 5% (up to 25%) with each turn passed",
                 "transformedLinks": [
                     "Saiyan Warrior Race",
                     "Super Saiyan",
@@ -32443,8 +32449,8 @@
     {
         "name": "Buu (Kid)",
         "title": "Majin of Destruction",
-        "maxLevel": 120,
-        "maxSALevel": 10,
+        "maxLevel": 140,
+        "maxSALevel": 15,
         "rarity": "UR",
         "class": "Extreme",
         "type": "STR",
@@ -32452,10 +32458,15 @@
         "id": "12349",
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/d/dd/Card_1023490_thumb.png/revision/latest?cb=20220331143229",
         "leaderSkill": "\"Battle of Fate\" or \"Majin Buu Saga\" Category Ki +3, HP & ATK +170% and DEF +130%",
-        "superAttack": "Raises ATK & DEF for 1 turn[1] and causes immense damage with a medium chance of stunning the enemy[2]",
-        "passive": "Ki +3 and ATK & DEF +180%; plus an additional ATK & DEF +30% with each attack performed (up to 120%); launches an additional attack that has a medium chance[3] of becoming a Super Attack; recovers 20% HP at the end of the turn in which an attack was received; great chance[4] of nullifying Unarmed Super Attacks directed at the character",
+        "ezaLeaderSkill": "\"Battle of Fate\" or \"Majin Buu Saga\" Category Ki +3 and HP, ATK & DEF +170%",
+        "superAttack": "Raises ATK & DEF for 1 turn[1] and causes immense damage with a medium chance[2] of stunning the enemy",
+        "ezaSuperAttack": "Greatly raises ATK & DEF for 1 turn[3] and causes immense damage with a high chance[4] of stunning the enemy",
+        "passive": "Ki +3 and ATK & DEF +180%; plus an additional ATK & DEF +30% with each attack performed (up to 120%); launches an additional attack that has a medium chance[5] of becoming a Super Attack; recovers 20% HP at the end of the turn in which an attack was received; great chance[6] of nullifying Unarmed Super Attacks directed at the character",
+        "ezaPassive": "Ki +3 and ATK & DEF +250%; plus an additional ATK & DEF +40% with each attack performed (up to 160%); launches an additional attack that has a high chance[7] of becoming a Super Attack; high chance[8] of performing a critical hit; reduces damage received by 20%; plus an additional ATK & DEF +40% (up to 120%) and an additional damage reduction of 10% (up to 30%) per \"Majin Power\" or \"Majin Buu Saga\" Category ally on the team (depending on which Category has more members); plus an additional DEF +100% and an additional damage reduction of 20% before the character receives an attack 6 times in battle; recovers 20% HP at the end of the turn in which an attack was received; nullifies unarmed Super Attacks directed at the character for 3 turns from the character's entry turn; great chance[6] of nullifying Unarmed Super Attacks directed at the character starting from the 4th turn from the character's entry turn",
         "activeSkill": "ATK & DEF +20% in battle",
         "activeSkillCondition": "Can be activated when there is a \"Majin Buu Saga\" Category enemy, or after the character receives an attack 6 or more times in battle (once only)",
+        "ezaActiveSkill": "ATK & DEF +20% in battle",
+        "ezaActiveSkillCondition": "Can be activated when there is a \"Majin Buu Saga\" Category enemy, or after the character receives an attack 6 or more times in battle (once only)",
         "links": [
             "Majin",
             "Brutal Beatdown",
@@ -32478,7 +32489,8 @@
             "Accelerated Battle",
             "Worldwide Chaos",
             "Battle of Fate",
-            "Uncontrollable Power"
+            "Uncontrollable Power",
+            "Demonic Power"
         ],
         "kiMeter": [
             "KiMeter 2 Green"
@@ -32937,7 +32949,7 @@
         "superAttack": "Causes supreme damage to enemy and greatly lowers DEF[1]",
         "ezaSuperAttack": "Raises DEF for 1 turn[2], causes supreme damage to enemy and greatly lowers DEF[1]",
         "passive": "ATK & DEF +120%; Ki +3 and high chance[3] of evading enemy's attack (including Super Attack) when there is an ally or enemy whose name includes \"Goku (Youth)\"; plus an additional ATK +120% & DEF +80% for 5 turns after evading an attack",
-        "ezaPassive": "ATK & DEF +150%; Ki +3 plus an additional ATK & DEF +150% when there is an ally or enemy whose name includes \"Goku (Youth)\"; high chance[3] of evading enemy's attack (including Super Attack); chance to evade enemy's attack (including Super Attack) +15% for 1 turn from the character's entry turn; chance to evade enemy's attack (including Super Attack) +5% per \"Youth\" Category ally attacking in the same turn; chance to evade enemy's attack (including Super Attack) +5% starting from the turn in which the character evades the 5th attack in battle; chance to evade enemy's attack (including Super Attack) +8% starting from the turn in which the character evades the 8th attack in battle; plus an additional ATK & DEF +150% and high chance[4] of performing a critical hit within the same turn after evading an attack; lowers the attacked enemy's ATK by 30% for 2 turns",
+        "ezaPassive": "ATK & DEF +150%; Ki +3 plus an additional ATK & DEF +150% when there is an ally or enemy whose name includes \"Goku (Youth)\"; high chance[3] of evading enemy's attack (including Super Attack); plus an additional chance of evading enemy's attack (including Super Attack) +15% for 1 turn from the character's entry turn; plus an additional chance of evading enemy's attack (including Super Attack) +5% per \"DB Saga\" Category ally attacking in the same turn; plus an additional chance of evading enemy's attack (including Super Attack) +5% starting from the turn in which the character evades the 5th attack in battle; plus an additional chance of evading enemy's attack (including Super Attack) +8% starting from the turn in which the character evades the 8th attack in battle; plus an additional ATK & DEF +150% and high chance[4] of performing a critical hit for 5 turns after evading an attack; attacked enemy's ATK -30% for 2 turns",
         "links": [
             "Turtle School",
             "Kamehameha",
@@ -36548,6 +36560,52 @@
         "transformations": []
     },
     {
+        "name": "Hell Fighter #17",
+        "title": "Poised Declaration of War",
+        "maxLevel": 120,
+        "maxSALevel": 10,
+        "rarity": "UR",
+        "class": "Extreme",
+        "type": "STR",
+        "cost": 36,
+        "id": "11699",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/7/7b/Card_1029870_thumb.png/revision/latest?cb=20241211031110",
+        "leaderSkill": " Type Ki +3 and HP, ATK & DEF +70%",
+        "superAttack": "Raises ATK & DEF for 1 turn[1], causes supreme damage to enemy and greatly lowers ATK[2]",
+        "passive": "ATK & DEF +170%; high chance[3] of evading enemy's attack (including Super Attack); plus an additional ATK & DEF +170% and chance of evading enemy's attack (including Super Attack) +17% when performing a Super Attack; plus an additional ATK +100% and DEF +70% and launches an additional attack that has a high chance[4] of becoming a Super Attack when there is another \"Androids\" or \"Artificial Life Forms\" Category ally attacking in the same turn; \"Androids\" Category allies' Ki +1, ATK +30% and DEF +20%; \"Artificial Life Forms\" Category allies' Ki +1, ATK +30% and DEF +20%",
+        "links": [
+            "Android Assault",
+            "Fear and Faith",
+            "Brutal Beatdown",
+            "Nightmare",
+            "Shocking Speed",
+            "GT",
+            "Shattering the Limit"
+        ],
+        "categories": [
+            "Androids",
+            "Artificial Life Forms",
+            "Target: Goku"
+        ],
+        "kiMeter": [
+            "KiMeter 3 Green"
+        ],
+        "baseHP": 2321,
+        "maxLevelHP": 7662,
+        "freeDupeHP": 8862,
+        "rainbowHP": 10662,
+        "baseAttack": 2520,
+        "maxLevelAttack": 8319,
+        "freeDupeAttack": 9519,
+        "rainbowAttack": 11559,
+        "baseDefence": 1562,
+        "maxDefence": 5155,
+        "freeDupeDefence": 6355,
+        "rainbowDefence": 7915,
+        "kiMultiplier": "12 Ki Multiplier is 140%; ",
+        "transformations": []
+    },
+    {
         "name": "Shen",
         "title": "Possessed by Kami",
         "maxLevel": 120,
@@ -39402,7 +39460,7 @@
         "superAttack": "Causes supreme damage to enemy and raises ATK & DEF by 30% for 3 turns",
         "ezaSuperAttack": "Causes supreme damage to enemy and raises ATK & DEF by 50% for 3 turns",
         "passive": "ATK & DEF +100%; plus an additional ATK & DEF +80% for 3 turns after receiving attack; high chance[1] of evading enemy's attack (including Super Attack); plus an additional ATK +180% for 3 turns after evading an attack",
-        "ezaPassive": "Ki +3 and ATK & DEF +180%; launches an additional attack that has a medium chance[2] of becoming a Super Attack; plus an additional ATK & DEF +180% for 3 turns after receiving an attack; high chance[1] of evading enemy's attack (including Super Attack); plus an additional ATK +180% for 3 turns and launches an additional attack that has a medium chance[2] of becoming a Super Attack after evading an attack; launches an additional Super Attack when there is another \"Androids\" Category ally on the team",
+        "ezaPassive": "Ki +3 and ATK & DEF +180%; launches an additional attack that has a medium chance[2] of becoming a Super Attack; plus an additional ATK & DEF +180% for 3 turns after receiving an attack; high chance[1] of evading enemy's attack (including Super Attack); plus an additional ATK +180% and launches an additional attack that has a medium chance[2] of becoming a Super Attack for 3 turns after evading an attack; launches an additional Super Attack when there is another \"Androids\" Category ally on the team",
         "links": [
             "Android Assault",
             "Battlefield Diva",
