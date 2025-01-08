@@ -17,5 +17,7 @@
         public static string DISCORD_NAME_TAG => "discordusername";
 
         public static string INVALID_TAG => "invalidrun";
+
+        public static string CHALLENGE_TARGET_TAG => "challengetarget";
     }
 }
