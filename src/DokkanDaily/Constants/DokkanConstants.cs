@@ -146,6 +146,12 @@ namespace DokkanDaily.Constants
             new("Bright and Fun Life", "Master Roshi", Tier.A),
             new("Solitary Iron Wall of Power", "Jiren", Tier.S),
             new("Audacious Finish", "Super Saiyan 3 Gotenks", Tier.S),
+            new("Battle for the Dragon Balls in the Demon Realm", "Super Saiyan Goku (Mini) (DAIMA)", Tier.S),
+            new("Wielder of Thunder Magic", "Glorio", Tier.S),
+            new("Battle to Protect Tomorrow", "Super Saiyan 2 Goku", Tier.A),
+            new("A Promise Made to Kakarot", "Super Saiyan 2 Vegeta (Angel)", Tier.B),
+            new("Indomitable Fighting Spirit", "Super Saiyan 2 Vegeta", Tier.B),
+            new("Rousing Fighting Spirit", "Super Saiyan 2 Goku (Angel)", Tier.B),
             //extreme
             new("Universe-Devastating Combat Power", "Broly", Tier.S),
             new("Surge of Heightened Fighting Spirit", "Super Saiyan Broly", Tier.S),
@@ -182,7 +188,9 @@ namespace DokkanDaily.Constants
             new("Boiling Evil", "Super Janemba", Tier.S),
             new("Decisive Strike of Rebellion", "Vegeta", Tier.B),
             new("Terrifying Super Namekian", "Lord Slug", Tier.A),
-            new("Application of Skills and Intelligence", "Majin Buu (Ultimate Gohan)", Tier.S)
+            new("Application of Skills and Intelligence", "Majin Buu (Ultimate Gohan)", Tier.S),
+            new("Majin of Destruction", "Buu (Kid)", Tier.A),
+            new("Murderous Overlord", "Boujack", Tier.C)
         ];
         #endregion
 

@@ -9,7 +9,7 @@ namespace DokkanDaily.Repository
 
         Task InsertChallenge(Challenge challenge);
 
-        Task<IEnumerable<DbChallenge>> GetChallengeList(DateTime cutoff);
+        Task<IEnumerable<DbChallenge>> GetChallengeList(DateTime? cutoff);
 
         Task<IEnumerable<DbLeaderboardResult>> GetLeaderboardByDate(DateTime monthAndYear);
 
