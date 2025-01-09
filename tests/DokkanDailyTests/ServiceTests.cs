@@ -28,7 +28,12 @@ namespace DokkanDailyTests
         [Test]
         public void TestRngService()
         {
-            IRngHelperService rngHelperService = new RngHelperServiceV2(mocks.Create<IDokkanDailyRepository>().Object, mocks.Create<ILogger<RngHelperServiceV2>>().Object);
+            var mock = mocks.Create<IDokkanDailyRepository>();
+            IRngHelperService rngHelperService = new RngHelperServiceV2(mock.Object, Options.Create<DokkanDailySettings>(new()), mocks.Create<ILogger<RngHelperServiceV2>>().Object);
+
+            mock
+                .Setup(x => x.GetChallengeList(It.IsAny<DateTime?>()))
+                .Returns(Task.FromResult<IEnumerable<DbChallenge>>([]));
 
             var seed1 = rngHelperService.GetRawSeed();
             rngHelperService.RollDailySeed();
@@ -45,7 +50,7 @@ namespace DokkanDailyTests
             {
                 rngHelperService.RollDailySeed();
 
-                rngHelperService.GetRawSeed();
+                rngHelperService.UpdateDailyChallenge();
 
                 rngHelperService.GetDailyChallenge();
 
@@ -53,7 +58,33 @@ namespace DokkanDailyTests
 
                 rngHelperService.Reset();
 
+                Assert.That(rngHelperService.GetRawSeed(), Is.EqualTo(seed1));
+
                 dailyTypes.Add(rngHelperService.GetTodaysDailyType().ToString());
+            });
+        }
+
+        [Test]
+        public void RngServiceDoesNotThrow()
+        {
+            var repoMock = mocks.Create<IDokkanDailyRepository>();
+            IRngHelperService rngHelperService = new RngHelperServiceV2(repoMock.Object, Options.Create(new DokkanDailySettings() { EventRepeatLimitDays=99999999, StageRepeatLimitDays=99999999 }), mocks.Create<ILogger<RngHelperServiceV2>>().Object);
+
+            var list = new List<Stage>(DokkanConstants.Stages);
+            list.RemoveAll(x => x.Name.Contains("Heroine"));
+
+            repoMock
+                .Setup(x => x.GetChallengeList(It.IsAny<DateTime?>()))
+                .Returns(Task.FromResult(list.Select(x => new DbChallenge() { Event = x.Name, Stage = x.StageNumber, DailyTypeName = "Category", Category = "Demonic Power", Date = DateTime.UtcNow })));
+
+            Assert.DoesNotThrowAsync(async () =>
+            {
+                for (int i = 0; i < 10000; i++)
+                {
+                    await rngHelperService.SetDailySeed(i);
+                    var chall = await rngHelperService.GetDailyChallenge();
+                    Assert.That(chall.TodaysEvent.Name, Does.Contain("Heroine"));
+                }
             });
         }
 

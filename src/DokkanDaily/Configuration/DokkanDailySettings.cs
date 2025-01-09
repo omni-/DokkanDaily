@@ -18,6 +18,10 @@
 
         public string WebhookUrl { get; init; }
 
+        public int StageRepeatLimitDays { get; init; }
+
+        public int EventRepeatLimitDays { get; init; }
+
         public FeatureFlags FeatureFlags { get; init; } = new();
     }
 }
