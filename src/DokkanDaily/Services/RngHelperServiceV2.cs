@@ -89,7 +89,9 @@ namespace DokkanDaily.Services
                     .Select(x => x.Category));
             var events = stages
                 .Select(x => x.Name)
-                .Distinct()
+                .Except(recentChallenges
+                    .Take(InternalConstants.EventRepeatLimitDays)
+                    .Select(x => x.TodaysEvent.Name))
                 .ToList();
 
             // pick an event
