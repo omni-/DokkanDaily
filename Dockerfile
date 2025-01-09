@@ -12,6 +12,8 @@ ARG OAuth2ClientSecret
 ARG OAuth2ClientId
 ARG WebhookUrl
 ARG EnableJpParsing
+ARG StageRepeatLimit
+ARG EventRepeatLimit
 
 ENV DOTNET_DokkanDailySettings__AzureAccountName=$AzureAccountName
 ENV DOTNET_DokkanDailySettings__AzureBlobConnectionString=$AzureConnectionString
@@ -21,6 +23,8 @@ ENV DOTNET_DokkanDailySettings__SqlServerConnectionString=$SqlServerConnectionSt
 ENV DOTNET_DokkanDailySettings__OAuth2ClientSecret=$OAuth2ClientSecret
 ENV DOTNET_DokkanDailySettings__OAuth2ClientId=$OAuth2ClientId
 ENV DOTNET_DokkanDailySettings__WebhookUrl=$WebhookUrl
+ENV DOTNET_DokkanDailySettings__StageRepeatLimitDays=$StageRepeatLimit
+ENV DOTNET_DokkanDailySettings__EventRepeatLimitDays=$EventRepeatLimit
 ENV DOTNET_DokkanDailySettings__FeatureFlags__EnableJapaneseParsing=$EnableJpParsing
 ENV LD_LIBRARY_PATH="/lib:/usr/lib:/usr/local/lib"
 

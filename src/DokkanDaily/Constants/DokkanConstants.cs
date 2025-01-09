@@ -306,6 +306,7 @@ namespace DokkanDaily.Constants
             new("Crossover", Tier.C),
             new("DB Saga", Tier.B),
             new("Defenders of Justice", Tier.D),
+            new("Demonic Power", Tier.S),
             new("Dragon Ball Heroes", Tier.C),
             new("Earthlings", Tier.F),
             new("Earth-Bred Fighters", Tier.S),

@@ -1,9 +1,11 @@
-﻿using DokkanDaily.Constants;
+﻿using DokkanDaily.Configuration;
+using DokkanDaily.Constants;
 using DokkanDaily.Helpers;
 using DokkanDaily.Models;
 using DokkanDaily.Models.Enums;
 using DokkanDaily.Repository;
 using DokkanDaily.Services.Interfaces;
+using Microsoft.Extensions.Options;
 
 namespace DokkanDaily.Services
 {
@@ -14,12 +16,14 @@ namespace DokkanDaily.Services
         private static int Seed;
         private readonly IDokkanDailyRepository dokkanDailyRepository;
         private readonly ILogger<RngHelperServiceV2> _logger;
+        private readonly DokkanDailySettings _settings;
 
-        public RngHelperServiceV2(IDokkanDailyRepository repository, ILogger<RngHelperServiceV2> logger)
+        public RngHelperServiceV2(IDokkanDailyRepository repository, IOptions<DokkanDailySettings> settings, ILogger<RngHelperServiceV2> logger)
         {
             _logger = logger;
             dokkanDailyRepository = repository;
             Seed = CalcSeed(Now);
+            _settings = settings.Value;
         }
 
         public async Task<Challenge> GetDailyChallenge()
@@ -73,7 +77,7 @@ namespace DokkanDaily.Services
             // filter out things we've done recently
             var stages = DokkanConstants.Stages
                 .Except(recentChallenges
-                    .Take(InternalConstants.ChallengeRepeatLimitDays)
+                    .Take(_settings.StageRepeatLimitDays)
                     .Select(x => x.TodaysEvent));
             var leaders = DokkanConstants.Leaders
                 .Except(recentChallenges
@@ -90,7 +94,7 @@ namespace DokkanDaily.Services
             var events = stages
                 .Select(x => x.Name)
                 .Except(recentChallenges
-                    .Take(InternalConstants.EventRepeatLimitDays)
+                    .Take(_settings.EventRepeatLimitDays)
                     .Select(x => x.TodaysEvent.Name))
                 .ToList();
 
