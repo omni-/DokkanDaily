@@ -196,24 +196,7 @@ namespace DokkanDaily.Constants
 
         #region Events
         public static IReadOnlyList<string> Events { get => events; }
-        private static readonly List<string> events =
-        [
-            "When Wishes Backfire! Birth of the Shadow Dragons",
-            "Fighting Legend: Frieza",
-            "Tremble with Fear! The Devil Awakens",
-            "Supreme Magnificent Battle [Movie Edition]",
-            "Supreme Magnificent Battle [Universe Survival Saga]",
-            "Supreme Magnificent Battle [Dragon Ball Super Edition]",
-            "Ultimate Red Zone [Majin Buu Saga]",
-            "Divine Wrath and Mortal Will",
-            "Ultimate Red Zone [Movie Edition]",
-            "Ultimate Red Zone [Movie Edition 2]",
-            "9th Anniv.! Anniversary Battle",
-            "Ultimate Red Zone [Dismal Future Edition]",
-            "Ultimate Red Zone [Wicked Bloodline Edition]",
-            "Fearsome Activation! Cell Max",
-            "Heart-Pounding Heroine Battle"
-        ];
+        private static readonly List<string> events;
 
         public static IReadOnlyList<Stage> Stages { get => stages; }
 
@@ -422,6 +405,10 @@ namespace DokkanDaily.Constants
             CategoryMap = new Dictionary<string, Category>(categories.Select(x => new KeyValuePair<string, Category>(x.Name, x)));
             DailyTypes = [DailyType.Category, DailyType.LinkSkill, DailyType.Character];
             unitDB = DokkanDailyHelper.BuildCharacterDb().ToList();
+            events = stages
+                .Select(x => x.Name)
+                .Distinct()
+                .ToList();
         }
     }
 }
