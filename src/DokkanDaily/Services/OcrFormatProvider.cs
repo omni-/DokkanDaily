@@ -41,14 +41,9 @@ namespace DokkanDaily.Services
 
         public bool IsValidClearHeader(string clearHeader)
         {
-            if (_jp)
-            {
-                // ocr sucks at kanji :(
-                return clearHeader.StartsWith(OcrConstants.StageClearDetailsJpnAlt, StringComparison.InvariantCulture)
-                    || clearHeader.StartsWith(OcrConstants.StageClearDetailsJpn, StringComparison.InvariantCulture);
-            }
-
-            return string.Equals(clearHeader, OcrConstants.StageClearDetailsEng, StringComparison.InvariantCulture);
+                return clearHeader.StartsWith(OcrConstants.StageClearDetailsEng, StringComparison.InvariantCulture)
+                    || clearHeader.StartsWith(OcrConstants.StageClearDetailsJpn, StringComparison.InvariantCulture)
+                    || clearHeader.StartsWith(OcrConstants.StageClearDetailsJpnAlt, StringComparison.InvariantCulture);
         }
     }
 }
