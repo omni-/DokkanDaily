@@ -41,7 +41,8 @@ namespace DokkanDaily.Services
 
         public bool IsValidClearHeader(string clearHeader)
         {
-                return clearHeader.StartsWith(OcrConstants.StageClearDetailsEng, StringComparison.InvariantCulture)
+                return clearHeader.EndsWith(OcrConstants.StageClearDetailsEngAlt)
+                    || clearHeader.StartsWith(OcrConstants.StageClearDetailsEng, StringComparison.InvariantCulture)
                     || clearHeader.StartsWith(OcrConstants.StageClearDetailsJpn, StringComparison.InvariantCulture)
                     || clearHeader.StartsWith(OcrConstants.StageClearDetailsJpnAlt, StringComparison.InvariantCulture);
         }
