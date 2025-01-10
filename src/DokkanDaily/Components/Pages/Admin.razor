@@ -157,14 +157,14 @@
 
     async Task SetStage()
     {
-        var sp = Stage?.Split(", Stage ");
+        var sp = Stage?.Trim()?.Split(", Stage ");
         var chall = await RngSvc.GetDailyChallenge();
         RngSvc.OverrideChallenge(chall.DailyType, DokkanConstants.Stages.First(x => x.Name == sp[0] && x.StageNumber == int.Parse(sp[1])), chall.LinkSkill, chall.Category, chall.Leader);
     }
 
     async Task SetUnit()
     {
-        var sp = Unit?.Split("] ");
+        var sp = Unit?.Trim()?.Split("] ");
 
         var chall = await RngSvc.GetDailyChallenge();
         RngSvc.OverrideChallenge(chall.DailyType, chall.TodaysEvent, chall.LinkSkill, chall.Category, DokkanConstants.Leaders.First(x => x.Name == sp[1] && x.Title == sp[0].Replace("[", "")));
@@ -173,13 +173,13 @@
     async Task SetLinkSkill()
     {
         var chall = await RngSvc.GetDailyChallenge();
-        RngSvc.OverrideChallenge(chall.DailyType, chall.TodaysEvent, DokkanConstants.LinkSkillMap[LinkSkill], chall.Category, chall.Leader);
+        RngSvc.OverrideChallenge(chall.DailyType, chall.TodaysEvent, DokkanConstants.LinkSkillMap[LinkSkill.Trim()], chall.Category, chall.Leader);
     }
 
     async Task SetCategory()
     {
         var chall = await RngSvc.GetDailyChallenge();
-        RngSvc.OverrideChallenge(chall.DailyType, chall.TodaysEvent, chall.LinkSkill, DokkanConstants.CategoryMap[Category], chall.Leader);
+        RngSvc.OverrideChallenge(chall.DailyType, chall.TodaysEvent, chall.LinkSkill, DokkanConstants.CategoryMap[Category.Trim()], chall.Leader);
     }
 
     async Task SendWebhook()
