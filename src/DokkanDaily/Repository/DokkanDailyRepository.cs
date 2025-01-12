@@ -53,8 +53,6 @@ namespace DokkanDaily.Repository
             {
                 await SqlConnectionWrapper.OpenAsync();
 
-                List<DbLeaderboardResult> results = [];
-
                 DynamicParameters dp = new();
                 if (cutoff != null) dp.Add("CutoffDateUTC", cutoff.Value);
 

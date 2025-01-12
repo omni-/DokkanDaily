@@ -1,11 +1,11 @@
 ﻿CREATE PROCEDURE [Core].[DailyInsert] 
-  @Event VARCHAR(50),
+  @Event VARCHAR(150),
   @Stage INT,
   @Date DATETIME2(2),
   @DailyTypeName VARCHAR(25),
-  @LeaderFullName VARCHAR(50) = NULL,
-  @Category VARCHAR(25) = NULL, 
-  @LinkSkill VARCHAR(25) = NULL
+  @LeaderFullName VARCHAR(100) = NULL,
+  @Category VARCHAR(50) = NULL, 
+  @LinkSkill VARCHAR(50) = NULL
 AS
 BEGIN
 
