@@ -131,14 +131,17 @@ namespace DokkanDaily.Services
                 throw;
             }
 
-            try
+            if (!isAdhoc)
             {
-                await _repository.InsertChallenge(todaysChallenge);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Unhandled exception while inserting daily challenge");
-                throw;
+                try
+                {
+                    await _repository.InsertChallenge(todaysChallenge);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Unhandled exception while inserting daily challenge");
+                    throw;
+                }
             }
 
             _logger.LogInformation("Updating leaderboard...");
