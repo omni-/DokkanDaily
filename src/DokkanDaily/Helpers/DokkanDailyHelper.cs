@@ -133,7 +133,7 @@ namespace DokkanDaily.Helpers
             {
                 Match m = DbcNicknameTagRegex().Match(username);
 
-                if (m == null || m.Groups.Count < 2) return username;
+                if (!m.Success || m.Groups.Count < 2) return username;
 
                 username = username.Replace(m.Groups[1].Value, OcrConstants.DbcTag);
             }
