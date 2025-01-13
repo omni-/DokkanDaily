@@ -11,9 +11,18 @@ namespace DokkanDaily.Helpers
     {
         private static readonly JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
 
+        public static readonly Dictionary<string, string> KnownUsernameMap = new()
+        {
+            // pattern, value
+            { "五.悟", "五条悟" },
+            { "UBCeomnt", "DBC*omni" }
+        };
 
         [GeneratedRegex("[^a-zA-Z0-9-]")]
         public static partial Regex AlphaNumericRegex();
+
+        [GeneratedRegex(@"([UDO]BC\s?[\*\+]\s?).*")]
+        public static partial Regex DbcNicknameTagRegex();
 
         public static IEnumerable<Unit> BuildCharacterDb()
         {
@@ -114,28 +123,19 @@ namespace DokkanDaily.Helpers
         {
             if (string.IsNullOrEmpty(username)) return username;
 
-            var sub = InternalConstants.KnownUsernameMap.Keys.FirstOrDefault(x => Regex.IsMatch(username, x));
+            var sub = KnownUsernameMap.Keys.FirstOrDefault(x => Regex.IsMatch(username, x));
 
             if (!string.IsNullOrEmpty(sub))
             {
-                return InternalConstants.KnownUsernameMap[sub];
+                return KnownUsernameMap[sub];
             }
             else
             {
-                Match m = null;
-
-                var key = InternalConstants.UsernameFragmentMap.Keys.FirstOrDefault(x => 
-                {
-                    var res = Regex.Match(username, x);
-                    if (res.Success)
-                        m = res;
-
-                    return res.Success;
-                });
+                Match m = DbcNicknameTagRegex().Match(username);
 
                 if (m == null || m.Groups.Count < 2) return username;
 
-                username = username.Replace(m.Groups[1].Value, InternalConstants.UsernameFragmentMap[key]);
+                username = username.Replace(m.Groups[1].Value, OcrConstants.DbcTag);
             }
 
             return username;
