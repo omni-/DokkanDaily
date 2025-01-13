@@ -3,7 +3,6 @@ using DokkanDaily.Helpers;
 using DokkanDaily.Models.Database;
 using DokkanDaily.Repository;
 using DokkanDaily.Services.Interfaces;
-using Microsoft.Extensions.Logging;
 
 namespace DokkanDaily.Services
 {
@@ -161,7 +160,7 @@ namespace DokkanDaily.Services
                 _logger.LogInformation("Sending end of season summary to #daily-challenge...");
                 int lastSeason = _leaderboardService.GetCurrentSeason() - 1;
                 var leaderboard = (await _leaderboardService.GetLeaderboardBySeason(lastSeason)).ToList();
-                string payload = $"# Season finish!\r\nSeason **{lastSeason}** has come to a close. Please congratulate the top scorers this season:\r\n\r\n";
+                string payload = $"# Season finish!\r\nSeason **{lastSeason}** has come to a close. Thank you to everyone who participated! Please congratulate the top scorers this season:\r\n\r\n";
                 for (int i = 0; i < 5; i++)
                 {
                     if (i >= leaderboard.Count) break;

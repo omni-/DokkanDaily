@@ -12,7 +12,7 @@ namespace DokkanDaily.Services
     public class RngHelperServiceV2 : IRngHelperService
     {
         private static DateTime Now => DateTime.UtcNow;
-        private static Challenge Challenge = null;
+        private static TempCache<Challenge> Challenge = null;
         private static int Seed;
         private readonly IDokkanDailyRepository dokkanDailyRepository;
         private readonly ILogger<RngHelperServiceV2> _logger;
@@ -28,15 +28,15 @@ namespace DokkanDaily.Services
 
         public async Task<Challenge> GetDailyChallenge()
         {
-            if (Challenge != null)
-                return Challenge;
+            if (Challenge != null && !Challenge.CacheExpired)
+                return Challenge.Value;
 
             Challenge = await CalcChallenge();
 
-            return Challenge;
+            return Challenge.Value;
         }
 
-        private async Task<Challenge> CalcChallenge()
+        private async Task<TempCache<Challenge>> CalcChallenge()
         {
             Random r = new(Seed);
 
@@ -59,7 +59,7 @@ namespace DokkanDaily.Services
                         // same here 
                         Leader leader = x.LeaderFullName == null ? null : DokkanConstants.Leaders.First(y => y.FullName.StartsWith(x.LeaderFullName));
                         LinkSkill skill = x.LinkSkill == null ? null : DokkanConstants.LinkSkillMap[x.LinkSkill];
-                        Category category = x.Category == null ? null : DokkanConstants.Categories.First(y => y.Name == x.Category);
+                        Category category = x.Category == null ? null : DokkanConstants.CategoryMap[x.Category];
                         Unit unit = x.LeaderFullName == null ? null : DokkanDailyHelper.GetUnit(leader);
 
                         return new Challenge(type, stage, skill, category, leader, unit);
@@ -122,7 +122,7 @@ namespace DokkanDaily.Services
 
             Unit unit = DokkanDailyHelper.GetUnit(leader);
 
-            return new Challenge(dailyType, todaysStage, linkSkill, category, leader, unit);
+            return new(new(dailyType, todaysStage, linkSkill, category, leader, unit));
         }
 
         private static int CalcSeed(DateTime date)
@@ -133,7 +133,7 @@ namespace DokkanDaily.Services
 
         public DailyType? GetTodaysDailyType()
         {
-            return Challenge?.DailyType;
+            return Challenge?.Value?.DailyType;
         }
 
         public int GetRawSeed()
@@ -143,12 +143,13 @@ namespace DokkanDaily.Services
 
         public void OverrideChallenge(DailyType type, Stage e, LinkSkill link, Category cat, Leader l)
         {
-            Challenge = new(type, e, link, cat, l, DokkanDailyHelper.GetUnit(l));
+            Challenge = new(new(type, e, link, cat, l, DokkanDailyHelper.GetUnit(l)));
         }
 
         public void OverrideChallengeType(DailyType type)
         {
-            Challenge.DailyType = type;
+            if (Challenge != null)
+                Challenge.Value.DailyType = type;
         }
 
         public async Task Reset()
@@ -173,7 +174,7 @@ namespace DokkanDaily.Services
         {
             Seed = CalcSeed(Now + TimeSpan.FromDays(1));
             Challenge = await CalcChallenge();
-            return Challenge;
+            return Challenge.Value;
         }
 
         private static T Pick<T>(IEnumerable<T> input, Random r, Tier t) where T : ITieredObject
