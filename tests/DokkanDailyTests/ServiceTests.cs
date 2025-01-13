@@ -68,7 +68,7 @@ namespace DokkanDailyTests
         public void RngServiceDoesNotThrow()
         {
             var repoMock = mocks.Create<IDokkanDailyRepository>();
-            IRngHelperService rngHelperService = new RngHelperServiceV2(repoMock.Object, Options.Create(new DokkanDailySettings() { EventRepeatLimitDays=99999999, StageRepeatLimitDays=99999999 }), mocks.Create<ILogger<RngHelperServiceV2>>().Object);
+            IRngHelperService rngHelperService = new RngHelperServiceV2(repoMock.Object, Options.Create(new DokkanDailySettings() { EventRepeatLimitDays = 99999999, StageRepeatLimitDays = 99999999 }), mocks.Create<ILogger<RngHelperServiceV2>>().Object);
 
             var list = new List<Stage>(DokkanConstants.Stages);
             list.RemoveAll(x => x.Name.Contains("Heroine"));

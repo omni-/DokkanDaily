@@ -39,7 +39,7 @@ namespace DokkanDailyTests
         [Test]
         public void TestGetUnit()
         {
-            foreach(Leader l in DokkanConstants.Leaders)
+            foreach (Leader l in DokkanConstants.Leaders)
                 Assert.DoesNotThrow(() => DokkanDailyHelper.GetUnit(l));
         }
 

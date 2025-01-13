@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace DokkanDaily.Constants
+﻿namespace DokkanDaily.Constants
 {
     public static class OcrConstants
     {

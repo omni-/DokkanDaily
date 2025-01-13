@@ -92,7 +92,7 @@ namespace DokkanDaily.Helpers
         public static string AddSasTokenToUri(this string uri, string sasToken)
             => $"{uri}?{sasToken}";
 
-        public static string GetDisplayName(this LeaderboardUser leaderboardUser) =>  string.IsNullOrWhiteSpace(leaderboardUser.DiscordUsername) ? leaderboardUser.DokkanNickname : $"{leaderboardUser.DiscordUsername} ({leaderboardUser.DokkanNickname})";
+        public static string GetDisplayName(this LeaderboardUser leaderboardUser) => string.IsNullOrWhiteSpace(leaderboardUser.DiscordUsername) ? leaderboardUser.DokkanNickname : $"{leaderboardUser.DiscordUsername} ({leaderboardUser.DokkanNickname})";
 
         public static string AddDokkandleDbcRolePing(this string source) => $"{source}\r\n{InternalConstants.DokkandleDbcRole}";
 

@@ -99,7 +99,7 @@ namespace DokkanDailyTests
         {
             List<DbClear> dbClears = [];
 
-            DateTime dt = new DateTime(2024, 12, 25);
+            DateTime dt = new(2024, 12, 25);
             DateTime now = DateTime.UtcNow;
 
             dbClears.Add(new DbClear()
