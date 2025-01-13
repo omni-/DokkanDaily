@@ -1,6 +1,6 @@
 ﻿namespace DokkanDaily.Constants
 {
-    public class AzureConstants
+    public static class AzureConstants
     {
         public static string DATE_TAG => "date";
 
