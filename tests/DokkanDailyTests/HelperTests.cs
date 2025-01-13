@@ -1,4 +1,5 @@
-﻿using DokkanDaily.Helpers;
+﻿using DokkanDaily.Constants;
+using DokkanDaily.Helpers;
 using DokkanDaily.Models;
 
 namespace DokkanDailyTests
@@ -38,8 +39,38 @@ namespace DokkanDailyTests
         [Test]
         public void TestGetUnit()
         {
-            Assert.DoesNotThrow(() => DokkanDailyHelper.GetUnit("Tenacious Secret Plan", "Super Vegeta"));
+            foreach (Leader l in DokkanConstants.Leaders)
+                Assert.DoesNotThrow(() => DokkanDailyHelper.GetUnit(l));
         }
 
+        [Test]
+        public void TestParseTime()
+        {
+            var str = "0'09\"12.3";
+            var exp = new TimeSpan(0, 0, 9, 12, 300);
+
+            var success = DokkanDailyHelper.TryParseDokkanTimeSpan(str, out TimeSpan result);
+
+            Assert.That(success, Is.True);
+            Assert.That(result, Is.EqualTo(exp));
+        }
+
+
+        [Test]
+        [TestCase("UBCeomnt", "DBC*omni")]
+        [TestCase("OBC*FIGO", "DBC*FIGO")]
+        [TestCase("DBC +FIGO", "DBC*FIGO")]
+        [TestCase("OBC*FIGO", "DBC*FIGO")]
+        [TestCase("五新悟", "五条悟")]
+        [TestCase("DBC *Owl", "DBC*Owl")]
+        [TestCase("DBC* Owl", "DBC*Owl")]
+        [TestCase("DBC * Owl", "DBC*Owl")]
+        [TestCase("DBCeomni", "DBCeomni")]
+        [TestCase("DBC*Brood", "DBC*Brood")]
+        [TestCase("ExoticDJ85", "ExoticDJ85")]
+        public void TestCheckUsername(string username, string exp)
+        {
+            Assert.That(DokkanDailyHelper.CheckUsername(username), Is.EqualTo(exp));
+        }
     }
 }

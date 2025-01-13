@@ -75,7 +75,7 @@
     {
         try
         {
-            leaderboard = await LeaderboardSvc.GetDailyLeaderboard();
+            leaderboard = await LeaderboardSvc.GetCurrentLeaderboard();
             currentSeason = LeaderboardSvc.GetCurrentSeason();
             selectedSeason = currentSeason;
         }

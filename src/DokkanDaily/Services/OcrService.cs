@@ -1,5 +1,5 @@
 ﻿using DokkanDaily.Configuration;
-using DokkanDaily.Exceptions;
+using DokkanDaily.Helpers;
 using DokkanDaily.Models;
 using DokkanDaily.Models.Enums;
 using DokkanDaily.Ocr;
@@ -64,7 +64,7 @@ namespace DokkanDaily.Services
 
                 Mat lineDetectionRegion = binaryBlackOnWhite;
                 Mat edges = t.NewMat();
-                Cv2.Canny(lineDetectionRegion, edges, 150, 200,3, false);
+                Cv2.Canny(lineDetectionRegion, edges, 150, 200, 3, false);
 
                 // Mat debugImageLines = t.NewMat();
                 // Cv2.CvtColor(edges, debugImageLines, ColorConversionCodes.GRAY2BGR);
@@ -90,15 +90,20 @@ namespace DokkanDaily.Services
                     if (dy == 0) { isHorizontal = true; }
                     else if (dx == 0) { isVertical = true; }
 
-                    if (isHorizontal) {
+                    if (isHorizontal)
+                    {
                         if (lineSegmentPoint.P1.Y < top) { top = lineSegmentPoint.P1.Y; }
                         if (lineSegmentPoint.P1.Y > bottom) { bottom = lineSegmentPoint.P1.Y; }
                         // Cv2.Line(debugImageLines, lineSegmentPoint.P1, lineSegmentPoint.P2, Scalar.Yellow, 1);
-                    } else if (isVertical) {
+                    }
+                    else if (isVertical)
+                    {
                         if (lineSegmentPoint.P1.X < left) { left = lineSegmentPoint.P1.X; }
                         if (lineSegmentPoint.P1.X > right) { right = lineSegmentPoint.P1.X; }
                         // Cv2.Line(debugImageLines, lineSegmentPoint.P1, lineSegmentPoint.P2, Scalar.Blue, 1);
-                    } else {
+                    }
+                    else
+                    {
                         // Cv2.Line(debugImageLines, lineSegmentPoint.P1, lineSegmentPoint.P2, Scalar.Red, 1);
                     }
                 }
@@ -188,7 +193,7 @@ namespace DokkanDaily.Services
 
             using Page nicknameTextPage = engine.Process(nicknamePix, PageSegMode.SingleBlock);
             string nicknameText = nicknameTextPage.GetText().Trim();
-            if (nicknameText.StartsWith("DBC *")) nicknameText = nicknameText.Replace("DBC *", "DBC*"); // one concession for the OCR
+            nicknameText = DokkanDailyHelper.CheckUsername(nicknameText); // some concessions for the OCR
             if (nicknameText.Length == 0) nicknameText = null;
 
             return nicknameText;

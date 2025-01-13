@@ -8,13 +8,13 @@ namespace DokkanDaily.Services
 {
     public class LeaderboardService(IDokkanDailyRepository repository) : ILeaderboardService
     {
-        private Dictionary<int, List<LeaderboardUser>> _leaderboards = [];
+        private readonly Dictionary<int, List<LeaderboardUser>> _leaderboards = [];
         private readonly IDokkanDailyRepository _repository = repository;
         private readonly DateTime _season1Start = InternalConstants.Season1StartDate;
 
         public int GetCurrentSeason() => ((DateTime.UtcNow.Month - _season1Start.Month) + 12 * (DateTime.UtcNow.Year - _season1Start.Year)) + 1;
 
-        public async Task<List<LeaderboardUser>> GetDailyLeaderboard(bool force = false)
+        public async Task<List<LeaderboardUser>> GetCurrentLeaderboard(bool force = false)
         {
             return await GetLeaderboardBySeason(GetCurrentSeason(), force);
         }
@@ -23,8 +23,8 @@ namespace DokkanDaily.Services
         {
             if (force || !_leaderboards.TryGetValue(season, out var leaderboard) || leaderboard.Count == 0)
             {
-                var result = season == 0 ? 
-                    await _repository.GetHallOfFame() 
+                var result = season == 0 ?
+                    await _repository.GetHallOfFame()
                     : await _repository.GetLeaderboardByDate(_season1Start.AddMonths(season - 1));
 
                 leaderboard = [];

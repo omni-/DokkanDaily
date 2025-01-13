@@ -11,9 +11,18 @@ namespace DokkanDaily.Helpers
     {
         private static readonly JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
 
+        public static readonly Dictionary<string, string> KnownUsernameMap = new()
+        {
+            // pattern, value
+            { "五.悟", "五条悟" },
+            { "UBCeomnt", "DBC*omni" }
+        };
 
         [GeneratedRegex("[^a-zA-Z0-9-]")]
         public static partial Regex AlphaNumericRegex();
+
+        [GeneratedRegex(@"([UDO]BC\s?[\*\+]\s?).*")]
+        public static partial Regex DbcNicknameTagRegex();
 
         public static IEnumerable<Unit> BuildCharacterDb()
         {
@@ -83,7 +92,7 @@ namespace DokkanDaily.Helpers
         public static string AddSasTokenToUri(this string uri, string sasToken)
             => $"{uri}?{sasToken}";
 
-        public static string GetDisplayName(this LeaderboardUser leaderboardUser) =>  string.IsNullOrWhiteSpace(leaderboardUser.DiscordUsername) ? leaderboardUser.DokkanNickname : $"{leaderboardUser.DiscordUsername} ({leaderboardUser.DokkanNickname})";
+        public static string GetDisplayName(this LeaderboardUser leaderboardUser) => string.IsNullOrWhiteSpace(leaderboardUser.DiscordUsername) ? leaderboardUser.DokkanNickname : $"{leaderboardUser.DiscordUsername} ({leaderboardUser.DokkanNickname})";
 
         public static string AddDokkandleDbcRolePing(this string source) => $"{source}\r\n{InternalConstants.DokkandleDbcRole}";
 
@@ -114,11 +123,19 @@ namespace DokkanDaily.Helpers
         {
             if (string.IsNullOrEmpty(username)) return username;
 
-            var sub = InternalConstants.KnownUsernameMap.Keys.FirstOrDefault(x => Regex.IsMatch(username, x));
+            var sub = KnownUsernameMap.Keys.FirstOrDefault(x => Regex.IsMatch(username, x));
 
             if (!string.IsNullOrEmpty(sub))
             {
-                return InternalConstants.KnownUsernameMap[sub];
+                return KnownUsernameMap[sub];
+            }
+            else
+            {
+                Match m = DbcNicknameTagRegex().Match(username);
+
+                if (!m.Success || m.Groups.Count < 2) return username;
+
+                username = username.Replace(m.Groups[1].Value, OcrConstants.DbcTag);
             }
 
             return username;

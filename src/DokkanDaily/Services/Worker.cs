@@ -11,10 +11,10 @@ public class Worker(
     private readonly IResetService _resetService = resetService;
 
     private static readonly Dictionary<WorkType, TimeOnly> WorkSchedule = new()
-    { 
+    {
         { WorkType.DailyReset, new(23, 59) },
         { WorkType.LeaderboardProcessing, new(1, 30) }
-    };  
+    };
 
     private static DateTime GetNextDateTime(DateTime currentDateTime, TimeOnly time)
     {
