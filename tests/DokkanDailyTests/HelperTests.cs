@@ -1,4 +1,5 @@
-﻿using DokkanDaily.Helpers;
+﻿using DokkanDaily.Constants;
+using DokkanDaily.Helpers;
 using DokkanDaily.Models;
 
 namespace DokkanDailyTests
@@ -38,8 +39,20 @@ namespace DokkanDailyTests
         [Test]
         public void TestGetUnit()
         {
-            Assert.DoesNotThrow(() => DokkanDailyHelper.GetUnit("Tenacious Secret Plan", "Super Vegeta"));
+            foreach(Leader l in DokkanConstants.Leaders)
+                Assert.DoesNotThrow(() => DokkanDailyHelper.GetUnit(l));
         }
 
+        [Test]
+        public void TestParseTime()
+        {
+            var str = "0'09\"12.3";
+            var exp = new TimeSpan(0, 0, 9, 12, 300);
+
+            var success = DokkanDailyHelper.TryParseDokkanTimeSpan(str, out TimeSpan result);
+
+            Assert.That(success, Is.True);
+            Assert.That(result, Is.EqualTo(exp));
+        }
     }
 }
