@@ -54,5 +54,23 @@ namespace DokkanDailyTests
             Assert.That(success, Is.True);
             Assert.That(result, Is.EqualTo(exp));
         }
+
+
+        [Test]
+        [TestCase("UBCeomnt", "DBC*omni")]
+        [TestCase("OBC*FIGO", "DBC*FIGO")]
+        [TestCase("DBC +FIGO", "DBC*FIGO")]
+        [TestCase("OBC*FIGO", "DBC*FIGO")]
+        [TestCase("五新悟", "五条悟")]
+        [TestCase("DBC *Owl", "DBC*Owl")]
+        [TestCase("DBC* Owl", "DBC*Owl")]
+        [TestCase("DBC * Owl", "DBC*Owl")]
+        [TestCase("DBCeomni", "DBCeomni")]
+        [TestCase("DBC*Brood", "DBC*Brood")]
+        [TestCase("ExoticDJ85", "ExoticDJ85")]
+        public void TestCheckUsername(string username, string exp)
+        {
+            Assert.That(DokkanDailyHelper.CheckUsername(username), Is.EqualTo(exp));
+        }
     }
 }

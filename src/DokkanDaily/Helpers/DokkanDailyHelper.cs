@@ -120,6 +120,23 @@ namespace DokkanDaily.Helpers
             {
                 return InternalConstants.KnownUsernameMap[sub];
             }
+            else
+            {
+                Match m = null;
+
+                var key = InternalConstants.UsernameFragmentMap.Keys.FirstOrDefault(x => 
+                {
+                    var res = Regex.Match(username, x);
+                    if (res.Success)
+                        m = res;
+
+                    return res.Success;
+                });
+
+                if (m == null || m.Groups.Count < 2) return username;
+
+                username = username.Replace(m.Groups[1].Value, InternalConstants.UsernameFragmentMap[key]);
+            }
 
             return username;
         }

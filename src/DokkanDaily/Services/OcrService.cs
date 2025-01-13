@@ -1,5 +1,6 @@
 ﻿using DokkanDaily.Configuration;
 using DokkanDaily.Exceptions;
+using DokkanDaily.Helpers;
 using DokkanDaily.Models;
 using DokkanDaily.Models.Enums;
 using DokkanDaily.Ocr;
@@ -188,7 +189,7 @@ namespace DokkanDaily.Services
 
             using Page nicknameTextPage = engine.Process(nicknamePix, PageSegMode.SingleBlock);
             string nicknameText = nicknameTextPage.GetText().Trim();
-            if (nicknameText.StartsWith("DBC *")) nicknameText = nicknameText.Replace("DBC *", "DBC*"); // one concession for the OCR
+            nicknameText = DokkanDailyHelper.CheckUsername(nicknameText); // some concessions for the OCR
             if (nicknameText.Length == 0) nicknameText = null;
 
             return nicknameText;

@@ -9,7 +9,14 @@
         public static readonly Dictionary<string, string> KnownUsernameMap = new() 
         {
             // pattern, value
-            {"五.悟", "五条悟"} 
+            { "五.悟", "五条悟" },
+            { "UBCeomnt", "DBC*omni" }
+        };
+
+        public static readonly Dictionary<string, string> UsernameFragmentMap = new()
+        {
+            // pattern, replacement
+            {@"([UDO]BC\s?[\*\+]\s?).*", "DBC*" }
         };
     }
 }
