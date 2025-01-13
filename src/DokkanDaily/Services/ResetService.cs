@@ -146,7 +146,7 @@ namespace DokkanDaily.Services
             _logger.LogInformation("Updating leaderboard...");
 
             // force reload leaderboard
-            await _leaderboardService.GetDailyLeaderboard(true);
+            await _leaderboardService.GetCurrentLeaderboard(true);
 
             _logger.LogInformation("Leaderboard updated.");
 
