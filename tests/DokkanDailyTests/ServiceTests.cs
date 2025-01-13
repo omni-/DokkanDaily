@@ -161,7 +161,7 @@ namespace DokkanDailyTests
                 .Setup(x => x.GetDailyChallenge())
                 .ReturnsAsync(new Challenge(DailyType.Character, new("foo", Tier.D, "LGE"), new("bar", Tier.D), new("baz", Tier.D), new("quz", "", Tier.D), new()));
 
-            lbMock.Setup(x => x.GetDailyLeaderboard(It.IsAny<bool>())).Returns(Task.FromResult<List<LeaderboardUser>>([]));
+            lbMock.Setup(x => x.GetCurrentLeaderboard(It.IsAny<bool>())).Returns(Task.FromResult<List<LeaderboardUser>>([]));
 
             webhookMock.Setup(x => x.PostAsync(It.IsAny<WebhookMessage>())).Returns(Task.CompletedTask);
 
@@ -181,7 +181,7 @@ namespace DokkanDailyTests
             rngMock.Verify(x => x.UpdateDailyChallenge(), Times.Once);
             rngMock.VerifyNoOtherCalls();
 
-            lbMock.Verify(x => x.GetDailyLeaderboard(true), Times.Once);
+            lbMock.Verify(x => x.GetCurrentLeaderboard(true), Times.Once);
             lbMock.VerifyNoOtherCalls();
 
             abMock.Verify(x => x.PruneContainers(It.IsAny<int>()), Times.Once);

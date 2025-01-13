@@ -14,7 +14,7 @@ namespace DokkanDaily.Services
 
         public int GetCurrentSeason() => ((DateTime.UtcNow.Month - _season1Start.Month) + 12 * (DateTime.UtcNow.Year - _season1Start.Year)) + 1;
 
-        public async Task<List<LeaderboardUser>> GetDailyLeaderboard(bool force = false)
+        public async Task<List<LeaderboardUser>> GetCurrentLeaderboard(bool force = false)
         {
             return await GetLeaderboardBySeason(GetCurrentSeason(), force);
         }

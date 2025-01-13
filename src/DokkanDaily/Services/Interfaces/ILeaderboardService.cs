@@ -6,7 +6,7 @@ namespace DokkanDaily.Services.Interfaces
     {
         Task<List<LeaderboardUser>> GetLeaderboardBySeason(int season, bool force = false);
 
-        Task<List<LeaderboardUser>> GetDailyLeaderboard(bool force = false);
+        Task<List<LeaderboardUser>> GetCurrentLeaderboard(bool force = false);
 
         int GetCurrentSeason();
     }

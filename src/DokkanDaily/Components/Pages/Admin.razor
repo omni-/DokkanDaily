@@ -19,6 +19,7 @@
 @inject IAzureBlobService BlobSvc
 @inject IJSRuntime JsRuntime
 @inject IResetService ResetSvc
+@inject ILeaderboardService LeaderboardSvc
 @inject NavigationManager NavManager
 @inject DiscordWebhookClient WebhookSvc
 @inject IOptions<DokkanDailySettings> settings
@@ -52,6 +53,8 @@
                         <label>Roll Seed: <button style="margin-left:5px" @onclick=RollSeed>Roll</button></label>
                         <br />
                         <label>Reset Seed: <button style="margin-left:5px" @onclick=Reset>Reset</button></label>
+                        <br />
+                        <label>Refresh Leaderboard: <button style="margin-left:5px" @onclick=UpdateLeaderboard>Refresh</button></label>
                         <br />
                         <label>Rerun Daily Reset: <input @bind-value=@Date /><button style="margin-left:5px" @onclick=Rerun>Rerun Daily Reset</button></label>
                         <br />
@@ -125,6 +128,11 @@
         }
 
         base.OnInitialized();
+    }
+
+    async Task UpdateLeaderboard()
+    {
+        await LeaderboardSvc.GetCurrentLeaderboard(true);
     }
 
     async Task SetSeed()
