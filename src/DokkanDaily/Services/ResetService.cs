@@ -49,8 +49,7 @@ namespace DokkanDaily.Services
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, "Unhandled exception during automated reset");
-                    throw;
+                    _logger.LogError(e, "Exception during automated reset");
                 }
             }
 
@@ -129,8 +128,7 @@ namespace DokkanDaily.Services
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Unhandled exception while inserting daily clears");
-                throw;
+                _logger.LogError(e, "Exception while inserting daily clears");
             }
 
             _logger.LogInformation("Updating leaderboard...");
