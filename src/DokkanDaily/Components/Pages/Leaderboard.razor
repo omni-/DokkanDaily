@@ -29,11 +29,18 @@
         <i style="float:left" @onclick="decSeason" hidden="@leftArrowHidden" class="arrow oi oi-chevron-left"></i>
         <i style="float:right" @onclick="incSeason" hidden="@rightArrowHidden" class="arrow oi oi-chevron-right"></i>
         <h3>@currentStandingsText</h3>
-        <p class="note">@bonusText</p>
-        @for (int i = 1; i < leaderboard.Count + 1; i++)
-        {
-            <p>@i. @leaderboard[i - 1].GetDisplayName() - @leaderboard[i - 1].TotalScore points</p>
-        }
+        <p class="italic">@bonusText</p>
+        <div class="box">
+            @for (int i = 1; i < leaderboard.Count + 1; i++)
+            {
+                <p>@i. @leaderboard[i - 1].GetDisplayName() - @leaderboard[i - 1].TotalScore points 
+                @if (@leaderboard[i - 1].TotalHighscores > 0)
+                {
+                        <p class="subtext italic">(@leaderboard[i - 1].TotalHighscores @pluralize("highscore", @leaderboard[i - 1].TotalHighscores)!)</p>
+                }
+                </p>
+            }
+        </div>
     }
     else
     {
@@ -48,6 +55,8 @@
 
     string displayText => string.IsNullOrEmpty(errorText) ? "Sorry, there's nothing here yet!" : errorText;
     string errorText;
+
+    string pluralize(string s, int ct) => ct > 1 ? $"{s}s" : s; 
 
     async void incSeason()
     {
