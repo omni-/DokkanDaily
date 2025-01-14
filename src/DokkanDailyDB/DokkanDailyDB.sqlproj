@@ -59,7 +59,7 @@
     <Folder Include="Core" />
     <Folder Include="Core\Tables" />
     <Folder Include="Core\StoredProcedures" />
-    <Folder Include="Core\User Defined Types" />
+    <Folder Include="Core\UserDefinedTypes" />
     <Folder Include="Security" />
     <Folder Include="RefData" />
     <Folder Include="Post-Deployment\" />
@@ -69,7 +69,7 @@
     <Build Include="Core\Tables\DokkanDailyUser.sql" />
     <Build Include="Core\Tables\StageClear.sql" />
     <Build Include="Security\Schemas.sql" />
-    <Build Include="Core\User Defined Types\ClearType.sql" />
+    <Build Include="Core\UserDefinedTypes\ClearType.sql" />
     <Build Include="Core\StoredProcedures\ClearInsert.sql" />
     <Build Include="Core\StoredProcedures\HallOfFameLeaderboardGet.sql" />
     <Build Include="Core\Tables\DailyChallenge.sql" />
