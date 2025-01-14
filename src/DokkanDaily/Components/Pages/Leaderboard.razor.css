@@ -18,13 +18,27 @@
     cursor: pointer;
 }
 
-.note {
+.italic {
     font-size: x-small;
+    font-family: sans-serif;
     font-style: italic;
+    font-weight: normal;
+}
+
+.box {
+    text-align: left;
+    padding-left: 10%;
+}
+
+.subtext {
+    margin-bottom: -0.75rem;
 }
 
 @media(max-width: 420px) {
     h3 {
         font-size: larger;
+    }
+    .box {
+        padding-left: 0;
     }
 }

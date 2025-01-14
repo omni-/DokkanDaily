@@ -39,12 +39,6 @@
     margin-top: .5em;
 }
 
-@media only screen and (max-height: 890px) {
-    .challenge-box {
-        font-size: 0.85rem;
-    }
-}
-
 .clear-box {
     margin-bottom: 2vh;
 }
@@ -53,5 +47,11 @@
     .challenge-box {
         max-width: 45vw;
         min-width: 45vw;
+    }
+}
+
+@media only screen and (max-height: 890px) {
+    .challenge-box {
+        font-size: 0.85rem;
     }
 }

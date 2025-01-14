@@ -35,11 +35,16 @@ namespace DokkanDaily.Services
                     {
                         DiscordUsername = user.DiscordUsername,
                         DokkanNickname = DokkanDailyHelper.UnescapeUnicode(user.DokkanNickname),
+                        TotalHighscores = user.DailyHighscores,
+                        ItemlessClears = user.ItemlessClears,
                         TotalScore = user.TotalClears + user.ItemlessClears + user.DailyHighscores
                     });
                 }
 
-                leaderboard = [.. leaderboard.OrderByDescending(x => x.TotalScore)];
+                leaderboard = [.. leaderboard
+                    .OrderByDescending(x => x.TotalScore)
+                    .ThenByDescending(x => x.TotalHighscores)
+                    .ThenByDescending(x => x.ItemlessClears)];
             }
 
             _leaderboards[season] = leaderboard;
