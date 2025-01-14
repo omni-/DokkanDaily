@@ -55,6 +55,15 @@ namespace DokkanDailyTests
             Assert.That(result, Is.EqualTo(exp));
         }
 
+        [Test]
+        public void TestEscapeUnicode()
+        {
+            string unescaped = DokkanDailyHelper.UnescapeUnicode(@"\u4E94\u6761\u609F");
+            string escaped = DokkanDailyHelper.EscapeUnicode("五条悟");
+
+            Assert.That(unescaped, Is.EqualTo("五条悟"));
+            Assert.That(escaped, Is.EqualTo(@"\u4e94\u6761\u609f"));
+        }
 
         [Test]
         [TestCase("UBCeomnt", "DBC*omni")]
