@@ -7,5 +7,9 @@
         public string DiscordUsername { get; init; }
 
         public int TotalScore { get; init; }
+
+        public int TotalHighscores { get; init; }
+
+        public int ItemlessClears { get; init; }
     }
 }
