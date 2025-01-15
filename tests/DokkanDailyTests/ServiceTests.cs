@@ -71,7 +71,7 @@ namespace DokkanDailyTests
             IRngHelperService rngHelperService = new RngHelperServiceV2(repoMock.Object, Options.Create(new DokkanDailySettings() { EventRepeatLimitDays = 99999999, StageRepeatLimitDays = 99999999 }), mocks.Create<ILogger<RngHelperServiceV2>>(MockBehavior.Loose).Object);
 
             var list = new List<Stage>(DokkanConstants.Stages);
-            list.RemoveAll(x => x.Name.Contains("Heroine"));
+            list.RemoveAll(x => x.Name.Contains("Frieza"));
 
             repoMock
                 .Setup(x => x.GetChallengeList(It.IsAny<DateTime?>()))
@@ -83,7 +83,7 @@ namespace DokkanDailyTests
                 {
                     await rngHelperService.SetDailySeed(i);
                     var chall = await rngHelperService.GetDailyChallenge();
-                    Assert.That(chall.TodaysEvent.Name, Does.Contain("Heroine"));
+                    Assert.That(chall.TodaysEvent.Name, Does.Contain("Frieza"));
                 }
             });
         }
