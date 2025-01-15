@@ -12,7 +12,7 @@ namespace DokkanDaily.Services
     public class RngHelperServiceV2 : IRngHelperService
     {
         private static DateTime Now => DateTime.UtcNow;
-        private static TempCache<Challenge> Challenge = null;
+        private static Challenge Challenge = null;
         private static int Seed;
         private readonly IDokkanDailyRepository dokkanDailyRepository;
         private readonly ILogger<RngHelperServiceV2> _logger;
@@ -28,16 +28,23 @@ namespace DokkanDaily.Services
 
         public async Task<Challenge> GetDailyChallenge()
         {
-            if (Challenge != null && !Challenge.CacheExpired)
-                return Challenge.Value;
+            if (Challenge != null)
+            {
+                var cacheExpired = DateTime.UtcNow > Challenge.Date + TimeSpan.FromDays(1);
+                if (!cacheExpired)
+                    return Challenge;
+                else
+                    _logger.LogInformation("Cached challenge from {@date} expired at {@time}. Re-calculating challenge...", Challenge.Date, Challenge.Date + TimeSpan.FromDays(1));
+            }
 
             Challenge = await CalcChallenge();
 
-            return Challenge.Value;
+            return Challenge;
         }
 
-        private async Task<TempCache<Challenge>> CalcChallenge()
+        private async Task<Challenge> CalcChallenge(DateTime? date = null)
         {
+            _logger.LogInformation("Calculating challenge using seed {Seed}", Seed);
             Random r = new(Seed);
 
             // first, get recent challenge history
@@ -49,6 +56,8 @@ namespace DokkanDaily.Services
                 // DateTime cutoffDate = DateTime.UtcNow - TimeSpan.FromDays(InternalConstants.ChallengeRepeatLimitDays);
 
                 var dbChallenges = await dokkanDailyRepository.GetChallengeList(null);
+
+                _logger.LogInformation("Retrieved {count} challenges.", dbChallenges.Count());
 
                 recentChallenges = dbChallenges
                     .Select(x =>
@@ -62,7 +71,7 @@ namespace DokkanDaily.Services
                         Category category = x.Category == null ? null : DokkanConstants.CategoryMap[x.Category];
                         Unit unit = x.LeaderFullName == null ? null : DokkanDailyHelper.GetUnit(leader);
 
-                        return new Challenge(type, stage, skill, category, leader, unit);
+                        return new Challenge(type, stage, skill, category, leader, unit, DateTime.UtcNow);
                     });
             }
             catch (Exception ex)
@@ -122,7 +131,15 @@ namespace DokkanDaily.Services
 
             Unit unit = DokkanDailyHelper.GetUnit(leader);
 
-            return new(new(dailyType, todaysStage, linkSkill, category, leader, unit));
+            var cacheDate = date ?? DateTime.UtcNow;
+
+            Challenge challenge = new(dailyType, todaysStage, linkSkill, category, leader, unit, cacheDate);
+
+            string logMessage = $"{{ DailyType: {dailyType}, Stage: {todaysStage.FullName}, Target: {dailyType switch { DailyType.LinkSkill => linkSkill.Name, DailyType.Category => category.Name, DailyType.Character => leader.FullName, _ => null }} }}";
+
+            _logger.LogInformation("Calculated new challenge: {msg} Expires at {@dt}UTC", logMessage, cacheDate.Date + TimeSpan.FromDays(1));
+
+            return challenge;
         }
 
         private static int CalcSeed(DateTime date)
@@ -133,7 +150,7 @@ namespace DokkanDaily.Services
 
         public DailyType? GetTodaysDailyType()
         {
-            return Challenge?.Value?.DailyType;
+            return Challenge?.DailyType;
         }
 
         public int GetRawSeed()
@@ -143,13 +160,13 @@ namespace DokkanDaily.Services
 
         public void OverrideChallenge(DailyType type, Stage e, LinkSkill link, Category cat, Leader l)
         {
-            Challenge = new(new(type, e, link, cat, l, DokkanDailyHelper.GetUnit(l)));
+            Challenge = new(type, e, link, cat, l, DokkanDailyHelper.GetUnit(l), DateTime.UtcNow);
         }
 
         public void OverrideChallengeType(DailyType type)
         {
             if (Challenge != null)
-                Challenge.Value.DailyType = type;
+                Challenge.DailyType = type;
         }
 
         public async Task Reset()
@@ -172,9 +189,10 @@ namespace DokkanDaily.Services
 
         public async Task<Challenge> UpdateDailyChallenge()
         {
-            Seed = CalcSeed(Now + TimeSpan.FromDays(1));
-            Challenge = await CalcChallenge();
-            return Challenge.Value;
+            var tomorrow = Now + TimeSpan.FromDays(1);
+            Seed = CalcSeed(tomorrow);
+            Challenge = await CalcChallenge(tomorrow);
+            return Challenge;
         }
 
         private static T Pick<T>(IEnumerable<T> input, Random r, Tier t) where T : ITieredObject
