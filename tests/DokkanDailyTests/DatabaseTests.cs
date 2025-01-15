@@ -5,6 +5,7 @@ using DokkanDaily.Models.Database;
 using DokkanDaily.Models.Enums;
 using DokkanDaily.Repository;
 using FluentAssertions;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -17,30 +18,32 @@ namespace DokkanDailyTests
     public class DatabaseTests
     {
         private DokkanDailyRepository repository;
-        private SqlConnectionWrapper wrapper;
+        private SqlConnection conn;
 
         [OneTimeSetUp]
         public void OneTimeSetup()
         {
             Mock<ILogger<DokkanDailyRepository>> mock = new(MockBehavior.Loose);
-            wrapper = new();
+            string sqlServerConnectionString = "Data Source=.,1433;Initial Catalog=mydatabase;Persist Security Info=True;User ID=SA;Password=<YourStrong@Passw0rd>;TrustServerCertificate=True;";
+            conn = new(sqlServerConnectionString);
 
             // todo: docker stuff here
 
             IOptions<DokkanDailySettings> options = Options.Create(new DokkanDailySettings()
             {
-                SqlServerConnectionString = "Data Source=.,1433;Initial Catalog=mydatabase;Persist Security Info=True;User ID=SA;Password=<YourStrong@Passw0rd>;TrustServerCertificate=True;"
+                SqlServerConnectionString = sqlServerConnectionString
+
             });
 
-            repository = new(wrapper, mock.Object, options);
+            repository = new(mock.Object, options);
         }
 
         [SetUp]
         public async Task Setup()
         {
-            await wrapper.OpenAsync();
-            await wrapper.ExecuteReaderAsync("delete from Core.StageClear; delete from Core.DokkanDailyUser; delete from Core.DailyChallenge;", new());
-            await wrapper.CloseAsync();
+            await conn.OpenAsync();
+            await conn.ExecuteReaderAsync("delete from Core.StageClear; delete from Core.DokkanDailyUser; delete from Core.DailyChallenge;", new());
+            await conn.CloseAsync();
         }
 
         [Test]
@@ -80,7 +83,7 @@ namespace DokkanDailyTests
         [Test]
         public async Task DatabaseCanRecordAndReturnChallengeList()
         {
-            await repository.InsertChallenge(new(DailyType.Character, new Stage("foo", Tier.F, "fakepath"), new("a", Tier.F), new("b", Tier.F), new("bar", "baz", Tier.F), null));
+            await repository.InsertChallenge(new(DailyType.Character, new Stage("foo", Tier.F, "fakepath"), new("a", Tier.F), new("b", Tier.F), new("bar", "baz", Tier.F), null, DateTime.UtcNow));
             var result = await repository.GetChallengeList(DateTime.UtcNow - TimeSpan.FromDays(2));
             var match = result.FirstOrDefault(x => x.DailyTypeName == "Character" && x.Category == null && x.Stage == 1 && x.Event == "foo" && x.LeaderFullName == "[bar] baz" && x.LinkSkill == null);
             Assert.That(match, Is.Not.Null, "Could not find matching record in db result");

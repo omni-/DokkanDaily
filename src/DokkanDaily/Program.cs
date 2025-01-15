@@ -38,7 +38,6 @@ namespace DokkanDaily
             builder.Services.AddTransient<IResetService, ResetService>();
             builder.Services.AddTransient<IAzureBlobService, AzureBlobService>();
             builder.Services.AddTransient<IOcrService, OcrService>();
-            builder.Services.AddTransient<ISqlConnectionWrapper, SqlConnectionWrapper>();
             builder.Services.AddTransient<IDokkanDailyRepository, DokkanDailyRepository>();
 
             builder.Services.AddHttpClient<DiscordWebhookClient>();

@@ -12,7 +12,7 @@ public class Worker(
 
     private static readonly Dictionary<WorkType, TimeOnly> WorkSchedule = new()
     {
-        { WorkType.DailyReset, new(23, 59) },
+        { WorkType.DailyReset, new(23, 58) },
         { WorkType.LeaderboardProcessing, new(1, 30) }
     };
 
