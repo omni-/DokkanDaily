@@ -41,6 +41,9 @@ namespace DokkanDaily.Services
                     // insert challenge
                     await _repository.InsertChallenge(todaysChallenge);
 
+                    // delay to avoid weird deadlock? idk and i can't repro :(
+                    await Task.Delay(5);
+
                     // Reset RNGService/seeding
                     var tomorrowsChallenge = await _rngHelperService.UpdateDailyChallenge();
 

@@ -68,10 +68,10 @@ namespace DokkanDailyTests
         public void RngServiceDoesNotThrow()
         {
             var repoMock = mocks.Create<IDokkanDailyRepository>();
-            IRngHelperService rngHelperService = new RngHelperServiceV2(repoMock.Object, Options.Create(new DokkanDailySettings() { EventRepeatLimitDays = 99999999, StageRepeatLimitDays = 99999999 }), mocks.Create<ILogger<RngHelperServiceV2>>().Object);
+            IRngHelperService rngHelperService = new RngHelperServiceV2(repoMock.Object, Options.Create(new DokkanDailySettings() { EventRepeatLimitDays = 99999999, StageRepeatLimitDays = 99999999 }), mocks.Create<ILogger<RngHelperServiceV2>>(MockBehavior.Loose).Object);
 
             var list = new List<Stage>(DokkanConstants.Stages);
-            list.RemoveAll(x => x.Name.Contains("Heroine"));
+            list.RemoveAll(x => x.Name.Contains("Frieza"));
 
             repoMock
                 .Setup(x => x.GetChallengeList(It.IsAny<DateTime?>()))
@@ -83,7 +83,7 @@ namespace DokkanDailyTests
                 {
                     await rngHelperService.SetDailySeed(i);
                     var chall = await rngHelperService.GetDailyChallenge();
-                    Assert.That(chall.TodaysEvent.Name, Does.Contain("Heroine"));
+                    Assert.That(chall.TodaysEvent.Name, Does.Contain("Frieza"));
                 }
             });
         }
@@ -156,10 +156,10 @@ namespace DokkanDailyTests
 
             rngMock
                 .Setup(x => x.UpdateDailyChallenge())
-                .ReturnsAsync(new Challenge(DailyType.Character, new("foo", Tier.D, "LGE"), new("bar", Tier.D), new("baz", Tier.D), new("quz", "", Tier.D), new()));
+                .ReturnsAsync(new Challenge(DailyType.Character, new("foo", Tier.D, "LGE"), new("bar", Tier.D), new("baz", Tier.D), new("quz", "", Tier.D), new(), DateTime.Now));
             rngMock
                 .Setup(x => x.GetDailyChallenge())
-                .ReturnsAsync(new Challenge(DailyType.Character, new("foo", Tier.D, "LGE"), new("bar", Tier.D), new("baz", Tier.D), new("quz", "", Tier.D), new()));
+                .ReturnsAsync(new Challenge(DailyType.Character, new("foo", Tier.D, "LGE"), new("bar", Tier.D), new("baz", Tier.D), new("quz", "", Tier.D), new(), DateTime.Now));
 
             lbMock.Setup(x => x.GetCurrentLeaderboard(It.IsAny<bool>())).Returns(Task.FromResult<List<LeaderboardUser>>([]));
 
