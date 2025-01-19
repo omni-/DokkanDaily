@@ -194,6 +194,7 @@ namespace DokkanDailyTests
             repoMock.VerifyNoOtherCalls();
 
             webhookMock.Verify(x => x.PostAsync(It.IsAny<WebhookMessage>()), Times.Once);
+            webhookMock.VerifyNoOtherCalls();
         }
     }
 }

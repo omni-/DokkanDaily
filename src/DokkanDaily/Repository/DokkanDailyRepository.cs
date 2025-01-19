@@ -54,7 +54,7 @@ namespace DokkanDaily.Repository
         {
             using SqlConnection sqlConnection = new(_connectionString);
 
-            _logger.LogInformation("Getting challenge list...");
+            _logger.LogInformation("Inserting daily challenge...");
 
             await sqlConnection.OpenAsync();
 

@@ -48,6 +48,13 @@ button {
     font-family: 'FOT-NewRodin ProN', inherit
 }
 
+.italic {
+    font-size: x-small;
+    font-family: sans-serif;
+    font-style: italic;
+    font-weight: normal;
+}
+
 .card {
     /* Add shadows to create the "card" effect */
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);

@@ -134,7 +134,7 @@ namespace DokkanDaily.Services
                 _logger.LogError(e, "Exception while inserting daily clears");
             }
 
-            _logger.LogInformation("Updating leaderboard...");
+            _logger.LogInformation("Done processing daily clears. Updating leaderboard...");
 
             // force reload leaderboard
             await _leaderboardService.GetCurrentLeaderboard(true);

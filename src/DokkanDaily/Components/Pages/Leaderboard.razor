@@ -77,7 +77,7 @@
     int selectedSeason = 0;
     bool leftArrowHidden => selectedSeason <= 0;
     bool rightArrowHidden => selectedSeason >= currentSeason;
-    string currentStandingsText => selectedSeason == 0 ? "Hall of Fame" : selectedSeason == currentSeason ? $"Current Standings (Season {selectedSeason})" : $"Season {selectedSeason}";
+    string currentStandingsText => selectedSeason == 0 ? "Hall of Fame" : selectedSeason == currentSeason ? $"Season {selectedSeason} (Current)" : $"Season {selectedSeason}";
     string bonusText => selectedSeason == 0 ? "Points from clears submitted prior to the implementation of the Season system" : string.Empty;
 
     protected override async Task OnInitializedAsync()
