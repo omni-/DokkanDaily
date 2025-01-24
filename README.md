@@ -14,6 +14,7 @@ Or, if you're more technically inclined, [Submit a Pull Request](https://github.
 
 ### Nerdy stuff
 __Project TODO List:__
+* Equivalency bins
 * Allow merging of username pairs (details in [`ClearInsert.sql`](https://github.com/omni-/DokkanDaily/blob/master/src/DokkanDailyDB/Core/Stored%20Procedures/ClearInsert.sql))
 * Support multiple webhook destinations
 * Set up modified scraper as an azure job/Script updating character json (github actions?)
