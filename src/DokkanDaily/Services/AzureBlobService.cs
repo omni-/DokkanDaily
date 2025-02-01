@@ -44,7 +44,7 @@ namespace DokkanDaily.Services
             return $"{_containerName}-{formattedDateTag}";
         }
 
-        public async Task<BlobClient> UploadToAzureAsync(string userFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null, string userAgent = null, string discordUsername = null)
+        public async Task<BlobClient> UploadToAzureAsync(string userFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null, string userAgent = null, string discordUsername = null, string discordId = null)
         {
             try
             {
@@ -76,7 +76,7 @@ namespace DokkanDaily.Services
                 {
                     var metadata = _ocrService.ProcessImage(ms);
                     _logger.LogInformation("Finished processing image.");
-                    var tags = BuildTagDict(model, metadata, discordUsername);
+                    var tags = BuildTagDict(model, metadata, discordUsername, discordId);
                     blob.SetMetadataAsync(tags);
                     _logger.LogInformation("Finished updating Azure metadata.");
                 });
@@ -221,7 +221,7 @@ namespace DokkanDaily.Services
             }
         }
 
-        private static Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata, string discordUsername)
+        private static Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata, string discordUsername, string discordId)
         {
             string invalid = null;
             if (metadata == null) invalid = true.ToString();
@@ -234,6 +234,7 @@ namespace DokkanDaily.Services
                 { AzureConstants.ITEMLESS_TAG, metadata?.ItemlessClear.ToString()},
                 { AzureConstants.CLEAR_TIME_TAG, metadata?.ClearTime},
                 { AzureConstants.DISCORD_NAME_TAG, discordUsername },
+                { AzureConstants.DISCORD_ID,  discordId },
                 { AzureConstants.INVALID_TAG, invalid },
                 { AzureConstants.CHALLENGE_TARGET_TAG, model.DailyType switch
                     {

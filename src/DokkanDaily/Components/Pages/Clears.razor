@@ -137,8 +137,8 @@
 
         try { remoteUserAgent = await jsRuntime.InvokeAsync<string>("getUserAgent"); } catch { }
 
-        var authState = await authStateProvider.GetAuthenticationStateAsync();
-        var claim = authState.User.Claims.FirstOrDefault(c => c.Issuer == "Discord" && c.Type.EndsWith("name"));
+        string discordUsername = await DokkanDailyHelper.GetUsernameFromDiscordAuthClaim(authStateProvider);
+        string discordId = await DokkanDailyHelper.GetIdFromDiscordAuthClaim(authStateProvider);
 
         var file = selectedFiles.FirstOrDefault();
         if (file == null) return;
@@ -152,17 +152,18 @@
                 file.ContentType,
                 file, challengeModel,
                 userAgent: remoteUserAgent,
-                discordUsername: claim?.Value);
+                discordUsername: discordUsername,
+                discordId: discordId);
 
-                FileUploadViewModel fileUploadViewModel = new FileUploadViewModel()
-                {
-                    FileName = blobClient.Name,
-                    FileStorageUrl = blobClient.Uri.ToString(),
-                    ContentType = file.ContentType
-                };
+            FileUploadViewModel fileUploadViewModel = new FileUploadViewModel()
+            {
+                FileName = blobClient.Name,
+                FileStorageUrl = blobClient.Uri.ToString(),
+                ContentType = file.ContentType
+            };
 
-                fileUploadViewModels.Add(fileUploadViewModel);
-                Message = file.Name + " Uploaded!!";
+            fileUploadViewModels.Add(fileUploadViewModel);
+            Message = file.Name + " Uploaded!!";
         }
         catch (Exception ex)
         {

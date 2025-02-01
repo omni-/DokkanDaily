@@ -24,12 +24,12 @@
 <Logo dailyType="@RngSvc.GetTodaysDailyType()?.ToString()" />
 
 <div class="container leaderboard text-center">
-    @if (leaderboard != null)
+    <i style="float:left" @onclick="decSeason" hidden="@leftArrowHidden" class="arrow oi oi-chevron-left"></i>
+    <i style="float:right" @onclick="incSeason" hidden="@rightArrowHidden" class="arrow oi oi-chevron-right"></i>
+    <h3>@currentStandingsText</h3>
+    <p class="italic">@bonusText</p>
+    @if (leaderboard != null && leaderboard.Any())
     {
-        <i style="float:left" @onclick="decSeason" hidden="@leftArrowHidden" class="arrow oi oi-chevron-left"></i>
-        <i style="float:right" @onclick="incSeason" hidden="@rightArrowHidden" class="arrow oi oi-chevron-right"></i>
-        <h3>@currentStandingsText</h3>
-        <p class="italic">@bonusText</p>
         <div class="box">
             @for (int i = 1; i < leaderboard.Count + 1; i++)
             {

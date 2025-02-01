@@ -6,6 +6,7 @@ BEGIN
     SELECT
         DDU.DokkanNickname,
         DDU.DiscordUsername,
+        DDU.DiscordId,
         COUNT(*) AS TotalClears,
         COUNT(CASE WHEN C.ItemlessClear = 1 THEN 1 ELSE NULL END) AS ItemlessClears,
         COUNT(CASE WHEN C.IsDailyHighscore = 1 THEN 1 ELSE NULL END) AS DailyHighscores 
@@ -17,7 +18,8 @@ BEGIN
         AND MONTH(C.ClearDate) = MONTH(@MonthAndYear)
     GROUP BY
         DDU.DokkanNickname,
-        DDU.DiscordUsername
+        DDU.DiscordUsername,
+        DDU.DiscordId
 
 RETURN 0
 END
