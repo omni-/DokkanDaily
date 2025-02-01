@@ -26,7 +26,8 @@ namespace DokkanDaily.Repository
             await sqlConnection.OpenAsync();
 
             DynamicParameters dp = new();
-            dp.Add("Clears", ToDataTable(clears).AsTableValuedParameter());
+            var dt = ToDataTable(clears);
+            dp.Add("Clears", dt.AsTableValuedParameter());
             dp.Add("ClearDate", dateOnly.Date);
 
             await sqlConnection.ExecuteAsync(

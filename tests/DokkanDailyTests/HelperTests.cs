@@ -81,5 +81,19 @@ namespace DokkanDailyTests
         {
             Assert.That(DokkanDailyHelper.CheckUsername(username), Is.EqualTo(exp));
         }
+
+        [Test]
+        public void TestUsernameFormatter()
+        {
+            LeaderboardUser user = new()
+            {
+                DiscordId = "7777777777777777",
+                DokkanNickname = "DBC*omni",
+                DiscordUsername = "omni"
+            };
+
+            Assert.That(user.GetDisplayName(), Is.EqualTo("omni (DBC*omni)"));
+            Assert.That(user.GetDisplayName(true), Is.EqualTo("<@7777777777777777> (DBC*omni)"));
+        }
     }
 }

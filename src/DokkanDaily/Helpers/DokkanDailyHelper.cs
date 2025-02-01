@@ -1,6 +1,8 @@
 ﻿using DokkanDaily.Constants;
 using DokkanDaily.Models;
 using DokkanDaily.Models.Enums;
+using Microsoft.AspNetCore.Components.Authorization;
+using OpenCvSharp;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -92,7 +94,11 @@ namespace DokkanDaily.Helpers
         public static string AddSasTokenToUri(this string uri, string sasToken)
             => $"{uri}?{sasToken}";
 
-        public static string GetDisplayName(this LeaderboardUser leaderboardUser) => string.IsNullOrWhiteSpace(leaderboardUser.DiscordUsername) ? leaderboardUser.DokkanNickname : $"{leaderboardUser.DiscordUsername} ({leaderboardUser.DokkanNickname})";
+        public static string GetDisplayName(this LeaderboardUser leaderboardUser, bool usePingFormat = false) => string.IsNullOrWhiteSpace(leaderboardUser.DiscordUsername) ? 
+            leaderboardUser.DokkanNickname 
+            : usePingFormat ? 
+                $"<@{leaderboardUser.DiscordId}> ({leaderboardUser.DokkanNickname})" 
+                : $"{leaderboardUser.DiscordUsername} ({leaderboardUser.DokkanNickname})";
 
         public static string AddDokkandleDbcRolePing(this string source) => $"{source}\r\n{InternalConstants.DokkandleDbcRole}";
 
@@ -139,6 +145,32 @@ namespace DokkanDaily.Helpers
             }
 
             return username;
+        }
+
+        public static async Task<string> GetUsernameFromDiscordAuthClaim(AuthenticationStateProvider authStateProvider)
+        {
+            var authState = await authStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (!user.Claims.Any())
+                return null;
+
+            var claim = authState.User.Claims.FirstOrDefault(c => c.Issuer == "Discord" && c.Type.EndsWith("name"));
+
+            return claim?.Value;
+        }
+
+        public static async Task<string> GetIdFromDiscordAuthClaim(AuthenticationStateProvider authStateProvider)
+        {
+            var authState = await authStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (!user.Claims.Any())
+                return null;
+
+            var claim = user.Claims.FirstOrDefault(c => c.Issuer == "Discord" && c.Type.Contains("identifier"));
+
+            return claim?.Value;
         }
     }
 }

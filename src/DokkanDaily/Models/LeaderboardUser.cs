@@ -6,6 +6,8 @@
 
         public string DiscordUsername { get; init; }
 
+        public string DiscordId { get; init; }
+
         public int TotalScore { get; init; }
 
         public int TotalHighscores { get; init; }

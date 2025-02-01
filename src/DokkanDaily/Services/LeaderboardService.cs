@@ -35,6 +35,7 @@ namespace DokkanDaily.Services
                     {
                         DiscordUsername = user.DiscordUsername,
                         DokkanNickname = DokkanDailyHelper.UnescapeUnicode(user.DokkanNickname),
+                        DiscordId = user.DiscordId,
                         TotalHighscores = user.DailyHighscores,
                         ItemlessClears = user.ItemlessClears,
                         TotalScore = user.TotalClears + user.ItemlessClears + user.DailyHighscores

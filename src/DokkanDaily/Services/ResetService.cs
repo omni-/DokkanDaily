@@ -101,6 +101,7 @@ namespace DokkanDaily.Services
                     {
                         DokkanNickname = tags.TryGetValue(AzureConstants.USER_NAME_TAG, out string nickname) ? nickname : null,
                         DiscordUsername = tags.TryGetValue(AzureConstants.DISCORD_NAME_TAG, out string discord) ? discord : null,
+                        DiscordId = tags.TryGetValue(AzureConstants.DISCORD_ID, out string discordId) ? discordId : null,
                         ClearTime = clearTime,
                         ItemlessClear = bool.Parse(itemless),
                         ClearTimeSpan = timeSpan
@@ -156,7 +157,7 @@ namespace DokkanDaily.Services
                 {
                     if (i >= leaderboard.Count) break;
 
-                    payload += $"\t{i switch { 0 or 1 or 2 => _medalEmojiCharMap[i], _ => $" {i + 1}\\." }} {leaderboard[i].GetDisplayName()} - **{leaderboard[i].TotalScore}** points\r\n";
+                    payload += $"\t{i switch { 0 or 1 or 2 => _medalEmojiCharMap[i], _ => $" {i + 1}\\." }} {leaderboard[i].GetDisplayName(true)} - **{leaderboard[i].TotalScore}** points\r\n";
                 }
                 payload += $"\r\nSeason **{lastSeason + 1}** has officially begun. Good luck!\r\n";
 

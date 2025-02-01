@@ -12,10 +12,11 @@ BEGIN
     WHEN MATCHED
     THEN UPDATE 
         SET TARGET.DokkanNickname = ISNULL(SOURCE.DokkanNickname, TARGET.DokkanNickname),
-        TARGET.DiscordUsername = ISNULL(SOURCE.DiscordUsername, TARGET.DiscordUsername)
+        TARGET.DiscordUsername = ISNULL(SOURCE.DiscordUsername, TARGET.DiscordUsername),
+        TARGET.DiscordId = ISNULL(SOURCE.DiscordId, TARGET.DiscordId)
     WHEN NOT MATCHED BY TARGET THEN
-        INSERT([DokkanNickname], [DiscordUsername])
-        VALUES(SOURCE.[DokkanNickname], SOURCE.[DiscordUsername]);
+        INSERT([DokkanNickname], [DiscordUsername], [DiscordId])
+        VALUES(SOURCE.[DokkanNickname], SOURCE.[DiscordUsername], SOURCE.[DiscordId]);
 
     MERGE INTO Core.StageClear AS TARGET
     USING (
