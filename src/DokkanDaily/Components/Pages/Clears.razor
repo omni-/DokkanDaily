@@ -137,8 +137,8 @@
 
         try { remoteUserAgent = await jsRuntime.InvokeAsync<string>("getUserAgent"); } catch { }
 
-        string discordUsername = await DokkanDailyHelper.GetUsernameFromDiscordAuthClaim(authStateProvider);
-        string discordId = await DokkanDailyHelper.GetIdFromDiscordAuthClaim(authStateProvider);
+        string discordUsername = await authStateProvider.GetUsernameFromDiscordAuthClaim();
+        string discordId = await authStateProvider.GetIdFromDiscordAuthClaim();
 
         var file = selectedFiles.FirstOrDefault();
         if (file == null) return;

@@ -34,7 +34,7 @@ namespace DokkanDaily.Services
                     leaderboard.Add(new()
                     {
                         DiscordUsername = user.DiscordUsername,
-                        DokkanNickname = DokkanDailyHelper.UnescapeUnicode(user.DokkanNickname),
+                        DokkanNickname = user.DokkanNickname.UnescapeUnicode(),
                         DiscordId = user.DiscordId,
                         TotalHighscores = user.DailyHighscores,
                         ItemlessClears = user.ItemlessClears,

@@ -10,26 +10,20 @@ namespace DokkanDaily.Helpers
 {
     public static partial class DokkanDailyHelper
     {
-        private static readonly JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
-
-        public static readonly Dictionary<string, string> KnownUsernameMap = new()
-        {
-            // pattern, value
-            { "五.悟", "五条悟" },
-            { "UBCeomnt", "DBC*omni" }
-        };
-
+        #region Regex
         [GeneratedRegex("[^a-zA-Z0-9-]")]
         public static partial Regex AlphaNumericRegex();
 
         [GeneratedRegex(@"([UDO]BC\s?[\*\+]\s?).*")]
         public static partial Regex DbcNicknameTagRegex();
+        #endregion
 
+        #region Helper Functions
         public static IEnumerable<Unit> BuildCharacterDb()
         {
             Stream s = File.OpenRead("./wwwroot/data/DokkanCharacterData.json");
 
-            var result = JsonSerializer.Deserialize<IEnumerable<Unit>>(s, options);
+            var result = JsonSerializer.Deserialize<IEnumerable<Unit>>(s, InternalConstants.DefaultSerializeOptions);
 
             foreach (var unit in result)
                 if (unit.ImageURL.Contains("static."))
@@ -71,6 +65,30 @@ namespace DokkanDaily.Helpers
         public static Unit GetUnit(Leader leader)
             => DokkanConstants.UnitDB.FirstOrDefault(x => x.Name == leader.Name && x.Title == leader.Title);
 
+        public static string CheckUsername(string username)
+        {
+            if (string.IsNullOrEmpty(username)) return username;
+
+            var sub = InternalConstants.KnownUsernameMap.Keys.FirstOrDefault(x => Regex.IsMatch(username, x));
+
+            if (!string.IsNullOrEmpty(sub))
+            {
+                return InternalConstants.KnownUsernameMap[sub];
+            }
+            else
+            {
+                Match m = DbcNicknameTagRegex().Match(username);
+
+                if (!m.Success || m.Groups.Count < 2) return username;
+
+                username = username.Replace(m.Groups[1].Value, OcrConstants.DbcTag);
+            }
+
+            return username;
+        }
+        #endregion
+
+        #region Extension Methods
         public static string GetChallengeText(this Challenge challenge, bool useDiscordFormatting = false)
         {
             string star = useDiscordFormatting ? "*" : "";
@@ -101,9 +119,9 @@ namespace DokkanDaily.Helpers
 
         public static string AddDokkandleDbcRolePing(this string source) => $"{source}\r\n{InternalConstants.DokkandleDbcRole}";
 
-        public static string UnescapeUnicode(string value) => string.IsNullOrWhiteSpace(value) ? value : Regex.Unescape(value);
+        public static string UnescapeUnicode(this string value) => string.IsNullOrWhiteSpace(value) ? value : Regex.Unescape(value);
 
-        public static string EscapeUnicode(string value)
+        public static string EscapeUnicode(this string value)
         {
             if (string.IsNullOrWhiteSpace(value)) return value;
 
@@ -124,29 +142,7 @@ namespace DokkanDaily.Helpers
             return sb.ToString();
         }
 
-        public static string CheckUsername(string username)
-        {
-            if (string.IsNullOrEmpty(username)) return username;
-
-            var sub = KnownUsernameMap.Keys.FirstOrDefault(x => Regex.IsMatch(username, x));
-
-            if (!string.IsNullOrEmpty(sub))
-            {
-                return KnownUsernameMap[sub];
-            }
-            else
-            {
-                Match m = DbcNicknameTagRegex().Match(username);
-
-                if (!m.Success || m.Groups.Count < 2) return username;
-
-                username = username.Replace(m.Groups[1].Value, OcrConstants.DbcTag);
-            }
-
-            return username;
-        }
-
-        public static async Task<string> GetUsernameFromDiscordAuthClaim(AuthenticationStateProvider authStateProvider)
+        public static async Task<string> GetUsernameFromDiscordAuthClaim(this AuthenticationStateProvider authStateProvider)
         {
             var authState = await authStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
@@ -159,7 +155,7 @@ namespace DokkanDaily.Helpers
             return claim?.Value;
         }
 
-        public static async Task<string> GetIdFromDiscordAuthClaim(AuthenticationStateProvider authStateProvider)
+        public static async Task<string> GetIdFromDiscordAuthClaim(this AuthenticationStateProvider authStateProvider)
         {
             var authState = await authStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
@@ -171,5 +167,8 @@ namespace DokkanDaily.Helpers
 
             return claim?.Value;
         }
+        
+        public static bool IsAdministrator(this string id) => InternalConstants.Administrators.Contains(id);
     }
+    #endregion
 }
