@@ -2,7 +2,6 @@
 using DokkanDaily.Models;
 using DokkanDaily.Models.Enums;
 using Microsoft.AspNetCore.Components.Authorization;
-using OpenCvSharp;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
