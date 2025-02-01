@@ -117,8 +117,8 @@ jobs:
         --build-arg SqlServerConnectionString="${{ secrets.SQL_CONNECTION_STRING }}" \
         --build-arg WebhookUrl="${{ secrets.DBC_WEBHOOKS_URL }}" \
         --build-arg EnableJpParsing="true" \
-        --build-arg StageRepeatLimit="30" \
-        --build-arg EventRepeatLimit="7"
+        --build-arg StageRepeatLimit="40" \
+        --build-arg EventRepeatLimit="10"
         
     - name: Docker push
       if: github.ref == 'refs/heads/master'
