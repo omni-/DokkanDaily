@@ -230,7 +230,7 @@ namespace DokkanDaily.Services
             {
                 { AzureConstants.DAILY_TYPE_TAG, model.DailyType.ToString()},
                 { AzureConstants.EVENT_TAG, model.TodaysEvent.FullName},
-                { AzureConstants.USER_NAME_TAG, DokkanDailyHelper.EscapeUnicode(metadata?.Nickname)},
+                { AzureConstants.USER_NAME_TAG, metadata?.Nickname.EscapeUnicode()},
                 { AzureConstants.ITEMLESS_TAG, metadata?.ItemlessClear.ToString()},
                 { AzureConstants.CLEAR_TIME_TAG, metadata?.ClearTime},
                 { AzureConstants.DISCORD_NAME_TAG, discordUsername },

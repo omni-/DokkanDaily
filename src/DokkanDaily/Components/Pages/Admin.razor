@@ -110,9 +110,9 @@
     {
         AuthorizedUser = false;
 
-        string discordId = await DokkanDailyHelper.GetIdFromDiscordAuthClaim(authStateProvider);
+        string discordId = await authStateProvider.GetIdFromDiscordAuthClaim();
 
-        if (discordId == "263499818234675200" || discordId == "112089455933792256")
+        if (discordId.IsAdministrator())
         {
             AuthorizedUser = true;
         }
