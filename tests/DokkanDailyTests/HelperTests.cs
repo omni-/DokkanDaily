@@ -94,6 +94,16 @@ namespace DokkanDailyTests
 
             Assert.That(user.GetDisplayName(), Is.EqualTo("omni (DBC*omni)"));
             Assert.That(user.GetDisplayName(true), Is.EqualTo("<@7777777777777777> (DBC*omni)"));
+
+            user = new()
+            {
+                DiscordId = null,
+                DokkanNickname = "DBC*omni",
+                DiscordUsername = "omni"
+            };
+
+            Assert.That(user.GetDisplayName(), Is.EqualTo("omni (DBC*omni)"));
+            Assert.That(user.GetDisplayName(true), Is.EqualTo("omni (DBC*omni)"));
         }
     }
 }
