@@ -1,6 +1,5 @@
 ﻿using DokkanDaily.Constants;
 using DokkanDaily.Models;
-using DokkanDaily.Models.Enums;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Text;
 using System.Text.Json;
@@ -89,19 +88,6 @@ namespace DokkanDaily.Helpers
         #endregion
 
         #region Extension Methods
-        public static string GetChallengeText(this Challenge challenge, bool useDiscordFormatting = false)
-        {
-            string star = useDiscordFormatting ? "*" : "";
-            string text = challenge.DailyType switch
-            {
-                DailyType.Character => $"{star}{challenge.Leader.FullName}{star} as the leader",
-                DailyType.Category => $"only units belonging to the {star}{challenge.Category.Name}{star} category",
-                DailyType.LinkSkill => $"only units with the link skill {star}{challenge.LinkSkill.Name}{star}",
-                _ => throw new ArgumentException("Reached unreachable code. Yay!")
-            };
-            return $"Defeat {star}{star}{challenge.TodaysEvent.FullName}{star}{star} using {text}";
-        }
-
         public static WebhookMessage ToWebhookPayload(this Challenge challenge) => new()
         {
             Message = $"# Daily Challenge!\r\n{challenge.GetChallengeText(true)}!\r\n\r\n{InternalConstants.DokkandleDbcRole}\r\n\r\n*via https://dokkandle.net/daily*",
@@ -111,10 +97,10 @@ namespace DokkanDaily.Helpers
         public static string AddSasTokenToUri(this string uri, string sasToken)
             => $"{uri}?{sasToken}";
 
-        public static string GetDisplayName(this LeaderboardUser leaderboardUser, bool usePingFormat = false) => string.IsNullOrWhiteSpace(leaderboardUser.DiscordUsername) ? 
-            leaderboardUser.DokkanNickname 
-            : usePingFormat ? 
-                $"<@{leaderboardUser.DiscordId}> ({leaderboardUser.DokkanNickname})" 
+        public static string GetDisplayName(this LeaderboardUser leaderboardUser, bool usePingFormat = false) => string.IsNullOrWhiteSpace(leaderboardUser.DiscordUsername) ?
+            leaderboardUser.DokkanNickname
+            : usePingFormat ?
+                $"<@{leaderboardUser.DiscordId}> ({leaderboardUser.DokkanNickname})"
                 : $"{leaderboardUser.DiscordUsername} ({leaderboardUser.DokkanNickname})";
 
         public static string AddDokkandleDbcRolePing(this string source) => $"{source}\r\n{InternalConstants.DokkandleDbcRole}";
@@ -167,7 +153,7 @@ namespace DokkanDaily.Helpers
 
             return claim?.Value;
         }
-        
+
         public static bool IsAdministrator(this string id) => InternalConstants.Administrators.Contains(id);
     }
     #endregion
