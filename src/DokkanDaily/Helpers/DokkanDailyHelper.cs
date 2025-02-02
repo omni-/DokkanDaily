@@ -99,7 +99,7 @@ namespace DokkanDaily.Helpers
 
         public static string GetDisplayName(this LeaderboardUser leaderboardUser, bool usePingFormat = false) => string.IsNullOrWhiteSpace(leaderboardUser.DiscordUsername) ?
             leaderboardUser.DokkanNickname
-            : usePingFormat ?
+            : usePingFormat && !string.IsNullOrWhiteSpace(leaderboardUser.DiscordId) ?
                 $"<@{leaderboardUser.DiscordId}> ({leaderboardUser.DokkanNickname})"
                 : $"{leaderboardUser.DiscordUsername} ({leaderboardUser.DokkanNickname})";
 
