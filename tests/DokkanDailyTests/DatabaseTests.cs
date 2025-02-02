@@ -67,6 +67,7 @@ namespace DokkanDailyTests
                 {
                     DokkanNickname = null,
                     DiscordUsername = "omni",
+                    DiscordId = "112089455933792256",
                     IsDailyHighscore = true,
                     ItemlessClear = true,
                     ClearTime = "n/a"
@@ -78,6 +79,7 @@ namespace DokkanDailyTests
             Assert.That(result, Is.Not.Null, "the repository should return a leaderboard");
             var list = result.ToList();
             Assert.That(list, Has.Count.EqualTo(2), "the returned leaderboard should have the correct number of elements");
+            Assert.That(list.Any(x => x.DiscordId == "112089455933792256"), Is.True, "an element should contain a discord id");
         }
 
         [Test]

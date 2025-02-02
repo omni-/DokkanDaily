@@ -1,6 +1,6 @@
 ﻿using DokkanDaily.Constants;
 using DokkanDaily.Models;
-using DokkanDaily.Models.Enums;
+using Microsoft.AspNetCore.Components.Authorization;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -9,26 +9,20 @@ namespace DokkanDaily.Helpers
 {
     public static partial class DokkanDailyHelper
     {
-        private static readonly JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
-
-        public static readonly Dictionary<string, string> KnownUsernameMap = new()
-        {
-            // pattern, value
-            { "五.悟", "五条悟" },
-            { "UBCeomnt", "DBC*omni" }
-        };
-
+        #region Regex
         [GeneratedRegex("[^a-zA-Z0-9-]")]
         public static partial Regex AlphaNumericRegex();
 
         [GeneratedRegex(@"([UDO]BC\s?[\*\+]\s?).*")]
         public static partial Regex DbcNicknameTagRegex();
+        #endregion
 
+        #region Helper Functions
         public static IEnumerable<Unit> BuildCharacterDb()
         {
             Stream s = File.OpenRead("./wwwroot/data/DokkanCharacterData.json");
 
-            var result = JsonSerializer.Deserialize<IEnumerable<Unit>>(s, options);
+            var result = JsonSerializer.Deserialize<IEnumerable<Unit>>(s, InternalConstants.DefaultSerializeOptions);
 
             foreach (var unit in result)
                 if (unit.ImageURL.Contains("static."))
@@ -70,19 +64,30 @@ namespace DokkanDaily.Helpers
         public static Unit GetUnit(Leader leader)
             => DokkanConstants.UnitDB.FirstOrDefault(x => x.Name == leader.Name && x.Title == leader.Title);
 
-        public static string GetChallengeText(this Challenge challenge, bool useDiscordFormatting = false)
+        public static string CheckUsername(string username)
         {
-            string star = useDiscordFormatting ? "*" : "";
-            string text = challenge.DailyType switch
-            {
-                DailyType.Character => $"{star}{challenge.Leader.FullName}{star} as the leader",
-                DailyType.Category => $"only units belonging to the {star}{challenge.Category.Name}{star} category",
-                DailyType.LinkSkill => $"only units with the link skill {star}{challenge.LinkSkill.Name}{star}",
-                _ => throw new ArgumentException("Reached unreachable code. Yay!")
-            };
-            return $"Defeat {star}{star}{challenge.TodaysEvent.FullName}{star}{star} using {text}";
-        }
+            if (string.IsNullOrEmpty(username)) return username;
 
+            var sub = InternalConstants.KnownUsernameMap.Keys.FirstOrDefault(x => Regex.IsMatch(username, x));
+
+            if (!string.IsNullOrEmpty(sub))
+            {
+                return InternalConstants.KnownUsernameMap[sub];
+            }
+            else
+            {
+                Match m = DbcNicknameTagRegex().Match(username);
+
+                if (!m.Success || m.Groups.Count < 2) return username;
+
+                username = username.Replace(m.Groups[1].Value, OcrConstants.DbcTag);
+            }
+
+            return username;
+        }
+        #endregion
+
+        #region Extension Methods
         public static WebhookMessage ToWebhookPayload(this Challenge challenge) => new()
         {
             Message = $"# Daily Challenge!\r\n{challenge.GetChallengeText(true)}!\r\n\r\n{InternalConstants.DokkandleDbcRole}\r\n\r\n*via https://dokkandle.net/daily*",
@@ -92,13 +97,17 @@ namespace DokkanDaily.Helpers
         public static string AddSasTokenToUri(this string uri, string sasToken)
             => $"{uri}?{sasToken}";
 
-        public static string GetDisplayName(this LeaderboardUser leaderboardUser) => string.IsNullOrWhiteSpace(leaderboardUser.DiscordUsername) ? leaderboardUser.DokkanNickname : $"{leaderboardUser.DiscordUsername} ({leaderboardUser.DokkanNickname})";
+        public static string GetDisplayName(this LeaderboardUser leaderboardUser, bool usePingFormat = false) => string.IsNullOrWhiteSpace(leaderboardUser.DiscordUsername) ?
+            leaderboardUser.DokkanNickname
+            : usePingFormat && !string.IsNullOrWhiteSpace(leaderboardUser.DiscordId) ?
+                $"<@{leaderboardUser.DiscordId}> ({leaderboardUser.DokkanNickname})"
+                : $"{leaderboardUser.DiscordUsername} ({leaderboardUser.DokkanNickname})";
 
         public static string AddDokkandleDbcRolePing(this string source) => $"{source}\r\n{InternalConstants.DokkandleDbcRole}";
 
-        public static string UnescapeUnicode(string value) => string.IsNullOrWhiteSpace(value) ? value : Regex.Unescape(value);
+        public static string UnescapeUnicode(this string value) => string.IsNullOrWhiteSpace(value) ? value : Regex.Unescape(value);
 
-        public static string EscapeUnicode(string value)
+        public static string EscapeUnicode(this string value)
         {
             if (string.IsNullOrWhiteSpace(value)) return value;
 
@@ -119,26 +128,33 @@ namespace DokkanDaily.Helpers
             return sb.ToString();
         }
 
-        public static string CheckUsername(string username)
+        public static async Task<string> GetUsernameFromDiscordAuthClaim(this AuthenticationStateProvider authStateProvider)
         {
-            if (string.IsNullOrEmpty(username)) return username;
+            var authState = await authStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
 
-            var sub = KnownUsernameMap.Keys.FirstOrDefault(x => Regex.IsMatch(username, x));
+            if (!user.Claims.Any())
+                return null;
 
-            if (!string.IsNullOrEmpty(sub))
-            {
-                return KnownUsernameMap[sub];
-            }
-            else
-            {
-                Match m = DbcNicknameTagRegex().Match(username);
+            var claim = authState.User.Claims.FirstOrDefault(c => c.Issuer == "Discord" && c.Type.EndsWith("name"));
 
-                if (!m.Success || m.Groups.Count < 2) return username;
-
-                username = username.Replace(m.Groups[1].Value, OcrConstants.DbcTag);
-            }
-
-            return username;
+            return claim?.Value;
         }
+
+        public static async Task<string> GetIdFromDiscordAuthClaim(this AuthenticationStateProvider authStateProvider)
+        {
+            var authState = await authStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (!user.Claims.Any())
+                return null;
+
+            var claim = user.Claims.FirstOrDefault(c => c.Issuer == "Discord" && c.Type.Contains("identifier"));
+
+            return claim?.Value;
+        }
+
+        public static bool IsAdministrator(this string id) => InternalConstants.Administrators.Contains(id);
     }
+    #endregion
 }

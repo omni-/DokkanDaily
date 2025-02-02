@@ -19,5 +19,18 @@ namespace DokkanDaily.Models
         private readonly DateTime _date = date.Date;
 
         public DateTime Date => _date;
+
+        public string GetChallengeText(bool useDiscordFormatting = false)
+        {
+            string star = useDiscordFormatting ? "*" : "";
+            string text = DailyType switch
+            {
+                DailyType.Character => $"{star}{Leader.FullName}{star} as the leader",
+                DailyType.Category => $"only units belonging to the {star}{Category.Name}{star} category",
+                DailyType.LinkSkill => $"only units with the link skill {star}{LinkSkill.Name}{star}",
+                _ => throw new ArgumentException($"Unknown daily type '{DailyType}'")
+            };
+            return $"Defeat {star}{star}{TodaysEvent.FullName}{star}{star} using {text}";
+        }
     }
 }
