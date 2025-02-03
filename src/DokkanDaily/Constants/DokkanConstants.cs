@@ -48,7 +48,6 @@ namespace DokkanDaily.Constants
             new("Saiyan Roar", Tier.D),
             new("Saiyan Warrior Race", Tier.S),
             new("Shocking Speed", Tier.S),
-            new("Signature Pose", Tier.C),
             new("Solid Support", Tier.E),
             new("Strongest Clan in Space", Tier.D),
             new("Super Saiyan", Tier.S),

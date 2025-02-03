@@ -142,7 +142,7 @@ namespace DokkanDaily.Services
 
             _logger.LogInformation("Leaderboard updated.");
 
-            _logger.LogInformation("Reset completed with no fatal errors.");
+            _logger.LogInformation("Reset completed with no critical errors.");
         }
 
         public async Task ProcessLeaderboard()
