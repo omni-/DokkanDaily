@@ -12,7 +12,7 @@ public class Worker(
 
     private static readonly Dictionary<WorkType, TimeOnly> WorkSchedule = new()
     {
-        { WorkType.DailyReset, new(23, 58) },
+        { WorkType.DailyReset, new(23, 59) },
         { WorkType.LeaderboardProcessing, new(1, 30) }
     };
 
@@ -40,7 +40,7 @@ public class Worker(
                 else if (taskToExecute == WorkType.LeaderboardProcessing)
                     await _resetService.ProcessLeaderboard();
             }
-            catch (Exception e) { _logger.LogError(e, "Unhandled exception while attempting to invoke reset service"); }
+            catch (Exception e) { _logger.LogCritical(e, "Critical error while attempting to invoke reset service"); }
         }
     }
 
