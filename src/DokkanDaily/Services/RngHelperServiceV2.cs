@@ -116,6 +116,8 @@ namespace DokkanDaily.Services
                         .Take(_settings.EventRepeatLimitDays)
                         .Select(x => x.TodaysEvent.Name))
                     .ToList();
+
+                _logger.LogInformation("Filtered challenges successfully.");
             }
             catch (Exception ex)
             {
