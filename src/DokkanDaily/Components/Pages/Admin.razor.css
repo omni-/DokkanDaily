@@ -1,3 +1,7 @@
 ﻿label {
     margin-top:1vh;
 }
+
+.error {
+    color: lightcoral;
+}
