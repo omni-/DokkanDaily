@@ -12,7 +12,6 @@
 @using DokkanDaily.Models.Enums
 @using DokkanDaily.Services.Interfaces
 @using Microsoft.Extensions.Options
-@using System.Reflection
 
 @inject AuthenticationStateProvider authStateProvider;
 @inject IRngHelperService RngSvc
@@ -46,32 +45,31 @@
                     <h3 style="padding-top:1vh;">Welcome back, Admin.</h3>
                     <div class="settings">
                         <br />
-                        <label>Current Seed: <input @bind=@CurrentSeed /></label>
+                        <label>Set Seed: <input @bind-value=@Seed /><button style="margin-left:5px" @onclick="async () => await Exec(SetSeed)">Set</button></label>
                         <br />
-                        <label>Set Seed: <input @bind-value=@Seed /><button style="margin-left:5px" @onclick=SetSeed>Set</button></label>
+                        <label>Roll Seed: <button style="margin-left:5px" @onclick="async () => await Exec(RollSeed)">Roll</button></label>
                         <br />
-                        <label>Roll Seed: <button style="margin-left:5px" @onclick=RollSeed>Roll</button></label>
+                        <label>Reset Seed: <button style="margin-left:5px" @onclick="async () => await Exec(Reset)">Reset</button></label>
                         <br />
-                        <label>Reset Seed: <button style="margin-left:5px" @onclick=Reset>Reset</button></label>
+                        <label>Refresh Leaderboard: <button style="margin-left:5px" @onclick="async () => await Exec(UpdateLeaderboard)">Refresh</button></label>
                         <br />
-                        <label>Refresh Leaderboard: <button style="margin-left:5px" @onclick=UpdateLeaderboard>Refresh</button></label>
+                        <label>Rerun Daily Reset: <input @bind-value=@Date /><button style="margin-left:5px" @onclick="async () => await Exec(Rerun)">Rerun Daily Reset</button></label>
                         <br />
-                        <label>Rerun Daily Reset: <input @bind-value=@Date /><button style="margin-left:5px" @onclick=Rerun>Rerun Daily Reset</button></label>
+                        <label>Set Daily Type: <input @bind-value=@DailyTypeOverride /><button style="margin-left:5px" @onclick="() => Exec(SetDailyType)">Set</button></label>
                         <br />
-                        <label>Set Daily Type: <input @bind-value=@DailyType /><button style="margin-left:5px" @onclick=SetDailyType>Set</button></label>
+                        <label>Set Stage: <input @bind-value=@Stage /><button style="margin-left:5px" @onclick="async () => await Exec(SetStage)">Set</button></label>
                         <br />
-                        <label>Set Stage: <input @bind-value=@Stage /><button style="margin-left:5px" @onclick=SetStage>Set</button></label>
+                        <label>Set Unit: <input @bind-value=@Unit /><button style="margin-left:5px" @onclick="async () => await Exec(SetUnit)">Set</button></label>
                         <br />
-                        <label>Set Unit: <input @bind-value=@Unit /><button style="margin-left:5px" @onclick=SetUnit>Set</button></label>
+                        <label>Set Link: <input @bind-value=@LinkSkill /><button style="margin-left:5px" @onclick="async () => await Exec(SetLinkSkill)">Set</button></label>
                         <br />
-                        <label>Set Link: <input @bind-value=@LinkSkill /><button style="margin-left:5px" @onclick=SetLinkSkill>Set</button></label>
+                        <label>Set Category: <input @bind-value=@Category /><button style="margin-left:5px" @onclick="async () => await Exec(SetCategory)">Set</button></label>
                         <br />
-                        <label>Set Category: <input @bind-value=@Category /><button style="margin-left:5px" @onclick=SetCategory>Set</button></label>
+                        <label>Send Daily via Webhook: <button style="margin-left:5px" @onclick="async () => await Exec(SendWebhook)">Send</button></label>
                         <br />
-                        <label>Send Daily via Webhook: <button style="margin-left:5px" @onclick=SendWebhook>Send</button></label>
-                        <br />
-                        <label>Send Announcement: <textarea @bind=@Announcement /><button style="margin-left:5px" @onclick=SendWebhookCustom>Send</button><input style="margin-left:5px" @bind=@AddRolePing type="checkbox" /></label>
+                        <label>Send Announcement: <textarea @bind=@Announcement /><button style="margin-left:5px" @onclick="async () => await Exec(SendWebhookCustom)">Send</button><input style="margin-left:5px" @bind=@AddRolePing type="checkbox" /></label>
                     </div>
+                    <p class="error">@ErrorText</p>
                 </div>
             }
         </Authorized>
@@ -88,9 +86,7 @@
 
     string Seed { get; set; }
 
-    string CurrentSeed { get => RngSvc.GetRawSeed().ToString(); set => _ = value; }
-
-    string DailyType { get; set; }
+    string DailyTypeOverride { get; set; }
 
     string Date { get; set; }
 
@@ -105,6 +101,8 @@
     string LinkSkill { get; set; }
 
     string Unit { get; set; }
+
+    string ErrorText { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -121,7 +119,35 @@
             NavManager.NavigateTo("/", false);
         }
 
+        Seed = RngSvc.GetRawSeed().ToString();
+
         base.OnInitialized();
+    }
+
+    async Task Exec(Func<Task> f)
+    {
+        ErrorText = "";
+        try
+        {
+            await f.Invoke();
+        }
+        catch (Exception e)
+        {
+            ErrorText = $"{e.GetType().Name}: {e.Message}";
+        }
+    }
+
+    void Exec(Action f)
+    {
+        ErrorText = "";
+        try
+        {
+            f.Invoke();
+        }
+        catch (Exception e)
+        {
+            ErrorText = $"{e.GetType().Name}: {e.Message}";
+        }
     }
 
     async Task UpdateLeaderboard()
@@ -137,11 +163,13 @@
     async Task RollSeed()
     {
         await RngSvc.RollDailySeed();
+        Seed = RngSvc.GetRawSeed().ToString();
     }
 
     async Task Reset()
     {
         await RngSvc.Reset();
+        Seed = RngSvc.GetRawSeed().ToString();
     }
 
     async Task Rerun()
@@ -154,14 +182,14 @@
 
     void SetDailyType()
     {
-        RngSvc.OverrideChallengeType(Enum.Parse<DailyType>(DailyType));
+        RngSvc.OverrideChallengeType(Enum.Parse<DailyType>(DailyTypeOverride));
     }
 
     async Task SetStage()
     {
         var sp = Stage?.Trim()?.Split(", Stage ");
         var chall = await RngSvc.GetDailyChallenge();
-        RngSvc.OverrideChallenge(chall.DailyType, DokkanConstants.Stages.First(x => x.Name == sp[0] && x.StageNumber == int.Parse(sp[1])), chall.LinkSkill, chall.Category, chall.Leader);
+        RngSvc.OverrideChallenge(chall.DailyType, DokkanConstants.Stages.First(x => x.Name == sp?.FirstOrDefault() && x.StageNumber == int.Parse(sp?.Skip(1)?.FirstOrDefault())), chall.LinkSkill, chall.Category, chall.Leader);
     }
 
     async Task SetUnit()
@@ -169,19 +197,19 @@
         var sp = Unit?.Trim()?.Split("] ");
 
         var chall = await RngSvc.GetDailyChallenge();
-        RngSvc.OverrideChallenge(chall.DailyType, chall.TodaysEvent, chall.LinkSkill, chall.Category, DokkanConstants.Leaders.First(x => x.Name == sp[1] && x.Title == sp[0].Replace("[", "")));
+        RngSvc.OverrideChallenge(DailyType.Character, chall.TodaysEvent, chall.LinkSkill, chall.Category, DokkanConstants.Leaders.First(x => x.Name == sp?.Skip(1)?.FirstOrDefault() && x.Title == sp?.FirstOrDefault()?.Replace("[", "")));
     }
 
     async Task SetLinkSkill()
     {
         var chall = await RngSvc.GetDailyChallenge();
-        RngSvc.OverrideChallenge(chall.DailyType, chall.TodaysEvent, DokkanConstants.LinkSkillMap[LinkSkill.Trim()], chall.Category, chall.Leader);
+        RngSvc.OverrideChallenge(DailyType.LinkSkill, chall.TodaysEvent, DokkanConstants.LinkSkillMap[LinkSkill?.Trim()], chall.Category, chall.Leader);
     }
 
     async Task SetCategory()
     {
         var chall = await RngSvc.GetDailyChallenge();
-        RngSvc.OverrideChallenge(chall.DailyType, chall.TodaysEvent, chall.LinkSkill, DokkanConstants.CategoryMap[Category.Trim()], chall.Leader);
+        RngSvc.OverrideChallenge(DailyType.Category, chall.TodaysEvent, chall.LinkSkill, DokkanConstants.CategoryMap[Category?.Trim()], chall.Leader);
     }
 
     async Task SendWebhook()
