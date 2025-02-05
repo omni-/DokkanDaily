@@ -40,7 +40,11 @@ namespace DokkanDailyTests
         public void TestGetUnit()
         {
             foreach (Leader l in DokkanConstants.Leaders)
-                Assert.DoesNotThrow(() => DokkanDailyHelper.GetUnit(l));
+            {
+                Unit u = null;
+                Assert.DoesNotThrow(() => u = DokkanDailyHelper.GetUnit(l));
+                Assert.That(u, Is.Not.Null, $"didnt find expected value {l.FullName}");
+            }
         }
 
         [Test]
