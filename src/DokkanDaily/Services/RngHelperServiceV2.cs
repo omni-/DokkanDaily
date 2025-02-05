@@ -91,6 +91,7 @@ namespace DokkanDaily.Services
                 // filter out things we've done recently
                 stages = stages
                     .Except(recentChallenges
+                        .Where(x => x.TodaysEvent != null)
                         .Take(_settings.StageRepeatLimitDays)
                         .Select(x => x.TodaysEvent), stageComparer)
                     .ToList();
