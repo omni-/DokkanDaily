@@ -68,12 +68,11 @@ namespace DokkanDaily.Services
                 _logger.LogInformation("Retrieved {count} challenges.", dbChallenges.Count());
 
                 recentChallenges = dbChallenges
-                    .Where(x => DokkanConstants.Stages.Any(y => y.Name.StartsWith(x.Event) && y.StageNumber == x.Stage))
                     .Select(x =>
                     {
                         DailyType type = Enum.Parse<DailyType>(x.DailyTypeName);
                         // should be == instead of StartsWith here, but i messed up and made the varchar column too small
-                        Stage stage = DokkanConstants.Stages.First(y => y.Name.StartsWith(x.Event) && y.StageNumber == x.Stage);
+                        Stage stage = DokkanConstants.Stages.FirstOrDefault(y => y.Name.StartsWith(x.Event) && y.StageNumber == x.Stage);
                         // same here 
                         Leader leader = x.LeaderFullName == null ? null : DokkanConstants.Leaders.FirstOrDefault(y => y.FullName.StartsWith(x.LeaderFullName));
                         LinkSkill skill = x.LinkSkill == null || !DokkanConstants.LinkSkillMap.ContainsKey(x.LinkSkill) ? null : DokkanConstants.LinkSkillMap[x.LinkSkill];
@@ -113,6 +112,7 @@ namespace DokkanDaily.Services
                 events = stages
                     .Select(x => x.Name)
                     .Except(recentChallenges
+                        .Where(x => x.TodaysEvent != null)
                         .Take(_settings.EventRepeatLimitDays)
                         .Select(x => x.TodaysEvent.Name))
                     .ToList();
