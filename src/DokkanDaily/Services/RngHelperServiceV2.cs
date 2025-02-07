@@ -97,17 +97,17 @@ namespace DokkanDaily.Services
                     .ToList();
                 leaders = leaders
                     .Except(recentChallenges
-                        .Where(x => x.DailyType == DailyType.Character)
+                        .Where(x => x.DailyType == DailyType.Character && x.Leader != null)
                         .Take(50)
                         .Select(x => x.Leader), leaderComparer);
                 linkSkills = linkSkills
                     .Except(recentChallenges
-                        .Where(x => x.DailyType == DailyType.LinkSkill)
+                        .Where(x => x.DailyType == DailyType.LinkSkill && x.LinkSkill != null)
                         .Take(30)
                         .Select(x => x.LinkSkill), linkSkillComparer);
                 categories = categories
                     .Except(recentChallenges
-                        .Where(x => x.DailyType == DailyType.Category)
+                        .Where(x => x.DailyType == DailyType.Category && x.Category != null)
                         .Take(40)
                         .Select(x => x.Category), categoryComparer);
                 events = stages
