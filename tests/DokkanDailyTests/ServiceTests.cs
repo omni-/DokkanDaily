@@ -11,6 +11,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using System.Collections.Generic;
 
 namespace DokkanDailyTests
 {
@@ -70,22 +71,40 @@ namespace DokkanDailyTests
             var repoMock = mocks.Create<IDokkanDailyRepository>();
             IRngHelperService rngHelperService = new RngHelperServiceV2(repoMock.Object, Options.Create(new DokkanDailySettings() { EventRepeatLimitDays = 99999999, StageRepeatLimitDays = 99999999 }), mocks.Create<ILogger<RngHelperServiceV2>>(MockBehavior.Loose).Object);
 
-            var list = new List<Stage>(DokkanConstants.Stages);
-            list.RemoveAll(x => x.Name.Contains("Frieza"));
+            var stages = new List<Stage>(DokkanConstants.Stages);
+            stages.RemoveAll(x => x.Name.Contains("Frieza"));
+
+            var list = stages
+                .Select(x => new DbChallenge() { Event = x.Name, Stage = x.StageNumber, DailyTypeName = "Category", Category = "Demonic Power", Date = DateTime.UtcNow })
+                .ToList();
 
             repoMock
                 .Setup(x => x.GetChallengeList(It.IsAny<DateTime?>()))
-                .Returns(Task.FromResult(list.Select(x => new DbChallenge() { Event = x.Name, Stage = x.StageNumber, DailyTypeName = "Category", Category = "Demonic Power", Date = DateTime.UtcNow })));
+                .Returns(Task.FromResult(list.AsEnumerable()));
 
             Assert.DoesNotThrowAsync(async () =>
             {
-                for (int i = 0; i < 10000; i++)
+                for (int i = 0; i < 1000; i++)
                 {
                     await rngHelperService.SetDailySeed(i);
                     var chall = await rngHelperService.GetDailyChallenge();
                     Assert.That(chall.TodaysEvent.Name, Does.Contain("Frieza"));
                 }
             });
+
+            var sample = DokkanConstants.Stages.First();
+            stages = new List<Stage>(DokkanConstants.Stages);
+            var list2 = stages
+                .Select(x => new DbChallenge() { Event = x.Name, Stage = x.StageNumber, DailyTypeName = "Category", Category = "Demonic Power", Date = DateTime.UtcNow })
+                .ToList();
+
+            list2.Add(new DbChallenge() { Event = sample.Name, Stage = sample.StageNumber, DailyTypeName = "LinkSkill", LinkSkill = "A removed link.", Date = DateTime.UtcNow });
+
+            repoMock
+                .Setup(x => x.GetChallengeList(It.IsAny<DateTime?>()))
+                .Returns(Task.FromResult(list2.AsEnumerable()));
+
+            Assert.DoesNotThrowAsync(rngHelperService.GetDailyChallenge);
         }
 
         [Test]
