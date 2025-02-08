@@ -125,7 +125,7 @@ namespace DokkanDaily.Constants
             new("Warriors Entrusted with Earth's Fate", "Super Saiyan Goku/Super Saiyan Gohan (Youth)", Tier.E),
             new("Absolute Power", "Jiren", Tier.F),
             new("Battle Against the Fate of Annihilation", "Bardock", Tier.E),
-            new("Battle to Protect Tomorrow", "Super Saiyan 2 Goku", Tier.E),
+            new("Battle to Protect Tomorrow", "Super Saiyan 2 Goku", Tier.A),
             new("Stamina to Attack Evil", "Pan (GT)", Tier.F),
             new("Divine Combat Begins", "Super Saiyan God SS Goku/Super Saiyan God SS Vegeta", Tier.F),
             new("Strike of Full Anger", "Super Saiyan Goku", Tier.F),
