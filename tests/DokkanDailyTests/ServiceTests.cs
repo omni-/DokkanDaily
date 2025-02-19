@@ -92,13 +92,15 @@ namespace DokkanDailyTests
                 }
             });
 
-            var sample = DokkanConstants.Stages.First();
-            stages = new List<Stage>(DokkanConstants.Stages);
+            var sample = DokkanConstants.Stages[0];
+            stages = [.. DokkanConstants.Stages];
             var list2 = stages
                 .Select(x => new DbChallenge() { Event = x.Name, Stage = x.StageNumber, DailyTypeName = "Category", Category = "Demonic Power", Date = DateTime.UtcNow })
                 .ToList();
 
             list2.Add(new DbChallenge() { Event = sample.Name, Stage = sample.StageNumber, DailyTypeName = "LinkSkill", LinkSkill = "A removed link.", Date = DateTime.UtcNow });
+            list2.Add(new DbChallenge() { Event = sample.Name, Stage = sample.StageNumber, DailyTypeName = "Character", LeaderFullName = "[The Man who Erased his Name] Kiryuu", Date = DateTime.UtcNow });
+            list2.Add(new DbChallenge() { Event = "Fake Event", Stage = 1, DailyTypeName = "Character", LeaderFullName = "[The Man who Erased his Name] Kiryuu", Date = DateTime.UtcNow });
 
             repoMock
                 .Setup(x => x.GetChallengeList(It.IsAny<DateTime?>()))
