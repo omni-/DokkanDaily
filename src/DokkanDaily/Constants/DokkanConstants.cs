@@ -52,7 +52,7 @@ namespace DokkanDaily.Constants
             new("The Wall Standing Tall", Tier.B),
             new("Thirst for Conquest", Tier.D),
             new("Universe's Most Malevolent", Tier.E),
-            new("Warrior Gods", Tier.B),
+            new("Warrior Gods", Tier.C),
             new("Z Fighters", Tier.E)
         ];
         #endregion
@@ -292,8 +292,7 @@ namespace DokkanDaily.Constants
             new("Ultimate Red Zone [Goku's Story Edition]", Tier.S, "GOKU_RZ", 3),
             new("Ultimate Red Zone [Goku's Story Edition]", Tier.S, "GOKU_RZ", 4),
             new("Ultimate Red Zone [Goku's Story Edition]", Tier.Z, "GOKU_RZ", 5),
-            new("Ultimate Red Zone [Goku's Story Edition]", Tier.Z, "GOKU_RZ", 6),
-            new("Dokkan Ultimate Thrilling Battle", Tier.A, "UTB")
+            new("Ultimate Red Zone [Goku's Story Edition]", Tier.Z, "GOKU_RZ", 6)
         ];
         #endregion
 
