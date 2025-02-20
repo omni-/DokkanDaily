@@ -52,7 +52,7 @@ namespace DokkanDaily.Constants
             new("The Wall Standing Tall", Tier.B),
             new("Thirst for Conquest", Tier.D),
             new("Universe's Most Malevolent", Tier.E),
-            new("Warrior Gods", Tier.B),
+            new("Warrior Gods", Tier.C),
             new("Z Fighters", Tier.E)
         ];
         #endregion
@@ -147,6 +147,8 @@ namespace DokkanDaily.Constants
             new("Incomparable Radiance", "Super Saiyan Goku + Super Saiyan Vegeta (Angel)", Tier.Z),
             new("Ultimate Saiyan Power Roar", "Super Saiyan 3 Goku (GT) (Golden Giant Ape)", Tier.B),
             new("Fight to Protect Pride and Keep Oaths", "Super Saiyan God SS Evolved Vegeta", Tier.S),
+            new("Fighter Entrusted with Fate", "Super Saiyan 2 Gohan (Youth)", Tier.S),
+            new("Unprecedented Miracle", "Super Saiyan Vegeta (Angel) + Super Saiyan Goku (Angel)", Tier.Z),
             //extreme
             new("Universe-Devastating Combat Power", "Broly", Tier.S),
             new("Surge of Heightened Fighting Spirit", "Super Saiyan Broly", Tier.S),
@@ -185,7 +187,8 @@ namespace DokkanDaily.Constants
             new("Terrifying Super Namekian", "Lord Slug", Tier.A),
             new("Application of Skills and Intelligence", "Majin Buu (Ultimate Gohan)", Tier.S),
             new("Majin of Destruction", "Buu (Kid)", Tier.A),
-            new("Murderous Overlord", "Boujack", Tier.C)
+            new("Murderous Overlord", "Boujack", Tier.C),
+            new("Universe 7's Final Will to Fight", "Frieza (Final Form) (Angel) + Goku", Tier.A)
         ];
         #endregion
 
@@ -292,8 +295,7 @@ namespace DokkanDaily.Constants
             new("Ultimate Red Zone [Goku's Story Edition]", Tier.S, "GOKU_RZ", 3),
             new("Ultimate Red Zone [Goku's Story Edition]", Tier.S, "GOKU_RZ", 4),
             new("Ultimate Red Zone [Goku's Story Edition]", Tier.Z, "GOKU_RZ", 5),
-            new("Ultimate Red Zone [Goku's Story Edition]", Tier.Z, "GOKU_RZ", 6),
-            new("Dokkan Ultimate Thrilling Battle", Tier.A, "UTB")
+            new("Ultimate Red Zone [Goku's Story Edition]", Tier.Z, "GOKU_RZ", 6)
         ];
         #endregion
 
