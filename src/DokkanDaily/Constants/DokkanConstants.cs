@@ -20,11 +20,11 @@ namespace DokkanDaily.Constants
             new("Braniacs", Tier.D),
             new("Brutal Beatdown", Tier.C),
             new("Cold Judgement", Tier.C),
-            new("Experienced Fighters", Tier.S),
+            new("Experienced Fighters", Tier.A),
             new("Fear and Faith", Tier.D),
             new("Gaze of Respect", Tier.F),
-            new("Godly Power", Tier.S),
-            new("Golden Warrior", Tier.S),
+            new("Godly Power", Tier.A),
+            new("Golden Warrior", Tier.A),
             new("GT", Tier.E),
             new("Guidance of the Dragon Balls", Tier.B),
             new("Hero of Justice", Tier.C),
@@ -48,7 +48,7 @@ namespace DokkanDaily.Constants
             new("Solid Support", Tier.E),
             new("Strongest Clan in Space", Tier.D),
             new("The Innocents", Tier.E),
-            new("The Saiyan Lineage", Tier.S),
+            new("The Saiyan Lineage", Tier.A),
             new("The Wall Standing Tall", Tier.B),
             new("Thirst for Conquest", Tier.D),
             new("Universe's Most Malevolent", Tier.E),
@@ -80,8 +80,8 @@ namespace DokkanDaily.Constants
             new("Indomitable Fighter", "Super Saiyan Gohan (Future)", Tier.A),
             new("Greatest Evolution of Power", "Super Saiyan 4 Goku", Tier.A),
             new("All-Out Ultimate Battle", "Super Saiyan Goku & Super Saiyan Vegeta & Super Saiyan Trunks (Teen)", Tier.S),
-            new("Exploding Fist", "Super Saiyan 3 Goku", Tier.S),
-            new("Fighter Entrusted with Allies' Wishes", "Super Saiyan God Goku", Tier.S),
+            new("Exploding Fist", "Super Saiyan 3 Goku", Tier.A),
+            new("Fighter Entrusted with Allies' Wishes", "Super Saiyan God Goku", Tier.A),
             new("Exploding Latent Power", "Piccolo (Power Awakening)", Tier.S),
             new("All-Out Final Battle", "Super Saiyan God SS Goku & Super Saiyan God SS Vegeta", Tier.S),
             new("Hope at the End of a Deadly Showdown", "Super Saiyan Trunks (Future)", Tier.B),
@@ -96,7 +96,7 @@ namespace DokkanDaily.Constants
             new("Genius Scientist's Courage and Resolve", "Android #21 (Normal)", Tier.A),
             new("Epic Defensive Battle", "Piccolo & Gohan (Kid)/Gohan (Kid)", Tier.B),
             new("Extraordinary Super Warrior", "Super Saiyan Goku", Tier.B),
-            new("Intense Struggle for Survival", "Androids #17 & #18", Tier.S),
+            new("Intense Struggle for Survival", "Androids #17 & #18", Tier.A),
             new("Awakened True Power", "Super Saiyan Gohan (Youth)", Tier.C),
             new("Miracle-Calling Clash", "Super Saiyan Gohan (Teen) & Super Saiyan Goten (Kid)", Tier.C),
             new("Raging Counterattack", "Bardock", Tier.E),
@@ -138,7 +138,7 @@ namespace DokkanDaily.Constants
             new("Next-Generation-Guiding Turtle School", "Master Roshi", Tier.A),
             new("Solitary Iron Wall of Power", "Jiren", Tier.S),
             new("Audacious Finish", "Super Saiyan 3 Gotenks", Tier.S),
-            new("Battle for the Dragon Balls in the Demon Realm", "Super Saiyan Goku (Mini) (DAIMA)", Tier.S),
+            new("Battle for the Dragon Balls in the Demon Realm", "Super Saiyan Goku (Mini) (DAIMA)", Tier.A),
             new("Wielder of Thunder Magic", "Glorio", Tier.S),
             new("Battle to Protect Tomorrow", "Super Saiyan 2 Goku", Tier.A),
             new("A Promise Made to Kakarot", "Super Saiyan 2 Vegeta (Angel)", Tier.B),
@@ -160,7 +160,7 @@ namespace DokkanDaily.Constants
             new("Death Match for World Domination", "Piccolo Jr. (Giant Form)", Tier.B),
             new("Invincible Absorption", "Majin Buu (Gotenks)", Tier.A),
             new("Split Into Good and Evil", "Majin Buu (Good)/Majin Buu (Pure Evil)", Tier.A),
-            new("Terrifying Phantom Majin", "Hirudegarn", Tier.S),
+            new("Terrifying Phantom Majin", "Hirudegarn", Tier.A),
             new("Instinctive Destruction", "Legendary Super Saiyan Broly", Tier.B),
             new("True Power of a God", "Zamasu", Tier.C),
             new("Planet-Crushing Blow", "Cooler (Final Form)", Tier.D),
@@ -182,7 +182,7 @@ namespace DokkanDaily.Constants
             new("Brief Paternal Moment", "Majin Vegeta", Tier.E),
             new("Unveiling of Power", "Raditz", Tier.F),
             new("Super Warrior Who Destroys All", "Legendary Super Saiyan Broly", Tier.S),
-            new("Boiling Evil", "Super Janemba", Tier.S),
+            new("Boiling Evil", "Super Janemba", Tier.A),
             new("Decisive Strike of Rebellion", "Vegeta", Tier.B),
             new("Terrifying Super Namekian", "Lord Slug", Tier.A),
             new("Application of Skills and Intelligence", "Majin Buu (Ultimate Gohan)", Tier.S),
@@ -426,11 +426,10 @@ namespace DokkanDaily.Constants
             LinkSkillMap = new Dictionary<string, LinkSkill>(linkSkills.Select(x => new KeyValuePair<string, LinkSkill>(x.Name, x)));
             CategoryMap = new Dictionary<string, Category>(categories.Select(x => new KeyValuePair<string, Category>(x.Name, x)));
             DailyTypes = [DailyType.Category, DailyType.LinkSkill, DailyType.Character];
-            unitDB = DokkanDailyHelper.BuildCharacterDb().ToList();
-            events = stages
+            unitDB = [.. DokkanDailyHelper.BuildCharacterDb()];
+            events = [.. stages
                 .Select(x => x.Name)
-                .Distinct()
-                .ToList();
+                .Distinct()];
         }
     }
 }
