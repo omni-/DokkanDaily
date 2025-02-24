@@ -18,11 +18,11 @@
 
 <style>
     body {
-        background: url('images/misc/wallpaper.jpg') fixed center no-repeat;
-        background-size: cover;
-        text-align: center;
-        margin: 0 auto;
-        overflow: hidden;
+    background: url('images/misc/wallpaper.jpg') fixed center no-repeat;
+    background-size: cover;
+    text-align: center;
+    margin: 0 auto;
+    overflow: hidden;
     }
 </style>
 
@@ -60,7 +60,7 @@ else
                     Go to clears
                 </button>
             </div>
-            <p>Time until challenge resets: @hoursToReset hour(s)</p>
+            <p>Time until challenge resets: @TimeUntil</p>
         </div>
     </div>
 
@@ -77,6 +77,8 @@ else
     int dailyFileCount = 0;
 
     int hoursToReset => 24 - DateTime.UtcNow.Hour;
+
+    string TimeUntil => hoursToReset > 1 ? $"{hoursToReset} hours" : $"{59 - DateTime.UtcNow.Minute} minute(s)"; 
 
     protected override async Task OnInitializedAsync()
     {
