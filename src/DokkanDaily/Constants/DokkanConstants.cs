@@ -290,12 +290,18 @@ namespace DokkanDaily.Constants
             new("Ultimate Red Zone [Vegeta's Story Edition]", Tier.S, "VEGETA_RZ", 4),
             new("Ultimate Red Zone [Vegeta's Story Edition]", Tier.S, "VEGETA_RZ", 5),
             new("Ultimate Red Zone [Vegeta's Story Edition]", Tier.S, "VEGETA_RZ", 6),
+            new("Ultimate Red Zone [Vegeta's Story Edition]", Tier.Z, "VEGETA_RZ", 7),
+            new("Ultimate Red Zone [Vegeta's Story Edition]", Tier.Z, "VEGETA_RZ", 8), 
+            new("Ultimate Red Zone [Vegeta's Story Edition]", Tier.Z, "VEGETA_RZ", 9),
             new("Ultimate Red Zone [Goku's Story Edition]", Tier.S, "GOKU_RZ"),
             new("Ultimate Red Zone [Goku's Story Edition]", Tier.S, "GOKU_RZ", 2),
             new("Ultimate Red Zone [Goku's Story Edition]", Tier.S, "GOKU_RZ", 3),
             new("Ultimate Red Zone [Goku's Story Edition]", Tier.S, "GOKU_RZ", 4),
             new("Ultimate Red Zone [Goku's Story Edition]", Tier.Z, "GOKU_RZ", 5),
-            new("Ultimate Red Zone [Goku's Story Edition]", Tier.Z, "GOKU_RZ", 6)
+            new("Ultimate Red Zone [Goku's Story Edition]", Tier.Z, "GOKU_RZ", 6),
+            new("Ultimate Red Zone [Goku's Story Edition]", Tier.Z, "GOKU_RZ", 7),
+            new("Ultimate Red Zone [Goku's Story Edition]", Tier.Z, "GOKU_RZ", 8),
+            new("Ultimate Red Zone [Goku's Story Edition]", Tier.Z, "GOKU_RZ", 9)
         ];
         #endregion
 

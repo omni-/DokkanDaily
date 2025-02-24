@@ -60,6 +60,7 @@ else
                     Go to clears
                 </button>
             </div>
+            <p>Time until challenge resets: @hoursToReset hour(s)</p>
         </div>
     </div>
 
@@ -74,6 +75,8 @@ else
     string typeColor => DokkanConstants.TypeHexMap[todaysChallenge.TodaysUnit.DokkanType];
 
     int dailyFileCount = 0;
+
+    int hoursToReset => 24 - DateTime.UtcNow.Hour;
 
     protected override async Task OnInitializedAsync()
     {

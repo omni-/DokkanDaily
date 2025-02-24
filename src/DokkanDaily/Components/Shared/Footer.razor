@@ -11,7 +11,9 @@
     <div>
         <a href="https://discord.gg/2D426TZtfK"><img src="images/misc/discord.png" /></a>
     </div>
-    <p>Time until challenge resets: @hoursToReset hour(s)</p>
+    <div>
+        <a href='https://ko-fi.com/F1F41B2IUO'><img src='images/misc/kofi_symbol.png' /></a>
+    </div>
     <Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
         <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
             <Authorized>
@@ -25,8 +27,6 @@
 </footer>
 
 @code {
-    int hoursToReset => 24 - DateTime.UtcNow.Hour;
-
     void OnClick()
     {
         JSRuntime.InvokeVoidAsync("open", $"{NavManager.BaseUri}deauth", "_blank");
