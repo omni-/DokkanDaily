@@ -121,7 +121,7 @@ namespace DokkanDaily.Services
                 _logger.LogInformation("Filtered challenges successfully.");
             }
             catch (Exception ex)
-            {
+            {  
                 _logger.LogCritical(ex, "Encountered exception while trying to filter recent challenges");
                 recentChallenges = [];
             }
