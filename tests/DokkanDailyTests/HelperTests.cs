@@ -43,7 +43,7 @@ namespace DokkanDailyTests
             {
                 Unit u = null;
                 Assert.DoesNotThrow(() => u = DokkanDailyHelper.GetUnit(l));
-                Assert.That(u, Is.Not.Null, $"didnt find expected value {l.FullName}");
+                Assert.That(u, Is.Not.Null, $"Didn't find expected value {l.FullName}");
             }
         }
 
