@@ -130,7 +130,7 @@ namespace DokkanDaily.Constants
             new("Divine Combat Begins", "Super Saiyan God SS Goku/Super Saiyan God SS Vegeta", Tier.F),
             new("Strike of Full Anger", "Super Saiyan Goku", Tier.F),
             new("Battle to Become the Strongest", "Super Saiyan Goku (GT)", Tier.A),
-            new("Battle to Reach the Top", "Super Saiyan Vegeta (GT)", Tier.D),
+            new("Battle to Reach the Top", "Super Saiyan Vegeta (GT)", Tier.A),
             new("Boiling Power", "Super Saiyan Goku", Tier.F),
             new("All-Out Super Attack", "Super Saiyan Gohan (Teen)", Tier.S),
             new("Fusion Reborn", "Goku (Angel) & Vegeta (Angel)", Tier.A),
@@ -434,7 +434,7 @@ namespace DokkanDaily.Constants
         {
             LinkSkillMap = new Dictionary<string, LinkSkill>(linkSkills.Select(x => new KeyValuePair<string, LinkSkill>(x.Name, x)));
             CategoryMap = new Dictionary<string, Category>(categories.Select(x => new KeyValuePair<string, Category>(x.Name, x)));
-            DailyTypes = [DailyType.Category, DailyType.LinkSkill, DailyType.Character];
+            DailyTypes = [DailyType.Category, DailyType.Character, DailyType.LinkSkill];
             unitDB = [.. DokkanDailyHelper.BuildCharacterDb()];
             events = [.. stages
                 .Select(x => x.Name)

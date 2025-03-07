@@ -68,6 +68,8 @@
                         <label>Send Daily via Webhook: <button style="margin-left:5px" @onclick="async () => await Exec(SendWebhook)">Send</button></label>
                         <br />
                         <label>Send Announcement: <textarea @bind=@Announcement /><button style="margin-left:5px" @onclick="async () => await Exec(SendWebhookCustom)">Send</button><input style="margin-left:5px" @bind=@AddRolePing type="checkbox" /></label>
+                        <br />
+                        <label>Dump challenge<textarea @bind=@Dump /><button style="margin-left:5px" @onclick="async () => await Exec(DumpChallenge)">Dump</button></label>
                     </div>
                     <p class="error">@ErrorText</p>
                 </div>
@@ -104,6 +106,8 @@
 
     string ErrorText { get; set; }
 
+    string Dump { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         AuthorizedUser = false;
@@ -133,7 +137,7 @@
         }
         catch (Exception e)
         {
-            ErrorText = $"{e.GetType().Name}: {e.Message}";
+            ErrorText = Format(e);
         }
     }
 
@@ -146,8 +150,14 @@
         }
         catch (Exception e)
         {
-            ErrorText = $"{e.GetType().Name}: {e.Message}";
+            ErrorText = Format(e);
         }
+    }
+
+    async Task DumpChallenge()
+    {
+        var chall = await RngSvc.GetDailyChallenge();
+        Dump = $"type: {chall.DailyType}\r\ncategory: {chall.Category?.Name ?? "null"}\r\nlink: {chall.LinkSkill?.Name ?? "null"}\r\nleader: {chall.Leader?.FullName}\r\nstage: {chall.TodaysEvent?.FullName ?? "null"}";
     }
 
     async Task UpdateLeaderboard()
@@ -222,4 +232,6 @@
     {
         await WebhookSvc.PostAsync(AddRolePing ? Announcement.AddDokkandleDbcRolePing() : Announcement);
     }
+
+    private string Format(Exception e) => $"{e.GetType().Name}: {e.Message}\r\n{e.StackTrace}";
 }
