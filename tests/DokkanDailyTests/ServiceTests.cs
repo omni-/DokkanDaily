@@ -110,6 +110,50 @@ namespace DokkanDailyTests
         }
 
         [Test]
+        public async Task TestNoLinkSkillsLeft()
+        {
+            var sTierChalls = DokkanConstants.LinkSkills
+                .Where(x => x.Tier == Tier.S)
+                .Select((x, i) => new DbChallenge
+                {
+                    DailyTypeName = DailyType.LinkSkill.ToString(),
+                    Event = DokkanConstants.Stages[0].Name,
+                    Stage = DokkanConstants.Stages[0].StageNumber,
+                    LinkSkill = x.Name,
+                    Category = null,
+                    LeaderFullName = null
+                })
+                .Concat(DokkanConstants.Stages
+                    .Where(x => x.FullName != "Fearsome Activation! Cell Max, Stage 2")
+                    .Select((x, i) => new DbChallenge
+                    {
+                        DailyTypeName = DailyType.Category.ToString(),
+                        Event = x.Name,
+                        Stage = x.StageNumber,
+                        LinkSkill = null,
+                        Category = "Demonic Power",
+                        LeaderFullName = null
+                    }
+                ));
+
+            var repoMock = mocks.Create<IDokkanDailyRepository>();
+            IRngHelperService rngHelperService = new RngHelperServiceV2(repoMock.Object, Options.Create(new DokkanDailySettings() { EventRepeatLimitDays = 0, StageRepeatLimitDays = 999999999 }), mocks.Create<ILogger<RngHelperServiceV2>>(MockBehavior.Loose).Object);
+
+            repoMock.Setup(x => x.GetChallengeList(It.IsAny<DateTime?>())).ReturnsAsync(sTierChalls);
+
+            Assert.DoesNotThrowAsync(rngHelperService.GetDailyChallenge);
+
+            for (int i = 0; i < 1000; i++) // need to ensure a 1/3 gets hit... i'm sorry...
+            {
+                await rngHelperService.RollDailySeed();
+                Challenge chall = null;
+                Assert.DoesNotThrowAsync(async () => chall = await rngHelperService.GetDailyChallenge());
+                Assert.That(chall, Is.Not.Null);
+                Assert.That(chall.DailyType, Is.Not.EqualTo(DailyType.LinkSkill), $"Expected no link skill, received {chall.LinkSkill?.Name}");
+            }
+        }
+
+        [Test]
         public void TestDailyResetService()
         {
             var abMock = mocks.Create<IAzureBlobService>();

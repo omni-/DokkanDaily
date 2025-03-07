@@ -53,10 +53,9 @@ namespace DokkanDaily.Services
             IEnumerable<LinkSkill> linkSkills = DokkanConstants.LinkSkills;
             IEnumerable<Category> categories = DokkanConstants.Categories;
             List<Stage> stages = [.. DokkanConstants.Stages];
-            List<string> events = stages
+            List<string> events = [.. stages
                 .Select(x => x.Name)
-                .Distinct()
-                .ToList();
+                .Distinct()];
 
             try
             {
@@ -89,12 +88,11 @@ namespace DokkanDaily.Services
                 var categoryComparer = EqualityComparer<Category>.Create((x, y) => x.Name == y.Name, x => x.Name.GetHashCode());
 
                 // filter out things we've done recently
-                stages = stages
+                stages = [.. stages
                     .Except(recentChallenges
                         .Where(x => x.TodaysEvent != null)
                         .Take(_settings.StageRepeatLimitDays)
-                        .Select(x => x.TodaysEvent), stageComparer)
-                    .ToList();
+                        .Select(x => x.TodaysEvent), stageComparer)];
                 leaders = leaders
                     .Except(recentChallenges
                         .Where(x => x.DailyType == DailyType.Character && x.Leader != null)
@@ -103,20 +101,19 @@ namespace DokkanDaily.Services
                 linkSkills = linkSkills
                     .Except(recentChallenges
                         .Where(x => x.DailyType == DailyType.LinkSkill && x.LinkSkill != null)
-                        .Take(30)
+                        .Take(25)
                         .Select(x => x.LinkSkill), linkSkillComparer);
                 categories = categories
                     .Except(recentChallenges
                         .Where(x => x.DailyType == DailyType.Category && x.Category != null)
                         .Take(40)
                         .Select(x => x.Category), categoryComparer);
-                events = stages
+                events = [.. stages
                     .Select(x => x.Name)
                     .Except(recentChallenges
                         .Where(x => x.TodaysEvent != null)
                         .Take(_settings.EventRepeatLimitDays)
-                        .Select(x => x.TodaysEvent.Name))
-                    .ToList();
+                        .Select(x => x.TodaysEvent.Name))];
 
                 _logger.LogInformation("Filtered challenges successfully.");
             }
@@ -128,14 +125,13 @@ namespace DokkanDaily.Services
 
             // pick an event
             string todaysEvent = events[r.Next(0, events.Count)];
-            var availableStages = stages
-                .Where(x => x.Name == todaysEvent)
-                .ToList();
+            List<Stage> availableStages = [.. stages.Where(x => x.Name == todaysEvent)];
             Stage todaysStage = availableStages[r.Next(0, availableStages.Count)];
             Tier t = todaysStage.Tier;
 
-            // pick a daily type
-            DailyType dailyType = DokkanConstants.DailyTypes[r.Next(0, DokkanConstants.DailyTypes.Count)];
+            // pick a daily type - avoid link skill challenges when it'll cause issues 
+            bool avoidLinkSkills = linkSkills.All(x => x.Tier < t - 1);
+            DailyType dailyType = avoidLinkSkills ? DokkanConstants.DailyTypes[r.Next(0, 2)] : DokkanConstants.DailyTypes[r.Next(0, DokkanConstants.DailyTypes.Count)];
 
             // fill out the challenge details
             Leader leader = Pick(leaders, r, t);
@@ -224,7 +220,7 @@ namespace DokkanDaily.Services
                         output.Add(item);
                 }
             }
-            return output[r.Next(0, output.Count)];
+            return output.Count == 0 ? default : output[r.Next(0, output.Count)];
         }
     }
 }

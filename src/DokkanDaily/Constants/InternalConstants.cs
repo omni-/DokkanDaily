@@ -12,7 +12,8 @@ namespace DokkanDaily.Constants
             { "五.悟", "五条悟" },
             { "UBCeomnt", "DBC*omni" },
             { "Komacni", "Komachi" },
-            { "Komacnhi", "Komachi" }
+            { "Komacnhi", "Komachi" },
+            { "\\*FIGOe", "*FIGO*" }
         };
 
         public static readonly JsonSerializerOptions DefaultSerializeOptions = new() { PropertyNameCaseInsensitive = true };
