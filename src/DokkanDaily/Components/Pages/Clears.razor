@@ -39,7 +39,7 @@
         <div style="padding-top:2vh;" class="row">
             <div>
                 <label>
-                    <InputFile class="form-control" disabled="@fileLoading" style="width:100%;" OnChange="@OnInputFileChange" single />
+                    <InputFile class="form-control" disabled="@fileLoading" accept=".jpg,.jpeg,.png,.webp,.avif" style="width:100%;" OnChange="@OnInputFileChange" single />
                 </label>
                 @if (fileLoading)
                 {

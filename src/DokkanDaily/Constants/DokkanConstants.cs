@@ -15,7 +15,6 @@ namespace DokkanDaily.Constants
         [
             new("All in the Family", Tier.S),
             new("Android Assault", Tier.D),
-            new("Battlefield Diva", Tier.E),
             new("Big Bad Bosses", Tier.S),
             new("Braniacs", Tier.D),
             new("Brutal Beatdown", Tier.C),
@@ -30,11 +29,11 @@ namespace DokkanDaily.Constants
             new("Hero of Justice", Tier.C),
             new("Infighter", Tier.A),
             new("Infinite Regeneration", Tier.B),
+            new("Legendary Power", Tier.S),
             new("Limit-Breaking Form", Tier.D),
             new("Majin", Tier.S),
             new("Messenger from the Future", Tier.F),
             new("Metamorphosis", Tier.D),
-            new("Namekians", Tier.F),
             new("Nightmare", Tier.C),
             new("Over in a Flash", Tier.A),
             new("Power Bestowed by God", Tier.B),
@@ -101,7 +100,7 @@ namespace DokkanDaily.Constants
             new("Miracle-Calling Clash", "Super Saiyan Gohan (Teen) & Super Saiyan Goten (Kid)", Tier.C),
             new("Raging Counterattack", "Bardock", Tier.E),
             new("A Soul Pumped Up in Battle", "Goku", Tier.B),
-            new("Quest for the Dragon Balls", "Goku (Youth)", Tier.C),
+            new("Quest for the Dragon Balls", "Goku (Youth)", Tier.B),
             new("Super Power Counterattack", "Super Saiyan Trunks (Teen)", Tier.E),
             new("Fusion Reborn", "Goku (Angel) & Vegeta (Angel)", Tier.F),
             new("Pinnacle of Fury", "Goku", Tier.F),
@@ -122,7 +121,7 @@ namespace DokkanDaily.Constants
             new("Hot-Blooded God of Destruction", "Beerus", Tier.C),
             new("Resilient Power of Emotions", "Kale (Berserk)", Tier.C),
             new("Full-Power Final Showdown", "Super Saiyan Goku & Super Saiyan Vegeta", Tier.C),
-            new("Warriors Entrusted with Earth's Fate", "Super Saiyan Goku/Super Saiyan Gohan (Youth)", Tier.E),
+            new("Warriors Entrusted with Earth's Fate", "Super Saiyan Goku/Super Saiyan Gohan (Youth)", Tier.S),
             new("Absolute Power", "Jiren", Tier.F),
             new("Battle Against the Fate of Annihilation", "Bardock", Tier.E),
             new("Battle to Protect Tomorrow", "Super Saiyan 2 Goku", Tier.A),
@@ -150,6 +149,7 @@ namespace DokkanDaily.Constants
             new("Fighter Entrusted with Fate", "Super Saiyan 2 Gohan (Youth)", Tier.S),
             new("Unprecedented Miracle", "Super Saiyan Vegeta (Angel) + Super Saiyan Goku (Angel)", Tier.Z),
             new("Thoroughly Refined Strength", "Super Saiyan 3 Vegeta (Mini) (DAIMA)", Tier.S),
+            new("Exciting and Heart-Pounding Adventure", "Goku (Youth)", Tier.S),
             //extreme
             new("Universe-Devastating Combat Power", "Broly", Tier.S),
             new("Surge of Heightened Fighting Spirit", "Super Saiyan Broly", Tier.S),
@@ -172,7 +172,7 @@ namespace DokkanDaily.Constants
             new("Foe Elimination Circuit", "Android #13", Tier.F),
             new("The Ultimate Shadow Dragon", "Omega Shenron", Tier.F),
             new("Shocking Absorption Ability", "Buu (Super)", Tier.D),
-            new("Ultimate Life Form with Immense Power", "Cell (1st Form)", Tier.D),
+            new("Ultimate Life Form with Immense Power", "Cell (1st Form)", Tier.B),
             new("Evil-Stained Androids", "Android #17 & Hell Fighter #17", Tier.F),
             new("Roar of Resentment", "Frieza (Full Power)", Tier.F),
             new("Fusion with the Big Gete Star", "Metal Cooler", Tier.F),
@@ -189,7 +189,8 @@ namespace DokkanDaily.Constants
             new("Application of Skills and Intelligence", "Majin Buu (Ultimate Gohan)", Tier.S),
             new("Majin of Destruction", "Buu (Kid)", Tier.A),
             new("Murderous Overlord", "Boujack", Tier.C),
-            new("Universe 7's Final Will to Fight", "Frieza (Final Form) (Angel) + Goku", Tier.A)
+            new("Universe 7's Final Will to Fight", "Frieza (Final Form) (Angel) + Goku", Tier.A),
+            new("Final Battle at the Highest Level", "Cell (Perfect Form)", Tier.B)
         ];
         #endregion
 
@@ -309,7 +310,13 @@ namespace DokkanDaily.Constants
             new("Supreme Magnificent Battle [Gathering of Super Warriors Edition]", Tier.D, "SMB_GSW", 3),
             new("Supreme Magnificent Battle [Gathering of Super Warriors Edition]", Tier.C, "SMB_GSW", 4),
             new("Supreme Magnificent Battle [Gathering of Super Warriors Edition]", Tier.S, "SMB_GSW", 5),
-            new("Supreme Magnificent Battle [Gathering of Super Warriors Edition]", Tier.S, "SMB_GSW", 6)
+            new("Supreme Magnificent Battle [Gathering of Super Warriors Edition]", Tier.S, "SMB_GSW", 6),
+            new("Ultimate Red Zone [DB Saga]", Tier.C, "OG_DB_RZ"),
+            new("Ultimate Red Zone [DB Saga]", Tier.B, "OG_DB_RZ", 2),
+            new("Ultimate Red Zone [DB Saga]", Tier.A, "OG_DB_RZ", 3),
+            new("Ultimate Red Zone [DB Saga]", Tier.A, "OG_DB_RZ", 4),
+            new("Ultimate Red Zone [DB Saga]", Tier.A, "OG_DB_RZ", 5),
+            new("Ultimate Red Zone [DB Saga]", Tier.S, "OG_DB_RZ", 6)
         ];
         #endregion
 
