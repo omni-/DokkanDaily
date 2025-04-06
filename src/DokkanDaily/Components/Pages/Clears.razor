@@ -18,11 +18,11 @@
 
 <style>
     body {
-        background: url('images/misc/wallpaper.jpg') fixed center no-repeat;
-        background-size: cover;
-        text-align: center;
-        margin: 0 auto;
-        overflow: hidden;
+    background: url('images/misc/wallpaper.jpg') fixed center no-repeat;
+    background-size: cover;
+    text-align: center;
+    margin: 0 auto;
+    overflow: hidden;
     }
 </style>
 <div style="height:100vh;">
@@ -32,7 +32,7 @@
     @if (warningMessage.Length > 0)
     {
         <div class="alert alert-warning">
-            <strong>Warning!</strong> @warningMessage.
+            <strong>Error!</strong> @warningMessage.
         </div>
     }
     <div class="container clear-box text-center">
@@ -66,7 +66,7 @@
                 {
                     <div class="card">
                         <img style="object-fit: cover;" src="@GetImgPath(attachment)" @onclick="() => OnFileViewClick(attachment)" />
-@*                         @if (@attachment.Tags.GetTagValueOrDefault(DDConstants.USER_NAME_TAG) != null)
+                        @*                         @if (@attachment.Tags.GetTagValueOrDefault(DDConstants.USER_NAME_TAG) != null)
                         {
                             <div class="container">
                                 <h4><b>@attachment.Tags.GetTagValueOrDefault(DDConstants.USER_NAME_TAG)</b></h4>
@@ -142,6 +142,14 @@
 
         var file = selectedFiles.FirstOrDefault();
         if (file == null) return;
+
+        List<string> allowedFileTypes = [".jpg", ".jpeg", ".png", ".webp", ".avif"];
+        if (!allowedFileTypes.Contains(Path.GetExtension(file.Name)))
+        {
+            warningMessage = $"Unsupported file type! Supported filetypes are {string.Join(',', allowedFileTypes)}";
+            selectedFiles = [];
+            return;
+        }
 
         fileLoading = true;
         this.StateHasChanged();
