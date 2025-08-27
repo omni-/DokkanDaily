@@ -112,34 +112,32 @@ namespace DokkanDailyTests
         [Test]
         public async Task TestNoLinkSkillsLeft()
         {
-            var sTierChalls = DokkanConstants.LinkSkills
-                .Where(x => x.Tier == Tier.S)
-                .Select((x, i) => new DbChallenge
+            var dbChallenges = DokkanConstants.Stages
+                .Where(x => x.FullName != "Supreme Magnificent Battle [Next-Generation Saiyans Edition], Stage 5") // force a very hard stage
+                .Select(x => new DbChallenge
+                {
+                    DailyTypeName = DailyType.Category.ToString(),
+                    Event = x.Name,
+                    Stage = x.StageNumber,
+                    LinkSkill = null,
+                    Category = "Demonic Power",
+                    LeaderFullName = null
+                })
+                .Concat([new DbChallenge // the only Z tier link skill
                 {
                     DailyTypeName = DailyType.LinkSkill.ToString(),
                     Event = DokkanConstants.Stages[0].Name,
                     Stage = DokkanConstants.Stages[0].StageNumber,
-                    LinkSkill = x.Name,
+                    LinkSkill = "Legendary Power",
                     Category = null,
                     LeaderFullName = null
-                })
-                .Concat(DokkanConstants.Stages
-                    .Where(x => x.FullName != "Fearsome Activation! Cell Max, Stage 2")
-                    .Select((x, i) => new DbChallenge
-                    {
-                        DailyTypeName = DailyType.Category.ToString(),
-                        Event = x.Name,
-                        Stage = x.StageNumber,
-                        LinkSkill = null,
-                        Category = "Demonic Power",
-                        LeaderFullName = null
-                    }
-                ));
+                }]);
+
 
             var repoMock = mocks.Create<IDokkanDailyRepository>();
-            IRngHelperService rngHelperService = new RngHelperServiceV2(repoMock.Object, Options.Create(new DokkanDailySettings() { EventRepeatLimitDays = 0, StageRepeatLimitDays = 999999999 }), mocks.Create<ILogger<RngHelperServiceV2>>(MockBehavior.Loose).Object);
+            var rngHelperService = new RngHelperServiceV2(repoMock.Object, Options.Create(new DokkanDailySettings() { EventRepeatLimitDays = 0, StageRepeatLimitDays = 999999999 }), mocks.Create<ILogger<RngHelperServiceV2>>(MockBehavior.Loose).Object);
 
-            repoMock.Setup(x => x.GetChallengeList(It.IsAny<DateTime?>())).ReturnsAsync(sTierChalls);
+            repoMock.Setup(x => x.GetChallengeList(It.IsAny<DateTime?>())).ReturnsAsync(dbChallenges);
 
             Assert.DoesNotThrowAsync(rngHelperService.GetDailyChallenge);
 
