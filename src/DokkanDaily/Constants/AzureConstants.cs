@@ -2,6 +2,8 @@
 {
     public static class AzureConstants
     {
+        public static string IP_TAG => "ip";
+
         public static string DATE_TAG => "date";
 
         public static string USER_NAME_TAG => "username";

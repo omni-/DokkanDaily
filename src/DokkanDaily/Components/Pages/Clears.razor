@@ -13,9 +13,9 @@
 @inject IJSRuntime jsRuntime
 @inject IRngHelperService RngSvc
 @inject AuthenticationStateProvider authStateProvider;
+@inject IHttpContextAccessor HttpContextAccessor
 
 <PageTitle>Dokkandle!</PageTitle>
-
 <style>
     body {
     background: url('images/misc/wallpaper.jpg') fixed center no-repeat;
@@ -87,6 +87,7 @@
 <Footer />
 
 @code {
+    private string clientIpAddress;
     private string warningMessage = "";
     private string displayMessage = "";
     private List<IBrowserFile> loadedFiles = new();
@@ -99,6 +100,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        clientIpAddress = HttpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString();
         try
         {
             challengeModel = await RngSvc.GetDailyChallenge();
@@ -168,7 +170,8 @@
                 file, challengeModel,
                 userAgent: remoteUserAgent,
                 discordUsername: discordUsername,
-                discordId: discordId);
+                discordId: discordId,
+                remoteIp: clientIpAddress);
 
             FileUploadViewModel fileUploadViewModel = new FileUploadViewModel()
             {
