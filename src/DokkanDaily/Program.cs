@@ -5,6 +5,7 @@ using DokkanDaily.Services;
 using DokkanDaily.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 
 namespace DokkanDaily
@@ -29,10 +30,17 @@ namespace DokkanDaily
                 .AddRazorComponents()
                 .AddInteractiveServerComponents();
 
+            builder.Services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                    ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
+
             builder.Services.AddHostedService<Worker>();
 
             builder.Services.AddSingleton<ILeaderboardService, LeaderboardService>();
             builder.Services.AddSingleton<IRngHelperService, RngHelperServiceV2>();
+
             builder.Services.AddTransient<OcrFormatProvider>();
             builder.Services.AddTransient<IResetService, ResetService>();
             builder.Services.AddTransient<IAzureBlobService, AzureBlobService>();
@@ -64,6 +72,8 @@ namespace DokkanDaily
                 });
 
             var app = builder.Build();
+
+            app.UseForwardedHeaders();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
