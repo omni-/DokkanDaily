@@ -40,8 +40,8 @@ namespace DokkanDaily
             builder.Services.AddTransient<IDokkanDailyRepository, DokkanDailyRepository>();
 
             // TODO: IP tracking to enforce bans (sadface)
-            //builder.Services.AddScoped<BlazorAppContext>(); 
-            //builder.Services.AddHttpContextAccessor();
+            builder.Services.AddScoped<BlazorAppContext>();
+            builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddHttpClient<DiscordWebhookClient>();
 
