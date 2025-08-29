@@ -3,6 +3,7 @@
 
 @using DokkanDaily.Components.Shared
 @using DokkanDaily.Constants
+@using DokkanDaily.Extensions
 @using DokkanDaily.Helpers
 @using DokkanDaily.Models
 @using DokkanDaily.Models.ViewModel
@@ -87,7 +88,6 @@
 <Footer />
 
 @code {
-    private string clientIpAddress;
     private string warningMessage = "";
     private string displayMessage = "";
     private List<IBrowserFile> loadedFiles = new();
@@ -100,7 +100,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        clientIpAddress = HttpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString();
         try
         {
             challengeModel = await RngSvc.GetDailyChallenge();
@@ -162,6 +161,7 @@
 
         fileLoading = true;
         this.StateHasChanged();
+
         try
         {
             var blobClient = await BlobSvc.UploadToAzureAsync(
@@ -171,7 +171,7 @@
                 userAgent: remoteUserAgent,
                 discordUsername: discordUsername,
                 discordId: discordId,
-                remoteIp: clientIpAddress);
+                remoteIp: HttpContextAccessor?.HttpContext?.GetUserIpAddress());
 
             FileUploadViewModel fileUploadViewModel = new FileUploadViewModel()
             {
