@@ -165,7 +165,7 @@ namespace DokkanDailyTests
         {
             List<DbClear> dbClears = [];
 
-            DateTime dt = DateTime.UtcNow.Date;
+            DateTime dt = DateTime.Parse("01/15/2025");
 
 
             dbClears.AddRange(
