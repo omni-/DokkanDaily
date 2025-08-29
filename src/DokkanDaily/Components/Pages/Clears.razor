@@ -112,6 +112,13 @@
                 {
                     var tags = await f.GetTagsAsync();
                     var metadata = await f.GetPropertiesAsync();
+
+                    if (metadata.Value.Metadata.TryGetValue(AzureConstants.INVALID_TAG, out string invalid)) //only display valid clears
+                    {
+                        _ = bool.TryParse(invalid, out bool invalidResult);
+                        if (invalidResult) continue;
+                    }
+
                     ret.Add(new()
                     {
                         FileName = f.Name,
