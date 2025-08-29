@@ -33,12 +33,15 @@ namespace DokkanDaily
 
             builder.Services.AddSingleton<ILeaderboardService, LeaderboardService>();
             builder.Services.AddSingleton<IRngHelperService, RngHelperServiceV2>();
-
             builder.Services.AddTransient<OcrFormatProvider>();
             builder.Services.AddTransient<IResetService, ResetService>();
             builder.Services.AddTransient<IAzureBlobService, AzureBlobService>();
             builder.Services.AddTransient<IOcrService, OcrService>();
             builder.Services.AddTransient<IDokkanDailyRepository, DokkanDailyRepository>();
+
+            // TODO: IP tracking to enforce bans (sadface)
+            //builder.Services.AddScoped<BlazorAppContext>(); 
+            //builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddHttpClient<DiscordWebhookClient>();
 
