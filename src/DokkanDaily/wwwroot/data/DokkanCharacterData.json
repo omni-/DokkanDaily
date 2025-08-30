@@ -7344,7 +7344,8 @@
             "Power Beyond Super Saiyan",
             "Fused Fighters",
             "Super Heroes",
-            "Earth-Protecting Heroes"
+            "Earth-Protecting Heroes",
+            "Accelerated Battle"
         ],
         "baseHP": 5185,
         "maxLevelHP": 17113,
@@ -7778,7 +7779,7 @@
                 "transformedID": "42911",
                 "transformedSuperAttack": "Greatly raises ATK and raises DEF for 1 turn[1] and causes colossal damage to enemy",
                 "transformedUltraSuperAttack": "Massively raises ATK and raises DEF for 1 turn[2], causes mega-colossal damage and stuns the enemy",
-                "transformedPassive": "Basic effect(s)- Ki +11- ATK & DEF 400% - Damage reduction rate 60% - Great chance[3] of performing a critical hit\nFor 1 turn from the character's entry turn- Foresees enemy's Super Attack- Damage reduction rate 11% \nWhen attacking- ATK & DEF 111% \nFor every Super Attack performed-  Chance of performing a critical hit +11% \nWhen attacking with 24 Ki- ATK 50% - Attacks guaranteed to hit- Performs a critical hit\nFor every Super Attack received-  ATK 50% ",
+                "transformedPassive": "Basic effect(s)- Ki +11- ATK & DEF 400% - Damage reduction rate 60% - Great chance[3] of performing a critical hit\nFor 1 turn from the character's entry turn- Foresees enemy's Super Attack- Damage reduction rate 11% \nWhen attacking- ATK & DEF 111% \nFor every Super Attack performed-  Chance of performing a critical hit +11% \nWhen attacking with 24 Ki- ATK 50% - Attacks guaranteed to hit- Performs a critical hit\nFor every Super Attack the enemy launches at the character-  ATK 50% ",
                 "transformedLinks": [
                     "Supreme Warrior",
                     "Shocking Speed",
@@ -7870,6 +7871,93 @@
                     "Legendary Power"
                 ],
                 "transformedImageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/c/cf/Card_4031600_thumb_apng.png/revision/latest?cb=20250807202418&format=original"
+            }
+        ]
+    },
+    {
+        "name": "Golden Frieza + Gogeta",
+        "title": "Stirred Battle Instincts",
+        "maxLevel": 150,
+        "maxSALevel": 20,
+        "rarity": "LR",
+        "class": "Extreme",
+        "type": "TEQ",
+        "cost": 77,
+        "id": "13172",
+        "imageURL": "Error",
+        "leaderSkill": "\"Movie Bosses\" or \"Movie Heroes\" Category Ki +3, HP +200% and ATK & DEF +170%;plus an additional HP, ATK & DEF +50% for characters who also belong to the \"Transformation Boost\", \"Gifted Warriors\" or \"Inhuman Deeds\" Category",
+        "superAttack": "Greatly raises ATK for 1 turn[1], causes colossal damage to enemy and lowers ATK & DEF[2]",
+        "ultraSuperAttack": "Greatly raises ATK for 1 turn[1], causes mega-colossal damage to enemy and greatly lowers ATK & DEF[3]; raises allies' ATK by 50% for 1 turn (self excluded)",
+        "passive": "Basic effect(s)-ATK & DEF 250%- Receives an additional Ki +2 per Ki Sphere obtained- Damage reduction rate 70%\nFor 5 turns from the character's entry turn- Guards all attacks\nStarting from the 6th turn from the character's entry turn- Great chance[4] of guarding all attacks\nWhen 4 or more Extreme Class allies are on the team, or when there is another \"Movie Heroes\" or \"Movie Bosses\" Category ally attacking in the same turn- Launches an additional Super Attack\nFor every attack received- ATK 150% and chance of performing a critical hit 10% within the turn\nWhenever guard is activated- DEF 20% (up to 100%)\nWhen 3 or more Super Class allies are on the team starting from the 3rd turn from the character's entry turn, or starting from the 5th turn from the start of battle- Changes Ki Spheres:  &  to - Randomly changes  or  Ki Spheres to  Ki Spheres- Meets up with Gogeta and can perform Reversible Exchange",
+        "activeSkill": "Ki +24, DEF +400% and directs enemy's attack towards the character for 1 turn",
+        "activeSkillCondition": "Can be activated when there are 4 or more Extreme Class allies on the team (once only, be it before or after Reversible Exchange)",
+        "links": [
+            "Prodigies",
+            "Universe's Most Malevolent",
+            "Shocking Speed",
+            "Strongest Clan in Space",
+            "Thirst for Conquest",
+            "Fierce Battle",
+            "Legendary Power"
+        ],
+        "categories": [
+            "Fusion",
+            "Movie Bosses",
+            "Full Power",
+            "Transformation Boost",
+            "Wicked Bloodline",
+            "Dragon Ball Seekers",
+            "Movie Heroes",
+            "Kamehameha",
+            "Terrifying Conquerors",
+            "Target: Goku",
+            "Final Trump Card",
+            "Revenge",
+            "Inhuman Deeds",
+            "Space-Traveling Warriors",
+            "Powerful Comeback",
+            "Gifted Warriors",
+            "Time Limit",
+            "Mastered Evolution",
+            "Sworn Enemies",
+            "Accelerated Battle",
+            "Fused Fighters",
+            "Super Heroes",
+            "Super Bosses",
+            "Earth-Protecting Heroes",
+            "Successors"
+        ],
+        "baseHP": 5636,
+        "maxLevelHP": 18600,
+        "freeDupeHP": 20600,
+        "rainbowHP": 23200,
+        "baseAttack": 4422,
+        "maxLevelAttack": 14595,
+        "freeDupeAttack": 16595,
+        "rainbowAttack": 19995,
+        "baseDefence": 3054,
+        "maxDefence": 10081,
+        "freeDupeDefence": 12081,
+        "rainbowDefence": 15081,
+        "kiMultiplier": "12 Ki Multiplier is 150%; 24 Ki Multiplier is 200%; SA Lv.20 raises SA Multiplier by an additional 30%",
+        "transformations": [
+            {
+                "transformedName": "Gogeta + Golden Frieza",
+                "transformedID": "13172",
+                "transformedSuperAttack": "Greatly raises ATK & DEF for 1 turn[1] and causes colossal damage to enemy",
+                "transformedUltraSuperAttack": "Massively raises ATK & DEF for 1 turn[2] and causes mega-colossal damage to enemy; raises allies' DEF by 50% for 1 turn (self excluded)",
+                "transformedPassive": "Basic effect(s)- Can perform Reversible Exchange with Golden Frieza- Ki +6 and ATK & DEF 250%- Receives an additional Ki +1 per Ki Sphere obtained- Attacks are effective against all Types- High chance[3] of evading enemy's attack\nWith a Ki Sphere obtained- Fully recovers HP\nWhen 3 or more Super Class allies are on the team, or when there is another \"Movie Heroes\" or \"Movie Bosses\" Category ally attacking in the same turn- Damage reduction rate 40%\nWhen attacking with 20 or more Ki- ATK & DEF 200%- Great chance[4] of performing a critical hit\nWhen activating the Active Skill or when attacking with 24 Ki- ATK 150%- Performs a critical hit\nFor every Ki Sphere obtained- Chance of evading enemy's attack 5%- ATK 10% and all allies' DEF 10% (self excluded) when attacking\nFor every 5 Ki Spheres obtained- Launches an additional Super Attack",
+                "transformedActiveSkill": "Raises ATK by 540% temporarily and causes ultimate damage to enemy; DEF +540% and changes all Ki Spheres to  Ki Spheres for 1 turn",
+                "transformedActiveSkillCondition": "Can be activated when there are 3 or more Super Class allies on the team (once only, be it before or after Reversible Exchange)",
+                "transformedLinks": [
+                    "Fused Fighter",
+                    "Prepared for Battle",
+                    "Shocking Speed",
+                    "Over in a Flash",
+                    "Kamehameha",
+                    "Fierce Battle",
+                    "Legendary Power"
+                ]
             }
         ]
     },
@@ -9383,7 +9471,8 @@
             "Power Beyond Super Saiyan",
             "Fused Fighters",
             "Super Heroes",
-            "Earth-Protecting Heroes"
+            "Earth-Protecting Heroes",
+            "Accelerated Battle"
         ],
         "baseHP": 5765,
         "maxLevelHP": 19025,
@@ -9648,7 +9737,7 @@
         "leaderSkill": "\"Artificial Life Forms\" or \"Super Bosses\" Category Ki +4 and HP, ATK & DEF +150%",
         "superAttack": "Greatly raises ATK for 1 turn[1] and causes colossal damage to enemy",
         "ultraSuperAttack": "Greatly raises ATK for 1 turn[1], causes mega-colossal damage to all enemies and greatly lowers ATK & DEF[2]",
-        "passive": "Activates the Entrance Animation when there is another \"Artificial Life Forms\" or \"Super Bosses\" Category ally on the team upon the character's entry-  ATK & DEF 100% , guards all attacks and launches an additional attack that has a high chance[3] of becoming a Super Attack for 3 turn(s)\nBasic effect(s)- Ki +5- ATK & DEF 300% - Launches an additional attack that has a high chance[3] of becoming a Super Attack\nFor every attack performed-  Ki +1 (up to +5)-  ATK 20%  (up to 100%)\nFor every attack received-  Ki +1 (up to +5)-  DEF 20%  (up to 100%)\nWhen all allies attacking in the same turn are \"Artificial Life Forms\", \"Super Bosses\" or \"Movie Bosses\" Category characters- DEF 250% - Damage reduction rate 30% \nWhen there are no \"Super Heroes\" Category allies attacking in the same turn- ATK +250% - Chance of performing a critical hit +30% \nAfter receiving a Super Attack- Launches an additional Super Attack",
+        "passive": "Activates the Entrance Animation when there is another \"Artificial Life Forms\" or \"Super Bosses\" Category ally on the team upon the character's entry-  ATK & DEF 100% , guards all attacks and launches an additional attack that has a high chance[3] of becoming a Super Attack for 3 turn(s)\nBasic effect(s)- Ki +5- ATK & DEF 300% - Launches an additional attack that has a high chance[3] of becoming a Super Attack\nFor every attack performed-  Ki +1 (up to +5)-  ATK 20%  (up to 100%)\nFor every attack received-  Ki +1 (up to +5)-  DEF 20%  (up to 100%)\nWhen all allies attacking in the same turn are \"Artificial Life Forms\", \"Super Bosses\" or \"Movie Bosses\" Category characters- DEF 250% - Damage reduction rate 30% \nWhen there are no \"Super Heroes\" Category allies attacking in the same turn- ATK +250% - Chance of performing a critical hit +30% \nAfter the enemy launches a Super Attack at the character- Launches an additional Super Attack",
         "activeSkill": "Massively raises ATK temporarily[4] and causes ultimate damage to enemy; DEF +999% and directs enemy's attack towards the character for 1 turn",
         "activeSkillCondition": "Can be activated when all allies attacking in the same turn are are \"Artificial Life Forms\" or \"Super Bosses\" Category characters starting from the 4th turn from start of battle, or when all allies attacking in the same turn are Extreme Class starting from the 6th turn from start of battle (once only)",
         "links": [
@@ -17207,6 +17296,56 @@
         "transformations": []
     },
     {
+        "name": "Vegeta",
+        "title": "Burning Will in the Freezing Cold",
+        "maxLevel": 120,
+        "maxSALevel": 10,
+        "rarity": "UR",
+        "class": "Super",
+        "type": "INT",
+        "cost": 40,
+        "id": "13175",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/3/39/Card_1031750_thumb.png/revision/latest?cb=20250828031622",
+        "leaderSkill": "\"Movie Heroes\" or \"Gifted Warriors\" Category Ki +3 and HP, ATK & DEF +130%",
+        "superAttack": "Greatly raises DEF[1] and causes supreme damage to enemy",
+        "passive": "Basic effect(s)- Ki +3 and ATK & DEF 150%- High chance[2] of evading enemy's attack- Changes Ki Spheres:  to \nWhen the character is the 1st attacker at the start of turn- Randomly changes Ki Spheres of a certain Type ( &  excluded) to  Ki Spheres\nWhen the character is the 2nd or 3rd attacker at the start of turn- High chance[3] of randomly changing Ki Spheres of a certain Type ( &  excluded) to  Ki Spheres\nWhen attacking with 12 or more Ki- ATK & DEF 100%\nWhen attacking as the 3rd attacker in a turn- ATK 200%- Launches an additional Super Attack\nWhen there is another \"Movie Heroes\" or \"Movie Bosses\" Category ally attacking in the same turn- ATK & DEF 150%- Damage reduction rate 30%\nWhen all allies attacking in the same turn are \"Movie Heroes\" or \"Movie Bosses\" Category characters (self excluded)- ATK & DEF 150%- Chance of evading enemy's attack 30%",
+        "links": [
+            "Saiyan Warrior Race",
+            "Royal Lineage",
+            "Prodigies",
+            "Saiyan Pride",
+            "Shocking Speed",
+            "Prepared for Battle",
+            "Fierce Battle"
+        ],
+        "categories": [
+            "Pure Saiyans",
+            "Movie Heroes",
+            "Vegeta's Family",
+            "Siblings' Bond",
+            "Worthy Rivals",
+            "Bond of Master and Disciple",
+            "Gifted Warriors",
+            "Bond of Parent and Child",
+            "Super Heroes",
+            "Successors"
+        ],
+        "baseHP": 2777,
+        "maxLevelHP": 9167,
+        "freeDupeHP": 11167,
+        "rainbowHP": 14167,
+        "baseAttack": 2640,
+        "maxLevelAttack": 8715,
+        "freeDupeAttack": 10715,
+        "rainbowAttack": 13715,
+        "baseDefence": 1604,
+        "maxDefence": 5296,
+        "freeDupeDefence": 7296,
+        "rainbowDefence": 10296,
+        "kiMultiplier": "12 Ki Multiplier is 140%; ",
+        "transformations": []
+    },
+    {
         "name": "Piccolo",
         "title": "Burst of Fighting Spirit",
         "maxLevel": 120,
@@ -18468,7 +18607,8 @@
             "Time Limit",
             "Fused Fighters",
             "Super Heroes",
-            "Earth-Protecting Heroes"
+            "Earth-Protecting Heroes",
+            "Accelerated Battle"
         ],
         "baseHP": 2706,
         "maxLevelHP": 8931,
@@ -19350,6 +19490,62 @@
         "freeDupeDefence": 7289,
         "rainbowDefence": 9889,
         "kiMultiplier": "12 Ki Multiplier is 140%; ",
+        "transformations": []
+    },
+    {
+        "name": "Golden Frieza",
+        "title": "Countering the Unexpected",
+        "maxLevel": 120,
+        "maxSALevel": 10,
+        "rarity": "UR",
+        "class": "Extreme",
+        "type": "TEQ",
+        "cost": 58,
+        "id": "13171",
+        "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/7/7b/Card_1031710_thumb.png/revision/latest?cb=20250828030940",
+        "leaderSkill": "\"Movie Bosses\" or \"Movie Heroes\" Category Ki +3, HP +170% and ATK & DEF +150%;plus an additional HP, ATK & DEF +30% for characters who also belong to the \"Transformation Boost\", \"Gifted Warriors\" or \"Inhuman Deeds\" Category",
+        "superAttack": "Raises ATK for 1 turn[1], causes supreme damage to enemy and lowers ATK & DEF[2]",
+        "passive": "Basic effect(s)- ATK & DEF 200%- Damage reduction rate 50%\nFor 5 turns from the character's entry turn- Great chance[3] of guarding all attacks\nStarting from the 6th turn from the character's entry turn- High chance[4] of guarding all attacks\nWhen there is another \"Movie Heroes\" or \"Movie Bosses\" Category ally attacking in the same turn- Launches an additional attack that has a great chance[5] of becoming a Super Attack\nFor every attack received- ATK 100% within the turn",
+        "links": [
+            "Prodigies",
+            "Universe's Most Malevolent",
+            "Shocking Speed",
+            "Strongest Clan in Space",
+            "Thirst for Conquest",
+            "Fierce Battle"
+        ],
+        "categories": [
+            "Movie Bosses",
+            "Full Power",
+            "Transformation Boost",
+            "Wicked Bloodline",
+            "Dragon Ball Seekers",
+            "Movie Heroes",
+            "Terrifying Conquerors",
+            "Target: Goku",
+            "Revenge",
+            "Inhuman Deeds",
+            "Space-Traveling Warriors",
+            "Gifted Warriors",
+            "Mastered Evolution",
+            "Sworn Enemies",
+            "Super Bosses",
+            "Earth-Protecting Heroes",
+            "Successors"
+        ],
+        "baseHP": 2931,
+        "maxLevelHP": 9675,
+        "freeDupeHP": 11675,
+        "rainbowHP": 14275,
+        "baseAttack": 2696,
+        "maxLevelAttack": 8898,
+        "freeDupeAttack": 10898,
+        "rainbowAttack": 14298,
+        "baseDefence": 1622,
+        "maxDefence": 5353,
+        "freeDupeDefence": 7353,
+        "rainbowDefence": 10353,
+        "kiMultiplier": "12 Ki Multiplier is 150%; ",
         "transformations": []
     },
     {
@@ -21776,7 +21972,8 @@
             "Mastered Evolution",
             "Sworn Enemies",
             "Super Bosses",
-            "Successors"
+            "Successors",
+            "Space-Traveling Warriors"
         ],
         "baseHP": 2404,
         "maxLevelHP": 7936,
@@ -28257,7 +28454,8 @@
             "Time Limit",
             "Fused Fighters",
             "Super Heroes",
-            "Earth-Protecting Heroes"
+            "Earth-Protecting Heroes",
+            "Accelerated Battle"
         ],
         "baseHP": 2999,
         "maxLevelHP": 9898,
@@ -34797,7 +34995,8 @@
             "Time Limit",
             "Fused Fighters",
             "Super Heroes",
-            "Earth-Protecting Heroes"
+            "Earth-Protecting Heroes",
+            "Accelerated Battle"
         ],
         "baseHP": 2092,
         "maxLevelHP": 6902,
@@ -34976,7 +35175,8 @@
             "Time Limit",
             "Powerful Comeback",
             "Fused Fighter",
-            "Super Heroes"
+            "Super Heroes",
+            "Accelerated Battle"
         ],
         "baseHP": 2010,
         "maxLevelHP": 6999,
@@ -38661,7 +38861,7 @@
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/a/ae/Card_1028950_thumb.png/revision/latest?cb=20240820101159",
         "leaderSkill": "\"Artificial Life Forms\" or \"Super Bosses\" Category Ki +3 and HP, ATK & DEF +120%",
         "superAttack": "Raises ATK for 1 turn[1], causes supreme damage to enemy and lowers DEF[2]",
-        "passive": "Basic effect(s)- Ki +3- ATK & DEF 200% - Launches an additional attack that has a high chance[3] of becoming a Super Attack\nFor every attack performed-  ATK 15%  (up to 75%)\nFor every attack received-  DEF 15%  (up to 75%)\nAfter receiving a Super Attack- Launches an additional attack that has a great chance[4] of becoming a Super Attack",
+        "passive": "Basic effect(s)- Ki +3- ATK & DEF 200% - Launches an additional attack that has a high chance[3] of becoming a Super Attack\nFor every attack performed-  ATK 15%  (up to 75%)\nFor every attack received-  DEF 15%  (up to 75%)\nAfter the enemy launches a Super Attack at the character- Launches an additional attack that has a great chance[4] of becoming a Super Attack",
         "links": [
             "Android Assault",
             "Infighter",
@@ -52463,7 +52663,8 @@
             "Mastered Evolution",
             "Sworn Enemies",
             "Super Bosses",
-            "Successors"
+            "Successors",
+            "Space-Traveling Warriors"
         ],
         "baseHP": 2256,
         "maxLevelHP": 7447,
@@ -53210,7 +53411,7 @@
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/6/61/Card_1031060_thumb.png/revision/latest?cb=20250303131902",
         "leaderSkill": "\"Transformation Boost\" or \"Gifted Warriors\" Category Ki +3, HP +200% and ATK & DEF +170%;plus an additional HP, ATK & DEF +50% for characters who also belong to the \"Power Beyond Super Saiyan\" Category",
         "superAttack": "Raises ATK & DEF by 33% for 3 turns and causes immense damage to enemy; raises allies' DEF by 33% for 1 turn (self excluded)",
-        "passive": "Activates the Entrance Animation upon the character's entry-Chance of performing a critical hit & damage reduction rate 20% and foresees enemy's Super Attack for 1 turn\nBasic effect(s)- Ki +3 and ATK & DEF 200%- Damage reduction rate 50%\nAs the 1st attacker in a turn- Damage reduction rate 20%\nAs the 1st or 2nd attacker in a turn- ATK 50%- Chance of performing a critical hit 30%\nWhen attacking- ATK 200%\nWhen receiving an attack- DEF 200%\nAfter receiving an attack- Launches an additional Super Attack\nAfter receiving a Super Attack- Launches an additional Super Attack",
+        "passive": "Activates the Entrance Animation upon the character's entry-Chance of performing a critical hit & damage reduction rate 20% and foresees enemy's Super Attack for 1 turn\nBasic effect(s)- Ki +3 and ATK & DEF 200%- Damage reduction rate 50%\nAs the 1st attacker in a turn- Damage reduction rate 20%\nAs the 1st or 2nd attacker in a turn- ATK 50%- Chance of performing a critical hit 30%\nWhen attacking- ATK 200%\nWhen receiving an attack- DEF 200%\nAfter receiving an attack- Launches an additional Super Attack\nAfter the enemy launches a Super Attack at the character- Launches an additional Super Attack",
         "activeSkill": "Greatly raises ATK temporarily[1] and causes ultimate damage to enemy; ATK +33% for 1 turn",
         "activeSkillCondition": "Can be activated after performing 5 or more Super Attacks in battle (once only)",
         "links": [
@@ -53837,7 +54038,7 @@
         "imageURL": "https://static.wikia.nocookie.net/dbz-dokkanbattle/images/9/9f/Card_1031040_thumb.png/revision/latest?cb=20250723010412",
         "leaderSkill": "\"Universe 6\" or \"Tournament Participants\" Category Ki +3 and HP, ATK & DEF +130%",
         "superAttack": "Causes supreme damage to enemy; raises allies' ATK & DEF by 30% for 2 turns",
-        "passive": "Basic effect(s)- Ki +1 and ATK & DEF 200%- Damage reduction rate 30%\nWhen receiving an attack- ATK & DEF 200%\nWhen all allies attacking in the same turn are \"Universe 6\" Category characters- Randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres- Guards all attacks\nWhen attacking with 12 or more Ki- All allies' DEF 20%- \"Universe 6\" Category allies' ATK 20%\nWhen receiving a Super Attack- Damage reduction 20% temporarily- Damage reduction rate 20% temporarily\nAfter receiving a Super Attack- Character will be stunned for 3 turns",
+        "passive": "Basic effect(s)- Ki +1 and ATK & DEF 200%- Damage reduction rate 30%\nWhen receiving an attack- ATK & DEF 200%\nWhen all allies attacking in the same turn are \"Universe 6\" Category characters- Randomly changes Ki Spheres of a certain Type ( excluded) to  Ki Spheres- Guards all attacks\nWhen attacking with 12 or more Ki- All allies' DEF 20%- \"Universe 6\" Category allies' ATK 20%\nWhen receiving a Super Attack- Damage reduction 20% temporarily- Damage reduction rate 20% temporarily\nAfter the enemy launches a Super Attack at the character- Character will be stunned for 3 turns",
         "links": [
             "More Than Meets the Eye",
             "Infighter",
@@ -54161,7 +54362,8 @@
             "Power Beyond Super Saiyan",
             "Fused Fighters",
             "Super Heroes",
-            "Earth-Protecting Heroes"
+            "Earth-Protecting Heroes",
+            "Accelerated Battle"
         ],
         "baseHP": 3377,
         "maxLevelHP": 11145,
