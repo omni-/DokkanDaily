@@ -49,6 +49,16 @@ namespace DokkanDailyTests
         }
 
         [Test]
+        public void TestCategories()
+        {
+            foreach(Category c in DokkanConstants.Categories)
+            {
+                string path = Path.Combine("wwwroot", c.ImageURL);
+                Assert.That(File.Exists(path), Is.True, $"Path {path} not found on disk");
+            }
+        }
+
+        [Test]
         public void TestParseTime()
         {
             var str = "0'09\"12.3";

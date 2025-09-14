@@ -24,12 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\data\*">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Update="wwwroot\tessdata\*">
+    <Content Update="wwwroot\**\*.*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
