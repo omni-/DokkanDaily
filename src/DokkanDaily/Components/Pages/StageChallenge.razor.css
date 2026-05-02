@@ -47,6 +47,67 @@
     margin: 0 auto;
 }
 
+.card-art {
+    display: inline-block;
+    position: relative;
+    width: 3em;
+    height: 3em;
+    margin: 0 .2em 0 .05em;
+    line-height: 0;
+    vertical-align: middle;
+    overflow: hidden;
+}
+
+.card-art > img {
+    position: absolute;
+    max-width: none;
+    margin: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    pointer-events: none;
+}
+
+.card-art > img.card-thumb-bg {
+    left: 14.286%;
+    top: 11.429%;
+    width: 71.429%;
+    height: 71.429%;
+    z-index: 1;
+}
+
+.card-art > img.card-thumb-character {
+    left: 5.357%;
+    top: 0;
+    width: 89.286%;
+    height: 89.286%;
+    z-index: 3;
+}
+
+.card-art > img.card-rarity {
+    left: 3.571%;
+    top: 50.714%;
+    width: 42.857%;
+    height: 42.857%;
+    z-index: 5;
+}
+
+.card-art > img.card-element {
+    left: 65%;
+    top: 0;
+    width: 34.357%;
+    height: 34.357%;
+    z-index: 4;
+}
+
+.card-art > img.card-lightning {
+    left: 5.357%;
+    top: 0;
+    width: 89.286%;
+    height: 89.286%;
+    z-index: 2;
+}
+
 @media only screen and (min-width: 1200px) {
     .challenge-box {
         width: min(45vw, 700px);

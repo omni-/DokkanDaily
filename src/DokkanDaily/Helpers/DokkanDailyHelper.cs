@@ -25,8 +25,8 @@ namespace DokkanDaily.Helpers
             var result = JsonSerializer.Deserialize<IEnumerable<Unit>>(s, InternalConstants.DefaultSerializeOptions);
 
             foreach (var unit in result)
-                if (unit.ImageURL.Contains("static."))
-                    unit.ImageURL = unit.ImageURL.Replace("static.", "vignette.");
+                if (unit.ImageUrl.Contains("static."))
+                    unit.ImageUrl = unit.ImageUrl.Replace("static.", "vignette.");
 
             return result;
         }

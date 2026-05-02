@@ -13,8 +13,8 @@ namespace DokkanDaily.Models
         public string Type { get; init; }
         public DokkanType DokkanType => Enum.Parse<DokkanType>(Type);
         public int? Cost { get; init; }
-        public string Id { get; init; }
-        public string ImageURL { get; set; }
+        public int Id { get; init; }
+        public string ImageUrl { get; set; }
         public string LeaderSkill { get; init; }
         public string EzaLeaderSkill { get; init; }
         public string SuperAttack { get; init; }
