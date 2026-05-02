@@ -45,7 +45,7 @@ namespace DokkanDailyTests
                 Unit u = null;
                 Assert.DoesNotThrow(() => u = DokkanDailyHelper.GetUnit(l), $"Error getting {l.FullName}");
                 Assert.That(u, Is.Not.Null, $"Didn't find expected value {l.FullName}");
-                Assert.DoesNotThrow(() => new Uri(u.ImageURL), $"Could not parse ImageUrl {u.ImageURL} as Uri for {l.FullName}");
+                Assert.That(File.Exists(Path.Combine("wwwroot", u.ImageUrl)), $"Could not find thumb art for {l.FullName} on disk");
             }
         }
 
