@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 443
@@ -40,7 +40,7 @@ WORKDIR /app/x64
 RUN ln -s /usr/lib/x86_64-linux-gnu/liblept.so.5 /app/x64/libleptonica-1.82.0.so
 RUN ln -s /usr/lib/x86_64-linux-gnu/libtesseract.so.5 /app/x64/libtesseract50.so
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /proj
 COPY . .
 RUN dotnet build "src/DokkanDaily/DokkanDaily.csproj" -c Release
@@ -51,6 +51,6 @@ RUN dotnet publish "src/DokkanDaily/DokkanDaily.csproj" -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-COPY --from=ghcr.io/shimat/opencvsharp/ubuntu22-dotnet6-opencv4.7.0:20230114 /usr/lib/libOpenCvSharpExtern.so /app/runtimes/linux-x64/native/libOpenCvSharpExtern.so
-COPY --from=ghcr.io/shimat/opencvsharp/ubuntu22-dotnet6-opencv4.7.0:20230114 /lib/x86_64-linux-gnu/ /lib/x86_64-linux-gnu/
+COPY --from=ghcr.io/shimat/opencvsharp/ubuntu24-dotnet10-opencv4.13.0:20260214 /usr/lib/libOpenCvSharpExtern.so /app/runtimes/linux-x64/native/libOpenCvSharpExtern.so
+COPY --from=ghcr.io/shimat/opencvsharp/ubuntu24-dotnet10-opencv4.13.0:20260214 /lib/x86_64-linux-gnu/ /lib/x86_64-linux-gnu/
 ENTRYPOINT ["dotnet", "DokkanDaily.dll"]
