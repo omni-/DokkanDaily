@@ -114,7 +114,7 @@ namespace DokkanDaily.Services
             }
 
             var dailyWinner = clears.MinBy(x => x.ClearTimeSpan);
-            dailyWinner.IsDailyHighscore = true;
+            if (dailyWinner is not null) dailyWinner.IsDailyHighscore = true;
 
             _logger.LogInformation("Calculated {@Clear} to be the fastest today.", dailyWinner);
 

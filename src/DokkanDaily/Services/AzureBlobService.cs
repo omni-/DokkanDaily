@@ -72,13 +72,20 @@ namespace DokkanDaily.Services
                 _logger.LogInformation("Finished Azure upload.");
 
                 // do OCR analysis, dont block the main thread
-                _ = Task.Run(() =>
+                _ = Task.Run(async () =>
                 {
-                    var metadata = _ocrService.ProcessImage(ms);
-                    _logger.LogInformation("Finished processing image.");
-                    var tags = BuildTagDict(model, metadata, discordUsername, discordId, remoteIp);
-                    blob.SetMetadataAsync(tags);
-                    _logger.LogInformation("Finished updating Azure metadata.");
+                    try
+                    {
+                        var metadata = _ocrService.ProcessImage(ms);
+                        _logger.LogInformation("Finished processing image.");
+                        var tags = BuildTagDict(model, metadata, discordUsername, discordId, remoteIp);
+                        await blob.SetMetadataAsync(tags);
+                        _logger.LogInformation("Finished updating Azure metadata.");
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Unhandled exception in background OCR task");
+                    }
                 });
 
                 return blob;
