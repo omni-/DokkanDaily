@@ -51,7 +51,7 @@ namespace DokkanDaily.Services
         {
             try
             {
-                var engine = Provider.CreateTesseractEngine();
+                using var engine = Provider.CreateTesseractEngine();
 
                 using ResourcesTracker t = new();
                 Mat gray = t.NewMat();
@@ -128,18 +128,18 @@ namespace DokkanDaily.Services
                 Rectangle itemlessRect = ui.GetItemlessRegion();
 
                 // Uncomment to see what the computer sees
-                // Mat debugImage = t.NewMat();
-                // Cv2.CvtColor(binaryBlackOnWhite, debugImage, ColorConversionCodes.GRAY2BGR);
-                // Cv2.Rectangle(debugImage, boundingRect, Scalar.Red, 2);
-                // Cv2.Rectangle(debugImage, stageClearDetailsRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Pink, 4);
-                // Cv2.Rectangle(debugImage, nicknameRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Yellow, 4);
-                // Cv2.Rectangle(debugImage, clearTimeRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Green, 4);
-                // Cv2.Rectangle(debugImage, itemlessRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Blue, 4);
-                // ShapeUtils.PreviewImage("Debug", debugImage, 0);
+                //Mat debugImage = t.NewMat();
+                //Cv2.CvtColor(binaryBlackOnWhite, debugImage, ColorConversionCodes.GRAY2BGR);
+                //Cv2.Rectangle(debugImage, boundingRect, Scalar.Red, 2);
+                //Cv2.Rectangle(debugImage, stageClearDetailsRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Pink, 4);
+                //Cv2.Rectangle(debugImage, nicknameRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Yellow, 4);
+                //Cv2.Rectangle(debugImage, clearTimeRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Green, 4);
+                //Cv2.Rectangle(debugImage, itemlessRect.ToCv2Rect().Add(boundingRect.TopLeft), Scalar.Blue, 4);
+                //ShapeUtils.PreviewImage("Debug", debugImage, 0);
 
                 // Uncomment to dump out the detected UI region image
-                // Mat finalRegionToOCRFrom = t.T(Mat.FromImageData(arr)).SubMat(boundingRect);
-                // finalRegionToOCRFrom.SaveImage("newReference.png");
+                //Mat finalRegionToOCRFrom = t.T(Mat.FromImageData(arr)).SubMat(boundingRect);
+                //finalRegionToOCRFrom.SaveImage("newReference.png");
 
                 // Stage Clear Details
                 string stageClearDetailsText = ParseStageClearDetails(engine, t, binaryBlackOnWhite, stageClearDetailsRect.ToCv2Rect(), boundingRect, scaleFactor);

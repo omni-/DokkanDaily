@@ -15,20 +15,6 @@
     font-family: 'FOT-NewRodin ProN', inherit
 }
 
-.challenge-box {
-    -webkit-overflow-scrolling: touch;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 2em .5em 1em .5em;
-    background-color: #EFCFA7;
-    border: solid;
-    max-width:70vw;
-    min-width:70vw;
-    max-height:70vh;
-}
-
 .challenge-text img {
     width: auto;
     height: 3em;
@@ -39,10 +25,37 @@
     margin-bottom: 2vh;
 }
 
+.challenge-box {
+    -webkit-overflow-scrolling: touch;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 2em .5em 1em .5em;
+    background-color: #EFCFA7;
+    border: solid;
+    width: min(70vw, 700px);
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.event-banner {
+    max-height: 22vh;
+    max-width: 100%;
+    border: solid;
+    display: block;
+    margin: 0 auto;
+}
+
 @media only screen and (min-width: 1200px) {
     .challenge-box {
-        max-width: 45vw;
-        min-width: 45vw;
+        width: min(45vw, 700px);
+    }
+}
+
+@media only screen and (max-width: 640px) {
+    .challenge-box {
+        width: 90vw;
     }
 }
 

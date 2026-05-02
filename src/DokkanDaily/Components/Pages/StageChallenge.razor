@@ -22,7 +22,6 @@
     background-size: cover;
     text-align: center;
     margin: 0 auto;
-    overflow: hidden;
     }
 </style>
 
@@ -51,7 +50,7 @@ else
             @if (todaysChallenge.TodaysEvent != null && todaysChallenge.TodaysEvent.WallpaperImagePath != null)
             {
                 <p>
-                    <img style="max-height:22vh;max-width:33vw;border:solid;" src="@todaysChallenge.TodaysEvent.BannerImagePath" />
+                    <img class="event-banner" src="@todaysChallenge.TodaysEvent.BannerImagePath" />
                 </p>
             }
             <div class="clear-box">

@@ -59,10 +59,10 @@ namespace DokkanDaily.Helpers
         }
 
         public static Unit GetUnit(string name, string title)
-            => DokkanConstants.UnitDB.FirstOrDefault(x => x.Name == name && x.Title == title);
+            => DokkanConstants.UnitDB.First(x => x.Name == name && x.Title == title);
 
         public static Unit GetUnit(Leader leader)
-            => DokkanConstants.UnitDB.FirstOrDefault(x => x.Name == leader.Name && x.Title == leader.Title);
+            => DokkanConstants.UnitDB.First(x => x.Name == leader.Name && x.Title == leader.Title);
 
         public static string CheckUsername(string username)
         {

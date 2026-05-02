@@ -1,6 +1,7 @@
 ﻿using DokkanDaily.Constants;
 using DokkanDaily.Helpers;
 using DokkanDaily.Models;
+using DokkanDaily.Services;
 
 namespace DokkanDailyTests
 {
@@ -42,7 +43,7 @@ namespace DokkanDailyTests
             foreach (Leader l in DokkanConstants.Leaders)
             {
                 Unit u = null;
-                Assert.DoesNotThrow(() => u = DokkanDailyHelper.GetUnit(l));
+                Assert.DoesNotThrow(() => u = DokkanDailyHelper.GetUnit(l), $"Error getting {l.FullName}");
                 Assert.That(u, Is.Not.Null, $"Didn't find expected value {l.FullName}");
                 Assert.DoesNotThrow(() => new Uri(u.ImageURL), $"Could not parse ImageUrl {u.ImageURL} as Uri for {l.FullName}");
             }

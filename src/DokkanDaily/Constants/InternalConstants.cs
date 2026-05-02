@@ -23,5 +23,7 @@ namespace DokkanDaily.Constants
         private static readonly List<string> _administrators = ["112089455933792256", "263499818234675200"];
 
         public static DateTime Season1StartDate => new(2025, 1, 1);
+
+        public static int ChallengeRepeatLimitDays => 7;
     }
 }
