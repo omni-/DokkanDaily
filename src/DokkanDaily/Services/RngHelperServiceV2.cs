@@ -52,6 +52,8 @@ namespace DokkanDaily.Services
             IEnumerable<Leader> leaders = DokkanConstants.Leaders;
             IEnumerable<LinkSkill> linkSkills = DokkanConstants.LinkSkills;
             IEnumerable<Category> categories = DokkanConstants.Categories;
+            //var list = categories.OrderByDescending(x => x.Tier).Select(x => $"{x.Name}({x.Tier})");
+            //foreach (var l in list) Console.WriteLine(l);
             List<Stage> stages = [.. DokkanConstants.Stages];
             List<string> events = [.. stages
                 .Select(x => x.Name)
@@ -96,17 +98,17 @@ namespace DokkanDaily.Services
                 leaders = leaders
                     .Except(recentChallenges
                         .Where(x => x.DailyType == DailyType.Character && x.Leader != null)
-                        .Take(50)
+                        .Take(10)
                         .Select(x => x.Leader), leaderComparer);
                 linkSkills = linkSkills
                     .Except(recentChallenges
                         .Where(x => x.DailyType == DailyType.LinkSkill && x.LinkSkill != null)
-                        .Take(25)
+                        .Take(10)
                         .Select(x => x.LinkSkill), linkSkillComparer);
                 categories = categories
                     .Except(recentChallenges
                         .Where(x => x.DailyType == DailyType.Category && x.Category != null)
-                        .Take(40)
+                        .Take(10)
                         .Select(x => x.Category), categoryComparer);
                 events = [.. stages
                     .Select(x => x.Name)
@@ -131,14 +133,24 @@ namespace DokkanDaily.Services
 
             // pick a daily type - avoid link skill challenges when it'll cause issues 
             bool avoidLinkSkills = linkSkills.All(x => x.Tier < t - 1);
+            bool avoidLeaders = leaders.All(x => x.Tier < t - 1);
+            bool avoidCats = categories.All(x => x.Tier < t - 1);
             DailyType dailyType = avoidLinkSkills ? DokkanConstants.DailyTypes[r.Next(0, 2)] : DokkanConstants.DailyTypes[r.Next(0, DokkanConstants.DailyTypes.Count)];
 
             // fill out the challenge details
             Leader leader = Pick(leaders, r, t);
             LinkSkill linkSkill = Pick(linkSkills, r, t);
             Category category = Pick(categories, r, t);
-
             Unit unit = DokkanDailyHelper.GetUnit(leader);
+            //catch(Exception e)
+            //{
+            //    Console.WriteLine($"tier: {t}");
+            //    Console.WriteLine($"count: {leaders.Count()}");
+            //    Console.WriteLine($"ale: {avoidLeaders}");
+            //    Console.WriteLine($"als: {avoidLinkSkills}");
+            //    Console.WriteLine($"ac: {avoidCats}");
+            //    Console.WriteLine("leader: " + leader is null ? "null" : leader.ToString());
+            //}
 
             var cacheDate = date ?? DateTime.UtcNow;
 

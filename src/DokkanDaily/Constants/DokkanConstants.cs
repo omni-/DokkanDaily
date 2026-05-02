@@ -157,6 +157,11 @@ namespace DokkanDaily.Constants
             new("Unpredictable Powerful Technique", "Paikuhan", Tier.B),
             new("Earth-Protecting Flash", "Super Saiyan 2 Gohan (Youth)", Tier.B),
             new("Power of Pride and Hope", "Super Saiyan God SS Vegeta & Super Saiyan Trunks (Future)", Tier.S),
+            new("Bonds Leading to the Future", "Super Saiyan Gohan (Future)/Super Saiyan Trunks (Youth) (Future)", Tier.S),
+            new("Remaining Hope", "Super Saiyan Gohan (Future) & Trunks (Youth) (Future)/Super Saiyan Gohan (Future)", Tier.A),
+            new("Maximum-Power Battle", "Super Saiyan 4 Goku (DAIMA)", Tier.Z),
+            new("Fate-Changing Messenger", "Trunks (Teen)", Tier.B),
+            new("The Power to Protect", "Gohan (Kid)", Tier.S),
             //extreme
             new("Universe-Devastating Combat Power", "Broly", Tier.A),
             new("Surge of Heightened Fighting Spirit", "Super Saiyan Broly", Tier.B),
@@ -204,7 +209,14 @@ namespace DokkanDaily.Constants
             new("Terrifying Zero Mortals Plan", "Goku Black (Super Saiyan Rosé) + Zamasu", Tier.A),
             new("World Shrouded in Evil Power", "Omega Shenron", Tier.Z),
             new("Stirred Battle Instincts", "Golden Frieza + Gogeta", Tier.A),
-            new("Dawn of an Ideal World", "Fusion Zamasu", Tier.S)
+            new("Dawn of an Ideal World", "Fusion Zamasu", Tier.A),
+            new("Emperor's Newfound Power", "Golden Frieza", Tier.B),
+            new("Relentlessly Surging Power", "Broly (Wrathful)", Tier.S),
+            new("Newborn Tuffle's Super Power", "Super Baby 1", Tier.S),
+            new("Threat of the Third Eye", "Third Eye Gomah", Tier.A),
+            new("Response to Emergencies", "Android #16", Tier.A),
+            new("Game of Death", "Androids #17 (Future) & #18 (Future)", Tier.S),
+            new("Omen of Destruction", "SS Gohan Possessed (GT) & SS Goten Possessed (GT)", Tier.A)
         ];
         #endregion
 
@@ -340,8 +352,8 @@ namespace DokkanDaily.Constants
             new("Global Campaign! Special Battle 2025", Tier.Z, "SB25", 4),
             new("Seriously Serious! All-Out Battles", Tier.C, "Serious"),
             new("Seriously Serious! All-Out Battles", Tier.C, "Serious", 2),
-            new("Seriously Serious! All-Out Battles", Tier.C, "Serious", 2),
-            new("Seriously Serious! All-Out Battles", Tier.C, "Serious", 2),
+            new("Seriously Serious! All-Out Battles", Tier.C, "Serious", 3),
+            new("Seriously Serious! All-Out Battles", Tier.C, "Serious", 4),
             new("Perfect Cooperation! Team Battle", Tier.C, "PCTB"),
             new("Perfect Cooperation! Team Battle", Tier.B, "PCTB", 2),
             new("Perfect Cooperation! Team Battle", Tier.A, "PCTB", 3),
@@ -364,8 +376,8 @@ namespace DokkanDaily.Constants
         [
             new("Accelerated Battle", Tier.S),
             new("All-Out Struggle", Tier.A),
-            new("Androids", Tier.E),
-            new("Androids/Cell Saga", Tier.D),
+            new("Androids", Tier.B),
+            new("Androids/Cell Saga", Tier.C),
             new("Artificial Life Forms", Tier.B),
             new("Battle of Fate", Tier.S),
             new("Battle of Wits", Tier.E),
@@ -375,9 +387,10 @@ namespace DokkanDaily.Constants
             new("Connected Hope", Tier.A),
             new("Corroded Body and Mind", Tier.A),
             new("Crossover", Tier.D),
+            new("DAIMA", Tier.A),
             new("DB Saga", Tier.B),
             new("Defenders of Justice", Tier.D),
-            new("Demonic Power", Tier.A),
+            new("Demonic Power", Tier.S),
             new("Dragon Ball Heroes", Tier.D),
             new("Earthlings", Tier.B),
             new("Earth-Bred Fighters", Tier.S),
@@ -387,7 +400,7 @@ namespace DokkanDaily.Constants
             new("Final Trump Card", Tier.S),
             new("Full Power", Tier.A),
             new("Fused Fighters", Tier.Z),
-            new("Fusion", Tier.B),
+            new("Fusion", Tier.S),
             new("Future Saga", Tier.S),
             new("Giant Ape Power", Tier.S),
             new("Gifted Warriors", Tier.B),
@@ -456,7 +469,7 @@ namespace DokkanDaily.Constants
             new("World Tournament", Tier.D),
             new("Worldwide Chaos", Tier.B),
             new("Worthy Rivals", Tier.C),
-            new("Youth", Tier.C)
+            new("Youth", Tier.S)
         ];
         #endregion
 
