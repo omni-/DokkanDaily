@@ -19,6 +19,7 @@
 @inject IJSRuntime JsRuntime
 @inject IResetService ResetSvc
 @inject ILeaderboardService LeaderboardSvc
+@inject IBannerService BannerSvc
 @inject NavigationManager NavManager
 @inject DiscordWebhookClient WebhookSvc
 @inject IOptions<DokkanDailySettings> settings
@@ -69,6 +70,13 @@
                         <label>Send Announcement: <textarea @bind=@Announcement /><button style="margin-left:5px" @onclick="async () => await Exec(SendWebhookCustom)">Send</button><input style="margin-left:5px" @bind=@AddRolePing type="checkbox" /></label>
                         <br />
                         <label>Dump challenge<textarea @bind=@Dump /><button style="margin-left:5px" @onclick="async () => await Exec(DumpChallenge)">Dump</button></label>
+                        <hr class="settings-divider" />
+                        <div class="banner-settings">
+                            <h4>Banner Notice</h4>
+                            <label>Show Banner: <input @bind=@BannerNoticeEnabled type="checkbox" /></label>
+                            <br />
+                            <label>Banner Text: <textarea @bind=@BannerNoticeText></textarea><button style="margin-left:5px" @onclick="async () => await Exec(SaveBannerNotice)">Save</button></label>
+                        </div>
                     </div>
                     <p class="error">@ErrorText</p>
                 </div>
@@ -107,6 +115,10 @@
 
     string Dump { get; set; }
 
+    string BannerNoticeText { get; set; }
+
+    bool BannerNoticeEnabled { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         AuthorizedUser = false;
@@ -123,6 +135,8 @@
         }
 
         Seed = RngSvc.GetRawSeed().ToString();
+        BannerNoticeText = BannerSvc.GetText();
+        BannerNoticeEnabled = BannerSvc.ShouldShow();
 
         base.OnInitialized();
     }
@@ -230,6 +244,11 @@
     async Task SendWebhookCustom()
     {
         await WebhookSvc.PostAsync(AddRolePing ? Announcement.AddDokkandleDbcRolePing() : Announcement);
+    }
+
+    async Task SaveBannerNotice()
+    {
+        await BannerSvc.SetBannerAsync(BannerNoticeText, BannerNoticeEnabled);
     }
 
     private string Format(Exception e) => $"{e.GetType().Name}: {e.Message}\r\n{e.StackTrace}";

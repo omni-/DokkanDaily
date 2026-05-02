@@ -5,6 +5,7 @@ using DokkanDaily.Services;
 using DokkanDaily.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 
@@ -40,6 +41,7 @@ namespace DokkanDaily
 
             builder.Services.AddSingleton<ILeaderboardService, LeaderboardService>();
             builder.Services.AddSingleton<IRngHelperService, RngHelperServiceV2>();
+            builder.Services.AddSingleton<IBannerService, BannerService>();
 
             builder.Services.AddTransient<OcrFormatProvider>();
             builder.Services.AddTransient<IResetService, ResetService>();
@@ -49,6 +51,7 @@ namespace DokkanDaily
 
             // TODO: IP tracking to enforce bans (sadface)
             builder.Services.AddScoped<BlazorAppContext>();
+            builder.Services.AddScoped<ProtectedSessionStorage>();
             builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddHttpClient<DiscordWebhookClient>();

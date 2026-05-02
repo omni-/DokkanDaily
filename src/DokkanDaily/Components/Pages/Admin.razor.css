@@ -2,6 +2,18 @@
     margin-top:1vh;
 }
 
+.settings-divider {
+    border-color: rgba(250, 235, 215, 0.45);
+    margin: 1.25rem auto 1rem;
+    max-width: 48rem;
+}
+
+.banner-settings textarea {
+    min-height: 4rem;
+    min-width: min(32rem, 80vw);
+    vertical-align: middle;
+}
+
 .error {
     color: lightcoral;
 }

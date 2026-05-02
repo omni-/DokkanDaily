@@ -1,39 +1,49 @@
-﻿@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
-@inject ProtectedLocalStorage ProtectedLocalStore
+@using DokkanDaily.Services.Interfaces
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject IBannerService BannerSvc
+@inject ProtectedSessionStorage SessionStore
 
-@if (isConnected)
+@if (isReady && ShouldRenderNotice)
 {
-    <p>Current count: <strong>@currentCount</strong></p>
-    <button @onclick="IncrementCount">Increment</button>
-}
-else
-{
-    <p>Loading...</p>
+    <section class="banner-notice" role="status" aria-live="polite">
+        <p>@noticeText</p>
+        <button type="button" class="banner-notice__dismiss" title="Dismiss" aria-label="Dismiss banner notice" @onclick="DismissAsync">
+            &times;
+        </button>
+    </section>
 }
 
 @code {
-    private int currentCount;
-    private bool isConnected;
+    private const string DismissedStorageKey = "DokkanDaily.BannerNoticeDismissed";
+
+    private bool isReady;
+    private bool isDismissed;
+    private string noticeText;
+
+    private bool ShouldRenderNotice =>
+        !isDismissed &&
+        BannerSvc.ShouldShow() &&
+        !string.IsNullOrWhiteSpace(noticeText);
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (!firstRender)
         {
-            isConnected = true;
-            await LoadStateAsync();
-            StateHasChanged();
+            return;
         }
+
+        noticeText = BannerSvc.GetText();
+
+        var dismissed = await SessionStore.GetAsync<bool>(DismissedStorageKey);
+        isDismissed = dismissed.Success && dismissed.Value;
+        isReady = true;
+
+        StateHasChanged();
     }
 
-    private async Task LoadStateAsync()
+    private async Task DismissAsync()
     {
-        var result = await ProtectedLocalStore.GetAsync<int>("count");
-        currentCount = result.Success ? result.Value : 0;
-    }
-
-    private async Task IncrementCount()
-    {
-        currentCount++;
-        await ProtectedLocalStore.SetAsync("count", currentCount);
+        isDismissed = true;
+        await SessionStore.SetAsync(DismissedStorageKey, true);
     }
 }
