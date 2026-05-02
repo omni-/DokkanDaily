@@ -25,9 +25,9 @@
     }
 </style>
 
-<Logo dailyType="@todaysChallenge?.DailyType.ToString()" />
+<Logo dailyType="@TodaysChallenge?.DailyType.ToString()" />
 
-@if (Executing || todaysChallenge is null)
+@if (Executing || TodaysChallenge is null)
 {
     <BusySpinner />
 }
@@ -35,22 +35,32 @@ else
 {
     <div class="challenge-box">
         <div style="margin: 0 1em 0 1em">
-            @if (todaysChallenge.DailyType == DailyType.LinkSkill)
+            @if (TodaysChallenge.DailyType == DailyType.LinkSkill)
             {
-                <p class="challenge-text"><b>Challenge!</b> defeat <b>@todaysChallenge.TodaysEvent.Name</b>, <b>Stage @todaysChallenge.TodaysEvent.StageNumber</b> using only units that have the Link Skill <div class="dokkan-link-wrapper"><div class="dokkan-link"><div class="text">@todaysChallenge.LinkSkill.Name</div></div></div><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
+                <p class="challenge-text"><b>Challenge!</b> defeat <b>@TodaysChallenge.TodaysEvent.Name</b>, <b>Stage @TodaysChallenge.TodaysEvent.StageNumber</b> using only units that have the Link Skill <div class="dokkan-link-wrapper"><div class="dokkan-link"><div class="text">@TodaysChallenge.LinkSkill.Name</div></div></div><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
             }
-            @if (todaysChallenge.DailyType == DailyType.Category)
+            @if (TodaysChallenge.DailyType == DailyType.Category)
             {
-                <p class="challenge-text"><b>Challenge!</b> defeat <b>@todaysChallenge.TodaysEvent.Name</b>, <b>Stage @todaysChallenge.TodaysEvent.StageNumber</b> using only units belonging to:<br /><img src="@todaysChallenge.Category.ImageURL" /><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
+                <p class="challenge-text"><b>Challenge!</b> defeat <b>@TodaysChallenge.TodaysEvent.Name</b>, <b>Stage @TodaysChallenge.TodaysEvent.StageNumber</b> using only units belonging to:<br /><img src="@TodaysChallenge.Category.ImageURL" /><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
             }
-            @if (todaysChallenge.DailyType == DailyType.Character)
+            @if (TodaysChallenge.DailyType == DailyType.Character)
             {
-                <p class="challenge-text"><b>Challenge!</b> build a team using <img style="width:3em;height:auto;" src="@todaysChallenge.TodaysUnit.ImageURL" /> <b style="color:@typeColor">[@todaysChallenge.Leader.Title] @todaysChallenge.Leader.Name</b> as the Leader and defeat <b>@todaysChallenge.TodaysEvent.Name</b>, <b>Stage @todaysChallenge.TodaysEvent.StageNumber</b>!<div class="challenge-text friend-text">(Only one required - you may use a Friend Unit)</div></p>
+                <p class="challenge-text"><b>Challenge!</b> build a team using 
+                    <span class="card-art">
+                        <img class="card-thumb-bg" src="@BgUrl" />
+                        <img class="card-thumb-character" src="@TodaysChallenge.TodaysUnit.ImageUrl" />
+                        <img class="card-rarity" src="@RarityUrl" />
+                        <img class="card-element" src="@TypeUrl" />
+                        @if (TodaysChallenge.TodaysUnit.Rarity == "LR")
+                        {
+                            <img class="card-lightning" src="images/misc/LR_lightning.png"/>
+                        }
+                    </span> <b style="color:@typeColor">[@TodaysChallenge.Leader.Title] @TodaysChallenge.Leader.Name</b> as the Leader and defeat <b>@TodaysChallenge.TodaysEvent.Name</b>, <b>Stage @TodaysChallenge.TodaysEvent.StageNumber</b>!<div class="challenge-text friend-text">(Only one required - you may use a Friend Unit)</div></p>
             }
-            @if (todaysChallenge.TodaysEvent != null && todaysChallenge.TodaysEvent.WallpaperImagePath != null)
+            @if (TodaysChallenge.TodaysEvent != null && TodaysChallenge.TodaysEvent.WallpaperImagePath != null)
             {
                 <p>
-                    <img class="event-banner" src="@todaysChallenge.TodaysEvent.BannerImagePath" />
+                    <img class="event-banner" src="@TodaysChallenge.TodaysEvent.BannerImagePath" />
                 </p>
             }
             <div class="clear-box">
@@ -67,11 +77,11 @@ else
 }
 
 @code {
-    Challenge todaysChallenge;
+    Challenge TodaysChallenge;
 
     bool Executing { get; set; }
 
-    string typeColor => DokkanConstants.TypeHexMap[todaysChallenge.TodaysUnit.DokkanType];
+    string typeColor => DokkanConstants.TypeHexMap[TodaysChallenge.TodaysUnit.DokkanType];
 
     int dailyFileCount = 0;
 
@@ -79,9 +89,17 @@ else
 
     string TimeUntil => hoursToReset > 1 ? $"{hoursToReset} hours" : $"{59 - DateTime.UtcNow.Minute} minute(s)"; 
 
+    string BgUrl => $"images/misc/card_bg_{TodaysChallenge?.TodaysUnit?.Type}.png";
+
+    string RarityUrl => $"images/misc/{TodaysChallenge?.TodaysUnit?.Rarity}.png";
+
+    string TypeUrl => $"images/misc/{TodaysChallenge?.TodaysUnit?.Class}_{TodaysChallenge?.TodaysUnit?.Type}.png";
+
+    string EzaIconUrl => "";
+
     protected override async Task OnInitializedAsync()
     {
-        todaysChallenge = await RngSvc.GetDailyChallenge();
+        TodaysChallenge = await RngSvc.GetDailyChallenge();
 
         try
         {
@@ -94,8 +112,5 @@ else
         base.OnInitialized();
     }
 
-    void OnClick()
-    {
-        NavManager.NavigateTo("/clears", false);
-    }
+    void OnClick() => NavManager.NavigateTo("/clears", false);
 }
