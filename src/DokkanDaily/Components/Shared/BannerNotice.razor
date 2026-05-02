@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage ProtectedLocalStore
+
+@if (isConnected)
+{
+    <p>Current count: <strong>@currentCount</strong></p>
+    <button @onclick="IncrementCount">Increment</button>
+}
+else
+{
+    <p>Loading...</p>
+}
+
+@code {
+    private int currentCount;
+    private bool isConnected;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            isConnected = true;
+            await LoadStateAsync();
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadStateAsync()
+    {
+        var result = await ProtectedLocalStore.GetAsync<int>("count");
+        currentCount = result.Success ? result.Value : 0;
+    }
+
+    private async Task IncrementCount()
+    {
+        currentCount++;
+        await ProtectedLocalStore.SetAsync("count", currentCount);
+    }
+}
