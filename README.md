@@ -8,7 +8,6 @@
 * ~~Full support of JP clears~~
 * ~~Seasonal leaderboard~~
 * Festival of Battles Day
-
 ### Feedback/Suggestions
 Please submit an [Issue](https://github.com/omni-/DokkanDaily/issues) if you have feedback or suggestions!
 
