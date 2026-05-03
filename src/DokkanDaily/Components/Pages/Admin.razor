@@ -156,7 +156,7 @@
     async Task DumpChallenge()
     {
         var chall = await RngSvc.GetDailyChallenge();
-        Dump = $"type: {chall.DailyType}\r\ncategory: {chall.Category?.Name ?? "null"}\r\nlink: {chall.LinkSkill?.Name ?? "null"}\r\nleader: {chall.Leader?.FullName}\r\nstage: {chall.TodaysEvent?.FullName ?? "null"}";
+        Dump = $"type: {chall?.DailyType}\r\ntier: {chall?.TodaysEvent?.Tier}\r\ncategory: {chall?.Category?.Name ?? "null"}\r\nlink: {chall?.LinkSkill?.Name ?? "null"}\r\nleader: {chall?.Leader?.FullName}\r\nstage: {chall?.TodaysEvent?.FullName ?? "null"}";
     }
 
     async Task UpdateLeaderboard()
