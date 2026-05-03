@@ -62,7 +62,41 @@ namespace DokkanDaily.Services
                 Cv2.Threshold(gray, binaryBlackOnWhite, 100, 255, ThresholdTypes.BinaryInv);
                 // ShapeUtils.PreviewImage("binaryBlackOnWhite", binaryBlackOnWhite, 0);
 
-                Mat lineDetectionRegion = binaryBlackOnWhite;
+                Mat brightWhiteOnBlack = t.NewMat();
+                Cv2.Threshold(gray, brightWhiteOnBlack, 180, 255, ThresholdTypes.Binary);
+
+                ParseResult darkLineResult = TryParseWithLineDetectionRegion(engine, t, binaryBlackOnWhite, binaryBlackOnWhite, useRelaxedLineDetection: false);
+                if (darkLineResult.Success)
+                {
+                    return darkLineResult;
+                }
+
+                if (!Provider.IsJapanese)
+                {
+                    return darkLineResult;
+                }
+
+                Mat brightAndDarkLineDetectionRegion = t.NewMat();
+                Cv2.BitwiseOr(binaryBlackOnWhite, brightWhiteOnBlack, brightAndDarkLineDetectionRegion);
+
+                ParseResult brightLineResult = TryParseWithLineDetectionRegion(engine, t, binaryBlackOnWhite, brightAndDarkLineDetectionRegion, useRelaxedLineDetection: true);
+                if (brightLineResult.Success || brightLineResult.Error != null)
+                {
+                    return brightLineResult;
+                }
+
+                return darkLineResult;
+            }
+            catch (Exception ex)
+            {
+                return new ParseResult(false, null, ex);
+            }
+        }
+
+        private ParseResult TryParseWithLineDetectionRegion(TesseractEngine engine, ResourcesTracker t, Mat binaryBlackOnWhite, Mat lineDetectionRegion, bool useRelaxedLineDetection)
+        {
+            try
+            {
                 Mat edges = t.NewMat();
                 Cv2.Canny(lineDetectionRegion, edges, 150, 200, 3, false);
 
@@ -71,7 +105,11 @@ namespace DokkanDaily.Services
                 // ShapeUtils.PreviewImage("Canny Lines", debugImageLines, 0);
                 // throw new OcrServiceException("debuggin");
 
-                LineSegmentPoint[] lines = Cv2.HoughLinesP(edges, 1, Math.PI / 180, 500, lineDetectionRegion.Width * 0.35, 0);
+                double minimumLineLength = lineDetectionRegion.Width * 0.35;
+                int houghThreshold = useRelaxedLineDetection
+                    ? Math.Min(500, (int)(lineDetectionRegion.Width * 0.25))
+                    : 500;
+                LineSegmentPoint[] lines = Cv2.HoughLinesP(edges, 1, Math.PI / 180, houghThreshold, minimumLineLength, 0);
 
                 // start extents at the center of our image
                 int left, right, top, bottom;
@@ -87,19 +125,39 @@ namespace DokkanDaily.Services
                     int dy = lineSegmentPoint.P2.Y - lineSegmentPoint.P1.Y;
                     int dx = lineSegmentPoint.P2.X - lineSegmentPoint.P1.X;
 
-                    if (dy == 0) { isHorizontal = true; }
-                    else if (dx == 0) { isVertical = true; }
+                    if (useRelaxedLineDetection)
+                    {
+                        if (IsNearlyHorizontal(dx, dy)) { isHorizontal = true; }
+                        else if (IsNearlyVertical(dx, dy)) { isVertical = true; }
+                    }
+                    else
+                    {
+                        if (dy == 0) { isHorizontal = true; }
+                        else if (dx == 0) { isVertical = true; }
+                    }
 
                     if (isHorizontal)
                     {
-                        if (lineSegmentPoint.P1.Y < top) { top = lineSegmentPoint.P1.Y; }
-                        if (lineSegmentPoint.P1.Y > bottom) { bottom = lineSegmentPoint.P1.Y; }
+                        int lineTop = useRelaxedLineDetection
+                            ? Math.Min(lineSegmentPoint.P1.Y, lineSegmentPoint.P2.Y)
+                            : lineSegmentPoint.P1.Y;
+                        int lineBottom = useRelaxedLineDetection
+                            ? Math.Max(lineSegmentPoint.P1.Y, lineSegmentPoint.P2.Y)
+                            : lineSegmentPoint.P1.Y;
+                        if (lineTop < top) { top = lineTop; }
+                        if (lineBottom > bottom) { bottom = lineBottom; }
                         // Cv2.Line(debugImageLines, lineSegmentPoint.P1, lineSegmentPoint.P2, Scalar.Yellow, 1);
                     }
                     else if (isVertical)
                     {
-                        if (lineSegmentPoint.P1.X < left) { left = lineSegmentPoint.P1.X; }
-                        if (lineSegmentPoint.P1.X > right) { right = lineSegmentPoint.P1.X; }
+                        int lineLeft = useRelaxedLineDetection
+                            ? Math.Min(lineSegmentPoint.P1.X, lineSegmentPoint.P2.X)
+                            : lineSegmentPoint.P1.X;
+                        int lineRight = useRelaxedLineDetection
+                            ? Math.Max(lineSegmentPoint.P1.X, lineSegmentPoint.P2.X)
+                            : lineSegmentPoint.P1.X;
+                        if (lineLeft < left) { left = lineLeft; }
+                        if (lineRight > right) { right = lineRight; }
                         // Cv2.Line(debugImageLines, lineSegmentPoint.P1, lineSegmentPoint.P2, Scalar.Blue, 1);
                     }
                     else
@@ -154,6 +212,11 @@ namespace DokkanDaily.Services
 
                 string clearTimeText = ParseClearTime(engine, t, binaryBlackOnWhite, clearTimeRect.ToCv2Rect(), boundingRect, scaleFactor);
 
+                if (nicknameText == null || clearTimeText == null)
+                {
+                    return new ParseResult(false, null, null);
+                }
+
                 bool itemless = ParseItemsUsed(engine, t, binaryBlackOnWhite, itemlessRect.ToCv2Rect(), boundingRect, scaleFactor);
 
                 return new ParseResult(true, new()
@@ -167,6 +230,18 @@ namespace DokkanDaily.Services
             {
                 return new ParseResult(false, null, ex);
             }
+        }
+
+        private static bool IsNearlyHorizontal(int dx, int dy)
+        {
+            int tolerance = Math.Max(2, (int)(Math.Abs(dx) * 0.02));
+            return Math.Abs(dx) > Math.Abs(dy) && Math.Abs(dy) <= tolerance;
+        }
+
+        private static bool IsNearlyVertical(int dx, int dy)
+        {
+            int tolerance = Math.Max(2, (int)(Math.Abs(dy) * 0.02));
+            return Math.Abs(dy) > Math.Abs(dx) && Math.Abs(dx) <= tolerance;
         }
 
         private string ParseStageClearDetails(TesseractEngine engine, ResourcesTracker t, Mat binaryBlackOnWhite, Rect stageClearDetailsRect, Rect boundingRect, float scaleFactor)
