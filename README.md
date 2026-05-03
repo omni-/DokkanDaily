@@ -4,8 +4,10 @@
 [>> SITE LINK <<](https://dokkandle.net/daily)
 
 ### Coming Soon(tm)
-* Announcement banner
-* Guess the Unit challenge
+* ~~Announcement banner~~
+* ~~Full support of JP clears~~
+* ~~Seasonal leaderboard~~
+* Festival of Battles Day
 
 ### Feedback/Suggestions
 Please submit an [Issue](https://github.com/omni-/DokkanDaily/issues) if you have feedback or suggestions!

@@ -12,6 +12,8 @@ namespace DokkanDaily.Services
 
         public void SetParsingMode(ParsingMode parsingMode) => _parsingMode = parsingMode;
 
+        public bool IsJapanese => _jp;
+
         private bool _jp => _parsingMode == ParsingMode.Japanese;
 
         public string None => _jp ? OcrConstants.NoneJpn : OcrConstants.NoneEng;
