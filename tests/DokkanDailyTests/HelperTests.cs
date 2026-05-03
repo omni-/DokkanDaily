@@ -60,6 +60,16 @@ namespace DokkanDailyTests
         }
 
         [Test]
+        public void TestEvents()
+        {
+            foreach(Stage stage in DokkanConstants.Stages)
+            {
+                Assert.That(File.Exists(Path.Combine("wwwroot", stage.WallpaperImagePath)), Is.True, $"Path {stage.WallpaperImagePath} not found on disk");
+                Assert.That(File.Exists(Path.Combine("wwwroot", stage.BannerImagePath)), Is.True, $"Path {stage.BannerImagePath} not found on disk");
+            }
+        }
+
+        [Test]
         public void TestParseTime()
         {
             var str = "0'09\"12.3";
