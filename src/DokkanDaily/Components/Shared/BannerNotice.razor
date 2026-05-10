@@ -34,8 +34,16 @@
 
         noticeText = BannerSvc.GetText();
 
-        var dismissed = await SessionStore.GetAsync<bool>(DismissedStorageKey);
-        isDismissed = dismissed.Success && dismissed.Value;
+        try
+        {
+            var dismissed = await SessionStore.GetAsync<bool>(DismissedStorageKey);
+            isDismissed = dismissed.Success && dismissed.Value;
+        }
+        catch (System.Security.Cryptography.CryptographicException) // restart issue, cache expired
+        {
+            isDismissed = false;
+        }
+
         isReady = true;
 
         StateHasChanged();

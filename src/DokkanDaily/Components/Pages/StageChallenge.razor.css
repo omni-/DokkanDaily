@@ -116,6 +116,12 @@
 
 @media only screen and (max-width: 640px) {
     .challenge-box {
+        left: auto;
+        margin: 1rem auto 5rem;
+        max-height: none;
+        position: relative;
+        top: auto;
+        transform: none;
         width: 90vw;
     }
 }
