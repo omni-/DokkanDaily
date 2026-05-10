@@ -193,7 +193,7 @@ namespace DokkanDaily.Services
 
             using Page nicknameTextPage = engine.Process(nicknamePix, PageSegMode.SingleBlock);
             string nicknameText = nicknameTextPage.GetText().Trim();
-            nicknameText = DokkanDailyHelper.CheckUsername(nicknameText); // some concessions for the OCR
+            nicknameText = DokkanDailyHelper.FixUsername(nicknameText); // some concessions for the OCR
             if (nicknameText.Length == 0) nicknameText = null;
 
             return nicknameText;

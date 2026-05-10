@@ -48,7 +48,7 @@ namespace DokkanDaily.Services
                     var tomorrowsChallenge = await _rngHelperService.UpdateDailyChallenge();
 
                     // send webhook notfication
-                    await _webhookClient.PostAsync(tomorrowsChallenge.ToWebhookPayload());
+                    await _webhookClient.PostAsync(tomorrowsChallenge?.ToWebhookPayload());
                 }
                 catch (Exception e)
                 {

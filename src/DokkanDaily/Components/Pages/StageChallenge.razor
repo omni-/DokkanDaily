@@ -7,6 +7,7 @@
 @using DokkanDaily.Models;
 @using DokkanDaily.Models.ViewModel
 @using DokkanDaily.Models.Enums
+@using DokkanDaily.Services
 @using DokkanDaily.Services.Interfaces
 
 @inject IRngHelperService RngSvc
@@ -65,12 +66,15 @@ else
                 </p>
             }
             <div class="clear-box">
-                <p>@dailyFileCount clear(s) uploaded today</p>
-                <button type="button" class="btn btn-secondary btn-lg" @onclick=OnClick>
+                @if (!isDuringReset)
+                {
+                    <p>@dailyFileCount clear(s) uploaded today</p>
+                }
+                <button disabled="@isDuringReset" type="button" class="btn btn-secondary btn-lg" @onclick=OnClick>
                     Go to clears
                 </button>
             </div>
-            <p>Time until challenge resets: @TimeUntil</p>
+            <p>@TimeUntil</p>
         </div>
     </div>
 
@@ -88,7 +92,9 @@ else
 
     int hoursToReset => 24 - DateTime.UtcNow.Hour;
 
-    string TimeUntil => hoursToReset > 1 ? $"{hoursToReset} hours" : $"{59 - DateTime.UtcNow.Minute} minute(s)"; 
+    private bool isDuringReset => Worker.GetWorkSchedule(Models.Enums.WorkType.DailyReset).IsDuringReset(TimeOnly.FromDateTime(DateTime.UtcNow));
+
+    string TimeUntil => isDuringReset ? "Calculating results..." : "Time until challenge resets: " + (hoursToReset > 1 ? $"{hoursToReset} hours" : $"{59 - DateTime.UtcNow.Minute} minute(s)");
 
     string BgUrl => $"images/misc/card_bg_{TodaysChallenge?.TodaysUnit?.Type}.png";
 

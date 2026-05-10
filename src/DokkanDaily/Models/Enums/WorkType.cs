@@ -3,6 +3,6 @@
     public enum WorkType
     {
         DailyReset,
-        LeaderboardProcessing
+        SeasonEnd
     }
 }

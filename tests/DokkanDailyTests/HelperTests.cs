@@ -105,7 +105,7 @@ namespace DokkanDailyTests
         [TestCase("ExoticDJ85", "ExoticDJ85")]
         public void TestCheckUsername(string username, string exp)
         {
-            Assert.That(DokkanDailyHelper.CheckUsername(username), Is.EqualTo(exp));
+            Assert.That(DokkanDailyHelper.FixUsername(username), Is.EqualTo(exp));
         }
 
         [Test]
@@ -130,6 +130,19 @@ namespace DokkanDailyTests
 
             Assert.That(user.GetDisplayName(), Is.EqualTo("omni (DBC*omni)"));
             Assert.That(user.GetDisplayName(true), Is.EqualTo("omni (DBC*omni)"));
+        }
+
+        [Test]
+        [TestCase("23:59:45", true)]
+        [TestCase("23:59", true)]
+        [TestCase("23:59:59.9999999", true)]
+        [TestCase("00:00", false)]
+        [TestCase("4:59", false)]
+        public void TestIsDuringReset(string time, bool result)
+        {
+            var resetTime = new TimeOnly(23, 59);
+
+            Assert.That(resetTime.IsDuringReset(TimeOnly.Parse(time)), Is.EqualTo(result));
         }
     }
 }
