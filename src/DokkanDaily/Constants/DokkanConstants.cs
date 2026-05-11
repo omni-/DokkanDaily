@@ -90,7 +90,7 @@ namespace DokkanDaily.Constants
             new("Raging Counterattack", "Bardock", Tier.F),
             new("Indomitable Fighting Spirit", "Super Saiyan 2 Vegeta", Tier.B),
             new("Rousing Fighting Spirit", "Super Saiyan 2 Goku (Angel)", Tier.B),
-            new("Hot-Blooded God of Destruction", "Beerus", Tier.D),
+            new("Hot-Blooded God of Destruction", "Beerus", Tier.C),
             new("Ultimate and Invincible Fusion", "Vegito", Tier.B),
             new("Ultimate and Supreme Fusion", "Gogeta", Tier.C),
             new("Transcendent Height", "Kefla", Tier.D),
