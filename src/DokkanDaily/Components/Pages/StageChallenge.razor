@@ -7,6 +7,7 @@
 @using DokkanDaily.Models;
 @using DokkanDaily.Models.ViewModel
 @using DokkanDaily.Models.Enums
+@using DokkanDaily.Services
 @using DokkanDaily.Services.Interfaces
 
 @inject IRngHelperService RngSvc
@@ -25,7 +26,8 @@
     }
 </style>
 
-<Logo dailyType="@TodaysChallenge?.DailyType.ToString()" />
+<Logo dailyType="@TodaysDailyType" />
+
 
 @if (Executing || TodaysChallenge is null)
 {
@@ -37,11 +39,11 @@ else
         <div style="margin: 0 1em 0 1em">
             @if (TodaysChallenge.DailyType == DailyType.LinkSkill)
             {
-                <p class="challenge-text"><b>Challenge!</b> defeat <b>@TodaysChallenge.TodaysEvent.Name</b>, <b>Stage @TodaysChallenge.TodaysEvent.StageNumber</b> using only units that have the Link Skill <div class="dokkan-link-wrapper"><div class="dokkan-link"><div class="text">@TodaysChallenge.LinkSkill.Name</div></div></div><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
+                <p class="challenge-text"><b>Challenge!</b> defeat <b>@TodaysChallenge?.TodaysEvent?.Name</b>, <b>Stage @TodaysChallenge.TodaysEvent.StageNumber</b> using only units that have the Link Skill <div class="dokkan-link-wrapper"><div class="dokkan-link"><div class="text">@TodaysChallenge.LinkSkill.Name</div></div></div><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
             }
             @if (TodaysChallenge.DailyType == DailyType.Category)
             {
-                <p class="challenge-text"><b>Challenge!</b> defeat <b>@TodaysChallenge.TodaysEvent.Name</b>, <b>Stage @TodaysChallenge.TodaysEvent.StageNumber</b> using only units belonging to:<br /><img src="@TodaysChallenge.Category.ImageURL" /><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
+                <p class="challenge-text"><b>Challenge!</b> defeat <b>@TodaysChallenge?.TodaysEvent?.Name</b>, <b>Stage @TodaysChallenge.TodaysEvent.StageNumber</b> using only units belonging to:<br /><img src="@TodaysChallenge.Category.ImageURL" /><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
             }
             @if (TodaysChallenge.DailyType == DailyType.Character)
             {
@@ -55,21 +57,24 @@ else
                         {
                             <img class="card-lightning" src="images/misc/LR_lightning.png"/>
                         }
-                    </span> <b style="color:@typeColor">[@TodaysChallenge.Leader.Title] @TodaysChallenge.Leader.Name</b> as the Leader and defeat <b>@TodaysChallenge.TodaysEvent.Name</b>, <b>Stage @TodaysChallenge.TodaysEvent.StageNumber</b>!<div class="challenge-text friend-text">(Only one required - you may use a Friend Unit)</div></p>
+                    </span> <b style="color:@typeColor">[@TodaysChallenge.Leader.Title] @TodaysChallenge?.Leader?.Name</b> as the Leader and defeat <b>@TodaysChallenge?.TodaysEvent?.Name</b>, <b>Stage @TodaysChallenge?.TodaysEvent?.StageNumber</b>!<div class="challenge-text friend-text">(Only one required - you may use a Friend Unit)</div></p>
             }
-            @if (TodaysChallenge.TodaysEvent != null && TodaysChallenge.TodaysEvent.WallpaperImagePath != null)
+            @if ( TodaysChallenge?.TodaysEvent?.WallpaperImagePath is not null)
             {
                 <p>
                     <img class="event-banner" src="@TodaysChallenge.TodaysEvent.BannerImagePath" />
                 </p>
             }
             <div class="clear-box">
-                <p>@dailyFileCount clear(s) uploaded today</p>
-                <button type="button" class="btn btn-secondary btn-lg" @onclick=OnClick>
+                @if (!isDuringReset)
+                {
+                    <p>@dailyFileCount clear(s) uploaded today</p>
+                }
+                <button disabled="@isDuringReset" type="button" class="btn btn-secondary btn-lg" @onclick=OnClick>
                     Go to clears
                 </button>
             </div>
-            <p>Time until challenge resets: @TimeUntil</p>
+            <p>@TimeUntil</p>
         </div>
     </div>
 
@@ -87,7 +92,9 @@ else
 
     int hoursToReset => 24 - DateTime.UtcNow.Hour;
 
-    string TimeUntil => hoursToReset > 1 ? $"{hoursToReset} hours" : $"{59 - DateTime.UtcNow.Minute} minute(s)"; 
+    private bool isDuringReset => Worker.GetWorkSchedule(Models.Enums.WorkType.DailyReset).IsDuringReset(TimeOnly.FromDateTime(DateTime.UtcNow));
+
+    string TimeUntil => isDuringReset ? "Calculating results..." : "Time until challenge resets: " + (hoursToReset > 1 ? $"{hoursToReset} hours" : $"{59 - DateTime.UtcNow.Minute} minute(s)");
 
     string BgUrl => $"images/misc/card_bg_{TodaysChallenge?.TodaysUnit?.Type}.png";
 
@@ -96,6 +103,8 @@ else
     string TypeUrl => $"images/misc/{TodaysChallenge?.TodaysUnit?.Class}_{TodaysChallenge?.TodaysUnit?.Type}.png";
 
     string EzaIconUrl => "";
+
+    string TodaysDailyType => TodaysChallenge is null ? null : TodaysChallenge.DailyType.ToString();
 
     protected override async Task OnInitializedAsync()
     {

@@ -1,5 +1,6 @@
 ﻿using DokkanDaily.Constants;
 using DokkanDaily.Models;
+using DokkanDaily.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Text;
 using System.Text.Json;
@@ -64,7 +65,7 @@ namespace DokkanDaily.Helpers
         public static Unit GetUnit(Leader leader)
             => DokkanConstants.UnitDB.First(x => x.Name == leader.Name && x.Title == leader.Title);
 
-        public static string CheckUsername(string username)
+        public static string FixUsername(string username)
         {
             if (string.IsNullOrEmpty(username)) return username;
 
@@ -90,8 +91,8 @@ namespace DokkanDaily.Helpers
         #region Extension Methods
         public static WebhookMessage ToWebhookPayload(this Challenge challenge) => new()
         {
-            Message = $"# Daily Challenge!\r\n{challenge.GetChallengeText(true)}!\r\n\r\n{InternalConstants.DokkandleDbcRole}\r\n\r\n*via https://dokkandle.net/daily*",
-            FilePath = challenge.TodaysEvent?.WallpaperImagePath
+            Message = challenge is null ? $"Oops! Bot died! Someone ping {InternalConstants.Owner}!" : $"# Daily Challenge!\r\n{challenge.GetChallengeText(true)}!\r\n\r\n{InternalConstants.DokkandleDbcRole}\r\n\r\n*via https://dokkandle.net/daily*",
+            FilePath = challenge?.TodaysEvent?.WallpaperImagePath
         };
 
         public static string AddSasTokenToUri(this string uri, string sasToken)
@@ -155,6 +156,17 @@ namespace DokkanDaily.Helpers
         }
 
         public static bool IsAdministrator(this string id) => InternalConstants.Administrators.Contains(id);
+
+        public static bool IsDuringReset(this TimeOnly targetUtcTime, TimeOnly now)
+        {
+            var end = targetUtcTime.Add(TimeSpan.FromSeconds(Worker.ResetDuration));
+
+            if (targetUtcTime <= end)
+                return now >= targetUtcTime && now < end;
+
+            return now >= targetUtcTime || now < end;
+        }
+
     }
     #endregion
 }

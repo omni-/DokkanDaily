@@ -1,5 +1,6 @@
 ﻿using DokkanDaily.Models.Enums;
 using DokkanDaily.Services.Interfaces;
+using System.Collections.ObjectModel;
 
 namespace DokkanDaily.Services;
 
@@ -10,11 +11,15 @@ public class Worker(
     private readonly ILogger<Worker> _logger = logger;
     private readonly IResetService _resetService = resetService;
 
-    private static readonly Dictionary<WorkType, TimeOnly> WorkSchedule = new()
+    private static readonly Dictionary<WorkType, TimeOnly> _workSchedule = new()
     {
         { WorkType.DailyReset, new(23, 59) },
-        { WorkType.LeaderboardProcessing, new(1, 30) }
+        { WorkType.SeasonEnd, new(1, 30) }
     };
+
+    public static TimeOnly GetWorkSchedule(WorkType workType) => _workSchedule[workType];
+
+    public static int ResetDuration => 60;
 
     private static DateTime GetNextDateTime(DateTime currentDateTime, TimeOnly time)
     {
@@ -37,7 +42,7 @@ public class Worker(
             {
                 if (taskToExecute == WorkType.DailyReset)
                     await _resetService.DoReset();
-                else if (taskToExecute == WorkType.LeaderboardProcessing)
+                else if (taskToExecute == WorkType.SeasonEnd)
                     await _resetService.ProcessLeaderboard();
             }
             catch (Exception e) { _logger.LogCritical(e, "Critical error while attempting to invoke reset service"); }
@@ -47,7 +52,7 @@ public class Worker(
     protected virtual async Task<WorkType> WaitUntilNextScheduledTime(CancellationToken ct)
     {
         var currentDateTime = DateTime.UtcNow;
-        var nextScheduledTime = WorkSchedule
+        var nextScheduledTime = _workSchedule
             .Select(x => new { Task = x.Key, Time = GetNextDateTime(currentDateTime, x.Value) })
             .MinBy(record => record.Time);
 
