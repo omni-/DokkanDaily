@@ -41,49 +41,194 @@
         <Authorized>
             @if (AuthorizedUser)
             {
-                <div class="content" style="color:antiquewhite">
-                    <h3 style="padding-top:1vh;">Welcome back, Admin.</h3>
-                    <div class="settings">
-                        <br />
-                        <label>Set Seed: <input @bind-value=@Seed /><button style="margin-left:5px" @onclick="async () => await Exec(SetSeed)">Set</button></label>
-                        <br />
-                        <label>Roll Seed: <button style="margin-left:5px" @onclick="async () => await Exec(RollSeed)">Roll</button></label>
-                        <br />
-                        <label>Reset Seed: <button style="margin-left:5px" @onclick="async () => await Exec(Reset)">Reset</button></label>
-                        <br />
-                        <label>Refresh Leaderboard: <button style="margin-left:5px" @onclick="async () => await Exec(UpdateLeaderboard)">Refresh</button></label>
-                        <br />
-                        <label>Rerun Daily Reset: <input @bind-value=@Date /><button style="margin-left:5px" @onclick="async () => await Exec(Rerun)">Rerun Daily Reset</button></label>
-                        <br />
-                        <label>Set Daily Type: <input @bind-value=@DailyTypeOverride /><button style="margin-left:5px" @onclick="() => Exec(SetDailyType)">Set</button></label>
-                        <br />
-                        <label>Set Stage: <input @bind-value=@Stage /><button style="margin-left:5px" @onclick="async () => await Exec(SetStage)">Set</button></label>
-                        <br />
-                        <label>Set Unit: <input @bind-value=@Unit /><button style="margin-left:5px" @onclick="async () => await Exec(SetUnit)">Set</button></label>
-                        <br />
-                        <label>Set Link: <input @bind-value=@LinkSkill /><button style="margin-left:5px" @onclick="async () => await Exec(SetLinkSkill)">Set</button></label>
-                        <br />
-                        <label>Set Category: <input @bind-value=@Category /><button style="margin-left:5px" @onclick="async () => await Exec(SetCategory)">Set</button></label>
-                        <br />
-                        <label>Send Daily via Webhook: <button style="margin-left:5px" @onclick="async () => await Exec(SendWebhook)">Send</button></label>
-                        <br />
-                        <label>Send Announcement: <textarea @bind=@Announcement /><button style="margin-left:5px" @onclick="async () => await Exec(SendWebhookCustom)">Send</button><input style="margin-left:5px" @bind=@AddRolePing type="checkbox" /></label>
-                        <br />
-                        <label>Dump challenge<textarea @bind=@Dump /><button style="margin-left:5px" @onclick="async () => await Exec(DumpChallenge)">Dump</button></label>
-                        <hr class="settings-divider" />
-                        <div class="banner-settings">
-                            <h4>Banner Notice</h4>
-                            <label>Show Banner: <input @bind=@BannerNoticeEnabled type="checkbox" /></label>
-                            <br />
-                            <label>Banner Text: <textarea @bind=@BannerNoticeText></textarea><button style="margin-left:5px" @onclick="async () => await Exec(SaveBannerNotice)">Save</button></label>
+                <main class="admin-page">
+                    <header class="admin-header">
+                        <div>
+                            <p class="eyebrow">Admin Console</p>
+                            <h1>Welcome back.</h1>
                         </div>
-                    </div>
-                    <p class="error">@ErrorText</p>
-                </div>
+                        <div class="seed-summary">
+                            <span>Current Seed</span>
+                            <strong>@Seed</strong>
+                        </div>
+                    </header>
+
+                    @if (!string.IsNullOrWhiteSpace(StatusText))
+                    {
+                        <div class="admin-alert admin-alert--success" role="status">@StatusText</div>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(ErrorText))
+                    {
+                        <pre class="admin-alert admin-alert--error">@ErrorText</pre>
+                    }
+
+                    <section class="admin-grid">
+                        <div class="admin-panel">
+                            <div class="panel-heading">
+                                <h2>Daily Operations</h2>
+                                <p>Seed, reset, and leaderboard controls.</p>
+                            </div>
+
+                            <div class="control-stack">
+                                <label class="control-row">
+                                    <span>Set Seed</span>
+                                    <input class="form-control" @bind-value="Seed" inputmode="numeric" />
+                                    <button type="button" class="btn btn-primary" @onclick='async () => await Exec(SetSeed, "Seed saved.")'>Set</button>
+                                </label>
+
+                                <div class="button-row">
+                                    <button type="button" class="btn btn-secondary" @onclick='async () => await Exec(RollSeed, "Seed rolled.")'>Roll Seed</button>
+                                    <button type="button" class="btn btn-outline-light" @onclick='async () => await Exec(Reset, "Seed reset.")'>Reset Seed</button>
+                                    <button type="button" class="btn btn-outline-light" @onclick='async () => await Exec(UpdateLeaderboard, "Leaderboard refreshed.")'>Refresh Leaderboard</button>
+                                </div>
+
+                                <label class="control-row">
+                                    <span>Rerun Reset</span>
+                                    <input class="form-control" @bind-value="Date" inputmode="numeric" placeholder="Days back, default 1" />
+                                    <button type="button" class="btn btn-primary" @onclick='async () => await Exec(Rerun, "Daily reset rerun complete.")'>Run</button>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="admin-panel">
+                            <div class="panel-heading">
+                                <h2>Challenge Overrides</h2>
+                                <p>Replace today's generated challenge pieces.</p>
+                            </div>
+
+                            <div class="control-stack">
+                                <label class="control-row">
+                                    <span>Daily Type</span>
+                                    <select class="form-select" @bind="DailyTypeOverride">
+                                        <option value="">Choose a type</option>
+                                        @foreach (var dailyType in Enum.GetNames<DailyType>())
+                                        {
+                                            <option value="@dailyType">@dailyType</option>
+                                        }
+                                    </select>
+                                    <button type="button" class="btn btn-primary" @onclick='() => Exec(SetDailyType, "Daily type override saved.")'>Set</button>
+                                </label>
+
+                                <label class="control-row">
+                                    <span>Stage</span>
+                                    <input class="form-control" @bind-value="Stage" list="stage-options" placeholder="Stage name" />
+                                    <button type="button" class="btn btn-primary" @onclick='async () => await Exec(SetStage, "Stage override saved.")'>Set</button>
+                                </label>
+
+                                <label class="control-row">
+                                    <span>Leader</span>
+                                    <input class="form-control" @bind-value="Unit" list="leader-options" placeholder="[Title] Name" />
+                                    <button type="button" class="btn btn-primary" @onclick='async () => await Exec(SetUnit, "Leader override saved.")'>Set</button>
+                                </label>
+
+                                <label class="control-row">
+                                    <span>Link Skill</span>
+                                    <input class="form-control" @bind-value="LinkSkill" list="link-options" placeholder="Link skill" />
+                                    <button type="button" class="btn btn-primary" @onclick='async () => await Exec(SetLinkSkill, "Link skill override saved.")'>Set</button>
+                                </label>
+
+                                <label class="control-row">
+                                    <span>Category</span>
+                                    <input class="form-control" @bind-value="Category" list="category-options" placeholder="Category" />
+                                    <button type="button" class="btn btn-primary" @onclick='async () => await Exec(SetCategory, "Category override saved.")'>Set</button>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="admin-panel">
+                            <div class="panel-heading">
+                                <h2>Messaging</h2>
+                                <p>Post daily challenge updates and announcements.</p>
+                            </div>
+
+                            <div class="control-stack">
+                                <div class="split-action">
+                                    <span>Daily Webhook</span>
+                                    <button type="button" class="btn btn-secondary" @onclick='async () => await Exec(SendWebhook, "Daily webhook sent.")'>Send Daily</button>
+                                </div>
+
+                                <label class="field-block">
+                                    <span>Announcement</span>
+                                    <textarea class="form-control" @bind="Announcement" rows="4" placeholder="Announcement text"></textarea>
+                                </label>
+
+                                <div class="inline-options">
+                                    <label class="form-check form-switch">
+                                        <input class="form-check-input" @bind="AddRolePing" type="checkbox" />
+                                        <span class="form-check-label">Ping DBC role</span>
+                                    </label>
+                                    <button type="button" class="btn btn-primary" @onclick='async () => await Exec(SendWebhookCustom, "Announcement sent.")'>Send Announcement</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="admin-panel">
+                            <div class="panel-heading">
+                                <h2>Banner Notice</h2>
+                                <p>Control the site-wide notice shown under the logo.</p>
+                            </div>
+
+                            <div class="control-stack">
+                                <label class="form-check form-switch panel-toggle">
+                                    <input class="form-check-input" @bind="BannerNoticeEnabled" type="checkbox" />
+                                    <span class="form-check-label">Show banner</span>
+                                </label>
+
+                                <label class="field-block">
+                                    <span>Banner Text</span>
+                                    <textarea class="form-control" @bind="BannerNoticeText" rows="4" placeholder="Banner notice text"></textarea>
+                                </label>
+
+                                <button type="button" class="btn btn-primary align-self-end" @onclick='async () => await Exec(SaveBannerNotice, "Banner notice saved.")'>Save Banner</button>
+                            </div>
+                        </div>
+
+                        <div class="admin-panel admin-panel--wide">
+                            <div class="panel-heading">
+                                <h2>Challenge Snapshot</h2>
+                                <p>Generate a quick text dump of the active challenge.</p>
+                            </div>
+
+                            <div class="dump-layout">
+                                <textarea class="form-control dump-output" @bind="Dump" rows="5" readonly placeholder="No dump generated yet."></textarea>
+                                <button type="button" class="btn btn-secondary" @onclick='async () => await Exec(DumpChallenge, "Challenge dump generated.")'>Dump Challenge</button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <datalist id="stage-options">
+                        @foreach (var stage in DokkanConstants.Stages)
+                        {
+                            <option value="@stage.FullName"></option>
+                        }
+                    </datalist>
+
+                    <datalist id="leader-options">
+                        @foreach (var leader in DokkanConstants.Leaders)
+                        {
+                            <option value="@leader.FullName"></option>
+                        }
+                    </datalist>
+
+                    <datalist id="link-options">
+                        @foreach (var linkSkill in DokkanConstants.LinkSkills)
+                        {
+                            <option value="@linkSkill.Name"></option>
+                        }
+                    </datalist>
+
+                    <datalist id="category-options">
+                        @foreach (var category in DokkanConstants.Categories)
+                        {
+                            <option value="@category.Name"></option>
+                        }
+                    </datalist>
+                </main>
             }
         </Authorized>
         <NotAuthorized>
-            <p>Unauthorized.</p>
+            <p class="admin-unauthorized">Unauthorized.</p>
         </NotAuthorized>
     </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
 </Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
@@ -113,6 +258,8 @@
 
     string ErrorText { get; set; }
 
+    string StatusText { get; set; }
+
     string Dump { get; set; }
 
     string BannerNoticeText { get; set; }
@@ -135,36 +282,46 @@
         }
 
         Seed = RngSvc.GetRawSeed().ToString();
+        DailyTypeOverride = RngSvc.GetTodaysDailyType()?.ToString();
         BannerNoticeText = BannerSvc.GetText();
         BannerNoticeEnabled = BannerSvc.ShouldShow();
 
         base.OnInitialized();
     }
 
-    async Task Exec(Func<Task> f)
+    async Task Exec(Func<Task> f, string successText)
     {
         ErrorText = "";
+        StatusText = "";
+
         try
         {
             await f.Invoke();
+            StatusText = successText;
         }
         catch (Exception e)
         {
             ErrorText = Format(e);
         }
+
+        StateHasChanged();
     }
 
-    void Exec(Action f)
+    void Exec(Action f, string successText)
     {
         ErrorText = "";
+        StatusText = "";
+
         try
         {
             f.Invoke();
+            StatusText = successText;
         }
         catch (Exception e)
         {
             ErrorText = Format(e);
         }
+        StateHasChanged();
     }
 
     async Task DumpChallenge()
