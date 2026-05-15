@@ -20,7 +20,7 @@ namespace DokkanDaily.Constants
 
         public static IReadOnlyList<string> Administrators => _administrators.AsReadOnly();
 
-        public static string Owner => $"<@&{_administrators[0]}>";
+        public static string Owner => $"<@{_administrators[0]}>";
 
         private static readonly List<string> _administrators = ["112089455933792256", "263499818234675200"];
 
