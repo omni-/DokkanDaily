@@ -1,18 +1,26 @@
 ﻿using DokkanDaily.Constants;
 using DokkanDaily.Helpers;
 using DokkanDaily.Models;
+using DokkanDaily.Models.Database;
 using DokkanDaily.Repository;
 using DokkanDaily.Services.Interfaces;
+using System.Collections.Concurrent;
 
 namespace DokkanDaily.Services
 {
     public class LeaderboardService(IDokkanDailyRepository repository) : ILeaderboardService
     {
-        private readonly Dictionary<int, List<LeaderboardUser>> _leaderboards = [];
+        // read and written concurrently by every page load and by the nightly reset
+        private readonly ConcurrentDictionary<int, List<LeaderboardUser>> _leaderboards = [];
         private readonly IDokkanDailyRepository _repository = repository;
         private readonly DateTime _season1Start = InternalConstants.Season1StartDate;
 
-        public int GetCurrentSeason() => ((DateTime.UtcNow.Month - _season1Start.Month) + 12 * (DateTime.UtcNow.Year - _season1Start.Year)) + 1;
+        public int GetCurrentSeason()
+        {
+            DateTime now = DateTime.UtcNow;
+
+            return ((now.Month - _season1Start.Month) + 12 * (now.Year - _season1Start.Year)) + 1;
+        }
 
         public async Task<List<LeaderboardUser>> GetCurrentLeaderboard(bool force = false)
         {
@@ -21,15 +29,15 @@ namespace DokkanDaily.Services
 
         public async Task<List<LeaderboardUser>> GetLeaderboardBySeason(int season, bool force = false)
         {
-            if (force || !_leaderboards.TryGetValue(season, out var leaderboard) || leaderboard.Count == 0)
+            if (force || !_leaderboards.TryGetValue(season, out List<LeaderboardUser> leaderboard) || leaderboard.Count == 0)
             {
-                var result = season == 0 ?
+                IEnumerable<DbLeaderboardResult> result = season == 0 ?
                     await _repository.GetHallOfFame()
                     : await _repository.GetLeaderboardByDate(_season1Start.AddMonths(season - 1));
 
                 leaderboard = [];
 
-                foreach (var user in result)
+                foreach (DbLeaderboardResult user in result)
                 {
                     leaderboard.Add(new()
                     {

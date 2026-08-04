@@ -35,6 +35,14 @@ namespace DokkanDaily
             {
                 options.ForwardedHeaders =
                     ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+
+                // App Service fronts the container with a proxy whose address we cannot enumerate,
+                // so the default loopback-only trust list drops the headers entirely - which leaves
+                // the app seeing http and the container IP. The default ForwardLimit of 1 still
+                // makes this safe: only the rightmost entry (the one the platform appended) is
+                // honoured, so a client-supplied X-Forwarded-For cannot spoof the remote address.
+                options.KnownIPNetworks.Clear();
+                options.KnownProxies.Clear();
             });
 
             builder.Services.AddHostedService<Worker>();
@@ -50,16 +58,23 @@ namespace DokkanDaily
             builder.Services.AddTransient<IDokkanDailyRepository, DokkanDailyRepository>();
 
             // TODO: IP tracking to enforce bans (sadface)
-            builder.Services.AddScoped<BlazorAppContext>();
             builder.Services.AddScoped<ProtectedSessionStorage>();
             builder.Services.AddHttpContextAccessor();
+            builder.Services.AddCascadingAuthenticationState();
 
             builder.Services.AddHttpClient<DiscordWebhookClient>();
 
             IConfigurationSection configuration = builder.Configuration.GetSection(nameof(DokkanDailySettings));
 
             builder.Services
-                .Configure<DokkanDailySettings>(configuration)
+                .AddOptions<DokkanDailySettings>()
+                .Bind(configuration)
+                .Validate(
+                    settings => settings.StageRepeatLimitDays > 0 && settings.EventRepeatLimitDays > 0,
+                    "StageRepeatLimitDays and EventRepeatLimitDays must be greater than zero, otherwise challenge repeat protection is silently disabled.")
+                .ValidateOnStart();
+
+            builder.Services
                 .AddAuthentication(opt =>
                 {
                     opt.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;

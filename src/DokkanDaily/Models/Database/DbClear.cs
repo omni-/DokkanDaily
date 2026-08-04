@@ -14,7 +14,7 @@ namespace DokkanDaily.Models.Database
         public string DiscordId { get; init; }
 
         [DataTableIndex(3)]
-        public bool ItemlessClear { get; init; }
+        public bool ItemlessClear { get; set; }
 
         [DataTableIndex(4)]
         public string ClearTime { get; init; }

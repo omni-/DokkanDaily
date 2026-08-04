@@ -2,10 +2,13 @@
 (
     [DailyChallengeId] INT NOT NULL IDENTITY(1, 1),
     [DailyTypeId] INT NOT NULL,
-    [Event] VARCHAR(100) NOT NULL,
+    -- widened to match the stored procedure parameters; long event and leader names would
+    -- otherwise fail the insert outright. Existing rows stay truncated, which is why the
+    -- challenge generator still matches these columns with StartsWith rather than equality.
+    [Event] VARCHAR(150) NOT NULL,
     [Stage] INT NOT NULL,
-    [Date] DATETIME2(2) NOT NULL,
-    [LeaderFullName] VARCHAR(100) NULL,
+    [Date] DATETIME2(2) NOT NULL INDEX DailyChallenge_IX01 NONCLUSTERED,
+    [LeaderFullName] VARCHAR(200) NULL,
     [Category] VARCHAR(50) NULL,
     [LinkSkill] VARCHAR(50) NULL,
 

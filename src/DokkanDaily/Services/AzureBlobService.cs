@@ -1,5 +1,4 @@
 ﻿using Azure;
-using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
@@ -11,6 +10,7 @@ using DokkanDaily.Models.Enums;
 using DokkanDaily.Services.Interfaces;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Options;
+using System.Globalization;
 
 namespace DokkanDaily.Services
 {
@@ -20,11 +20,13 @@ namespace DokkanDaily.Services
         private readonly ILogger<AzureBlobService> _logger;
         private readonly IOcrService _ocrService;
         private readonly string _connectionString;
-        private readonly string _azureKey;
         private readonly string _containerName;
-        private readonly string _accountName;
 
         private const int maxFileSize = 1024 * 8192;
+
+        // OCR is CPU-bound and runs off the request thread, so cap how many uploads can be
+        // analysed at once - otherwise concurrent submissions can saturate every core.
+        private static readonly SemaphoreSlim _ocrThrottle = new(Math.Max(1, Environment.ProcessorCount / 2));
 
         private string TodaysBucketFullName => GetBucketNameForDate(DokkanDailyHelper.GetUtcNowDateTag());
 
@@ -33,9 +35,7 @@ namespace DokkanDaily.Services
             _settings = settings.Value;
             _logger = logger;
             _connectionString = _settings.AzureBlobConnectionString;
-            _azureKey = _settings.AzureBlobKey;
             _containerName = _settings.AzureBlobContainerName;
-            _accountName = _settings.AzureAccountName;
             _ocrService = ocrService;
         }
 
@@ -48,17 +48,19 @@ namespace DokkanDaily.Services
         {
             try
             {
-                var (container, _) = await GetOrCreate(bucket);
+                (BlobContainerClient container, _) = await GetOrCreate(bucket);
 
-                string fileName = DokkanDailyHelper.AddUserAgentToFileName(userFileName, userAgent);
+                string fileName = DokkanDailyHelper.BuildBlobName(userFileName, userAgent, discordId);
 
                 BlobClient blob = container.GetBlobClient(fileName);
 
                 await blob.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
 
                 MemoryStream ms = new();
-                using Stream fileStream = browserFile.OpenReadStream(maxFileSize);
-                await fileStream.CopyToAsync(ms);
+                using (Stream fileStream = browserFile.OpenReadStream(maxFileSize))
+                {
+                    await fileStream.CopyToAsync(ms);
+                }
                 ms.Position = 0;
 
                 _logger.LogInformation("Uploading to `{Container}/{File}`...", container.Name, fileName);
@@ -74,17 +76,23 @@ namespace DokkanDaily.Services
                 // do OCR analysis, dont block the main thread
                 _ = Task.Run(async () =>
                 {
+                    await _ocrThrottle.WaitAsync();
                     try
                     {
-                        var metadata = _ocrService.ProcessImage(ms);
+                        ClearMetadata metadata = _ocrService.ProcessImage(ms);
                         _logger.LogInformation("Finished processing image.");
-                        var tags = BuildTagDict(model, metadata, discordUsername, discordId, remoteIp);
+                        Dictionary<string, string> tags = BuildTagDict(model, metadata, discordUsername, discordId, remoteIp);
                         await blob.SetMetadataAsync(tags);
                         _logger.LogInformation("Finished updating Azure metadata.");
                     }
                     catch (Exception ex)
                     {
                         _logger.LogError(ex, "Unhandled exception in background OCR task");
+                    }
+                    finally
+                    {
+                        _ocrThrottle.Release();
+                        await ms.DisposeAsync();
                     }
                 });
 
@@ -109,26 +117,26 @@ namespace DokkanDaily.Services
 
                     BlobServiceClient client = new(_connectionString);
 
-                    var containerList = client.GetBlobContainers();
-
-                    foreach (var container in containerList)
+                    await foreach (BlobContainerItem container in client.GetBlobContainersAsync())
                     {
-                        string date = string.Join('-', container.Name.Split('-').Skip(2));
-
-                        if (DateTime.TryParse(date, out DateTime parsedDate) && parsedDate < cutoffDate)
+                        if (!TryGetContainerDate(container.Name, out DateTime parsedDate))
                         {
-                            _logger.LogInformation("Container {C} is older than {Days} old. Deleting...", container.Name, daysToKeep);
+                            _logger.LogInformation("Container {C} has no parseable date suffix. Skipping.", container.Name);
+                            continue;
+                        }
 
-                            try
-                            {
-                                await client.DeleteBlobContainerAsync(container.Name);
-                            }
-                            catch (RequestFailedException ex)
-                            {
-                                _logger.LogError("Failed to delete container {C}. Exception: `{@Ex}`", container.Name, ex);
-                            }
+                        if (parsedDate >= cutoffDate) continue;
 
+                        _logger.LogInformation("Container {C} is older than {Days} days. Deleting...", container.Name, daysToKeep);
+
+                        try
+                        {
+                            await client.DeleteBlobContainerAsync(container.Name);
                             _logger.LogInformation("Container {C} deleted.", container.Name);
+                        }
+                        catch (RequestFailedException ex)
+                        {
+                            _logger.LogError(ex, "Failed to delete container {C}.", container.Name);
                         }
                     }
                 }
@@ -143,30 +151,59 @@ namespace DokkanDaily.Services
             }
         }
 
-        public string GetBlobSasTokenByFile(string fileName, string bucket = null)
+        /// <summary>
+        /// Extracts the date suffix from a bucket name of the form <c>{containerName}-{MM-dd-yyyy}</c>.
+        /// The format is fixed, so it must be parsed with the invariant culture - a culture-sensitive
+        /// parse would read <c>03-08-2026</c> as 3 August on a dd-MM-yyyy host and prune live data.
+        /// </summary>
+        private bool TryGetContainerDate(string containerName, out DateTime date)
+        {
+            date = default;
+
+            if (!containerName.StartsWith($"{_containerName}-", StringComparison.Ordinal)) return false;
+
+            string suffix = containerName[(_containerName.Length + 1)..];
+
+            return DateTime.TryParseExact(suffix, "MM-dd-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
+        }
+
+        /// <summary>
+        /// Builds a short-lived read URL for a blob, SAS token included.
+        /// </summary>
+        /// <remarks>
+        /// The client signs the SAS itself using the account key already carried by the connection
+        /// string, so no separate account name or key setting is needed - those were a second copy
+        /// of the same credential and could silently drift out of sync with it.
+        /// </remarks>
+        public string GetBlobReadUri(string fileName, string bucket = null)
         {
             try
             {
+                BlobContainerClient container = new(_connectionString, bucket ?? TodaysBucketFullName);
+                BlobClient blob = container.GetBlobClient(fileName);
+
+                if (!blob.CanGenerateSasUri)
+                {
+                    _logger.LogError("The configured blob connection string carries no account key, so a read SAS cannot be signed for `{File}`.", fileName);
+                    return null;
+                }
+
                 BlobSasBuilder blobSasBuilder = new()
                 {
-                    BlobContainerName = bucket ?? TodaysBucketFullName,
+                    BlobContainerName = container.Name,
                     BlobName = fileName,
-                    ExpiresOn = DateTime.UtcNow.AddMinutes(2)
+                    // backdated to absorb clock skew between this host and Azure Storage
+                    StartsOn = DateTimeOffset.UtcNow.AddMinutes(-5),
+                    ExpiresOn = DateTimeOffset.UtcNow.AddMinutes(15)
                 };
 
                 blobSasBuilder.SetPermissions(BlobSasPermissions.Read);
 
-                var sasToken = blobSasBuilder.ToSasQueryParameters(
-                    new StorageSharedKeyCredential(
-                        _accountName,
-                        _azureKey))
-                    .ToString();
-
-                return sasToken;
+                return blob.GenerateSasUri(blobSasBuilder).ToString();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unhandled exception while getting SAS token");
+                _logger.LogError(ex, "Unhandled exception while generating a read URI for `{File}`", fileName);
                 throw;
             }
         }

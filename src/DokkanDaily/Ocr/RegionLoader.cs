@@ -1,6 +1,7 @@
 ﻿using DokkanDaily.Exceptions;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using System.Collections.Concurrent;
 
 namespace DokkanDaily.Ocr;
 
@@ -24,7 +25,8 @@ internal static class RegionLoader
         }
     };
 
-    private static readonly Dictionary<string, Dictionary<string, RelativeRegion>> cachedMaps = [];
+    // populated from concurrent OCR tasks, so it must not be a plain Dictionary
+    private static readonly ConcurrentDictionary<string, Dictionary<string, RelativeRegion>> cachedMaps = [];
 
     public static Dictionary<string, RelativeRegion> LoadUIRegions(string regionMapPath)
     {
@@ -35,13 +37,14 @@ internal static class RegionLoader
 
         Dictionary<Rgba32, Rectangle> foundRegions = DetectRegionsByColor(regionMap);
 
-        Rectangle? stageClearDetailsRegion = foundRegions[knownRegionColors["stageClearDetails"]];
-        Rectangle? nicknameRegion = foundRegions[knownRegionColors["nickname"]];
-        Rectangle? cleartimeRegion = foundRegions[knownRegionColors["cleartime"]];
-        Rectangle? itemlessRegion = foundRegions[knownRegionColors["itemless"]];
-        if (nicknameRegion == null || cleartimeRegion == null || itemlessRegion == null)
+        // indexing would throw KeyNotFoundException before the guard below could ever fire
+        Rectangle? stageClearDetailsRegion = LookupRegion(foundRegions, "stageClearDetails");
+        Rectangle? nicknameRegion = LookupRegion(foundRegions, "nickname");
+        Rectangle? cleartimeRegion = LookupRegion(foundRegions, "cleartime");
+        Rectangle? itemlessRegion = LookupRegion(foundRegions, "itemless");
+        if (stageClearDetailsRegion is null || nicknameRegion is null || cleartimeRegion is null || itemlessRegion is null)
         {
-            throw new OcrServiceException("Failed to find all required regions in the region map.");
+            throw new OcrServiceException($"Failed to find all required regions in the region map '{regionMapPath}'.");
         }
 
         RelativeRegion normalizedStageClearDetailsRegion = new(
@@ -72,7 +75,7 @@ internal static class RegionLoader
             itemlessRegion.Value.Height / (float)regionMap.Size.Height
         );
 
-        var map = new Dictionary<string, RelativeRegion>
+        Dictionary<string, RelativeRegion> map = new()
         {
             { "stageClearDetails", normalizedStageClearDetailsRegion },
             { "nickname", normalizedNicknameRegion },
@@ -85,10 +88,13 @@ internal static class RegionLoader
         return map;
     }
 
+    private static Rectangle? LookupRegion(Dictionary<Rgba32, Rectangle> foundRegions, string regionName)
+        => foundRegions.TryGetValue(knownRegionColors[regionName], out Rectangle region) ? region : null;
+
     // Detect rectangles for unique colors in the region map
     static Dictionary<Rgba32, Rectangle> DetectRegionsByColor(Image<Rgba32> map)
     {
-        var regions = new Dictionary<Rgba32, Rectangle>();
+        Dictionary<Rgba32, Rectangle> regions = [];
 
         for (int y = 0; y < map.Height; y++)
         {

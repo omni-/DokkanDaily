@@ -22,8 +22,8 @@ namespace Discord.OAuth2
             if (!response.IsSuccessStatusCode)
                 throw new HttpRequestException($"Failed to retrieve Discord user information ({response.StatusCode}).");
 
-            var payload = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-            var context = new OAuthCreatingTicketContext(new ClaimsPrincipal(identity), properties, Context, Scheme, Options, Backchannel, tokens, payload.RootElement);
+            using JsonDocument payload = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+            OAuthCreatingTicketContext context = new(new ClaimsPrincipal(identity), properties, Context, Scheme, Options, Backchannel, tokens, payload.RootElement);
 
             context.RunClaimActions();
 

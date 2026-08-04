@@ -56,8 +56,11 @@ namespace DokkanDaily.Services
                 }
             }
 
-            // delete old clears
-            await _azureBlobService.PruneContainers(30);
+            // delete old clears - an admin rerun should never trigger deletions
+            if (!isAdhoc)
+                await _azureBlobService.PruneContainers(30);
+            else
+                _logger.LogInformation("Adhoc reset. Skipping the prune job.");
 
             DateTime date = DateTime.UtcNow - TimeSpan.FromDays(daysAgo);
 
@@ -86,11 +89,12 @@ namespace DokkanDaily.Services
                         continue;
                     }
 
-                    if (!tags.TryGetValue(AzureConstants.ITEMLESS_TAG, out string itemless))
+                    if (!tags.TryGetValue(AzureConstants.ITEMLESS_TAG, out string itemless) || !bool.TryParse(itemless, out bool itemlessClear))
                     {
-                        _logger.LogWarning("`ITEMLESS` tag missing. Defaulting to false.");
+                        _logger.LogWarning("`ITEMLESS` tag missing or unparseable. Defaulting to false.");
+                        itemlessClear = false;
                     }
-                ;
+
                     if (!tags.TryGetValue(AzureConstants.CLEAR_TIME_TAG, out string clearTime) || !DokkanDailyHelper.TryParseDokkanTimeSpan(clearTime, out TimeSpan timeSpan))
                     {
                         _logger.LogWarning("`CLEARTIME` tag missing. Defaulting to TimeSpan.MaxValue.");
@@ -103,7 +107,7 @@ namespace DokkanDaily.Services
                         DiscordUsername = tags.TryGetValue(AzureConstants.DISCORD_NAME_TAG, out string discord) ? discord : null,
                         DiscordId = tags.TryGetValue(AzureConstants.DISCORD_ID, out string discordId) ? discordId : null,
                         ClearTime = clearTime,
-                        ItemlessClear = bool.Parse(itemless),
+                        ItemlessClear = itemlessClear,
                         ClearTimeSpan = timeSpan
                     });
                 }
@@ -113,20 +117,30 @@ namespace DokkanDaily.Services
                 }
             }
 
-            var dailyWinner = clears.MinBy(x => x.ClearTimeSpan);
-            if (dailyWinner is not null) dailyWinner.IsDailyHighscore = true;
-
-            _logger.LogInformation("Calculated {@Clear} to be the fastest today.", dailyWinner);
+            DbClear dailyWinner = clears.MinBy(x => x.ClearTimeSpan);
+            if (dailyWinner is null)
+                _logger.LogWarning("No valid clears were submitted today. There is no daily highscore to award.");
+            else
+            {
+                dailyWinner.IsDailyHighscore = true;
+                _logger.LogInformation("Calculated {@Clear} to be the fastest today.", dailyWinner);
+            }
 
             try
             {
-                clears = clears
-                    .GroupBy(x => x.DokkanNickname)
+                clears = [.. clears
+                    .GroupBy(GetIdentityKey)
                     .Select(group =>
-                        group.FirstOrDefault(x => x.IsDailyHighscore)
-                        ?? group.FirstOrDefault(x => x.ItemlessClear)
-                        ?? group.MinBy(x => x.ClearTimeSpan))
-                    .ToList();
+                    {
+                        DbClear best = group.FirstOrDefault(x => x.IsDailyHighscore)
+                            ?? group.MinBy(x => x.ClearTimeSpan);
+
+                        // only one row per user per day is stored, so carry the itemless point across
+                        // the whole day's submissions rather than losing it to the faster run
+                        best.ItemlessClear = group.Any(x => x.ItemlessClear);
+
+                        return best;
+                    })];
 
                 await _repository.InsertDailyClears(clears, date);
             }
@@ -143,6 +157,20 @@ namespace DokkanDaily.Services
             _logger.LogInformation("Leaderboard updated.");
 
             _logger.LogInformation("Reset completed with no critical errors.");
+        }
+
+        /// <summary>
+        /// Groups a day's clears by the strongest identity available. Falling back through Discord id
+        /// and username keeps clears whose nickname could not be read from all collapsing onto a
+        /// single null key, which would silently discard every one of them but the first.
+        /// </summary>
+        private static string GetIdentityKey(DbClear clear)
+        {
+            if (!string.IsNullOrWhiteSpace(clear.DiscordId)) return $"discordid:{clear.DiscordId}";
+
+            if (!string.IsNullOrWhiteSpace(clear.DiscordUsername)) return $"discord:{clear.DiscordUsername}";
+
+            return $"nickname:{clear.DokkanNickname}";
         }
 
         public async Task ProcessLeaderboard()

@@ -3,29 +3,26 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 443
 
-ARG AzureAccountName
-ARG AzureConnectionString
-ARG BlobContainerName
-ARG BlobKey
-ARG SqlServerConnectionString
-ARG OAuth2ClientSecret
-ARG OAuth2ClientId
-ARG WebhookUrl
-ARG EnableJpParsing
-ARG StageRepeatLimit
-ARG EventRepeatLimit
+# Configuration is supplied at RUNTIME, not baked in here.
+#
+# Anything passed as a build ARG and written to ENV is recoverable from the published image with
+# `docker history` / `docker inspect`, and old image digests keep the old values forever - so
+# rotating a secret would mean rebuilding and purging tags rather than editing a setting.
+#
+# Set these as App Service application settings (or `docker run -e`) instead:
+#   DOTNET_DokkanDailySettings__AzureBlobConnectionString
+#   DOTNET_DokkanDailySettings__AzureBlobContainerName
+#   DOTNET_DokkanDailySettings__SqlServerConnectionString
+#   DOTNET_DokkanDailySettings__OAuth2ClientSecret
+#   DOTNET_DokkanDailySettings__OAuth2ClientId
+#   DOTNET_DokkanDailySettings__WebhookUrl
+#
+# Non-secret tuning has defaults in appsettings.json and can be overridden the same way:
+#   DOTNET_DokkanDailySettings__StageRepeatLimitDays
+#   DOTNET_DokkanDailySettings__EventRepeatLimitDays
+#   DOTNET_DokkanDailySettings__FeatureFlags__EnableJapaneseParsing
+#   DOTNET_DokkanDailySettings__FeatureFlags__EnablePruneJob
 
-ENV DOTNET_DokkanDailySettings__AzureAccountName=$AzureAccountName
-ENV DOTNET_DokkanDailySettings__AzureBlobConnectionString=$AzureConnectionString
-ENV DOTNET_DokkanDailySettings__AzureBlobContainerName=$BlobContainerName
-ENV DOTNET_DokkanDailySettings__AzureBlobKey=$BlobKey
-ENV DOTNET_DokkanDailySettings__SqlServerConnectionString=$SqlServerConnectionString
-ENV DOTNET_DokkanDailySettings__OAuth2ClientSecret=$OAuth2ClientSecret
-ENV DOTNET_DokkanDailySettings__OAuth2ClientId=$OAuth2ClientId
-ENV DOTNET_DokkanDailySettings__WebhookUrl=$WebhookUrl
-ENV DOTNET_DokkanDailySettings__StageRepeatLimitDays=$StageRepeatLimit
-ENV DOTNET_DokkanDailySettings__EventRepeatLimitDays=$EventRepeatLimit
-ENV DOTNET_DokkanDailySettings__FeatureFlags__EnableJapaneseParsing=$EnableJpParsing
 ENV LD_LIBRARY_PATH="/lib:/usr/lib:/usr/local/lib"
 
 RUN apt-get update \

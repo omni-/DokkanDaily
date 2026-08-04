@@ -10,20 +10,25 @@ namespace DokkanDaily.Helpers
 {
     public static partial class DokkanDailyHelper
     {
+        private const int MaxBlobNameLength = 200;
+
         #region Regex
         [GeneratedRegex("[^a-zA-Z0-9-]")]
         public static partial Regex AlphaNumericRegex();
 
         [GeneratedRegex(@"([UDO]BC\s?[\*\+]\s?).*")]
         public static partial Regex DbcNicknameTagRegex();
+
+        [GeneratedRegex("[^a-zA-Z0-9._-]")]
+        public static partial Regex UnsafeBlobNameCharRegex();
         #endregion
 
         #region Helper Functions
         public static IEnumerable<Unit> BuildCharacterDb()
         {
-            Stream s = File.OpenRead("./wwwroot/data/DokkanCharacterData.json");
+            using Stream s = File.OpenRead("./wwwroot/data/DokkanCharacterData.json");
 
-            var result = JsonSerializer.Deserialize<IEnumerable<Unit>>(s, InternalConstants.DefaultSerializeOptions);
+            IEnumerable<Unit> result = JsonSerializer.Deserialize<IEnumerable<Unit>>(s, InternalConstants.DefaultSerializeOptions);
 
             foreach (var unit in result)
                 if (unit.ImageUrl.Contains("static."))
@@ -59,11 +64,38 @@ namespace DokkanDaily.Helpers
             return $"{name}{agentPart}{ext}";
         }
 
+        /// <summary>
+        /// Builds a storage-safe blob name from a client-supplied file name. Path separators and
+        /// other unsafe characters are stripped, and the uploader's Discord id - when known - scopes
+        /// the blob into its own virtual directory so one user cannot overwrite another user's clear
+        /// by submitting a file with the same name.
+        /// </summary>
+        public static string BuildBlobName(string userFileName, string userAgent, string discordId)
+        {
+            string named = AddUserAgentToFileName(userFileName, userAgent);
+            string safe = UnsafeBlobNameCharRegex().Replace(named ?? "", "").TrimStart('.');
+
+            if (safe.Length > MaxBlobNameLength) safe = safe[^MaxBlobNameLength..];
+
+            if (string.IsNullOrWhiteSpace(safe)) safe = "clear.png";
+
+            if (string.IsNullOrWhiteSpace(discordId)) return safe;
+
+            return $"{AlphaNumericRegex().Replace(discordId, "")}/{safe}";
+        }
+
         public static Unit GetUnit(string name, string title)
             => DokkanConstants.UnitDB.First(x => x.Name == name && x.Title == title);
 
         public static Unit GetUnit(Leader leader)
             => DokkanConstants.UnitDB.First(x => x.Name == leader.Name && x.Title == leader.Title);
+
+        /// <summary>
+        /// Resolves the unit backing a leader, returning <see langword="null"/> when the leader is
+        /// unset or has no matching entry in the character database.
+        /// </summary>
+        public static Unit GetUnitOrDefault(Leader leader)
+            => leader is null ? null : DokkanConstants.UnitDB.FirstOrDefault(x => x.Name == leader.Name && x.Title == leader.Title);
 
         public static string FixUsername(string username)
         {
@@ -94,9 +126,6 @@ namespace DokkanDaily.Helpers
             Message = challenge is null ? $"Oops! Bot died! Someone ping {InternalConstants.Owner}!" : $"# Daily Challenge!\r\n{challenge.GetChallengeText(true)}!\r\n\r\n{InternalConstants.DokkandleDbcRole}\r\n\r\n*via https://dokkandle.net/daily*",
             FilePath = challenge?.TodaysEvent?.WallpaperImagePath
         };
-
-        public static string AddSasTokenToUri(this string uri, string sasToken)
-            => $"{uri}?{sasToken}";
 
         public static string GetDisplayName(this LeaderboardUser leaderboardUser, bool usePingFormat = false) => string.IsNullOrWhiteSpace(leaderboardUser.DiscordUsername) ?
             leaderboardUser.DokkanNickname

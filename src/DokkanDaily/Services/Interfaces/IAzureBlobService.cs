@@ -12,7 +12,7 @@ namespace DokkanDaily.Services.Interfaces
 
         Task<int> GetFileCountForTag(string tagName, string bucket = null);
 
-        string GetBlobSasTokenByFile(string fileName, string bucket = null);
+        string GetBlobReadUri(string fileName, string bucket = null);
 
         Task PruneContainers(int daysToKeep);
 

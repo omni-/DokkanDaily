@@ -15,6 +15,7 @@
 @inject IRngHelperService RngSvc
 @inject AuthenticationStateProvider authStateProvider;
 @inject IHttpContextAccessor HttpContextAccessor
+@inject ILogger<Clears> Logger
 
 <PageTitle>Dokkandle!</PageTitle>
 <style>
@@ -65,7 +66,7 @@
                 @foreach (var attachment in fileUploadViewModels)
                 {
                     <div class="card">
-                        <img style="object-fit: cover;" src="@GetImgPath(attachment)" @onclick="() => OnFileViewClick(attachment)" />
+                        <img style="object-fit: cover;" src="@attachment.SasUrl" @onclick="() => OnFileViewClick(attachment)" />
                         @*                         @if (@attachment.Tags.GetTagValueOrDefault(DDConstants.USER_NAME_TAG) != null)
                         {
                             <div class="container">
@@ -89,9 +90,7 @@
 @code {
     private string warningMessage = "";
     private string displayMessage = "";
-    private List<IBrowserFile> loadedFiles = new();
     private bool fileLoading;
-    private string Message = "No file(s) selected";
     private IReadOnlyList<IBrowserFile> selectedFiles = [];
     private List<FileUploadViewModel> fileUploadViewModels = [];
     private const string defaultWarning = "Something went wrong! Please try again.";
@@ -123,35 +122,41 @@
                     {
                         FileName = f.Name,
                         FileStorageUrl = f.Uri.ToString(),
+                        SasUrl = BlobSvc.GetBlobReadUri(f.Name),
                         Tags = tags.Value.Tags.Concat(metadata.Value.Metadata).ToDictionary()
                     });
                 }
                 return ret;
             }).ConfigureAwait(false);
         }
-        catch { }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to load today's clears. The gallery will render empty.");
+            warningMessage = defaultWarning;
+        }
     }
 
     private void OnInputFileChange(InputFileChangeEventArgs e)
     {
         selectedFiles = e.GetMultipleFiles();
-        Message = $"{selectedFiles.Count} file(s) selected";
+        warningMessage = "";
+        displayMessage = "";
         this.StateHasChanged();
     }
-    private async void OnUploadSubmit()
+    private async Task OnUploadSubmit()
     {
-        string remoteUserAgent = null;
-
-        try { remoteUserAgent = await jsRuntime.InvokeAsync<string>("getUserAgent"); } catch { }
-
-        string discordUsername = await authStateProvider.GetUsernameFromDiscordAuthClaim();
-        string discordId = await authStateProvider.GetIdFromDiscordAuthClaim();
+        warningMessage = "";
+        displayMessage = "";
 
         var file = selectedFiles.FirstOrDefault();
-        if (file == null) return;
+        if (file == null)
+        {
+            warningMessage = "Please choose a file first";
+            return;
+        }
 
         List<string> allowedFileTypes = [".jpg", ".jpeg", ".png", ".webp", ".avif"];
-        if (!allowedFileTypes.Contains(Path.GetExtension(file.Name)))
+        if (!allowedFileTypes.Contains(Path.GetExtension(file.Name), StringComparer.OrdinalIgnoreCase))
         {
             warningMessage = $"Unsupported file type! Supported filetypes are {string.Join(',', allowedFileTypes)}";
             selectedFiles = [];
@@ -163,6 +168,13 @@
 
         try
         {
+            string remoteUserAgent = null;
+            try { remoteUserAgent = await jsRuntime.InvokeAsync<string>("getUserAgent"); }
+            catch (Exception ex) { Logger.LogWarning(ex, "Could not read the user agent. Uploading without it."); }
+
+            string discordUsername = await authStateProvider.GetUsernameFromDiscordAuthClaim();
+            string discordId = await authStateProvider.GetIdFromDiscordAuthClaim();
+
             var blobClient = await BlobSvc.UploadToAzureAsync(
                 file.Name,
                 file.ContentType,
@@ -176,43 +188,40 @@
             {
                 FileName = blobClient.Name,
                 FileStorageUrl = blobClient.Uri.ToString(),
+                SasUrl = BlobSvc.GetBlobReadUri(blobClient.Name),
                 ContentType = file.ContentType
             };
 
             fileUploadViewModels.Add(fileUploadViewModel);
-            Message = file.Name + " Uploaded!!";
+            displayMessage = $"{file.Name} uploaded";
+            selectedFiles = [];
         }
         catch (Exception ex)
         {
-            warningMessage = ex.Message;
+            // the raw message can carry storage account and container names, so keep it server-side
+            Logger.LogError(ex, "Failed to upload clear `{File}`", file.Name);
+            warningMessage = defaultWarning;
         }
 
         fileLoading = false;
         this.StateHasChanged();
     }
 
-    private string GetImgPath(FileUploadViewModel attachment)
-    {
-        var sasToken = BlobSvc.GetBlobSasTokenByFile(attachment.FileName);
-
-        return attachment?.FileStorageUrl?.AddSasTokenToUri(sasToken);
-    }
-
-    private async void OnFileViewClick(FileUploadViewModel attachment)
+    private async Task OnFileViewClick(FileUploadViewModel attachment)
     {
         try
         {
-            var sasToken = BlobSvc.GetBlobSasTokenByFile(attachment.FileName);
-            if (sasToken != null)
+            // re-signed rather than reusing attachment.SasUrl, which may have expired by now
+            string fileUrl = BlobSvc.GetBlobReadUri(attachment.FileName);
+            if (fileUrl is not null)
             {
-                string fileUrl = attachment.FileStorageUrl + "?" + sasToken;
                 await jsRuntime.InvokeVoidAsync("open", fileUrl, "_blank");
             }
-
         }
         catch (Exception ex)
         {
-            warningMessage = ex.Message;
+            Logger.LogError(ex, "Failed to open clear `{File}`", attachment.FileName);
+            warningMessage = defaultWarning;
         }
 
         this.StateHasChanged();

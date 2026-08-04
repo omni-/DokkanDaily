@@ -277,8 +277,12 @@
             AuthorizedUser = true;
         }
 
-        if (!AuthorizedUser) {
+        if (!AuthorizedUser)
+        {
+            // NavigateTo does not unwind this method, so stop here rather than carrying on
+            // populating admin state for a user who is being redirected away
             NavManager.NavigateTo("/", false);
+            return;
         }
 
         Seed = RngSvc.GetRawSeed().ToString();

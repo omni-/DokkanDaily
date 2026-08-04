@@ -27,42 +27,35 @@ namespace DokkanDailyTests
         }
 
         [Test]
-        public void TestRngService()
+        public async Task TestRngService()
         {
             var mock = mocks.Create<IDokkanDailyRepository>();
-            IRngHelperService rngHelperService = new RngHelperServiceV2(mock.Object, Options.Create<DokkanDailySettings>(new()), mocks.Create<ILogger<RngHelperServiceV2>>().Object);
+            IRngHelperService rngHelperService = new RngHelperServiceV2(mock.Object, Options.Create<DokkanDailySettings>(new()), mocks.Create<ILogger<RngHelperServiceV2>>(MockBehavior.Loose).Object);
 
             mock
                 .Setup(x => x.GetChallengeList(It.IsAny<DateTime?>()))
                 .Returns(Task.FromResult<IEnumerable<DbChallenge>>([]));
 
             var seed1 = rngHelperService.GetRawSeed();
-            rngHelperService.RollDailySeed();
+            await rngHelperService.RollDailySeed();
             var seed2 = rngHelperService.GetRawSeed();
 
             Assert.That(seed1, Is.Not.EqualTo(seed2));
 
-            List<string> leaders = [];
-            List<string> categories = [];
-            List<string> linkSkills = [];
-            List<string> dailyTypes = [];
+            // these were previously invoked without awaiting, so any exception they threw was
+            // swallowed into an unobserved Task and the assertions below raced the mutations
+            await rngHelperService.RollDailySeed();
 
-            Assert.DoesNotThrow(() =>
-            {
-                rngHelperService.RollDailySeed();
+            await rngHelperService.UpdateDailyChallenge();
 
-                rngHelperService.UpdateDailyChallenge();
+            await rngHelperService.GetDailyChallenge();
 
-                rngHelperService.GetDailyChallenge();
+            await rngHelperService.SetDailySeed(9);
 
-                rngHelperService.SetDailySeed(9);
+            await rngHelperService.Reset();
 
-                rngHelperService.Reset();
-
-                Assert.That(rngHelperService.GetRawSeed(), Is.EqualTo(seed1));
-
-                dailyTypes.Add(rngHelperService.GetTodaysDailyType().ToString());
-            });
+            Assert.That(rngHelperService.GetRawSeed(), Is.EqualTo(seed1));
+            Assert.That(rngHelperService.GetTodaysDailyType(), Is.Not.Null);
         }
 
         [Test]
@@ -231,10 +224,12 @@ namespace DokkanDailyTests
             Assert.DoesNotThrowAsync(() => tdrs.DoReset());
 
 
+            // one row per user per day: their best time, with the itemless flag OR'd across every
+            // clear they submitted so a faster run using items cannot cost them the itemless point
             List<DbClear> exp =
             [
-                new() { DokkanNickname = "omni", ClearTime = "0'20\"10.8", IsDailyHighscore = false, ItemlessClear = true, ClearTimeSpan = new TimeSpan(0, 0, 20, 10, 800) },
-                new() { DokkanNickname = "owl", ClearTime = "0'18\"10.8", IsDailyHighscore = true, ItemlessClear = false, ClearTimeSpan = new TimeSpan(0, 0, 18, 10, 800) },
+                new() { DokkanNickname = "omni", ClearTime = "0'19\"10.8", IsDailyHighscore = false, ItemlessClear = true, ClearTimeSpan = new TimeSpan(0, 0, 19, 10, 800) },
+                new() { DokkanNickname = "owl", ClearTime = "0'18\"10.8", IsDailyHighscore = true, ItemlessClear = true, ClearTimeSpan = new TimeSpan(0, 0, 18, 10, 800) },
                 new() { DokkanNickname = "rabs", ClearTime = "0'30\"10.8", IsDailyHighscore = false, ItemlessClear = true, ClearTimeSpan = new TimeSpan(0, 0, 30, 10, 800) }
             ];
 
@@ -258,6 +253,66 @@ namespace DokkanDailyTests
 
             webhookMock.Verify(x => x.PostAsync(It.IsAny<WebhookMessage>()), Times.Once);
             webhookMock.VerifyNoOtherCalls();
+        }
+
+        [Test]
+        public void DiscordUsersWithNoReadableNicknameAreNotCollapsedTogether()
+        {
+            // Arrange - two logged in users whose nickname the OCR could not read. Grouping on
+            // DokkanNickname alone put both on the same null key and discarded one of them.
+            var abMock = mocks.Create<IAzureBlobService>();
+            var repoMock = mocks.Create<IDokkanDailyRepository>();
+            var lbMock = mocks.Create<ILeaderboardService>();
+            var rngMock = mocks.Create<IRngHelperService>();
+            var loggerMock = mocks.Create<ILogger<ResetService>>(MockBehavior.Loose);
+            var loggerMock2 = mocks.Create<ILogger<DiscordWebhookClient>>(MockBehavior.Loose);
+            var httpMock = mocks.Create<HttpClient>(MockBehavior.Loose);
+            var webhookMock = mocks.Create<DiscordWebhookClient>(loggerMock2.Object, httpMock.Object, Options.Create<DokkanDailySettings>(new() { WebhookUrl = "http://foo.bar" }));
+
+            IResetService tdrs = new ResetService(abMock.Object, repoMock.Object, lbMock.Object, rngMock.Object, webhookMock.Object, loggerMock.Object);
+
+            List<DbClear> actual = [];
+
+            abMock
+                .Setup(x => x.GetFilesForTag(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync([
+                    new MockBlobClient(new Dictionary<string, string>()
+                    {
+                        { AzureConstants.DISCORD_NAME_TAG, "alice" },
+                        { AzureConstants.DISCORD_ID, "1" },
+                        { AzureConstants.CLEAR_TIME_TAG, "0'20\"10.8" },
+                        { AzureConstants.ITEMLESS_TAG, "false" }
+                    }),
+                    new MockBlobClient(new Dictionary<string, string>()
+                    {
+                        { AzureConstants.DISCORD_NAME_TAG, "bob" },
+                        { AzureConstants.DISCORD_ID, "2" },
+                        { AzureConstants.CLEAR_TIME_TAG, "0'30\"10.8" },
+                        { AzureConstants.ITEMLESS_TAG, "false" }
+                    }),
+                ]);
+            abMock.Setup(x => x.PruneContainers(30)).Returns(Task.CompletedTask);
+            abMock.Setup(x => x.GetBucketNameForDate(It.IsAny<string>())).Returns(It.IsAny<string>());
+
+            repoMock
+                .Setup(x => x.InsertDailyClears(It.IsAny<List<DbClear>>(), It.IsAny<DateTime>()))
+                .Returns(Task.CompletedTask)
+                .Callback<IEnumerable<DbClear>, DateTime>((x, y) => actual = x.ToList());
+            repoMock.Setup(x => x.InsertChallenge(It.IsAny<Challenge>())).Returns(Task.CompletedTask);
+
+            Challenge challenge = new(DailyType.Character, new("foo", Tier.D, "LGE"), new("bar", Tier.D), new("baz", Tier.D), new("quz", "", Tier.D), new(), DateTime.Now);
+            rngMock.Setup(x => x.UpdateDailyChallenge()).ReturnsAsync(challenge);
+            rngMock.Setup(x => x.GetDailyChallenge()).ReturnsAsync(challenge);
+
+            lbMock.Setup(x => x.GetCurrentLeaderboard(It.IsAny<bool>())).Returns(Task.FromResult<List<LeaderboardUser>>([]));
+            webhookMock.Setup(x => x.PostAsync(It.IsAny<WebhookMessage>())).Returns(Task.CompletedTask);
+
+            // Act
+            Assert.DoesNotThrowAsync(() => tdrs.DoReset());
+
+            // Assert
+            Assert.That(actual, Has.Count.EqualTo(2));
+            Assert.That(actual.Select(x => x.DiscordUsername), Is.EquivalentTo(new[] { "alice", "bob" }));
         }
     }
 }

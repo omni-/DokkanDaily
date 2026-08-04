@@ -14,6 +14,7 @@
 @inject IAzureBlobService BlobSvc
 @inject IJSRuntime JsRuntime
 @inject NavigationManager NavManager
+@inject ILogger<StageChallenge> Logger
 
 <PageTitle>Dokkandle!</PageTitle>
 
@@ -47,19 +48,23 @@ else
             }
             @if (TodaysChallenge.DailyType == DailyType.Character)
             {
-                <p class="challenge-text"><b>Challenge!</b> build a team using 
-                    <span class="card-art">
-                        <img class="card-thumb-bg" src="@BgUrl" />
-                        <img class="card-thumb-character" src="@TodaysChallenge.TodaysUnit.ImageUrl" />
-                        <img class="card-rarity" src="@RarityUrl" />
-                        <img class="card-element" src="@TypeUrl" />
-                        @if (TodaysChallenge.TodaysUnit.Rarity == "LR")
-                        {
-                            <img class="card-lightning" src="images/misc/LR_lightning.png"/>
-                        }
-                    </span> <b style="color:@typeColor">[@TodaysChallenge.Leader.Title] @TodaysChallenge?.Leader?.Name</b> as the Leader and defeat <b>@TodaysChallenge?.TodaysEvent?.Name</b>, <b>Stage @TodaysChallenge?.TodaysEvent?.StageNumber</b>!<div class="challenge-text friend-text">(Only one required - you may use a Friend Unit)</div></p>
+                <p class="challenge-text"><b>Challenge!</b> build a team using
+                    @if (TodaysChallenge.TodaysUnit is not null)
+                    {
+                        <span class="card-art">
+                            <img class="card-thumb-bg" src="@BgUrl" />
+                            <img class="card-thumb-character" src="@TodaysChallenge.TodaysUnit.ImageUrl" />
+                            <img class="card-rarity" src="@RarityUrl" />
+                            <img class="card-element" src="@TypeUrl" />
+                            @if (TodaysChallenge.TodaysUnit.Rarity == "LR")
+                            {
+                                <img class="card-lightning" src="images/misc/LR_lightning.png"/>
+                            }
+                        </span>
+                    }
+                    <b style="color:@typeColor">[@TodaysChallenge?.Leader?.Title] @TodaysChallenge?.Leader?.Name</b> as the Leader and defeat <b>@TodaysChallenge?.TodaysEvent?.Name</b>, <b>Stage @TodaysChallenge?.TodaysEvent?.StageNumber</b>!<div class="challenge-text friend-text">(Only one required - you may use a Friend Unit)</div></p>
             }
-            @if ( TodaysChallenge?.TodaysEvent?.WallpaperImagePath is not null)
+            @if (TodaysChallenge?.TodaysEvent is not null)
             {
                 <p>
                     <img class="event-banner" src="@TodaysChallenge.TodaysEvent.BannerImagePath" />
@@ -86,7 +91,9 @@ else
 
     bool Executing { get; set; }
 
-    string typeColor => DokkanConstants.TypeHexMap[TodaysChallenge.TodaysUnit.DokkanType];
+    string typeColor => TodaysChallenge?.TodaysUnit is null
+        ? null
+        : DokkanConstants.TypeHexMap.GetValueOrDefault(TodaysChallenge.TodaysUnit.DokkanType);
 
     int dailyFileCount = 0;
 
@@ -102,8 +109,6 @@ else
 
     string TypeUrl => $"images/misc/{TodaysChallenge?.TodaysUnit?.Class}_{TodaysChallenge?.TodaysUnit?.Type}.png";
 
-    string EzaIconUrl => "";
-
     string TodaysDailyType => TodaysChallenge is null ? null : TodaysChallenge.DailyType.ToString();
 
     protected override async Task OnInitializedAsync()
@@ -116,7 +121,10 @@ else
                 .GetFileCountForTag(DokkanDailyHelper.GetUtcNowDateTag())
                 .ConfigureAwait(false);
         }
-        catch { }
+        catch (Exception ex)
+        {
+            Logger.LogWarning(ex, "Could not read today's clear count. Defaulting to 0.");
+        }
 
         base.OnInitialized();
     }

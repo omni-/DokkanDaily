@@ -26,6 +26,27 @@ namespace DokkanDailyTests
             Assert.That(DokkanDailyHelper.AddUserAgentToFileName("cats.png", null), Is.EqualTo("cats.png"));
         }
 
+        [Test]
+        [TestCase("cats.png", null, null, "cats.png")]
+        [TestCase("../../escape.png", null, null, "escape.png")]
+        [TestCase("a/b/c.png", null, null, "abc.png")]
+        [TestCase("....png", null, null, "png")]
+        [TestCase("cats.png", null, "112089455933792256", "112089455933792256/cats.png")]
+        public void BlobNamesAreSanitizedAndScopedToTheUploader(string file, string agent, string discordId, string expected)
+        {
+            string output = DokkanDailyHelper.BuildBlobName(file, agent, discordId);
+
+            Assert.That(output, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void BlobNamesNeverEscapeTheOwnerDirectory()
+        {
+            string output = DokkanDailyHelper.BuildBlobName("../../../other-user/steal.png", null, "42");
+
+            Assert.That(output, Does.StartWith("42/"));
+            Assert.That(output, Does.Not.Contain(".."));
+        }
 
         [Test]
         public void CanBuildCharacterDb()

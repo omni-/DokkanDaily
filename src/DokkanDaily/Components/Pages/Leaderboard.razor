@@ -8,6 +8,7 @@
 
 @inject ILeaderboardService LeaderboardSvc;
 @inject IRngHelperService RngSvc;
+@inject ILogger<Leaderboard> Logger
 
 <PageTitle>Dokkandle!</PageTitle>
 
@@ -52,23 +53,39 @@
 @code {
     List<LeaderboardUser> leaderboard;
 
+    const string defaultError = "Sorry, the leaderboard couldn't be loaded right now. Please try again shortly.";
+
     string displayText => string.IsNullOrEmpty(errorText) ? "Sorry, there's nothing here yet!" : errorText;
     string errorText;
 
     string pluralize(string s, int ct) => ct > 1 ? $"{s}s" : s; 
 
-    async void incSeason()
+    async Task incSeason()
     {
         if (selectedSeason == currentSeason) return;
-        selectedSeason++;
-        leaderboard = await LeaderboardSvc.GetLeaderboardBySeason(selectedSeason);
-        StateHasChanged();
+        await LoadSeason(selectedSeason + 1);
     }
-    async void decSeason()
+
+    async Task decSeason()
     {
         if (selectedSeason == 0) return;
-        selectedSeason--;
-        leaderboard = await LeaderboardSvc.GetLeaderboardBySeason(selectedSeason);
+        await LoadSeason(selectedSeason - 1);
+    }
+
+    async Task LoadSeason(int season)
+    {
+        try
+        {
+            leaderboard = await LeaderboardSvc.GetLeaderboardBySeason(season);
+            selectedSeason = season;
+            errorText = null;
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Failed to load the leaderboard for season {Season}", season);
+            errorText = defaultError;
+        }
+
         StateHasChanged();
     }
 
@@ -87,6 +104,11 @@
             currentSeason = LeaderboardSvc.GetCurrentSeason();
             selectedSeason = currentSeason;
         }
-        catch(Exception e) { errorText = e.Message; }
+        catch (Exception e)
+        {
+            // the raw message can carry connection details, so keep it server-side
+            Logger.LogError(e, "Failed to load the current leaderboard");
+            errorText = defaultError;
+        }
     }
 }
