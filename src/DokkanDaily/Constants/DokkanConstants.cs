@@ -190,6 +190,8 @@ namespace DokkanDaily.Constants
             new("Breakthrough Amidst Adversity", "Piccolo", Tier.A),
             new("Overwhelming Force of Destruction", "Beerus", Tier.S),
             new("Epic Battle of Divine Scale", "Super Saiyan God Goku", Tier.Z),
+            new("Grand Assault Leading Allies", "Super Saiyan 3 Goku (Mini) (DAIMA)", Tier.Z),
+            new("Blinding Radiance of the Decisive Strike", "Gohan (Beast)", Tier.Z),
             //extreme
             new("Crashing Maelstrom", "Omega Shenron", Tier.E),
             new("Emperor's True Splendor", "Golden Frieza (Angel)", Tier.F),
@@ -257,6 +259,9 @@ namespace DokkanDaily.Constants
             new("Fated Showdown", "Majin Vegeta + Super Saiyan 2 Goku (Angel)", Tier.Z),
             new("Inconceivable Saiyan Power", "Vegeta + Nappa", Tier.S),
             new("Super Saiyan God of Successive Mutations", "Super Saiyan God Vegeta (Ultra Supervillain)", Tier.S),
+            new("Earth-Blanketing Army", "Metal Cooler Army", Tier.Z),
+            new("Supreme Tree of Might", "Turles", Tier.S),
+            new("Cataclysmic Calamity", "Cell Max", Tier.Z),
         ];
         #endregion
 
@@ -441,6 +446,24 @@ namespace DokkanDaily.Constants
             new("Seriously Serious! All-Out Battles 2", Tier.S, "Serious2", 3),
             new("Seriously Serious! All-Out Battles 2", Tier.S, "Serious2", 4),
             new("Seriously Serious! All-Out Battles 2", Tier.A, "Serious2", 5),
+            new("Ultimate Red Zone: RE [GT Edition]", Tier.S, "GT_RZ_RE"),
+            new("Ultimate Red Zone: RE [GT Edition]", Tier.Z, "GT_RZ_RE", 2),
+            new("Ultimate Red Zone: RE [GT Edition]", Tier.ZPlus, "GT_RZ_RE", 3),
+            new("Supreme Magnificent Battle: RE [Universe Survival Saga]", Tier.Z, "SMB_USS_RE"),
+            new("Supreme Magnificent Battle: RE [Universe Survival Saga]", Tier.Z, "SMB_USS_RE", 2),
+            new("Supreme Magnificent Battle: RE [Universe Survival Saga]", Tier.ZPlus, "SMB_USS_RE", 3),
+            new("Supreme Magnificent Battle: RE [vs. Five Great Super Saiyans]", Tier.S, "SMB_5SS_RE"),
+            new("Supreme Magnificent Battle: RE [vs. Five Great Super Saiyans]", Tier.Z, "SMB_5SS_RE", 2),
+            new("Supreme Magnificent Battle: RE [vs. Five Great Super Saiyans]", Tier.ZPlus, "SMB_5SS_RE", 3),
+            new("Supreme Magnificent Battle: RE [Battle of Gods]", Tier.S, "SMB_BOG_RE"),
+            new("Supreme Magnificent Battle: RE [Battle of Gods]", Tier.Z, "SMB_BOG_RE", 2),
+            new("Supreme Magnificent Battle: RE [The Tree of Might]", Tier.S, "SMB_TOM_RE"),
+            new("Supreme Magnificent Battle: RE [The Tree of Might]", Tier.ZPlus, "SMB_TOM_RE", 2),
+            new("Ultimate Red Zone: RE [Super Hero Edition]", Tier.Z, "SH_RZ_RE"),
+            new("Ultimate Red Zone: RE [Super Hero Edition]", Tier.A, "SH_RZ_RE", 2),
+            new("Ultimate Red Zone: RE [Super Hero Edition]", Tier.ZPlus, "SH_RZ_RE", 3),
+            new("Supreme Magnificent Battle: RE [DAIMA Edition]", Tier.Z, "SMB_DAIMA_RE"),
+            new("Supreme Magnificent Battle: RE [DAIMA Edition]", Tier.Z, "SMB_DAIMA_RE", 2),
         ];
         #endregion
 

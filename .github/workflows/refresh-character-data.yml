@@ -1,0 +1,118 @@
+name: 'refresh-character-data'
+
+# Runs the DokkanWebScraper against DokkanStats, drops the result into wwwroot along with any
+# new card thumbs, checks it still passes the data validation tests, and opens a PR.
+#
+# This job only does the mechanical half of a content update: new premium leaders and new
+# stages still have to be added by hand.
+
+on:
+  schedule:
+    # 1st of the month. Content lands in bursts, so a monthly sweep plus a manual run after a
+    # banner drops beats a weekly job that mostly opens empty PRs.
+    - cron: '0 17 1 * *'
+  workflow_dispatch:
+    inputs:
+      scraper_ref:
+        description: 'DokkanWebScraper branch to run'
+        required: false
+        default: 'main'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  SCRAPER_REPO: omni-/DokkanWebScraper
+  SCRAPER_DIR: .scraper
+  DOTNET_CORE_VERSION: 10.0.x
+  # Nothing here drives a browser; skip the ~300MB playwright download.
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+    - name: Checkout DokkanDaily
+      uses: actions/checkout@v4
+
+    - name: Checkout DokkanWebScraper
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ env.SCRAPER_REPO }}
+        ref: ${{ inputs.scraper_ref || 'main' }}
+        path: ${{ env.SCRAPER_DIR }}
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.x
+        cache: npm
+        cache-dependency-path: ${{ env.SCRAPER_DIR }}/package-lock.json
+
+    - name: Install scraper dependencies
+      working-directory: ${{ env.SCRAPER_DIR }}
+      run: npm ci
+
+    # The scraper only downloads thumbs it doesn't already have, so hand it the ones we ship.
+    - name: Seed thumb cache
+      run: |
+        mkdir -p "$SCRAPER_DIR/data/images/thumbs"
+        cp -n src/DokkanDaily/wwwroot/images/thumbs/*.png "$SCRAPER_DIR/data/images/thumbs/" || true
+
+    - name: Scrape character data
+      working-directory: ${{ env.SCRAPER_DIR }}
+      run: npm run run:dokkanstats
+
+    - name: Sync into wwwroot
+      run: node scripts/sync-character-data.mjs --scraper "$SCRAPER_DIR" --summary "$RUNNER_TEMP/sync-summary.md"
+
+    - name: Check for changes
+      id: changes
+      run: |
+        # --porcelain rather than `git diff`, so newly downloaded (untracked) thumbs count too.
+        if [ -z "$(git status --porcelain -- src/DokkanDaily/wwwroot/data src/DokkanDaily/wwwroot/images/thumbs)" ]; then
+          echo "changed=false" >> "$GITHUB_OUTPUT"
+        else
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Setup .NET SDK
+      if: steps.changes.outputs.changed == 'true'
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+
+    # HelperTests is the suite that actually validates this data: every Leader resolves to a
+    # unit, every leader/category/stage image exists on disk, and the JSON deserializes.
+    - name: Validate data
+      if: steps.changes.outputs.changed == 'true'
+      run: dotnet test ./tests/DokkanDailyTests/DokkanDailyTests.csproj --filter "FullyQualifiedName~HelperTests" -v n
+
+    - name: Build PR body
+      if: steps.changes.outputs.changed == 'true'
+      run: |
+        {
+          cat "$RUNNER_TEMP/sync-summary.md"
+          echo
+          echo "---"
+          echo
+          echo "Opened by the \`refresh-character-data\` workflow. This is the mechanical half of a content update:"
+          echo "new premium leaders and new stages still need to be added by hand."
+        } > "$RUNNER_TEMP/pr-body.md"
+
+    - name: Open pull request
+      if: steps.changes.outputs.changed == 'true'
+      uses: peter-evans/create-pull-request@v7
+      with:
+        base: master
+        branch: data/character-refresh
+        add-paths: |
+          src/DokkanDaily/wwwroot/data/DokkanCharacterData.json
+          src/DokkanDaily/wwwroot/images/thumbs
+        commit-message: 'New unit json'
+        title: 'New unit json'
+        body-path: ${{ runner.temp }}/pr-body.md
+        labels: data
+        delete-branch: true
