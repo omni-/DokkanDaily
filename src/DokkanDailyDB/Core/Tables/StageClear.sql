@@ -7,5 +7,6 @@
     [ClearTime] VARCHAR(25) NOT NULL,
     [ClearDate] DATETIME2(2) NOT NULL,
     CONSTRAINT [ClearPK] PRIMARY KEY CLUSTERED ([StageClearId] ASC),
-    CONSTRAINT [Clear_FK01] FOREIGN KEY ([DokkanDailyUserId]) REFERENCES [Core].[DokkanDailyUser]([DokkanDailyUserId])
+    CONSTRAINT [Clear_FK01] FOREIGN KEY ([DokkanDailyUserId]) REFERENCES [Core].[DokkanDailyUser]([DokkanDailyUserId]),
+    CONSTRAINT [StageClear_UC01] UNIQUE ([DokkanDailyUserId], [ClearDate])
 )

@@ -64,13 +64,17 @@
     <Folder Include="RefData" />
     <Folder Include="Post-Deployment\" />
     <Folder Include="Post-Deployment\Scripts\" />
+    <Folder Include="Pre-Deployment\" />
+    <Folder Include="Pre-Deployment\Scripts\" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Core\Tables\DokkanDailyUser.sql" />
     <Build Include="Core\Tables\StageClear.sql" />
     <Build Include="Security\Schemas.sql" />
     <Build Include="Core\UserDefinedTypes\ClearType.sql" />
-    <Build Include="Core\StoredProcedures\ClearInsert.sql" />
+    <Build Include="Core\StoredProcedures\ClearInsert.sql">
+      <SuppressTSqlWarnings>71502</SuppressTSqlWarnings>
+    </Build>
     <Build Include="Core\StoredProcedures\HallOfFameLeaderboardGet.sql" />
     <Build Include="Core\Tables\DailyChallenge.sql" />
     <Build Include="Core\StoredProcedures\DailyInsert.sql" />
@@ -86,5 +90,8 @@
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Post-Deployment\Scripts\PostDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PreDeploy Include="Pre-Deployment\Scripts\PreDeployment.sql" />
   </ItemGroup>
 </Project>

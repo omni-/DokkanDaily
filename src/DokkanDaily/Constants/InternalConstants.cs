@@ -27,5 +27,7 @@ namespace DokkanDaily.Constants
         public static DateTime Season1StartDate => new(2025, 1, 1);
 
         public static int ChallengeRepeatLimitDays => 7;
+
+        public static TimeSpan PendingOcrDrainTimeout => TimeSpan.FromSeconds(45);
     }
 }

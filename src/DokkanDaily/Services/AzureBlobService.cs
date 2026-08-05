@@ -25,6 +25,7 @@ namespace DokkanDaily.Services
         private readonly string _containerName;
 
         private static readonly SemaphoreSlim _ocrThrottle = new(Math.Max(1, Environment.ProcessorCount / 2));
+        private static readonly ConcurrentDictionary<Guid, Task> _pendingAnalysis = new();
         private static readonly ConcurrentDictionary<string, SemaphoreSlim> _uploaderLocks = new();
 
         private const int maxFileSize = 1024 * 8192;
@@ -48,18 +49,23 @@ namespace DokkanDaily.Services
 
         public async Task<BlobClient> UploadToAzureAsync(string userFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null, string userAgent = null, string discordUsername = null, string discordId = null, string remoteIp = null)
         {
-            UploadAdmission admission = await _uploadAttemptLimiter.TryAcceptAsync(discordId, remoteIp);
-            if (!admission.Accepted)
-                throw new UploadRejectedException(admission.RejectionMessage);
+            Guid analysisId = Guid.NewGuid();
+            TaskCompletionSource analysisLifecycle = new(TaskCreationOptions.RunContinuationsAsynchronously);
+            _pendingAnalysis[analysisId] = analysisLifecycle.Task;
 
             SemaphoreSlim uploaderLock = string.IsNullOrWhiteSpace(discordId)
                 ? null
                 : _uploaderLocks.GetOrAdd(discordId, _ => new SemaphoreSlim(1, 1));
             bool uploaderLockHeld = false;
+            bool lifecycleHandedToAnalysis = false;
             MemoryStream uploadStream = null;
 
             try
             {
+                UploadAdmission admission = await _uploadAttemptLimiter.TryAcceptAsync(discordId, remoteIp);
+                if (!admission.Accepted)
+                    throw new UploadRejectedException(admission.RejectionMessage);
+
                 if (uploaderLock != null)
                 {
                     await uploaderLock.WaitAsync();
@@ -116,14 +122,26 @@ namespace DokkanDaily.Services
                     {
                         if (throttleHeld) _ocrThrottle.Release();
                         if (releaseUploaderLock) uploaderLock.Release();
-                        await analysisStream.DisposeAsync();
+                        try
+                        {
+                            await analysisStream.DisposeAsync();
+                        }
+                        finally
+                        {
+                            CompletePendingAnalysis(analysisId, analysisLifecycle);
+                        }
                     }
                 });
 
                 uploadStream = null;
                 uploaderLockHeld = false;
+                lifecycleHandedToAnalysis = true;
 
                 return blob;
+            }
+            catch (UploadRejectedException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -134,7 +152,41 @@ namespace DokkanDaily.Services
             {
                 if (uploaderLockHeld) uploaderLock.Release();
                 if (uploadStream != null) await uploadStream.DisposeAsync();
+                if (!lifecycleHandedToAnalysis) CompletePendingAnalysis(analysisId, analysisLifecycle);
             }
+        }
+
+        public async Task WaitForPendingAnalysis(TimeSpan timeout)
+        {
+            DateTimeOffset deadline = DateTimeOffset.UtcNow.Add(timeout);
+
+            while (true)
+            {
+                Task[] pending = [.. _pendingAnalysis.Values];
+                if (pending.Length == 0) return;
+
+                TimeSpan remaining = deadline - DateTimeOffset.UtcNow;
+                if (remaining <= TimeSpan.Zero)
+                {
+                    _logger.LogWarning("Timed out waiting for OCR to finish. {Count} clear(s) remain pending and will be skipped.", _pendingAnalysis.Count);
+                    return;
+                }
+
+                _logger.LogInformation("Waiting up to {Timeout} for {Count} in-flight OCR task(s) to finish.", remaining, pending.Length);
+
+                Task all = Task.WhenAll(pending);
+                if (await Task.WhenAny(all, Task.Delay(remaining)) != all)
+                {
+                    _logger.LogWarning("Timed out waiting for OCR to finish. {Count} clear(s) remain pending and will be skipped.", _pendingAnalysis.Count);
+                    return;
+                }
+            }
+        }
+
+        private static void CompletePendingAnalysis(Guid analysisId, TaskCompletionSource lifecycle)
+        {
+            lifecycle.TrySetResult();
+            _pendingAnalysis.TryRemove(analysisId, out _);
         }
 
         // TODO: test this
