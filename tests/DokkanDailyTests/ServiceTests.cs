@@ -292,6 +292,13 @@ namespace DokkanDailyTests
                         { AzureConstants.CLEAR_TIME_TAG, "0'30\"10.8" },
                         { AzureConstants.ITEMLESS_TAG, "false" }
                     }),
+                    // Identity is present before OCR. If parsing never finishes, the user still gets
+                    // participation credit but must not be eligible for the fastest-clear point.
+                    new MockBlobClient(new Dictionary<string, string>()
+                    {
+                        { AzureConstants.DISCORD_NAME_TAG, "charlie" },
+                        { AzureConstants.DISCORD_ID, "3" }
+                    }),
                 ]);
             abMock.Setup(x => x.PruneContainers(30)).Returns(Task.CompletedTask);
             abMock.Setup(x => x.WaitForPendingAnalysis(It.IsAny<TimeSpan>())).Returns(Task.CompletedTask);
@@ -314,8 +321,10 @@ namespace DokkanDailyTests
             Assert.DoesNotThrowAsync(() => tdrs.DoReset());
 
             // Assert
-            Assert.That(actual, Has.Count.EqualTo(2));
-            Assert.That(actual.Select(x => x.DiscordUsername), Is.EquivalentTo(new[] { "alice", "bob" }));
+            Assert.That(actual, Has.Count.EqualTo(3));
+            Assert.That(actual.Select(x => x.DiscordUsername), Is.EquivalentTo(new[] { "alice", "bob", "charlie" }));
+            Assert.That(actual.Single(x => x.DiscordUsername == "alice").IsDailyHighscore, Is.True);
+            Assert.That(actual.Single(x => x.DiscordUsername == "charlie").IsDailyHighscore, Is.False);
         }
     }
 }

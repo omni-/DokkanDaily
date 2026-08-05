@@ -29,10 +29,16 @@ namespace DokkanDaily.Services
         // analysed at once - otherwise concurrent submissions can saturate every core.
         private static readonly SemaphoreSlim _ocrThrottle = new(Math.Max(1, Environment.ProcessorCount / 2));
 
-        // Analysis runs after the upload returns, so a reset firing moments later could read a blob
-        // whose identifying metadata has not been written yet and skip the clear entirely. Tracking
-        // the in-flight work lets the reset drain it first.
+        // Tracks the full lifecycle of an accepted upload, from the first storage request through
+        // background OCR. Registering before the first await prevents the reset from taking a
+        // snapshot while an upload is still transferring and therefore not yet represented here.
         private static readonly ConcurrentDictionary<Guid, Task> _pendingAnalysis = new();
+
+        // Replacements for the same logged-in user must be serialized. Without this, two concurrent
+        // uploads can each delete the other's newly-created blob while cleaning up older clears.
+        // Entries are retained for the process lifetime; there is only one entry per authenticated
+        // uploader, and avoiding unsafe removal keeps separate locks from being created for one id.
+        private static readonly ConcurrentDictionary<string, SemaphoreSlim> _uploaderLocks = new();
 
         private string TodaysBucketFullName => GetBucketNameForDate(DokkanDailyHelper.GetUtcNowDateTag());
 
@@ -52,19 +58,32 @@ namespace DokkanDaily.Services
 
         public async Task<BlobClient> UploadToAzureAsync(string userFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null, string userAgent = null, string discordUsername = null, string discordId = null, string remoteIp = null)
         {
+            Guid analysisId = Guid.NewGuid();
+            TaskCompletionSource<bool> analysisLifecycle = new(TaskCreationOptions.RunContinuationsAsynchronously);
+            _pendingAnalysis[analysisId] = analysisLifecycle.Task;
+
+            MemoryStream ms = null;
+            SemaphoreSlim uploaderLock = string.IsNullOrWhiteSpace(discordId)
+                ? null
+                : _uploaderLocks.GetOrAdd(discordId, _ => new SemaphoreSlim(1, 1));
+            bool lockHeld = false;
+            bool lifecycleHandedToAnalysis = false;
+
             try
             {
+                if (uploaderLock is not null)
+                {
+                    await uploaderLock.WaitAsync();
+                    lockHeld = true;
+                }
+
                 (BlobContainerClient container, _) = await GetOrCreate(bucket);
 
                 string fileName = DokkanDailyHelper.BuildBlobName(userFileName, discordId);
 
                 BlobClient blob = container.GetBlobClient(fileName);
 
-                // names are unique now, so nothing would ever be overwritten - drop the uploader's
-                // earlier attempts explicitly instead so the gallery shows one clear per person
-                await DeletePreviousUploads(container, discordId);
-
-                MemoryStream ms = new();
+                ms = new();
                 using (Stream fileStream = browserFile.OpenReadStream(maxFileSize))
                 {
                     await fileStream.CopyToAsync(ms);
@@ -84,13 +103,19 @@ namespace DokkanDaily.Services
 
                 _logger.LogInformation("Finished Azure upload.");
 
+                // The replacement is durable now, so it is safe to remove earlier attempts. Keep
+                // the new blob out of the cleanup enumeration.
+                await DeletePreviousUploads(container, discordId, blob.Name);
+
                 // do OCR analysis, dont block the main thread
-                Guid analysisId = Guid.NewGuid();
-                Task analysis = Task.Run(async () =>
+                _ = Task.Run(async () =>
                 {
-                    await _ocrThrottle.WaitAsync();
+                    bool throttleHeld = false;
                     try
                     {
+                        await _ocrThrottle.WaitAsync();
+                        throttleHeld = true;
+
                         ClearMetadata metadata = _ocrService.ProcessImage(ms);
                         _logger.LogInformation("Finished processing image.");
                         Dictionary<string, string> tags = BuildTagDict(model, metadata, discordUsername, discordId, remoteIp, userAgent);
@@ -103,15 +128,13 @@ namespace DokkanDaily.Services
                     }
                     finally
                     {
-                        _ocrThrottle.Release();
+                        if (throttleHeld) _ocrThrottle.Release();
                         await ms.DisposeAsync();
+                        CompletePendingAnalysis(analysisId, analysisLifecycle);
                     }
                 });
 
-                // registered before the continuation is attached, so a task that finishes early
-                // cannot be removed before it is added
-                _pendingAnalysis[analysisId] = analysis;
-                _ = analysis.ContinueWith(_ => _pendingAnalysis.TryRemove(analysisId, out _), TaskScheduler.Default);
+                lifecycleHandedToAnalysis = true;
 
                 return blob;
             }
@@ -119,6 +142,16 @@ namespace DokkanDaily.Services
             {
                 _logger.LogError(ex, "Unhandled exception while uploading to Azure");
                 throw;
+            }
+            finally
+            {
+                if (lockHeld) uploaderLock.Release();
+
+                if (!lifecycleHandedToAnalysis)
+                {
+                    if (ms is not null) await ms.DisposeAsync();
+                    CompletePendingAnalysis(analysisId, analysisLifecycle);
+                }
             }
         }
 
@@ -291,7 +324,7 @@ namespace DokkanDaily.Services
         /// the user agent in the file name, which meant the same person on a phone and a desktop
         /// produced two blobs. Anonymous uploads have no prefix to key on and are left alone.
         /// </remarks>
-        private async Task DeletePreviousUploads(BlobContainerClient container, string discordId)
+        private async Task DeletePreviousUploads(BlobContainerClient container, string discordId, string replacementBlobName)
         {
             string prefix = DokkanDailyHelper.GetUserBlobPrefix(discordId);
 
@@ -301,6 +334,8 @@ namespace DokkanDaily.Services
             {
                 await foreach (BlobItem existing in container.GetBlobsAsync(BlobTraits.None, BlobStates.None, prefix, CancellationToken.None))
                 {
+                    if (existing.Name == replacementBlobName) continue;
+
                     _logger.LogInformation("Replacing the uploader's previous clear `{File}`.", existing.Name);
                     await container.DeleteBlobIfExistsAsync(existing.Name, DeleteSnapshotsOption.IncludeSnapshots);
                 }
@@ -385,6 +420,12 @@ namespace DokkanDaily.Services
                 _logger.LogWarning("Timed out waiting for OCR to finish. {Count} clear(s) may still be missing metadata and will be skipped.", _pendingAnalysis.Count);
             else
                 _logger.LogInformation("All in-flight OCR tasks finished.");
+        }
+
+        private static void CompletePendingAnalysis(Guid analysisId, TaskCompletionSource<bool> lifecycle)
+        {
+            lifecycle.TrySetResult(true);
+            _pendingAnalysis.TryRemove(analysisId, out _);
         }
 
         private async Task<(BlobContainerClient, bool)> GetOrCreate(string bucket)
