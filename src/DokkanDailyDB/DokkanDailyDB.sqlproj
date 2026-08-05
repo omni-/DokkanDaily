@@ -64,6 +64,8 @@
     <Folder Include="RefData" />
     <Folder Include="Post-Deployment\" />
     <Folder Include="Post-Deployment\Scripts\" />
+    <Folder Include="Pre-Deployment\" />
+    <Folder Include="Pre-Deployment\Scripts\" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Core\Tables\DokkanDailyUser.sql" />
@@ -81,6 +83,7 @@
     <Build Include="Core\StoredProcedures\LeaderboardGetByDate.sql" />
   </ItemGroup>
   <ItemGroup>
+    <PreDeploy Include="Pre-Deployment\Scripts\PreDeployment.sql" />
     <PostDeploy Include="Post-Deployment\Scripts\PostDeployment.sql" />
   </ItemGroup>
 </Project>

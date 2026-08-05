@@ -201,6 +201,7 @@ namespace DokkanDailyTests
                     }),
                 ]);
             abMock.Setup(x => x.PruneContainers(30)).Returns(Task.CompletedTask);
+            abMock.Setup(x => x.WaitForPendingAnalysis(It.IsAny<TimeSpan>())).Returns(Task.CompletedTask);
             abMock.Setup(x => x.GetBucketNameForDate(It.IsAny<string>())).Returns(It.IsAny<string>());
 
             repoMock
@@ -245,6 +246,7 @@ namespace DokkanDailyTests
             abMock.Verify(x => x.PruneContainers(It.IsAny<int>()), Times.Once);
             abMock.Verify(x => x.GetBucketNameForDate(It.IsAny<string>()));
             abMock.Verify(x => x.GetFilesForTag(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            abMock.Verify(x => x.WaitForPendingAnalysis(It.IsAny<TimeSpan>()), Times.Once);
             abMock.VerifyNoOtherCalls();
 
             repoMock.Verify(x => x.InsertDailyClears(It.IsAny<IEnumerable<DbClear>>(), It.IsAny<DateTime>()), Times.Once);
@@ -292,6 +294,7 @@ namespace DokkanDailyTests
                     }),
                 ]);
             abMock.Setup(x => x.PruneContainers(30)).Returns(Task.CompletedTask);
+            abMock.Setup(x => x.WaitForPendingAnalysis(It.IsAny<TimeSpan>())).Returns(Task.CompletedTask);
             abMock.Setup(x => x.GetBucketNameForDate(It.IsAny<string>())).Returns(It.IsAny<string>());
 
             repoMock

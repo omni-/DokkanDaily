@@ -10,6 +10,7 @@ using DokkanDaily.Models.Enums;
 using DokkanDaily.Services.Interfaces;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Options;
+using System.Collections.Concurrent;
 using System.Globalization;
 
 namespace DokkanDaily.Services
@@ -27,6 +28,11 @@ namespace DokkanDaily.Services
         // OCR is CPU-bound and runs off the request thread, so cap how many uploads can be
         // analysed at once - otherwise concurrent submissions can saturate every core.
         private static readonly SemaphoreSlim _ocrThrottle = new(Math.Max(1, Environment.ProcessorCount / 2));
+
+        // Analysis runs after the upload returns, so a reset firing moments later could read a blob
+        // whose identifying metadata has not been written yet and skip the clear entirely. Tracking
+        // the in-flight work lets the reset drain it first.
+        private static readonly ConcurrentDictionary<Guid, Task> _pendingAnalysis = new();
 
         private string TodaysBucketFullName => GetBucketNameForDate(DokkanDailyHelper.GetUtcNowDateTag());
 
@@ -68,13 +74,17 @@ namespace DokkanDaily.Services
                 await blob.UploadAsync(ms, options: new BlobUploadOptions()
                 {
                     HttpHeaders = new BlobHttpHeaders { ContentType = contentType },
+                    // written with the upload rather than after OCR, so a clear submitted seconds
+                    // before the reset is still attributable even if analysis has not run yet
+                    Metadata = BuildIdentityTagDict(model, discordUsername, discordId, remoteIp),
                     Tags = new Dictionary<string, string> { { AzureConstants.DATE_TAG, DokkanDailyHelper.GetUtcNowDateTag() } }
                 });
 
                 _logger.LogInformation("Finished Azure upload.");
 
                 // do OCR analysis, dont block the main thread
-                _ = Task.Run(async () =>
+                Guid analysisId = Guid.NewGuid();
+                Task analysis = Task.Run(async () =>
                 {
                     await _ocrThrottle.WaitAsync();
                     try
@@ -95,6 +105,11 @@ namespace DokkanDaily.Services
                         await ms.DisposeAsync();
                     }
                 });
+
+                // registered before the continuation is attached, so a task that finishes early
+                // cannot be removed before it is added
+                _pendingAnalysis[analysisId] = analysis;
+                _ = analysis.ContinueWith(_ => _pendingAnalysis.TryRemove(analysisId, out _), TaskScheduler.Default);
 
                 return blob;
             }
@@ -265,33 +280,76 @@ namespace DokkanDaily.Services
             }
         }
 
-        private static Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata, string discordUsername, string discordId, string remoteIp)
+        /// <summary>
+        /// The metadata that is known without OCR. Written at upload time so a clear submitted just
+        /// before the nightly reset can still be attributed to a logged in user.
+        /// </summary>
+        private static Dictionary<string, string> BuildIdentityTagDict(Challenge model, string discordUsername, string discordId, string remoteIp)
         {
-            string invalid = null;
-            if (metadata == null) invalid = true.ToString();
-
-            var dict = new Dictionary<string, string>()
+            Dictionary<string, string> dict = new()
             {
                 { AzureConstants.DAILY_TYPE_TAG, model.DailyType.ToString()},
                 { AzureConstants.EVENT_TAG, model.TodaysEvent.FullName},
-                { AzureConstants.USER_NAME_TAG, metadata?.Nickname?.EscapeUnicode()},
-                { AzureConstants.ITEMLESS_TAG, (metadata?.ItemlessClear)?.ToString()},
-                { AzureConstants.CLEAR_TIME_TAG, metadata?.ClearTime},
                 { AzureConstants.DISCORD_NAME_TAG, discordUsername },
                 { AzureConstants.DISCORD_ID,  discordId },
-                { AzureConstants.INVALID_TAG, invalid },
                 { AzureConstants.IP_TAG, remoteIp },
                 { AzureConstants.CHALLENGE_TARGET_TAG, model.DailyType switch
                     {
-                        DailyType.LinkSkill =>  model.LinkSkill.Name,
-                        DailyType.Category => model.Category.Name,
-                        DailyType.Character => model.Leader.FullName,
+                        DailyType.LinkSkill =>  model.LinkSkill?.Name,
+                        DailyType.Category => model.Category?.Name,
+                        DailyType.Character => model.Leader?.FullName,
                         _ => null
                     }
                 }
             };
 
             return dict.Where(kv => !string.IsNullOrEmpty(kv.Value)).ToDictionary();
+        }
+
+        private static Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata, string discordUsername, string discordId, string remoteIp)
+        {
+            Dictionary<string, string> dict = BuildIdentityTagDict(model, discordUsername, discordId, remoteIp);
+
+            if (metadata is null)
+            {
+                dict[AzureConstants.INVALID_TAG] = true.ToString();
+
+                return dict;
+            }
+
+            string nickname = metadata.Nickname?.EscapeUnicode();
+
+            if (!string.IsNullOrEmpty(nickname)) dict[AzureConstants.USER_NAME_TAG] = nickname;
+            if (!string.IsNullOrEmpty(metadata.ClearTime)) dict[AzureConstants.CLEAR_TIME_TAG] = metadata.ClearTime;
+
+            dict[AzureConstants.ITEMLESS_TAG] = metadata.ItemlessClear.ToString();
+
+            return dict;
+        }
+
+        /// <summary>
+        /// Waits for outstanding OCR analysis to finish, up to <paramref name="timeout"/>.
+        /// </summary>
+        /// <remarks>
+        /// Uploads return as soon as the blob is stored; the metadata that identifies a clear is
+        /// written afterwards, and may be queued behind the OCR throttle. The nightly reset calls
+        /// this first so submissions accepted moments before the deadline are not read - and
+        /// silently discarded - while their analysis is still pending.
+        /// </remarks>
+        public async Task WaitForPendingAnalysis(TimeSpan timeout)
+        {
+            Task[] pending = [.. _pendingAnalysis.Values];
+
+            if (pending.Length == 0) return;
+
+            _logger.LogInformation("Waiting up to {Timeout} for {Count} in-flight OCR task(s) to finish.", timeout, pending.Length);
+
+            Task all = Task.WhenAll(pending);
+
+            if (await Task.WhenAny(all, Task.Delay(timeout)) != all)
+                _logger.LogWarning("Timed out waiting for OCR to finish. {Count} clear(s) may still be missing metadata and will be skipped.", _pendingAnalysis.Count);
+            else
+                _logger.LogInformation("All in-flight OCR tasks finished.");
         }
 
         private async Task<(BlobContainerClient, bool)> GetOrCreate(string bucket)

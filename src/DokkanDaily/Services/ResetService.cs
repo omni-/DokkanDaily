@@ -31,6 +31,11 @@ namespace DokkanDaily.Services
         {
             _logger.LogInformation("Starting daily reset...");
 
+            // Capture the effective day before any asynchronous work. The scheduled reset starts
+            // at 23:59 UTC, and draining OCR can cross midnight; recalculating afterwards would
+            // make us read the next day's bucket instead of the day being finalized.
+            DateTime date = DateTime.UtcNow - TimeSpan.FromDays(daysAgo);
+
             // get old challenge
             var todaysChallenge = await _rngHelperService.GetDailyChallenge();
 
@@ -62,7 +67,9 @@ namespace DokkanDaily.Services
             else
                 _logger.LogInformation("Adhoc reset. Skipping the prune job.");
 
-            DateTime date = DateTime.UtcNow - TimeSpan.FromDays(daysAgo);
+            // a clear accepted seconds before the deadline may still be queued for OCR, and a blob
+            // without identity metadata gets skipped below - so let analysis drain before reading
+            await _azureBlobService.WaitForPendingAnalysis(InternalConstants.PendingOcrDrainTimeout);
 
             // upload clears for the day
             string tag = date.GetTagFromDate();

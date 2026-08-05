@@ -1,5 +1,6 @@
 ﻿@page "/clears"
 @rendermode InteractiveServer
+@implements IAsyncDisposable
 
 @using DokkanDaily.Components.Shared
 @using DokkanDaily.Constants
@@ -7,6 +8,7 @@
 @using DokkanDaily.Helpers
 @using DokkanDaily.Models
 @using DokkanDaily.Models.ViewModel
+@using DokkanDaily.Services
 @using DokkanDaily.Services.Interfaces
 @using Microsoft.AspNetCore.Components.Authorization
 
@@ -30,6 +32,12 @@
 
     <Logo dailyType="@RngSvc.GetTodaysDailyType()?.ToString()" />
 
+    @if (isDuringReset)
+    {
+        <div class="alert alert-info">
+            <strong>Daily reset in progress...</strong>
+        </div>
+    }
     @if (warningMessage.Length > 0)
     {
         <div class="alert alert-warning">
@@ -40,7 +48,7 @@
         <div style="padding-top:2vh;" class="row">
             <div>
                 <label>
-                    <InputFile class="form-control" disabled="@fileLoading" accept=".jpg,.jpeg,.png,.webp,.avif" style="width:100%;" OnChange="@OnInputFileChange" single />
+                    <InputFile class="form-control" disabled="@uploadDisabled" accept=".jpg,.jpeg,.png,.webp,.avif" style="width:100%;" OnChange="@OnInputFileChange" single />
                 </label>
                 @if (fileLoading)
                 {
@@ -48,7 +56,7 @@
                 }
             </div>
             <div style="padding-top:1vh;">
-                <button type="button" disabled="@fileLoading" class="btn btn-secondary btn-md" @onclick="OnUploadSubmit">
+                <button type="button" disabled="@uploadDisabled" class="btn btn-secondary btn-md" @onclick="OnUploadSubmit">
                     Upload File
                 </button>
             </div>
@@ -95,6 +103,14 @@
     private List<FileUploadViewModel> fileUploadViewModels = [];
     private const string defaultWarning = "Something went wrong! Please try again.";
     private Challenge challengeModel;
+    private readonly CancellationTokenSource resetMonitorCancellation = new();
+    private Task resetMonitorTask;
+
+    private bool isDuringReset => Worker
+        .GetWorkSchedule(Models.Enums.WorkType.DailyReset)
+        .IsDuringReset(TimeOnly.FromDateTime(DateTime.UtcNow));
+
+    private bool uploadDisabled => fileLoading || isDuringReset;
 
     protected override async Task OnInitializedAsync()
     {
@@ -134,6 +150,8 @@
             Logger.LogError(ex, "Failed to load today's clears. The gallery will render empty.");
             warningMessage = defaultWarning;
         }
+
+        resetMonitorTask = MonitorResetState();
     }
 
     private void OnInputFileChange(InputFileChangeEventArgs e)
@@ -147,6 +165,10 @@
     {
         warningMessage = "";
         displayMessage = "";
+
+        // The rendered button is disabled during the reset, but enforce the cutoff here too in
+        // case the reset window begins between the last render and this event reaching the server.
+        if (isDuringReset) return;
 
         var file = selectedFiles.FirstOrDefault();
         if (file == null)
@@ -174,6 +196,15 @@
 
             string discordUsername = await authStateProvider.GetUsernameFromDiscordAuthClaim();
             string discordId = await authStateProvider.GetIdFromDiscordAuthClaim();
+
+            // Authentication and browser interop may straddle the start of the reset window.
+            // Recheck immediately before storage so a click accepted at 23:58:59 cannot begin an
+            // upload after the cutoff.
+            if (isDuringReset)
+            {
+                fileLoading = false;
+                return;
+            }
 
             var blobClient = await BlobSvc.UploadToAzureAsync(
                 file.Name,
@@ -225,5 +256,43 @@
         }
 
         this.StateHasChanged();
+    }
+
+    private async Task MonitorResetState()
+    {
+        try
+        {
+            while (!resetMonitorCancellation.IsCancellationRequested)
+            {
+                DateTime now = DateTime.UtcNow;
+                DateTime resetStart = now.Date + Worker.GetWorkSchedule(Models.Enums.WorkType.DailyReset).ToTimeSpan();
+                DateTime resetEnd = resetStart + TimeSpan.FromSeconds(Worker.ResetDuration);
+
+                if (resetEnd <= resetStart)
+                    resetEnd += TimeSpan.FromDays(1);
+
+                DateTime nextTransition = now < resetStart
+                    ? resetStart
+                    : now < resetEnd
+                        ? resetEnd
+                        : resetStart + TimeSpan.FromDays(1);
+
+                await Task.Delay(nextTransition - now, resetMonitorCancellation.Token);
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        catch (OperationCanceledException) when (resetMonitorCancellation.IsCancellationRequested)
+        {
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        resetMonitorCancellation.Cancel();
+
+        if (resetMonitorTask is not null)
+            await resetMonitorTask;
+
+        resetMonitorCancellation.Dispose();
     }
 }

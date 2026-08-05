@@ -27,5 +27,12 @@ namespace DokkanDaily.Constants
         public static DateTime Season1StartDate => new(2025, 1, 1);
 
         public static int ChallengeRepeatLimitDays => 7;
+
+        /// <summary>
+        /// How long the reset will wait for OCR of last-minute uploads to finish before reading
+        /// clears. Anything still pending after this is skipped, so it trades reset latency against
+        /// dropping a clear that was accepted before the deadline.
+        /// </summary>
+        public static TimeSpan PendingOcrDrainTimeout => TimeSpan.FromSeconds(45);
     }
 }

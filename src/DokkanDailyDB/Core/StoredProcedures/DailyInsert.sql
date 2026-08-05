@@ -25,30 +25,44 @@ BEGIN
         RETURN 1;
     END
 
-    -- A restart or an admin rerun can invoke the reset twice in one day. Inserting a second row
-    -- for the same date would skew the recency windows the challenge generator reads back, so
-    -- treat a same-day insert as a no-op instead.
-    IF EXISTS (SELECT 1 FROM [Core].[DailyChallenge] WHERE [Date] = @Date)
-    BEGIN
-        RETURN 0;
-    END
-
-    INSERT INTO [Core].[DailyChallenge](
-        [Event], 
-        [Stage], 
-        [Date],
-        [DailyTypeId],
-        [LeaderFullName],
-        [Category], 
-        [LinkSkill])
-    VALUES(
-        @Event,
-        @Stage,
-        @Date,
-        @DailyTypeId,
-        @LeaderFullName,
-        @Category, 
-        @LinkSkill)
+    -- Upsert on the date. A restart or a rerun can invoke the reset more than once for the same
+    -- day; a second plain INSERT would leave duplicate rows and skew the recency windows the
+    -- challenge generator reads back. Replacing keeps one row per day AND lets a rerun correct a
+    -- challenge that was regenerated after the first insert.
+    --
+    -- HOLDLOCK is what makes this safe when more than one instance is running: every instance
+    -- hosts its own Worker, so two can reach this at 23:59 together. Under the UNIQUE constraint
+    -- on [Date] the hint takes a range lock on the key, serialising the match-then-write instead
+    -- of letting both miss and both insert. An UPDATE followed by a conditional INSERT has that
+    -- same race and is not sufficient.
+    MERGE INTO [Core].[DailyChallenge] WITH (HOLDLOCK) AS TARGET
+    USING (SELECT @Date AS [Date]) AS SOURCE
+    ON (TARGET.[Date] = SOURCE.[Date])
+    WHEN MATCHED THEN
+        UPDATE SET
+            TARGET.[Event] = @Event,
+            TARGET.[Stage] = @Stage,
+            TARGET.[DailyTypeId] = @DailyTypeId,
+            TARGET.[LeaderFullName] = @LeaderFullName,
+            TARGET.[Category] = @Category,
+            TARGET.[LinkSkill] = @LinkSkill
+    WHEN NOT MATCHED BY TARGET THEN
+        INSERT(
+            [Event],
+            [Stage],
+            [Date],
+            [DailyTypeId],
+            [LeaderFullName],
+            [Category],
+            [LinkSkill])
+        VALUES(
+            @Event,
+            @Stage,
+            @Date,
+            @DailyTypeId,
+            @LeaderFullName,
+            @Category,
+            @LinkSkill);
 
     RETURN 0;
 
