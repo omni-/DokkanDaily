@@ -128,6 +128,20 @@ namespace DokkanDaily.Repository
             return results;
         }
 
+        public async Task<bool> TryAcceptUploadAttempt(string uploaderKey, DateOnly utcDate)
+        {
+            using SqlConnection sqlConnection = new(_connectionString);
+
+            await sqlConnection.OpenAsync();
+
+            DynamicParameters parameters = new();
+            parameters.Add("UploaderKey", uploaderKey);
+            parameters.Add("AttemptDate", utcDate.ToDateTime(TimeOnly.MinValue));
+
+            return await sqlConnection.QuerySingleAsync<bool>(
+                "[Core].[UploadAttemptTryAccept]", parameters);
+        }
+
         private DataTable ToDataTable<T>(IEnumerable<T> values) where T : class
         {
             Type type = typeof(T);

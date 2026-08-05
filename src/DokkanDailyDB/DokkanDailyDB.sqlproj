@@ -79,6 +79,10 @@
     <Build Include="RefData\LoadDaily.sql" />
     <Build Include="RefData\LoadAllData.sql" />
     <Build Include="Core\StoredProcedures\LeaderboardGetByDate.sql" />
+    <Build Include="Core\Tables\UploadAttempt.sql" />
+    <Build Include="Core\StoredProcedures\UploadAttemptTryAccept.sql">
+      <SuppressTSqlWarnings>71502</SuppressTSqlWarnings>
+    </Build>
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Post-Deployment\Scripts\PostDeployment.sql" />

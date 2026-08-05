@@ -121,5 +121,7 @@ else
         base.OnInitialized();
     }
 
-    void OnClick() => NavManager.NavigateTo("/clears", false);
+    // A full navigation guarantees that Clears is prerendered with the current request address,
+    // which is then persisted into its interactive component state.
+    void OnClick() => NavManager.NavigateTo("/clears", true);
 }

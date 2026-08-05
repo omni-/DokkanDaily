@@ -42,7 +42,7 @@ namespace DokkanDailyTests
         public async Task Setup()
         {
             await conn.OpenAsync();
-            await conn.ExecuteReaderAsync("delete from Core.StageClear; delete from Core.DokkanDailyUser; delete from Core.DailyChallenge;", new());
+            await conn.ExecuteReaderAsync("delete from Core.StageClear; delete from Core.DokkanDailyUser; delete from Core.DailyChallenge; delete from Core.UploadAttempt;", new());
             await conn.CloseAsync();
         }
 
@@ -80,6 +80,19 @@ namespace DokkanDailyTests
             var list = result.ToList();
             Assert.That(list, Has.Count.EqualTo(2), "the returned leaderboard should have the correct number of elements");
             Assert.That(list.Any(x => x.DiscordId == "112089455933792256"), Is.True, "an element should contain a discord id");
+        }
+
+        [Test]
+        public async Task UploadAttemptAdmissionIsAtomicAcrossConcurrentConnectionsAndUtcDays()
+        {
+            DateOnly firstDay = new(2026, 8, 5);
+
+            bool[] admissions = await Task.WhenAll(Enumerable.Range(0, 40)
+                .Select(_ => repository.TryAcceptUploadAttempt("discord:concurrent", firstDay)));
+
+            Assert.That(admissions.Count(x => x), Is.EqualTo(5));
+            Assert.That(await repository.TryAcceptUploadAttempt("discord:concurrent", firstDay), Is.False);
+            Assert.That(await repository.TryAcceptUploadAttempt("discord:concurrent", firstDay.AddDays(1)), Is.True);
         }
 
         [Test]

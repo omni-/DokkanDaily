@@ -14,5 +14,7 @@ namespace DokkanDaily.Repository
         Task<IEnumerable<DbLeaderboardResult>> GetLeaderboardByDate(DateTime monthAndYear);
 
         Task<IEnumerable<DbLeaderboardResult>> GetHallOfFame();
+
+        Task<bool> TryAcceptUploadAttempt(string uploaderKey, DateOnly utcDate);
     }
 }

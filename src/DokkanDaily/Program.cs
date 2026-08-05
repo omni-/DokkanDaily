@@ -39,6 +39,11 @@ namespace DokkanDaily
             {
                 options.ForwardedHeaders =
                     ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+
+                // Azure App Service is the ingress trust boundary. ForwardLimit remains one, so
+                // only the address appended by the platform proxy is consumed.
+                options.KnownIPNetworks.Clear();
+                options.KnownProxies.Clear();
             });
 
             builder.Services.AddHostedService<Worker>();
@@ -51,7 +56,9 @@ namespace DokkanDaily
             builder.Services.AddTransient<IResetService, ResetService>();
             builder.Services.AddTransient<IAzureBlobService, AzureBlobService>();
             builder.Services.AddTransient<IOcrService, OcrService>();
+            builder.Services.AddTransient<IUploadAttemptLimiter, UploadAttemptLimiter>();
             builder.Services.AddTransient<IDokkanDailyRepository, DokkanDailyRepository>();
+            builder.Services.AddSingleton(TimeProvider.System);
 
             // TODO: IP tracking to enforce bans (sadface)
             builder.Services.AddScoped<BlazorAppContext>();

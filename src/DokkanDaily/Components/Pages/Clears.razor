@@ -4,6 +4,7 @@
 @using DokkanDaily.Components.Shared
 @using DokkanDaily.Constants
 @using DokkanDaily.Extensions
+@using DokkanDaily.Exceptions
 @using DokkanDaily.Helpers
 @using DokkanDaily.Models
 @using DokkanDaily.Models.ViewModel
@@ -15,6 +16,7 @@
 @inject IRngHelperService RngSvc
 @inject AuthenticationStateProvider authStateProvider;
 @inject IHttpContextAccessor HttpContextAccessor
+@inject ILogger<Clears> Logger
 
 <PageTitle>Dokkandle!</PageTitle>
 <style>
@@ -97,8 +99,16 @@
     private const string defaultWarning = "Something went wrong! Please try again.";
     private Challenge challengeModel;
 
+    // HttpContext is valid during prerendering but not during interactive events. Blazor restores
+    // this protected value when the component becomes interactive, so anonymous admission remains
+    // keyed to the address resolved by forwarded-header middleware.
+    [PersistentState]
+    public string RemoteIpAddress { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
+        RemoteIpAddress ??= HttpContextAccessor.HttpContext?.GetUserIpAddress();
+
         try
         {
             challengeModel = await RngSvc.GetDailyChallenge();
@@ -138,7 +148,7 @@
         Message = $"{selectedFiles.Count} file(s) selected";
         this.StateHasChanged();
     }
-    private async void OnUploadSubmit()
+    private async Task OnUploadSubmit()
     {
         string remoteUserAgent = null;
 
@@ -170,7 +180,7 @@
                 userAgent: remoteUserAgent,
                 discordUsername: discordUsername,
                 discordId: discordId,
-                remoteIp: HttpContextAccessor?.HttpContext?.GetUserIpAddress());
+                remoteIp: RemoteIpAddress);
 
             FileUploadViewModel fileUploadViewModel = new FileUploadViewModel()
             {
@@ -182,9 +192,14 @@
             fileUploadViewModels.Add(fileUploadViewModel);
             Message = file.Name + " Uploaded!!";
         }
-        catch (Exception ex)
+        catch (UploadRejectedException ex)
         {
             warningMessage = ex.Message;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to upload clear `{File}`", file.Name);
+            warningMessage = defaultWarning;
         }
 
         fileLoading = false;
