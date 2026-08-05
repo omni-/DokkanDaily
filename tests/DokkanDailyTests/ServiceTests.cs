@@ -326,5 +326,51 @@ namespace DokkanDailyTests
             Assert.That(actual.Single(x => x.DiscordUsername == "alice").IsDailyHighscore, Is.True);
             Assert.That(actual.Single(x => x.DiscordUsername == "charlie").IsDailyHighscore, Is.False);
         }
+
+        [Test]
+        public void SoleClearWinsWhenItsTimeCouldNotBeParsed()
+        {
+            var abMock = mocks.Create<IAzureBlobService>();
+            var repoMock = mocks.Create<IDokkanDailyRepository>();
+            var lbMock = mocks.Create<ILeaderboardService>();
+            var rngMock = mocks.Create<IRngHelperService>();
+            var loggerMock = mocks.Create<ILogger<ResetService>>(MockBehavior.Loose);
+            var webhookLoggerMock = mocks.Create<ILogger<DiscordWebhookClient>>(MockBehavior.Loose);
+            var httpMock = mocks.Create<HttpClient>(MockBehavior.Loose);
+            var webhookMock = mocks.Create<DiscordWebhookClient>(webhookLoggerMock.Object, httpMock.Object, Options.Create(new DokkanDailySettings { WebhookUrl = "http://foo.bar" }));
+
+            IResetService resetService = new ResetService(abMock.Object, repoMock.Object, lbMock.Object, rngMock.Object, webhookMock.Object, loggerMock.Object);
+            List<DbClear> actual = [];
+
+            abMock.Setup(x => x.GetFilesForTag(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync([
+                    new MockBlobClient(new Dictionary<string, string>
+                    {
+                        { AzureConstants.DISCORD_NAME_TAG, "alice" },
+                        { AzureConstants.DISCORD_ID, "1" }
+                    })
+                ]);
+            abMock.Setup(x => x.PruneContainers(30)).Returns(Task.CompletedTask);
+            abMock.Setup(x => x.WaitForPendingAnalysis(It.IsAny<TimeSpan>())).Returns(Task.CompletedTask);
+            abMock.Setup(x => x.GetBucketNameForDate(It.IsAny<string>())).Returns(It.IsAny<string>());
+
+            repoMock.Setup(x => x.InsertDailyClears(It.IsAny<List<DbClear>>(), It.IsAny<DateTime>()))
+                .Returns(Task.CompletedTask)
+                .Callback<IEnumerable<DbClear>, DateTime>((clears, _) => actual = clears.ToList());
+            repoMock.Setup(x => x.InsertChallenge(It.IsAny<Challenge>())).Returns(Task.CompletedTask);
+
+            Challenge challenge = new(DailyType.Character, new("foo", Tier.D, "LGE"), new("bar", Tier.D), new("baz", Tier.D), new("quz", "", Tier.D), new(), DateTime.Now);
+            rngMock.Setup(x => x.UpdateDailyChallenge()).ReturnsAsync(challenge);
+            rngMock.Setup(x => x.GetDailyChallenge()).ReturnsAsync(challenge);
+
+            lbMock.Setup(x => x.GetCurrentLeaderboard(It.IsAny<bool>())).ReturnsAsync([]);
+            webhookMock.Setup(x => x.PostAsync(It.IsAny<WebhookMessage>())).Returns(Task.CompletedTask);
+
+            Assert.DoesNotThrowAsync(() => resetService.DoReset());
+
+            Assert.That(actual, Has.Count.EqualTo(1));
+            Assert.That(actual[0].IsDailyHighscore, Is.True);
+            Assert.That(actual[0].ClearTimeSpan, Is.EqualTo(TimeSpan.MaxValue));
+        }
     }
 }

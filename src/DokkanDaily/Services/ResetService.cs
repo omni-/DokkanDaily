@@ -124,12 +124,13 @@ namespace DokkanDaily.Services
                 }
             }
 
-            // Identity metadata is written before OCR, so a logged-in clear can legitimately reach
-            // this point without a parsed time when OCR fails or the drain times out. It still earns
-            // participation credit, but it cannot be considered for the fastest-clear point.
-            DbClear dailyWinner = clears
-                .Where(x => x.ClearTimeSpan != TimeSpan.MaxValue)
-                .MinBy(x => x.ClearTimeSpan);
+            // A sole accepted clear wins by default even when OCR could not read its time. With
+            // multiple entrants, however, an unparsed time cannot be ranked against another clear.
+            DbClear dailyWinner = clears.Count == 1
+                ? clears[0]
+                : clears
+                    .Where(x => x.ClearTimeSpan != TimeSpan.MaxValue)
+                    .MinBy(x => x.ClearTimeSpan);
             if (dailyWinner is null)
                 _logger.LogWarning("No valid clears were submitted today. There is no daily highscore to award.");
             else
