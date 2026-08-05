@@ -73,8 +73,12 @@ namespace DokkanDaily.Helpers
         /// </remarks>
         public static string BuildBlobName(string userFileName, string discordId)
         {
-            string ext = UnsafeBlobNameCharRegex().Replace(Path.GetExtension(userFileName ?? ""), "");
-            string name = UnsafeBlobNameCharRegex().Replace(Path.GetFileNameWithoutExtension(userFileName ?? ""), "").Trim('.');
+            // Path.GetFileName only recognizes the current platform's directory separator. Browser
+            // file names can contain either style, so normalize Windows separators before taking
+            // the leaf name to keep traversal components out on Linux as well as Windows.
+            string leafName = Path.GetFileName((userFileName ?? "").Replace('\\', '/'));
+            string ext = UnsafeBlobNameCharRegex().Replace(Path.GetExtension(leafName), "");
+            string name = UnsafeBlobNameCharRegex().Replace(Path.GetFileNameWithoutExtension(leafName), "").Trim('.');
 
             if (string.IsNullOrWhiteSpace(name)) name = "clear";
             if (name.Length > MaxBlobNameLength) name = name[..MaxBlobNameLength];
