@@ -280,6 +280,7 @@ namespace DokkanDailyTests
                 .ReturnsAsync([
                     new MockBlobClient(new Dictionary<string, string>()
                     {
+                        { AzureConstants.UPLOAD_STATUS_TAG, AzureConstants.UPLOAD_STATUS_VALID },
                         { AzureConstants.DISCORD_NAME_TAG, "alice" },
                         { AzureConstants.DISCORD_ID, "1" },
                         { AzureConstants.CLEAR_TIME_TAG, "0'20\"10.8" },
@@ -287,15 +288,16 @@ namespace DokkanDailyTests
                     }),
                     new MockBlobClient(new Dictionary<string, string>()
                     {
+                        { AzureConstants.UPLOAD_STATUS_TAG, AzureConstants.UPLOAD_STATUS_VALID },
                         { AzureConstants.DISCORD_NAME_TAG, "bob" },
                         { AzureConstants.DISCORD_ID, "2" },
                         { AzureConstants.CLEAR_TIME_TAG, "0'30\"10.8" },
                         { AzureConstants.ITEMLESS_TAG, "false" }
                     }),
-                    // Identity is present before OCR. If parsing never finishes, the user still gets
-                    // participation credit but must not be eligible for the fastest-clear point.
+                    // Identity is present before OCR, but pending analysis must not earn credit.
                     new MockBlobClient(new Dictionary<string, string>()
                     {
+                        { AzureConstants.UPLOAD_STATUS_TAG, AzureConstants.UPLOAD_STATUS_PENDING },
                         { AzureConstants.DISCORD_NAME_TAG, "charlie" },
                         { AzureConstants.DISCORD_ID, "3" }
                     }),
@@ -321,14 +323,14 @@ namespace DokkanDailyTests
             Assert.DoesNotThrowAsync(() => tdrs.DoReset());
 
             // Assert
-            Assert.That(actual, Has.Count.EqualTo(3));
-            Assert.That(actual.Select(x => x.DiscordUsername), Is.EquivalentTo(new[] { "alice", "bob", "charlie" }));
+            Assert.That(actual, Has.Count.EqualTo(2));
+            Assert.That(actual.Select(x => x.DiscordUsername), Is.EquivalentTo(new[] { "alice", "bob" }));
             Assert.That(actual.Single(x => x.DiscordUsername == "alice").IsDailyHighscore, Is.True);
-            Assert.That(actual.Single(x => x.DiscordUsername == "charlie").IsDailyHighscore, Is.False);
+            Assert.That(actual.Any(x => x.DiscordUsername == "charlie"), Is.False);
         }
 
         [Test]
-        public void SoleClearWinsWhenItsTimeCouldNotBeParsed()
+        public void LegacyIdentityOnlyClearIsNotScored()
         {
             var abMock = mocks.Create<IAzureBlobService>();
             var repoMock = mocks.Create<IDokkanDailyRepository>();
@@ -368,9 +370,7 @@ namespace DokkanDailyTests
 
             Assert.DoesNotThrowAsync(() => resetService.DoReset());
 
-            Assert.That(actual, Has.Count.EqualTo(1));
-            Assert.That(actual[0].IsDailyHighscore, Is.True);
-            Assert.That(actual[0].ClearTimeSpan, Is.EqualTo(TimeSpan.MaxValue));
+            Assert.That(actual, Is.Empty);
         }
     }
 }

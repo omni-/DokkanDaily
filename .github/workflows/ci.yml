@@ -140,7 +140,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    needs: build
+    needs: [build, db-deploy]
     # building here pulls registry credentials, so keep it off pull request runs
     if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
     steps:

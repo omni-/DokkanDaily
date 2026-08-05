@@ -116,6 +116,53 @@ namespace DokkanDailyTests
         }
 
         [Test]
+        public async Task StrongDiscordIdsDoNotFallBackToASharedNickname()
+        {
+            DateTime firstDay = new(2026, 8, 3);
+
+            await repository.InsertDailyClears([
+                new DbClear
+                {
+                    DokkanNickname = "SharedName",
+                    DiscordUsername = "alice",
+                    DiscordId = "discord-1",
+                    ClearTime = "0'20\"10.8",
+                    ItemlessClear = false
+                }
+            ], firstDay);
+
+            await repository.InsertDailyClears([
+                new DbClear
+                {
+                    DokkanNickname = "SharedName",
+                    DiscordUsername = "bob",
+                    DiscordId = "discord-2",
+                    ClearTime = "0'30\"10.8",
+                    ItemlessClear = false
+                }
+            ], firstDay.AddDays(1));
+
+            await conn.OpenAsync();
+            try
+            {
+                int userCount = await conn.ExecuteScalarAsync<int>(
+                    "select count(*) from Core.DokkanDailyUser where DokkanNickname = 'SharedName'");
+                int firstIdentityCount = await conn.ExecuteScalarAsync<int>(
+                    "select count(*) from Core.DokkanDailyUser where DiscordId = 'discord-1' and DiscordUsername = 'alice'");
+                int secondIdentityCount = await conn.ExecuteScalarAsync<int>(
+                    "select count(*) from Core.DokkanDailyUser where DiscordId = 'discord-2' and DiscordUsername = 'bob'");
+
+                Assert.That(userCount, Is.EqualTo(2));
+                Assert.That(firstIdentityCount, Is.EqualTo(1));
+                Assert.That(secondIdentityCount, Is.EqualTo(1));
+            }
+            finally
+            {
+                await conn.CloseAsync();
+            }
+        }
+
+        [Test]
         public async Task DatabaseCanRecordAndReturnChallengeList()
         {
             await repository.InsertChallenge(new(DailyType.Character, new Stage("foo", Tier.F, "fakepath"), new("a", Tier.F), new("b", Tier.F), new("bar", "baz", Tier.F), null, DateTime.UtcNow));

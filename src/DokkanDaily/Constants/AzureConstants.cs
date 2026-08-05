@@ -26,6 +26,14 @@
 
         public static string USER_AGENT_TAG => "useragent";
 
+        public const string UPLOAD_STATUS_TAG = "uploadstatus";
+
+        public const string UPLOAD_STATUS_PENDING = "pending";
+
+        public const string UPLOAD_STATUS_VALID = "valid";
+
+        public const string UPLOAD_STATUS_INVALID = "invalid";
+
         /// <summary>
         /// Container holding the Data Protection key ring. Deliberately has no date suffix, so the
         /// prune job's <c>{container}-{MM-dd-yyyy}</c> filter can never match and delete it.

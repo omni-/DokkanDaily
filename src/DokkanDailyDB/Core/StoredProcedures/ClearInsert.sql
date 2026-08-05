@@ -32,12 +32,19 @@ BEGIN
         M.DokkanDailyUserId
     FROM @Clears C
     OUTER APPLY (
+        -- A supplied stronger identity is authoritative. If it is new, do not fall back to a
+        -- coincidentally shared username or nickname and overwrite that other user's identity.
         SELECT TOP 1
             DDU.DokkanDailyUserId
         FROM Core.DokkanDailyUser DDU
         WHERE (C.DiscordId IS NOT NULL AND DDU.DiscordId = C.DiscordId)
-           OR (C.DiscordUsername IS NOT NULL AND DDU.DiscordUsername = C.DiscordUsername)
-           OR (C.DokkanNickname IS NOT NULL AND DDU.DokkanNickname = C.DokkanNickname)
+           OR (C.DiscordId IS NULL
+               AND C.DiscordUsername IS NOT NULL
+               AND DDU.DiscordUsername = C.DiscordUsername)
+           OR (C.DiscordId IS NULL
+               AND C.DiscordUsername IS NULL
+               AND C.DokkanNickname IS NOT NULL
+               AND DDU.DokkanNickname = C.DokkanNickname)
         ORDER BY
             CASE
                 WHEN C.DiscordId IS NOT NULL AND DDU.DiscordId = C.DiscordId THEN 1

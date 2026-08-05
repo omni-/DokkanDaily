@@ -84,6 +84,21 @@ namespace DokkanDaily.Services
                     var props = await clear.GetPropertiesAsync();
                     var tags = props.Value.Metadata;
 
+                    // New uploads begin as pending and become valid only after OCR and the final
+                    // metadata write both succeed. A completed legacy blob has the OCR fields even
+                    // though it predates the explicit state; an identity-only legacy blob does not.
+                    bool hasUploadStatus = tags.TryGetValue(AzureConstants.UPLOAD_STATUS_TAG, out string uploadStatus);
+                    bool finalized = hasUploadStatus
+                        ? string.Equals(uploadStatus, AzureConstants.UPLOAD_STATUS_VALID, StringComparison.OrdinalIgnoreCase)
+                        : tags.ContainsKey(AzureConstants.CLEAR_TIME_TAG) && tags.ContainsKey(AzureConstants.ITEMLESS_TAG);
+                    if (!finalized)
+                    {
+                        _logger.LogWarning(
+                            "Upload is not finalized as valid ({Status}). Skipping clear.",
+                            hasUploadStatus ? uploadStatus : "legacy-incomplete");
+                        continue;
+                    }
+
                     // skip upload in case we don't know who the clear belongs to or it was marked invalid
                     if (tags.TryGetValue(AzureConstants.INVALID_TAG, out string invalid))
                     {

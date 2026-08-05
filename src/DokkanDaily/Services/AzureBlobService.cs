@@ -36,8 +36,9 @@ namespace DokkanDaily.Services
         // snapshot while an upload is still transferring and therefore not yet represented here.
         private static readonly ConcurrentDictionary<Guid, Task> _pendingAnalysis = new();
 
-        // Replacements for the same logged-in user must be serialized. Without this, two concurrent
-        // uploads can each delete the other's newly-created blob while cleaning up older clears.
+        // Replacements for the same logged-in user must be serialized through final OCR. Without
+        // this, an older upload can finish analysis after a newer upload arrives and delete the
+        // newer blob while cleaning up what it believes are earlier clears.
         // Entries are retained for the process lifetime; there is only one entry per authenticated
         // uploader, and avoiding unsafe removal keeps separate locks from being created for one id.
         private static readonly ConcurrentDictionary<string, SemaphoreSlim> _uploaderLocks = new();
@@ -75,6 +76,7 @@ namespace DokkanDaily.Services
                 : _uploaderLocks.GetOrAdd(discordId, _ => new SemaphoreSlim(1, 1));
             bool lockHeld = false;
             bool lifecycleHandedToAnalysis = false;
+            bool analysisOwnsUploaderLock = false;
 
             try
             {
@@ -102,44 +104,62 @@ namespace DokkanDaily.Services
                 await blob.UploadAsync(ms, options: new BlobUploadOptions()
                 {
                     HttpHeaders = new BlobHttpHeaders { ContentType = contentType },
-                    // written with the upload rather than after OCR, so a clear submitted seconds
-                    // before the reset is still attributable even if analysis has not run yet
+                    // Written with the upload so pending work remains attributable for diagnostics.
+                    // UPLOAD_STATUS_PENDING prevents reset processing until OCR finalizes it.
                     Metadata = BuildIdentityTagDict(model, discordUsername, discordId, remoteIp, userAgent),
                     Tags = new Dictionary<string, string> { { AzureConstants.DATE_TAG, DokkanDailyHelper.GetUtcNowDateTag() } }
                 });
 
                 _logger.LogInformation("Finished Azure upload.");
 
-                // The replacement is durable now, so it is safe to remove earlier attempts. Keep
-                // the new blob out of the cleanup enumeration.
-                await DeletePreviousUploads(container, discordId, blob.Name);
-
                 // do OCR analysis, dont block the main thread
-                _ = Task.Run(async () =>
-                {
-                    bool throttleHeld = false;
-                    try
-                    {
-                        await _ocrThrottle.WaitAsync();
-                        throttleHeld = true;
+                analysisOwnsUploaderLock = lockHeld;
+                lockHeld = false;
 
-                        ClearMetadata metadata = _ocrService.ProcessImage(ms);
-                        _logger.LogInformation("Finished processing image.");
-                        Dictionary<string, string> tags = BuildTagDict(model, metadata, discordUsername, discordId, remoteIp, userAgent);
-                        await blob.SetMetadataAsync(tags);
-                        _logger.LogInformation("Finished updating Azure metadata.");
-                    }
-                    catch (Exception ex)
+                try
+                {
+                    _ = Task.Run(async () =>
                     {
-                        _logger.LogError(ex, "Unhandled exception in background OCR task");
-                    }
-                    finally
-                    {
-                        if (throttleHeld) _ocrThrottle.Release();
-                        await ms.DisposeAsync();
-                        CompletePendingAnalysis(analysisId, analysisLifecycle);
-                    }
-                });
+                        bool throttleHeld = false;
+                        try
+                        {
+                            await _ocrThrottle.WaitAsync();
+                            throttleHeld = true;
+
+                            ClearMetadata metadata = _ocrService.ProcessImage(ms);
+                            _logger.LogInformation("Finished processing image.");
+                            Dictionary<string, string> tags = BuildTagDict(model, metadata, discordUsername, discordId, remoteIp, userAgent);
+                            await blob.SetMetadataAsync(tags);
+                            _logger.LogInformation("Finished updating Azure metadata.");
+
+                            // A replacement is authoritative only after OCR has validated it and
+                            // Azure has durably recorded that final state. Invalid or interrupted
+                            // attempts leave the uploader's previous valid clear intact.
+                            if (metadata is not null)
+                                await DeletePreviousUploads(container, discordId, blob.Name);
+                        }
+                        catch (Exception ex)
+                        {
+                            // The initial metadata remains `pending`, so the reset cannot score a
+                            // clear whose analysis or final metadata write did not complete.
+                            _logger.LogError(ex, "Unhandled exception in background OCR task");
+                        }
+                        finally
+                        {
+                            if (throttleHeld) _ocrThrottle.Release();
+                            if (analysisOwnsUploaderLock) uploaderLock.Release();
+                            await ms.DisposeAsync();
+                            CompletePendingAnalysis(analysisId, analysisLifecycle);
+                        }
+                    });
+                }
+                catch
+                {
+                    // Task.Run failed before the background task took ownership.
+                    lockHeld = analysisOwnsUploaderLock;
+                    analysisOwnsUploaderLock = false;
+                    throw;
+                }
 
                 lifecycleHandedToAnalysis = true;
 
@@ -339,9 +359,28 @@ namespace DokkanDaily.Services
 
             try
             {
+                BlobProperties replacementProperties = (await container
+                    .GetBlobClient(replacementBlobName)
+                    .GetPropertiesAsync()).Value;
+                DateTimeOffset? replacementCreatedOn = replacementProperties.CreatedOn;
+
+                if (replacementCreatedOn is null)
+                {
+                    _logger.LogWarning(
+                        "Could not determine when replacement `{File}` was created. Keeping previous clears to avoid deleting a newer upload.",
+                        replacementBlobName);
+                    return;
+                }
+
                 await foreach (BlobItem existing in container.GetBlobsAsync(BlobTraits.None, BlobStates.None, prefix, CancellationToken.None))
                 {
                     if (existing.Name == replacementBlobName) continue;
+
+                    // The in-memory uploader lock protects one process. CreatedOn also protects a
+                    // scaled-out deployment: an older instance finishing OCR late must never delete
+                    // a newer upload created by another instance.
+                    if (existing.Properties.CreatedOn is null || existing.Properties.CreatedOn >= replacementCreatedOn)
+                        continue;
 
                     _logger.LogInformation("Replacing the uploader's previous clear `{File}`.", existing.Name);
                     await container.DeleteBlobIfExistsAsync(existing.Name, DeleteSnapshotsOption.IncludeSnapshots);
@@ -362,6 +401,7 @@ namespace DokkanDaily.Services
         {
             Dictionary<string, string> dict = new()
             {
+                { AzureConstants.UPLOAD_STATUS_TAG, AzureConstants.UPLOAD_STATUS_PENDING },
                 { AzureConstants.DAILY_TYPE_TAG, model.DailyType.ToString()},
                 { AzureConstants.EVENT_TAG, model.TodaysEvent.FullName},
                 { AzureConstants.DISCORD_NAME_TAG, discordUsername },
@@ -389,10 +429,13 @@ namespace DokkanDaily.Services
 
             if (metadata is null)
             {
+                dict[AzureConstants.UPLOAD_STATUS_TAG] = AzureConstants.UPLOAD_STATUS_INVALID;
                 dict[AzureConstants.INVALID_TAG] = true.ToString();
 
                 return dict;
             }
+
+            dict[AzureConstants.UPLOAD_STATUS_TAG] = AzureConstants.UPLOAD_STATUS_VALID;
 
             string nickname = metadata.Nickname?.EscapeUnicode();
 

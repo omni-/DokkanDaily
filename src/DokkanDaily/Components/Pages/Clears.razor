@@ -129,6 +129,16 @@
                     var tags = await f.GetTagsAsync();
                     var metadata = await f.GetPropertiesAsync();
 
+                    bool hasUploadStatus = metadata.Value.Metadata.TryGetValue(AzureConstants.UPLOAD_STATUS_TAG, out string uploadStatus);
+                    bool finalized = hasUploadStatus
+                        ? string.Equals(uploadStatus, AzureConstants.UPLOAD_STATUS_VALID, StringComparison.OrdinalIgnoreCase)
+                        : metadata.Value.Metadata.ContainsKey(AzureConstants.CLEAR_TIME_TAG) &&
+                          metadata.Value.Metadata.ContainsKey(AzureConstants.ITEMLESS_TAG);
+                    if (!finalized)
+                    {
+                        continue;
+                    }
+
                     if (metadata.Value.Metadata.TryGetValue(AzureConstants.INVALID_TAG, out string invalid)) //only display valid clears
                     {
                         _ = bool.TryParse(invalid, out bool invalidResult);
