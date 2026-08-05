@@ -14,7 +14,7 @@ permissions:
 
 env:
   CONFIGURATION: Release
-  DOTNET_CORE_VERSION: 8.0.x
+  DOTNET_CORE_VERSION: 10.0.x
   WORKING_DIRECTORY: src/DokkanDaily
   DACPAC_NAME: DokkanDailyDB.dacpac
 jobs:
@@ -77,7 +77,7 @@ jobs:
       run: |
         cd src/DokkanDailyDB/
         docker build . --build-arg PASSWORD="<YourStrong@Passw0rd>" -t mydatabase:1.0 --no-cache
-        docker run -p 1433:1433 --name sqldb -d mydatabase:1.0
+        docker run -p 127.0.0.1:1433:1433 --name sqldb -d mydatabase:1.0
         cd ../..
       
     - name: Test
@@ -136,8 +136,11 @@ jobs:
       
   deploy:
     runs-on: ubuntu-latest
-    permissions: write-all
-    needs: build
+    permissions:
+      contents: read
+      id-token: write
+    needs: [build, db-deploy]
+    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
     steps:
     - uses: actions/checkout@v4
     
@@ -158,26 +161,13 @@ jobs:
         
     - name: Docker Build
       run: |
-        docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }} \
-        --build-arg AzureAccountName="${{ vars.AZURE_ACCOUNT_NAME }}" \
-        --build-arg AzureConnectionString="${{ secrets.BLOB_CONNECTION_STRING }}" \
-        --build-arg BlobContainerName="${{ vars.BLOB_CONTAINER_NAME }}" \
-        --build-arg BlobKey="${{ secrets.BLOB_KEY }}" \
-        --build-arg OAuth2ClientSecret="${{ secrets.OAUTH_CLIENT_SECRET }}" \
-        --build-arg OAuth2ClientId="${{ secrets.OAUTH_CLIENT_ID }}" \
-        --build-arg SqlServerConnectionString="${{ secrets.SQL_CONNECTION_STRING }}" \
-        --build-arg WebhookUrl="${{ secrets.DBC_WEBHOOKS_URL }}" \
-        --build-arg EnableJpParsing="true" \
-        --build-arg StageRepeatLimit="40" \
-        --build-arg EventRepeatLimit="10"
+        docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}
         
     - name: Docker push
-      if: github.ref == 'refs/heads/master'
       run: |
         docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}
         
     - name: Deploy to Azure WebApp
-      if: github.ref == 'refs/heads/master'
       uses: azure/webapps-deploy@v2
       with:
         app-name: DokkanDaily
@@ -187,6 +177,7 @@ jobs:
   db-deploy:
     runs-on: windows-latest
     needs: build
+    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
     steps:
     - name: Download artifact (Database)
       uses: actions/download-artifact@v4
@@ -202,7 +193,6 @@ jobs:
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         
     - name: Deploy DACPAC to Azure
-      if: github.ref == 'refs/heads/master'
       uses: azure/sql-action@v2.3
       with:
         connection-string: ${{ secrets.SQL_CONNECTION_STRING }}

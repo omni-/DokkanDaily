@@ -1,5 +1,4 @@
 ﻿using Azure;
-using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
@@ -20,9 +19,7 @@ namespace DokkanDaily.Services
         private readonly ILogger<AzureBlobService> _logger;
         private readonly IOcrService _ocrService;
         private readonly string _connectionString;
-        private readonly string _azureKey;
         private readonly string _containerName;
-        private readonly string _accountName;
 
         private const int maxFileSize = 1024 * 8192;
 
@@ -33,9 +30,7 @@ namespace DokkanDaily.Services
             _settings = settings.Value;
             _logger = logger;
             _connectionString = _settings.AzureBlobConnectionString;
-            _azureKey = _settings.AzureBlobKey;
             _containerName = _settings.AzureBlobContainerName;
-            _accountName = _settings.AzureAccountName;
             _ocrService = ocrService;
         }
 
@@ -147,22 +142,26 @@ namespace DokkanDaily.Services
         {
             try
             {
+                BlobContainerClient container = new(_connectionString, bucket ?? TodaysBucketFullName);
+                BlobClient blob = container.GetBlobClient(fileName);
+
+                if (!blob.CanGenerateSasUri)
+                {
+                    _logger.LogError("The configured blob connection string cannot sign a read SAS for `{File}`.", fileName);
+                    return null;
+                }
+
                 BlobSasBuilder blobSasBuilder = new()
                 {
-                    BlobContainerName = bucket ?? TodaysBucketFullName,
+                    BlobContainerName = container.Name,
                     BlobName = fileName,
-                    ExpiresOn = DateTime.UtcNow.AddMinutes(2)
+                    StartsOn = DateTimeOffset.UtcNow.AddMinutes(-5),
+                    ExpiresOn = DateTimeOffset.UtcNow.AddMinutes(15)
                 };
 
                 blobSasBuilder.SetPermissions(BlobSasPermissions.Read);
 
-                var sasToken = blobSasBuilder.ToSasQueryParameters(
-                    new StorageSharedKeyCredential(
-                        _accountName,
-                        _azureKey))
-                    .ToString();
-
-                return sasToken;
+                return blob.GenerateSasUri(blobSasBuilder).Query.TrimStart('?');
             }
             catch (Exception ex)
             {

@@ -17,6 +17,10 @@ namespace DokkanDaily
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Existing Azure settings use the DOTNET_ prefix. Load them as application
+            // configuration after the defaults so they override appsettings.json as documented.
+            builder.Configuration.AddEnvironmentVariables(prefix: "DOTNET_");
+
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(builder.Configuration)
                 .Enrich.FromLogContext()
