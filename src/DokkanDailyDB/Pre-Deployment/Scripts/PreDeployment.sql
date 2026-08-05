@@ -11,8 +11,11 @@ Pre-Deployment Script
 -- each date. On a fresh database the table does not exist yet and this is skipped.
 IF OBJECT_ID('Core.DailyChallenge', 'U') IS NOT NULL
 BEGIN
+    -- IncludeTransactionalScripts keeps this lock until the DACPAC finishes applying the schema
+    -- plan. That prevents the currently running application from inserting another duplicate
+    -- between this cleanup and creation of DailyChallenge_UC01.
     DELETE DC
-    FROM Core.DailyChallenge DC
+    FROM Core.DailyChallenge DC WITH (TABLOCKX, HOLDLOCK)
     WHERE EXISTS (
         SELECT 1
         FROM Core.DailyChallenge Newer

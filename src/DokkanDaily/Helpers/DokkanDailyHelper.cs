@@ -53,35 +53,33 @@ namespace DokkanDaily.Helpers
         public static bool TryParseDokkanTimeSpan(string value, out TimeSpan result)
             => TimeSpan.TryParseExact(value, "h\\'mm\\\"ss\\.f", System.Globalization.CultureInfo.InvariantCulture, out result);
 
-        public static string AddUserAgentToFileName(string file, string userAgent)
-        {
-            if (string.IsNullOrEmpty(userAgent)) return file;
-
-            string ext = Path.GetExtension(file);
-            string name = Path.GetFileNameWithoutExtension(file);
-            string agentPart = string.IsNullOrEmpty(userAgent) ? "" : $"-{AlphaNumericRegex().Replace(userAgent, "")}";
-
-            return $"{name}{agentPart}{ext}";
-        }
+        /// <summary>
+        /// The virtual directory a logged in user's clears live under, or <see langword="null"/> for
+        /// an anonymous upload. Includes the trailing slash so it can be used as a blob prefix.
+        /// </summary>
+        public static string GetUserBlobPrefix(string discordId)
+            => string.IsNullOrWhiteSpace(discordId) ? null : $"{AlphaNumericRegex().Replace(discordId, "")}/";
 
         /// <summary>
-        /// Builds a storage-safe blob name from a client-supplied file name. Path separators and
-        /// other unsafe characters are stripped, and the uploader's Discord id - when known - scopes
-        /// the blob into its own virtual directory so one user cannot overwrite another user's clear
-        /// by submitting a file with the same name.
+        /// Builds a storage-safe, unique blob name from a client-supplied file name.
         /// </summary>
-        public static string BuildBlobName(string userFileName, string userAgent, string discordId)
+        /// <remarks>
+        /// Path separators and other unsafe characters are stripped, and a GUID is appended so two
+        /// uploads can never collide. The uploader's Discord id, when known, scopes the blob into
+        /// its own virtual directory, which keeps one user from touching another's clears at all.
+        /// The user agent deliberately plays no part in the name - it used to, which meant
+        /// re-uploading a previously downloaded clear stacked a second agent onto the name. It is
+        /// recorded in blob metadata instead.
+        /// </remarks>
+        public static string BuildBlobName(string userFileName, string discordId)
         {
-            string named = AddUserAgentToFileName(userFileName, userAgent);
-            string safe = UnsafeBlobNameCharRegex().Replace(named ?? "", "").TrimStart('.');
+            string ext = UnsafeBlobNameCharRegex().Replace(Path.GetExtension(userFileName ?? ""), "");
+            string name = UnsafeBlobNameCharRegex().Replace(Path.GetFileNameWithoutExtension(userFileName ?? ""), "").Trim('.');
 
-            if (safe.Length > MaxBlobNameLength) safe = safe[^MaxBlobNameLength..];
+            if (string.IsNullOrWhiteSpace(name)) name = "clear";
+            if (name.Length > MaxBlobNameLength) name = name[..MaxBlobNameLength];
 
-            if (string.IsNullOrWhiteSpace(safe)) safe = "clear.png";
-
-            if (string.IsNullOrWhiteSpace(discordId)) return safe;
-
-            return $"{AlphaNumericRegex().Replace(discordId, "")}/{safe}";
+            return $"{GetUserBlobPrefix(discordId)}{name}-{Guid.NewGuid():N}{ext}";
         }
 
         public static Unit GetUnit(string name, string title)

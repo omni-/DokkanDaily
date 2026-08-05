@@ -5,7 +5,7 @@ using DokkanDaily.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using Newtonsoft.Json;
+using System.Text.Json;
 using NUnit.Framework.Internal;
 using System.Collections.Concurrent;
 
@@ -72,12 +72,24 @@ namespace DokkanDailyTests
             }
         }
 
+        /// <summary>
+        /// Snapshots are hand-annotated - `ipad.json` for one keeps the values OCR *should* return
+        /// commented out beside the nulls it currently returns. Newtonsoft skipped those comments
+        /// by default; System.Text.Json rejects them unless told otherwise.
+        /// </summary>
+        private static readonly JsonSerializerOptions SnapshotJsonOptions = new()
+        {
+            WriteIndented = true,
+            ReadCommentHandling = JsonCommentHandling.Skip,
+            AllowTrailingCommas = true
+        };
+
         private static class SnapshotHelper<T> where T : class
         {
             public static void SaveSnapshot(string imagePath, T data)
             {
                 string snapshotPath = GetSnapshotPath(imagePath);
-                string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+                string json = JsonSerializer.Serialize(data, SnapshotJsonOptions);
                 File.WriteAllText(snapshotPath, json);
             }
 
@@ -90,7 +102,7 @@ namespace DokkanDailyTests
                 }
 
                 string json = File.ReadAllText(snapshotPath);
-                return JsonConvert.DeserializeObject<T>(json);
+                return JsonSerializer.Deserialize<T>(json, SnapshotJsonOptions);
             }
 
             private static string GetSnapshotPath(string imagePath)

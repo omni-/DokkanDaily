@@ -1,0 +1,34 @@
+# The Dockerfile does `COPY . .` into the SDK stage, so whatever survives this file gets built
+# on top of. Host build output is the dangerous part: obj/ carries staticwebassets.build.json
+# with absolute host paths (C:\Users\...\ on Windows) plus a prebuilt scoped-CSS bundle, and
+# MSBuild treats those as up to date rather than regenerating them for linux-x64. The result is
+# an image whose DokkanDaily.styles.css does not match the scope IDs on the rendered markup, so
+# every CSS-isolation rule silently stops matching. CI never hit this because actions/checkout
+# hands the deploy job a clean tree.
+**/bin/
+**/obj/
+**/publish/
+**/TestResults/
+
+# Source control and CI - nothing in the build reads these
+.git/
+.gitignore
+.gitattributes
+.github/
+
+# IDE and editor state
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Docker's own files are passed with -f, not read from the context
+Dockerfile
+.dockerignore
+
+# Database build artifacts (the DB image builds from src/DokkanDailyDB with its own context)
+Dacpac/
+**/*.dacpac

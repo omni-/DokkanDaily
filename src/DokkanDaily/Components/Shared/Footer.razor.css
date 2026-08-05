@@ -21,6 +21,25 @@ footer {
     display:flex;
     justify-content: center;
 }
-button {
+/* Login and logout are links now, so the button chrome the browser used to supply has to be
+   declared here. `footer button` in app.css no longer matches them, hence the margins. */
+.auth-button {
+    align-self: flex-end;
+    background-color: #efefef;
+    border: 1px solid #767676;
+    border-radius: 3px;
+    color: #000;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: normal;
     margin-bottom: 1vh;
+    margin-left: 1vw;
+    padding: 1px 7px 2px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.auth-button:hover {
+    background-color: #e5e5e5;
+    color: #000;
 }

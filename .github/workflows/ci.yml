@@ -203,7 +203,9 @@ jobs:
         connection-string: ${{ secrets.SQL_CONNECTION_STRING }}
         path: './${{ env.DACPAC_NAME }}'
         action: 'publish'
-        arguments: '/p:DropObjectsNotInSource=false'
+        # Keep pre-deployment data cleanup and schema changes in one transaction. This ensures the
+        # duplicate cleanup is rolled back if the new UNIQUE constraint cannot be applied.
+        arguments: '/p:DropObjectsNotInSource=false /p:IncludeTransactionalScripts=true'
     
     - name: Logout from Azure
       run: |

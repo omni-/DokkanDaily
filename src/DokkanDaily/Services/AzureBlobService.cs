@@ -56,11 +56,13 @@ namespace DokkanDaily.Services
             {
                 (BlobContainerClient container, _) = await GetOrCreate(bucket);
 
-                string fileName = DokkanDailyHelper.BuildBlobName(userFileName, userAgent, discordId);
+                string fileName = DokkanDailyHelper.BuildBlobName(userFileName, discordId);
 
                 BlobClient blob = container.GetBlobClient(fileName);
 
-                await blob.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
+                // names are unique now, so nothing would ever be overwritten - drop the uploader's
+                // earlier attempts explicitly instead so the gallery shows one clear per person
+                await DeletePreviousUploads(container, discordId);
 
                 MemoryStream ms = new();
                 using (Stream fileStream = browserFile.OpenReadStream(maxFileSize))
@@ -76,7 +78,7 @@ namespace DokkanDaily.Services
                     HttpHeaders = new BlobHttpHeaders { ContentType = contentType },
                     // written with the upload rather than after OCR, so a clear submitted seconds
                     // before the reset is still attributable even if analysis has not run yet
-                    Metadata = BuildIdentityTagDict(model, discordUsername, discordId, remoteIp),
+                    Metadata = BuildIdentityTagDict(model, discordUsername, discordId, remoteIp, userAgent),
                     Tags = new Dictionary<string, string> { { AzureConstants.DATE_TAG, DokkanDailyHelper.GetUtcNowDateTag() } }
                 });
 
@@ -91,7 +93,7 @@ namespace DokkanDaily.Services
                     {
                         ClearMetadata metadata = _ocrService.ProcessImage(ms);
                         _logger.LogInformation("Finished processing image.");
-                        Dictionary<string, string> tags = BuildTagDict(model, metadata, discordUsername, discordId, remoteIp);
+                        Dictionary<string, string> tags = BuildTagDict(model, metadata, discordUsername, discordId, remoteIp, userAgent);
                         await blob.SetMetadataAsync(tags);
                         _logger.LogInformation("Finished updating Azure metadata.");
                     }
@@ -281,10 +283,40 @@ namespace DokkanDaily.Services
         }
 
         /// <summary>
+        /// Removes an uploader's earlier clears from the container so a re-upload replaces rather
+        /// than accumulates.
+        /// </summary>
+        /// <remarks>
+        /// Keyed on the uploader's blob prefix, so this works across devices - the old scheme put
+        /// the user agent in the file name, which meant the same person on a phone and a desktop
+        /// produced two blobs. Anonymous uploads have no prefix to key on and are left alone.
+        /// </remarks>
+        private async Task DeletePreviousUploads(BlobContainerClient container, string discordId)
+        {
+            string prefix = DokkanDailyHelper.GetUserBlobPrefix(discordId);
+
+            if (prefix is null) return;
+
+            try
+            {
+                await foreach (BlobItem existing in container.GetBlobsAsync(BlobTraits.None, BlobStates.None, prefix, CancellationToken.None))
+                {
+                    _logger.LogInformation("Replacing the uploader's previous clear `{File}`.", existing.Name);
+                    await container.DeleteBlobIfExistsAsync(existing.Name, DeleteSnapshotsOption.IncludeSnapshots);
+                }
+            }
+            catch (Exception ex)
+            {
+                // not worth failing the upload over - the worst case is the gallery showing both
+                _logger.LogWarning(ex, "Could not remove previous clears for `{Prefix}`. The new clear will appear alongside them.", prefix);
+            }
+        }
+
+        /// <summary>
         /// The metadata that is known without OCR. Written at upload time so a clear submitted just
         /// before the nightly reset can still be attributed to a logged in user.
         /// </summary>
-        private static Dictionary<string, string> BuildIdentityTagDict(Challenge model, string discordUsername, string discordId, string remoteIp)
+        private static Dictionary<string, string> BuildIdentityTagDict(Challenge model, string discordUsername, string discordId, string remoteIp, string userAgent)
         {
             Dictionary<string, string> dict = new()
             {
@@ -293,6 +325,9 @@ namespace DokkanDaily.Services
                 { AzureConstants.DISCORD_NAME_TAG, discordUsername },
                 { AzureConstants.DISCORD_ID,  discordId },
                 { AzureConstants.IP_TAG, remoteIp },
+                // kept for correlating OCR failures with a device or browser; it used to live in
+                // the blob name, where it stacked up on every re-upload
+                { AzureConstants.USER_AGENT_TAG, userAgent?.EscapeUnicode() },
                 { AzureConstants.CHALLENGE_TARGET_TAG, model.DailyType switch
                     {
                         DailyType.LinkSkill =>  model.LinkSkill?.Name,
@@ -306,9 +341,9 @@ namespace DokkanDaily.Services
             return dict.Where(kv => !string.IsNullOrEmpty(kv.Value)).ToDictionary();
         }
 
-        private static Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata, string discordUsername, string discordId, string remoteIp)
+        private static Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata, string discordUsername, string discordId, string remoteIp, string userAgent)
         {
-            Dictionary<string, string> dict = BuildIdentityTagDict(model, discordUsername, discordId, remoteIp);
+            Dictionary<string, string> dict = BuildIdentityTagDict(model, discordUsername, discordId, remoteIp, userAgent);
 
             if (metadata is null)
             {

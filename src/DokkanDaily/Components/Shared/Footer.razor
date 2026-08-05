@@ -1,5 +1,4 @@
 ﻿@inject NavigationManager NavManager
-@inject IJSRuntime JSRuntime
 
 <footer>
     <div>
@@ -16,20 +15,16 @@
     </div>
     <Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
         <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+            @* Both endpoints end in a full page load - one to Discord's consent screen, one to the
+               sign-out redirect - so they are plain links. Routing them through NavigateTo(forceLoad:
+               true) tore the circuit down while its own navigation interop call was still in flight,
+               which surfaced as a TaskCanceledException and flashed the error banner on the way out. *@
             <Authorized>
-                <button @onclick=OnClick>Log out</button>
+                <a class="auth-button" href="deauth">Log out</a>
             </Authorized>
             <NotAuthorized>
-                <button @onclick="@(()=>NavManager.NavigateTo("/auth", true))">Login</button>
+                <a class="auth-button" href="auth">Login</a>
             </NotAuthorized>
         </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
     </Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
 </footer>
-
-@code {
-    void OnClick()
-    {
-        JSRuntime.InvokeVoidAsync("open", $"{NavManager.BaseUri}deauth", "_blank");
-        NavManager.NavigateTo("/daily", true);
-    }
-}

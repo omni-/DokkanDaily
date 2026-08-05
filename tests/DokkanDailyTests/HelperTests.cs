@@ -9,43 +9,64 @@ namespace DokkanDailyTests
     public class HelperTests
     {
         [Test]
-        [TestCase("aliens.png", "/Agent 47/", "aliens-Agent47.png")]
-        [TestCase("IMG_1907.png", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0", "IMG_1907-Mozilla50WindowsNT100Win64x64rv1300Gecko20100101Firefox1300.png")]
-        [TestCase("myFile.LongName.WithDots.pdf", "idk/1.0 how; a; user agent; works", "myFile.LongName.WithDots-idk10howauseragentworks.pdf")]
-        [TestCase("cats.jpg", "", "cats.jpg")]
-        public void CanAddAgentToFileName(string file, string agent, string result)
+        [TestCase("cats.png", null, @"^cats-[0-9a-f]{32}\.png$")]
+        [TestCase("../../escape.png", null, @"^escape-[0-9a-f]{32}\.png$")]
+        // path components are discarded rather than flattened into the name
+        [TestCase("a/b/c.png", null, @"^c-[0-9a-f]{32}\.png$")]
+        [TestCase(@"..\..\windows\c.png", null, @"^c-[0-9a-f]{32}\.png$")]
+        // a name that is nothing but dots falls back to the default, keeping its extension
+        [TestCase("....png", null, @"^clear-[0-9a-f]{32}\.png$")]
+        [TestCase("", null, @"^clear-[0-9a-f]{32}$")]
+        [TestCase("myFile.LongName.WithDots.jpg", null, @"^myFile\.LongName\.WithDots-[0-9a-f]{32}\.jpg$")]
+        [TestCase("cats.png", "112089455933792256", @"^112089455933792256/cats-[0-9a-f]{32}\.png$")]
+        public void BlobNamesAreSanitizedUniqueAndScopedToTheUploader(string file, string discordId, string expected)
         {
-            string output = DokkanDailyHelper.AddUserAgentToFileName(file, agent);
+            string output = DokkanDailyHelper.BuildBlobName(file, discordId);
 
-            Assert.That(output, Is.EqualTo(result));
-        }
-
-        [Test]
-        public void NullAgentWorks()
-        {
-            Assert.That(DokkanDailyHelper.AddUserAgentToFileName("cats.png", null), Is.EqualTo("cats.png"));
-        }
-
-        [Test]
-        [TestCase("cats.png", null, null, "cats.png")]
-        [TestCase("../../escape.png", null, null, "escape.png")]
-        [TestCase("a/b/c.png", null, null, "abc.png")]
-        [TestCase("....png", null, null, "png")]
-        [TestCase("cats.png", null, "112089455933792256", "112089455933792256/cats.png")]
-        public void BlobNamesAreSanitizedAndScopedToTheUploader(string file, string agent, string discordId, string expected)
-        {
-            string output = DokkanDailyHelper.BuildBlobName(file, agent, discordId);
-
-            Assert.That(output, Is.EqualTo(expected));
+            Assert.That(output, Does.Match(expected));
         }
 
         [Test]
         public void BlobNamesNeverEscapeTheOwnerDirectory()
         {
-            string output = DokkanDailyHelper.BuildBlobName("../../../other-user/steal.png", null, "42");
+            string output = DokkanDailyHelper.BuildBlobName("../../../other-user/steal.png", "42");
 
             Assert.That(output, Does.StartWith("42/"));
             Assert.That(output, Does.Not.Contain(".."));
+        }
+
+        [Test]
+        public void BlobNamesAreUniquePerUpload()
+        {
+            // the user agent used to make the name stable per device, which meant a re-upload
+            // silently replaced the earlier blob - uniqueness is now explicit
+            string first = DokkanDailyHelper.BuildBlobName("clear.png", "42");
+            string second = DokkanDailyHelper.BuildBlobName("clear.png", "42");
+
+            Assert.That(first, Is.Not.EqualTo(second));
+        }
+
+        [Test]
+        public void BlobNamesDoNotGrowOnRepeatedUpload()
+        {
+            // feeding a generated name back in - as happens when a user re-uploads a clear they
+            // previously downloaded from the site - must not stack suffixes
+            string first = DokkanDailyHelper.BuildBlobName("Screenshot_20250317.jpg", null);
+            string second = DokkanDailyHelper.BuildBlobName(first, null);
+            string third = DokkanDailyHelper.BuildBlobName(second, null);
+
+            Assert.That(third.Length, Is.LessThanOrEqualTo(second.Length + 33));
+            Assert.That(third, Does.EndWith(".jpg"));
+        }
+
+        [Test]
+        [TestCase(null, null)]
+        [TestCase("", null)]
+        [TestCase("   ", null)]
+        [TestCase("112089455933792256", "112089455933792256/")]
+        public void UserBlobPrefixIsOnlySetForLoggedInUploads(string discordId, string expected)
+        {
+            Assert.That(DokkanDailyHelper.GetUserBlobPrefix(discordId), Is.EqualTo(expected));
         }
 
         [Test]

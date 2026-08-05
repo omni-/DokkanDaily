@@ -23,5 +23,22 @@
         public static string CHALLENGE_TARGET_TAG => "challengetarget";
 
         public static string DISCORD_ID => "discordid";
+
+        public static string USER_AGENT_TAG => "useragent";
+
+        /// <summary>
+        /// Container holding the Data Protection key ring. Deliberately has no date suffix, so the
+        /// prune job's <c>{container}-{MM-dd-yyyy}</c> filter can never match and delete it.
+        /// </summary>
+        public const string DATA_PROTECTION_CONTAINER = "dataprotection-keys";
+
+        public const string DATA_PROTECTION_BLOB = "keys.xml";
+
+        /// <summary>
+        /// Purpose string mixed into every protected payload. Must stay identical across instances
+        /// and deployment slots: changing it, or letting it default to the assembly name in one
+        /// place and not another, invalidates every cookie issued by the other side.
+        /// </summary>
+        public const string DATA_PROTECTION_APP_NAME = "DokkanDaily";
     }
 }

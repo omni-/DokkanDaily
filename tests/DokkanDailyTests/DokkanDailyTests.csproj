@@ -10,15 +10,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="10.0.0">
+    <PackageReference Include="coverlet.collector" Version="10.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="FluentAssertions" Version="8.9.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
+    <PackageReference Include="FluentAssertions" Version="8.10.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
     <PackageReference Include="Moq" Version="4.20.72" />
-    <PackageReference Include="NUnit" Version="4.5.1" />
-    <PackageReference Include="NUnit.Analyzers" Version="4.12.0">
+    <PackageReference Include="NUnit" Version="4.6.1" />
+    <PackageReference Include="NUnit.Analyzers" Version="4.14.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -27,6 +27,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\DokkanDaily\DokkanDaily.csproj" />
+    <!--
+      The app under test is a Web SDK project, so it resolves Microsoft.AspNetCore.DataProtection
+      and its System.Security.Cryptography.Xml dependency from the ASP.NET Core shared framework -
+      patched by the runtime, not by NuGet. Without this reference the plain SDK test project has
+      no shared framework to resolve against and NuGet materialises those packages instead,
+      dragging in a version carrying published advisories that the app itself never ships.
+    -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,11 +1,15 @@
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using DokkanDaily.Components;
 using DokkanDaily.Configuration;
+using DokkanDaily.Constants;
 using DokkanDaily.Repository;
 using DokkanDaily.Services;
 using DokkanDaily.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 
@@ -74,6 +78,8 @@ namespace DokkanDaily
                     "StageRepeatLimitDays and EventRepeatLimitDays must be greater than zero, otherwise challenge repeat protection is silently disabled.")
                 .ValidateOnStart();
 
+            ConfigureDataProtection(builder, configuration);
+
             builder.Services
                 .AddAuthentication(opt =>
                 {
@@ -126,9 +132,13 @@ namespace DokkanDaily
                 await context.ChallengeAsync("Discord", new AuthenticationProperties { RedirectUri = "/" });
             });
 
+            // Redirects rather than ending on a blank page, so logging out can be a plain link.
+            // SignOutAsync only writes headers, so the response has not started and can still be
+            // turned into a 302.
             app.MapGet("/deauth", async (context) =>
             {
                 await context.SignOutAsync();
+                context.Response.Redirect("/daily");
             });
 
             Log.Information("Starting web host");
@@ -146,6 +156,67 @@ namespace DokkanDaily
             {
                 Log.CloseAndFlush();
             }
+        }
+
+        /// <summary>
+        /// Persists the Data Protection key ring to blob storage.
+        /// </summary>
+        /// <remarks>
+        /// The default provider writes the key ring to the container filesystem, which is discarded
+        /// on every redeploy, restart and scale event. A fresh key ring cannot decrypt anything the
+        /// previous instance issued: antiforgery tokens fail to deserialize, every signed-in user is
+        /// silently logged out, and <see cref="ProtectedSessionStorage"/> throws on reads of data it
+        /// wrote itself. Sharing one key ring also lets scaled-out instances read each other's
+        /// cookies, which they otherwise cannot.
+        /// </remarks>
+        private static void ConfigureDataProtection(WebApplicationBuilder builder, IConfigurationSection configuration)
+        {
+            string connectionString = configuration[nameof(DokkanDailySettings.AzureBlobConnectionString)];
+
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                // Expected when running locally without storage configured. The filesystem key ring
+                // is durable there, so this only costs cookie continuity across a container rebuild.
+                Log.Warning(
+                    "{Setting} is not configured, so the Data Protection key ring falls back to local storage. " +
+                    "In a container this means auth cookies and antiforgery tokens are invalidated on every restart.",
+                    nameof(DokkanDailySettings.AzureBlobConnectionString));
+
+                return;
+            }
+
+            BlobContainerClient container = new(connectionString, AzureConstants.DATA_PROTECTION_CONTAINER);
+
+            try
+            {
+                // The key ring is written lazily, so a missing container would otherwise surface as a
+                // failure on the first sign-in rather than here.
+                container.CreateIfNotExists(PublicAccessType.None);
+            }
+            catch (Exception ex)
+            {
+                // Registering the provider anyway would be worse than not registering it: Data
+                // Protection would throw on the first protect instead of only losing continuity, and
+                // that breaks antiforgery on every request. Fall back to the ephemeral key ring, which
+                // is what the app did before this was configured at all, and stay serving.
+                Log.Error(
+                    ex,
+                    "Could not open the Data Protection container `{Container}`. Falling back to an ephemeral key ring: " +
+                    "sign-ins will not survive a restart, and instances will not be able to read each other's cookies.",
+                    AzureConstants.DATA_PROTECTION_CONTAINER);
+
+                return;
+            }
+
+            builder.Services
+                .AddDataProtection()
+                .SetApplicationName(AzureConstants.DATA_PROTECTION_APP_NAME)
+                .PersistKeysToAzureBlobStorage(container.GetBlobClient(AzureConstants.DATA_PROTECTION_BLOB));
+
+            Log.Information(
+                "Data Protection key ring persisting to `{Container}/{Blob}`.",
+                AzureConstants.DATA_PROTECTION_CONTAINER,
+                AzureConstants.DATA_PROTECTION_BLOB);
         }
     }
 }
