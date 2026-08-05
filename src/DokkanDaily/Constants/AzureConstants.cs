@@ -23,5 +23,15 @@
         public static string CHALLENGE_TARGET_TAG => "challengetarget";
 
         public static string DISCORD_ID => "discordid";
+
+        public const string USER_AGENT_TAG = "useragent";
+
+        public const string UPLOAD_STATUS_TAG = "uploadstatus";
+
+        public const string UPLOAD_STATUS_PENDING = "pending";
+
+        public const string UPLOAD_STATUS_VALID = "valid";
+
+        public const string UPLOAD_STATUS_INVALID = "invalid";
     }
 }

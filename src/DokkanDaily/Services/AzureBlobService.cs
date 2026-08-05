@@ -2,6 +2,7 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
+using System.Collections.Concurrent;
 using DokkanDaily.Configuration;
 using DokkanDaily.Constants;
 using DokkanDaily.Exceptions;
@@ -22,6 +23,9 @@ namespace DokkanDaily.Services
         private readonly IUploadAttemptLimiter _uploadAttemptLimiter;
         private readonly string _connectionString;
         private readonly string _containerName;
+
+        private static readonly SemaphoreSlim _ocrThrottle = new(Math.Max(1, Environment.ProcessorCount / 2));
+        private static readonly ConcurrentDictionary<string, SemaphoreSlim> _uploaderLocks = new();
 
         private const int maxFileSize = 1024 * 8192;
 
@@ -48,47 +52,76 @@ namespace DokkanDaily.Services
             if (!admission.Accepted)
                 throw new UploadRejectedException(admission.RejectionMessage);
 
+            SemaphoreSlim uploaderLock = string.IsNullOrWhiteSpace(discordId)
+                ? null
+                : _uploaderLocks.GetOrAdd(discordId, _ => new SemaphoreSlim(1, 1));
+            bool uploaderLockHeld = false;
+            MemoryStream uploadStream = null;
+
             try
             {
+                if (uploaderLock != null)
+                {
+                    await uploaderLock.WaitAsync();
+                    uploaderLockHeld = true;
+                }
+
                 var (container, _) = await GetOrCreate(bucket);
 
-                string fileName = DokkanDailyHelper.AddUserAgentToFileName(userFileName, userAgent);
+                string fileName = DokkanDailyHelper.BuildBlobName(userFileName, discordId);
 
                 BlobClient blob = container.GetBlobClient(fileName);
 
-                await blob.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
-
-                MemoryStream ms = new();
+                uploadStream = new MemoryStream();
                 using Stream fileStream = browserFile.OpenReadStream(maxFileSize);
-                await fileStream.CopyToAsync(ms);
-                ms.Position = 0;
+                await fileStream.CopyToAsync(uploadStream);
+                uploadStream.Position = 0;
 
                 _logger.LogInformation("Uploading to `{Container}/{File}`...", container.Name, fileName);
 
-                await blob.UploadAsync(ms, options: new BlobUploadOptions()
+                await blob.UploadAsync(uploadStream, options: new BlobUploadOptions()
                 {
                     HttpHeaders = new BlobHttpHeaders { ContentType = contentType },
-                    Tags = new Dictionary<string, string> { { AzureConstants.DATE_TAG, DokkanDailyHelper.GetUtcNowDateTag() } }
+                    Tags = new Dictionary<string, string> { { AzureConstants.DATE_TAG, DokkanDailyHelper.GetUtcNowDateTag() } },
+                    Metadata = BuildIdentityTagDict(model, discordUsername, discordId, remoteIp, userAgent)
                 });
 
                 _logger.LogInformation("Finished Azure upload.");
 
-                // do OCR analysis, dont block the main thread
+                MemoryStream analysisStream = uploadStream;
+                bool releaseUploaderLock = uploaderLockHeld;
+
                 _ = Task.Run(async () =>
                 {
+                    bool throttleHeld = false;
                     try
                     {
-                        var metadata = _ocrService.ProcessImage(ms);
+                        await _ocrThrottle.WaitAsync();
+                        throttleHeld = true;
+
+                        var metadata = _ocrService.ProcessImage(analysisStream);
                         _logger.LogInformation("Finished processing image.");
-                        var tags = BuildTagDict(model, metadata, discordUsername, discordId, remoteIp);
+                        var tags = BuildTagDict(model, metadata, discordUsername, discordId, remoteIp, userAgent);
                         await blob.SetMetadataAsync(tags);
                         _logger.LogInformation("Finished updating Azure metadata.");
+
+                        if (metadata != null)
+                            await DeletePreviousUploads(container, blob, discordId);
                     }
                     catch (Exception ex)
                     {
                         _logger.LogError(ex, "Unhandled exception in background OCR task");
                     }
+                    finally
+                    {
+                        if (throttleHeld) _ocrThrottle.Release();
+                        if (releaseUploaderLock) uploaderLock.Release();
+                        await analysisStream.DisposeAsync();
+                    }
                 });
+
+                uploadStream = null;
+                uploaderLockHeld = false;
 
                 return blob;
             }
@@ -96,6 +129,11 @@ namespace DokkanDaily.Services
             {
                 _logger.LogError(ex, "Unhandled exception while uploading to Azure");
                 throw;
+            }
+            finally
+            {
+                if (uploaderLockHeld) uploaderLock.Release();
+                if (uploadStream != null) await uploadStream.DisposeAsync();
             }
         }
 
@@ -234,33 +272,75 @@ namespace DokkanDaily.Services
             }
         }
 
-        private static Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata, string discordUsername, string discordId, string remoteIp)
+        internal static Dictionary<string, string> BuildIdentityTagDict(Challenge model, string discordUsername, string discordId, string remoteIp, string userAgent)
         {
-            string invalid = null;
-            if (metadata == null) invalid = true.ToString();
-
             var dict = new Dictionary<string, string>()
             {
                 { AzureConstants.DAILY_TYPE_TAG, model.DailyType.ToString()},
-                { AzureConstants.EVENT_TAG, model.TodaysEvent.FullName},
-                { AzureConstants.USER_NAME_TAG, metadata?.Nickname?.EscapeUnicode()},
-                { AzureConstants.ITEMLESS_TAG, (metadata?.ItemlessClear)?.ToString()},
-                { AzureConstants.CLEAR_TIME_TAG, metadata?.ClearTime},
-                { AzureConstants.DISCORD_NAME_TAG, discordUsername },
+                { AzureConstants.EVENT_TAG, model.TodaysEvent.FullName?.EscapeUnicode()},
+                { AzureConstants.DISCORD_NAME_TAG, discordUsername?.EscapeUnicode() },
                 { AzureConstants.DISCORD_ID,  discordId },
-                { AzureConstants.INVALID_TAG, invalid },
                 { AzureConstants.IP_TAG, remoteIp },
-                { AzureConstants.CHALLENGE_TARGET_TAG, model.DailyType switch
+                { AzureConstants.USER_AGENT_TAG, userAgent?.EscapeUnicode() },
+                { AzureConstants.UPLOAD_STATUS_TAG, AzureConstants.UPLOAD_STATUS_PENDING },
+                { AzureConstants.CHALLENGE_TARGET_TAG, (model.DailyType switch
                     {
                         DailyType.LinkSkill =>  model.LinkSkill.Name,
                         DailyType.Category => model.Category.Name,
                         DailyType.Character => model.Leader.FullName,
                         _ => null
-                    }
+                    })?.EscapeUnicode()
                 }
             };
 
             return dict.Where(kv => !string.IsNullOrEmpty(kv.Value)).ToDictionary();
+        }
+
+        private static Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata, string discordUsername, string discordId, string remoteIp, string userAgent)
+        {
+            Dictionary<string, string> dict = BuildIdentityTagDict(model, discordUsername, discordId, remoteIp, userAgent);
+
+            if (metadata == null)
+            {
+                dict[AzureConstants.UPLOAD_STATUS_TAG] = AzureConstants.UPLOAD_STATUS_INVALID;
+                dict[AzureConstants.INVALID_TAG] = true.ToString();
+                return dict;
+            }
+
+            dict[AzureConstants.UPLOAD_STATUS_TAG] = AzureConstants.UPLOAD_STATUS_VALID;
+            dict[AzureConstants.USER_NAME_TAG] = metadata.Nickname?.EscapeUnicode();
+            dict[AzureConstants.ITEMLESS_TAG] = metadata.ItemlessClear.ToString();
+            dict[AzureConstants.CLEAR_TIME_TAG] = metadata.ClearTime;
+
+            return dict.Where(kv => !string.IsNullOrEmpty(kv.Value)).ToDictionary();
+        }
+
+        private async Task DeletePreviousUploads(BlobContainerClient container, BlobClient replacement, string discordId)
+        {
+            string prefix = DokkanDailyHelper.GetUserBlobPrefix(discordId);
+            if (prefix == null) return;
+
+            try
+            {
+                DateTimeOffset? replacementCreatedOn = (await replacement.GetPropertiesAsync()).Value.CreatedOn;
+                if (replacementCreatedOn == null) return;
+
+                await foreach (BlobItem existing in container.GetBlobsAsync(BlobTraits.None, BlobStates.None, prefix, CancellationToken.None))
+                {
+                    if (existing.Name == replacement.Name ||
+                        existing.Properties.CreatedOn == null ||
+                        existing.Properties.CreatedOn >= replacementCreatedOn)
+                    {
+                        continue;
+                    }
+
+                    await container.DeleteBlobIfExistsAsync(existing.Name, DeleteSnapshotsOption.IncludeSnapshots);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Could not remove prior uploads for Discord user `{DiscordId}`.", discordId);
+            }
         }
 
         private async Task<(BlobContainerClient, bool)> GetOrCreate(string bucket)

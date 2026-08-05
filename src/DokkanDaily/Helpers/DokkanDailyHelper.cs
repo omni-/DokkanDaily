@@ -10,12 +10,17 @@ namespace DokkanDaily.Helpers
 {
     public static partial class DokkanDailyHelper
     {
+        private const int MaxBlobNameLength = 200;
+
         #region Regex
         [GeneratedRegex("[^a-zA-Z0-9-]")]
         public static partial Regex AlphaNumericRegex();
 
         [GeneratedRegex(@"([UDO]BC\s?[\*\+]\s?).*")]
         public static partial Regex DbcNicknameTagRegex();
+
+        [GeneratedRegex("[^a-zA-Z0-9._-]")]
+        public static partial Regex UnsafeBlobNameCharRegex();
         #endregion
 
         #region Helper Functions
@@ -48,15 +53,19 @@ namespace DokkanDaily.Helpers
         public static bool TryParseDokkanTimeSpan(string value, out TimeSpan result)
             => TimeSpan.TryParseExact(value, "h\\'mm\\\"ss\\.f", System.Globalization.CultureInfo.InvariantCulture, out result);
 
-        public static string AddUserAgentToFileName(string file, string userAgent)
+        public static string GetUserBlobPrefix(string discordId)
+            => string.IsNullOrWhiteSpace(discordId) ? null : $"{AlphaNumericRegex().Replace(discordId, "")}/";
+
+        public static string BuildBlobName(string userFileName, string discordId)
         {
-            if (string.IsNullOrEmpty(userAgent)) return file;
+            string leafName = Path.GetFileName((userFileName ?? "").Replace('\\', '/'));
+            string ext = UnsafeBlobNameCharRegex().Replace(Path.GetExtension(leafName), "");
+            string name = UnsafeBlobNameCharRegex().Replace(Path.GetFileNameWithoutExtension(leafName), "").Trim('.');
 
-            string ext = Path.GetExtension(file);
-            string name = Path.GetFileNameWithoutExtension(file);
-            string agentPart = string.IsNullOrEmpty(userAgent) ? "" : $"-{AlphaNumericRegex().Replace(userAgent, "")}";
+            if (string.IsNullOrWhiteSpace(name)) name = "clear";
+            if (name.Length > MaxBlobNameLength) name = name[..MaxBlobNameLength];
 
-            return $"{name}{agentPart}{ext}";
+            return $"{GetUserBlobPrefix(discordId)}{name}-{Guid.NewGuid():N}{ext}";
         }
 
         public static Unit GetUnit(string name, string title)

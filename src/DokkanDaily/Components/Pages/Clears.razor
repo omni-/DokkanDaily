@@ -129,6 +129,13 @@
                         if (invalidResult) continue;
                     }
 
+                    bool finalized = metadata.Value.Metadata.TryGetValue(AzureConstants.UPLOAD_STATUS_TAG, out string uploadStatus)
+                        ? uploadStatus == AzureConstants.UPLOAD_STATUS_VALID
+                        : metadata.Value.Metadata.ContainsKey(AzureConstants.CLEAR_TIME_TAG)
+                            && metadata.Value.Metadata.ContainsKey(AzureConstants.ITEMLESS_TAG);
+
+                    if (!finalized) continue;
+
                     ret.Add(new()
                     {
                         FileName = f.Name,

@@ -1,6 +1,7 @@
 ﻿using DokkanDaily.Constants;
 using DokkanDaily.Helpers;
 using DokkanDaily.Models;
+using DokkanDaily.Models.Enums;
 using DokkanDaily.Services;
 
 namespace DokkanDailyTests
@@ -9,21 +10,57 @@ namespace DokkanDailyTests
     public class HelperTests
     {
         [Test]
-        [TestCase("aliens.png", "/Agent 47/", "aliens-Agent47.png")]
-        [TestCase("IMG_1907.png", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0", "IMG_1907-Mozilla50WindowsNT100Win64x64rv1300Gecko20100101Firefox1300.png")]
-        [TestCase("myFile.LongName.WithDots.pdf", "idk/1.0 how; a; user agent; works", "myFile.LongName.WithDots-idk10howauseragentworks.pdf")]
-        [TestCase("cats.jpg", "", "cats.jpg")]
-        public void CanAddAgentToFileName(string file, string agent, string result)
+        [TestCase("cats.png", null, @"^cats-[0-9a-f]{32}\.png$")]
+        [TestCase("../../escape.png", null, @"^escape-[0-9a-f]{32}\.png$")]
+        [TestCase(@"..\..\windows\c.png", null, @"^c-[0-9a-f]{32}\.png$")]
+        [TestCase("cats.png", "112089455933792256", @"^112089455933792256/cats-[0-9a-f]{32}\.png$")]
+        public void BlobNamesAreSanitizedUniqueAndScopedToTheUploader(string file, string discordId, string expected)
         {
-            string output = DokkanDailyHelper.AddUserAgentToFileName(file, agent);
+            string output = DokkanDailyHelper.BuildBlobName(file, discordId);
 
-            Assert.That(output, Is.EqualTo(result));
+            Assert.That(output, Does.Match(expected));
         }
 
         [Test]
-        public void NullAgentWorks()
+        public void BlobNamesNeverEscapeTheOwnerDirectory()
         {
-            Assert.That(DokkanDailyHelper.AddUserAgentToFileName("cats.png", null), Is.EqualTo("cats.png"));
+            string output = DokkanDailyHelper.BuildBlobName("../../../other-user/steal.png", "42");
+
+            Assert.That(output, Does.StartWith("42/"));
+            Assert.That(output, Does.Not.Contain(".."));
+        }
+
+        [Test]
+        public void BlobNamesAreUniquePerUpload()
+        {
+            string first = DokkanDailyHelper.BuildBlobName("clear.png", "42");
+            string second = DokkanDailyHelper.BuildBlobName("clear.png", "42");
+
+            Assert.That(first, Is.Not.EqualTo(second));
+        }
+
+        [Test]
+        public void InitialBlobMetadataIsAsciiSafe()
+        {
+            Challenge challenge = new(
+                DailyType.Character,
+                new Stage("Event", Tier.S, "event"),
+                null,
+                null,
+                new Leader("Power of Rosé", "Gokū Black", Tier.S),
+                null,
+                DateTime.UtcNow);
+
+            Dictionary<string, string> metadata = AzureBlobService.BuildIdentityTagDict(
+                challenge,
+                "Coopér",
+                "42",
+                "127.0.0.1",
+                "Bröwser");
+
+            Assert.That(metadata.Values.All(value => value.All(character => character <= 127)), Is.True);
+            Assert.That(metadata[AzureConstants.CHALLENGE_TARGET_TAG], Does.Contain(@"\u00e9"));
+            Assert.That(metadata[AzureConstants.UPLOAD_STATUS_TAG], Is.EqualTo(AzureConstants.UPLOAD_STATUS_PENDING));
         }
 
 
