@@ -15,6 +15,11 @@ Please submit an [Issue](https://github.com/omni-/DokkanDaily/issues) if you hav
 Or, if you're more technically inclined, [Submit a Pull Request](https://github.com/omni-/DokkanDaily/pulls) *(no promises on merging!)*
 
 ### Nerdy stuff
+
+Production forwarded-header handling assumes Azure App Service proxy-only ingress. The application
+container must not be exposed directly to client traffic, because the platform proxy is the trust
+boundary that appends the rightmost forwarded address consumed by the application.
+
 __Project TODO List:__
 * Equivalency bins
 * Allow merging of username pairs (details in [`ClearInsert.sql`](https://github.com/omni-/DokkanDaily/blob/master/src/DokkanDailyDB/Core/Stored%20Procedures/ClearInsert.sql))

@@ -4,6 +4,7 @@ using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
 using DokkanDaily.Configuration;
 using DokkanDaily.Constants;
+using DokkanDaily.Exceptions;
 using DokkanDaily.Helpers;
 using DokkanDaily.Models;
 using DokkanDaily.Models.Enums;
@@ -20,6 +21,7 @@ namespace DokkanDaily.Services
         private readonly DokkanDailySettings _settings;
         private readonly ILogger<AzureBlobService> _logger;
         private readonly IOcrService _ocrService;
+        private readonly IUploadAttemptLimiter _uploadAttemptLimiter;
         private readonly string _connectionString;
         private readonly string _containerName;
 
@@ -42,13 +44,14 @@ namespace DokkanDaily.Services
 
         private string TodaysBucketFullName => GetBucketNameForDate(DokkanDailyHelper.GetUtcNowDateTag());
 
-        public AzureBlobService(IOptions<DokkanDailySettings> settings, ILogger<AzureBlobService> logger, IOcrService ocrService)
+        public AzureBlobService(IOptions<DokkanDailySettings> settings, ILogger<AzureBlobService> logger, IOcrService ocrService, IUploadAttemptLimiter uploadAttemptLimiter)
         {
             _settings = settings.Value;
             _logger = logger;
             _connectionString = _settings.AzureBlobConnectionString;
             _containerName = _settings.AzureBlobContainerName;
             _ocrService = ocrService;
+            _uploadAttemptLimiter = uploadAttemptLimiter;
         }
 
         public string GetBucketNameForDate(string formattedDateTag)
@@ -58,6 +61,10 @@ namespace DokkanDaily.Services
 
         public async Task<BlobClient> UploadToAzureAsync(string userFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null, string userAgent = null, string discordUsername = null, string discordId = null, string remoteIp = null)
         {
+            UploadAdmission admission = await _uploadAttemptLimiter.TryAcceptAsync(discordId, remoteIp);
+            if (!admission.Accepted)
+                throw new UploadRejectedException(admission.RejectionMessage);
+
             Guid analysisId = Guid.NewGuid();
             TaskCompletionSource<bool> analysisLifecycle = new(TaskCreationOptions.RunContinuationsAsynchronously);
             _pendingAnalysis[analysisId] = analysisLifecycle.Task;

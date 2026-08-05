@@ -12,6 +12,17 @@ namespace DokkanDaily.Extensions
         /// would return the whole client-controlled chain and let anyone spoof their address.
         /// </remarks>
         public static string GetUserIpAddress(this HttpContext context)
-            => context?.Connection?.RemoteIpAddress?.ToString();
+        {
+            System.Net.IPAddress address = context?.Connection?.RemoteIpAddress;
+
+            if (address is null ||
+                address.Equals(System.Net.IPAddress.Any) ||
+                address.Equals(System.Net.IPAddress.IPv6Any))
+            {
+                return null;
+            }
+
+            return (address.IsIPv4MappedToIPv6 ? address.MapToIPv4() : address).ToString();
+        }
     }
 }

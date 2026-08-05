@@ -3,7 +3,7 @@ docker stop dokkandaily || true
 docker rm dokkandaily || true
 docker image rm -f dokkandaily.azurecr.io/dokkandaily:staging || true
 docker build . -t dokkandaily.azurecr.io/dokkandaily:staging
-docker run --name dokkandaily -p 8080:8080 \
+docker run --name dokkandaily -p 127.0.0.1:8080:8080 \
 --env DOTNET_DokkanDailySettings__AzureBlobConnectionString \
 --env DOTNET_DokkanDailySettings__AzureBlobContainerName \
 --env DOTNET_DokkanDailySettings__OAuth2ClientSecret \

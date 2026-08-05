@@ -43,8 +43,9 @@ namespace DokkanDaily
                 // App Service fronts the container with a proxy whose address we cannot enumerate,
                 // so the default loopback-only trust list drops the headers entirely - which leaves
                 // the app seeing http and the container IP. The default ForwardLimit of 1 still
-                // makes this safe: only the rightmost entry (the one the platform appended) is
-                // honoured, so a client-supplied X-Forwarded-For cannot spoof the remote address.
+                // makes this safe when production traffic can reach the container only through the
+                // App Service proxy: only the rightmost entry (the one the platform appended) is
+                // honoured. Do not expose the production container directly to client traffic.
                 options.KnownIPNetworks.Clear();
                 options.KnownProxies.Clear();
             });
@@ -59,7 +60,9 @@ namespace DokkanDaily
             builder.Services.AddTransient<IResetService, ResetService>();
             builder.Services.AddTransient<IAzureBlobService, AzureBlobService>();
             builder.Services.AddTransient<IOcrService, OcrService>();
+            builder.Services.AddTransient<IUploadAttemptLimiter, UploadAttemptLimiter>();
             builder.Services.AddTransient<IDokkanDailyRepository, DokkanDailyRepository>();
+            builder.Services.AddSingleton(TimeProvider.System);
 
             // TODO: IP tracking to enforce bans (sadface)
             builder.Services.AddScoped<ProtectedSessionStorage>();

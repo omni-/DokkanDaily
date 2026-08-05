@@ -5,6 +5,7 @@
 @using DokkanDaily.Components.Shared
 @using DokkanDaily.Constants
 @using DokkanDaily.Extensions
+@using DokkanDaily.Exceptions
 @using DokkanDaily.Helpers
 @using DokkanDaily.Models
 @using DokkanDaily.Models.ViewModel
@@ -226,6 +227,11 @@
             fileUploadViewModels.Add(fileUploadViewModel);
             displayMessage = $"{file.Name} uploaded";
             selectedFiles = [];
+        }
+        catch (UploadRejectedException ex)
+        {
+            Logger.LogWarning("Rejected upload of `{File}`: {Reason}", file.Name, ex.Message);
+            warningMessage = ex.Message;
         }
         catch (Exception ex)
         {

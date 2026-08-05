@@ -150,8 +150,10 @@ namespace DokkanDaily.Services
             _logger.LogInformation("Calculating challenge using seed {Seed}", _seed);
             Random r = new(_seed);
 
-            // a leader with no matching unit entry has no card art to render, so never offer one
-            IEnumerable<Leader> leaders = [.. DokkanConstants.Leaders.Where(x => DokkanDailyHelper.GetUnitOrDefault(x) is not null)];
+            // Materialize this once and retain it as the only source for filtering and fallback.
+            // A leader with no matching unit entry has no card art to render, so never offer one.
+            IReadOnlyList<Leader> baseLeaders = BuildEligibleLeaderBasePool(DokkanConstants.Leaders, DokkanConstants.UnitDB);
+            IEnumerable<Leader> leaders = baseLeaders;
             IEnumerable<LinkSkill> linkSkills = DokkanConstants.LinkSkills;
             IEnumerable<Category> categories = DokkanConstants.Categories;
             List<Stage> stages = [.. DokkanConstants.Stages];
@@ -164,7 +166,7 @@ namespace DokkanDaily.Services
                 // todo: experiment
                 // DateTime cutoffDate = DateTime.UtcNow - TimeSpan.FromDays(InternalConstants.ChallengeRepeatLimitDays);
 
-                IEnumerable<DbChallengeProjection> recentChallenges = await GetRecentChallenges();
+                IEnumerable<DbChallengeProjection> recentChallenges = await GetRecentChallenges(baseLeaders);
 
                 // create comparers
                 EqualityComparer<Stage> stageComparer = EqualityComparer<Stage>.Create((x, y) => x.FullName == y.FullName, x => x.FullName.GetHashCode());
@@ -240,7 +242,7 @@ namespace DokkanDaily.Services
             DailyType dailyType = availableTypes[r.Next(0, availableTypes.Count)];
 
             // fill out the challenge details
-            Leader leader = PickWithFallback(leaders, DokkanConstants.Leaders, r, t, "leaders");
+            Leader leader = PickWithFallback(leaders, baseLeaders, r, t, "leaders");
             LinkSkill linkSkill = PickWithFallback(linkSkills, DokkanConstants.LinkSkills, r, t, "link skills");
             Category category = PickWithFallback(categories, DokkanConstants.Categories, r, t, "categories");
             Unit unit = DokkanDailyHelper.GetUnitOrDefault(leader);
@@ -259,7 +261,7 @@ namespace DokkanDaily.Services
         /// <summary>
         /// Materialises the persisted challenge history into the in-memory model, most recent first.
         /// </summary>
-        private async Task<IEnumerable<DbChallengeProjection>> GetRecentChallenges()
+        private async Task<IEnumerable<DbChallengeProjection>> GetRecentChallenges(IReadOnlyList<Leader> baseLeaders)
         {
             IEnumerable<DbChallenge> dbChallenges = await _dokkanDailyRepository.GetChallengeList(null);
 
@@ -271,7 +273,7 @@ namespace DokkanDaily.Services
                 // should be == instead of StartsWith here, but i messed up and made the varchar column too small
                 Stage stage = DokkanConstants.Stages.FirstOrDefault(y => y.Name.StartsWith(x.Event) && y.StageNumber == x.Stage);
                 // same here
-                Leader leader = x.LeaderFullName is null ? null : DokkanConstants.Leaders.FirstOrDefault(y => y.FullName.StartsWith(x.LeaderFullName));
+                Leader leader = x.LeaderFullName is null ? null : baseLeaders.FirstOrDefault(y => y.FullName.StartsWith(x.LeaderFullName));
                 LinkSkill skill = x.LinkSkill is null ? null : DokkanConstants.LinkSkillMap.GetValueOrDefault(x.LinkSkill);
                 Category category = x.Category is null ? null : DokkanConstants.CategoryMap.GetValueOrDefault(x.Category);
 
@@ -292,11 +294,25 @@ namespace DokkanDaily.Services
         private static bool HasTierAppropriateEntry<T>(IEnumerable<T> pool, Tier t) where T : ITieredObject
             => pool.Any(x => Math.Abs((int)x.Tier - (int)t) < 2);
 
+        internal IReadOnlyList<Leader> BuildEligibleLeaderBasePool(IEnumerable<Leader> leaders, IEnumerable<Unit> units)
+        {
+            HashSet<(string Name, string Title)> unitKeys = units
+                .Select(x => (x.Name, x.Title))
+                .ToHashSet();
+            IReadOnlyList<Leader> eligible = [.. leaders.Where(x => unitKeys.Contains((x.Name, x.Title)))];
+
+            if (eligible.Count > 0) return eligible;
+
+            const string message = "Cannot calculate a character challenge because no configured leader has a matching unit.";
+            _logger.LogCritical(message);
+            throw new InvalidOperationException(message);
+        }
+
         /// <summary>
         /// Picks a tier-appropriate entry, widening the search when the recency-filtered pool is
         /// exhausted so that challenge generation can never yield a null target.
         /// </summary>
-        private T PickWithFallback<T>(IEnumerable<T> filtered, IReadOnlyList<T> unfiltered, Random r, Tier t, string poolName) where T : class, ITieredObject
+        internal T PickWithFallback<T>(IEnumerable<T> filtered, IReadOnlyList<T> unfiltered, Random r, Tier t, string poolName) where T : class, ITieredObject
         {
             T pick = Pick(filtered, r, t);
             if (pick is not null) return pick;

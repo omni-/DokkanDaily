@@ -81,6 +81,11 @@
     <Build Include="RefData\LoadDaily.sql" />
     <Build Include="RefData\LoadAllData.sql" />
     <Build Include="Core\StoredProcedures\LeaderboardGetByDate.sql" />
+    <Build Include="Core\Tables\UploadAttempt.sql" />
+    <Build Include="Core\StoredProcedures\UploadAttemptTryAccept.sql">
+      <!-- SSDT does not resolve built-in system procedures, so suppress only that false positive. -->
+      <SuppressTSqlWarnings>71502</SuppressTSqlWarnings>
+    </Build>
   </ItemGroup>
   <ItemGroup>
     <PreDeploy Include="Pre-Deployment\Scripts\PreDeployment.sql" />

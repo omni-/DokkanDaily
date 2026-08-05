@@ -77,7 +77,7 @@ jobs:
       run: |
         cd src/DokkanDailyDB/
         docker build . --build-arg PASSWORD="<YourStrong@Passw0rd>" -t mydatabase:1.0 --no-cache
-        docker run -p 1433:1433 --name sqldb -d mydatabase:1.0
+        docker run -p 127.0.0.1:1433:1433 --name sqldb -d mydatabase:1.0
         cd ../..
       
     - name: Test
@@ -203,8 +203,9 @@ jobs:
         connection-string: ${{ secrets.SQL_CONNECTION_STRING }}
         path: './${{ env.DACPAC_NAME }}'
         action: 'publish'
-        # Keep pre-deployment data cleanup and schema changes in one transaction. This ensures the
-        # duplicate cleanup is rolled back if the new UNIQUE constraint cannot be applied.
+        # This wraps SqlPackage's schema-plan scripts in a transaction. SqlPackage executes the
+        # pre-deployment cleanup before that transaction, so the cleanup is not rolled back if the
+        # schema plan fails.
         arguments: '/p:DropObjectsNotInSource=false /p:IncludeTransactionalScripts=true'
     
     - name: Logout from Azure
