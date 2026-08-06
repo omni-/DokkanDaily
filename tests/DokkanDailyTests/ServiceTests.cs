@@ -213,6 +213,9 @@ namespace DokkanDailyTests
                     }),
                 ]);
             abMock.Setup(x => x.PruneContainers(30)).Returns(Task.CompletedTask);
+            var resetBarrierMock = mocks.Create<IAsyncDisposable>();
+            resetBarrierMock.Setup(x => x.DisposeAsync()).Returns(ValueTask.CompletedTask);
+            abMock.Setup(x => x.AcquireResetBarrierAsync()).ReturnsAsync(resetBarrierMock.Object);
             abMock.Setup(x => x.WaitForPendingAnalysis(It.IsAny<TimeSpan>())).Returns(Task.CompletedTask);
             abMock.Setup(x => x.GetBucketNameForDate(It.IsAny<string>())).Returns(It.IsAny<string>());
 
@@ -254,6 +257,7 @@ namespace DokkanDailyTests
             lbMock.VerifyNoOtherCalls();
 
             abMock.Verify(x => x.PruneContainers(It.IsAny<int>()), Times.Once);
+            abMock.Verify(x => x.AcquireResetBarrierAsync(), Times.Once);
             abMock.Verify(x => x.WaitForPendingAnalysis(It.IsAny<TimeSpan>()), Times.Once);
             abMock.Verify(x => x.GetBucketNameForDate(It.IsAny<string>()));
             abMock.Verify(x => x.GetFilesForTag(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
@@ -262,6 +266,8 @@ namespace DokkanDailyTests
             repoMock.Verify(x => x.InsertDailyClears(It.IsAny<IEnumerable<DbClear>>(), It.IsAny<DateTime>()), Times.Once);
             repoMock.Verify(x => x.InsertChallenge(It.IsAny<Challenge>()), Times.Once);
             repoMock.VerifyNoOtherCalls();
+
+            resetBarrierMock.Verify(x => x.DisposeAsync(), Times.Once);
 
             webhookMock.Verify(x => x.PostAsync(It.IsAny<WebhookMessage>()), Times.Once);
             webhookMock.VerifyNoOtherCalls();

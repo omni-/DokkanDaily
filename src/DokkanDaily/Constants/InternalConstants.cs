@@ -28,6 +28,6 @@ namespace DokkanDaily.Constants
 
         public static int ChallengeRepeatLimitDays => 7;
 
-        public static TimeSpan PendingOcrDrainTimeout => TimeSpan.FromSeconds(45);
+        public static TimeSpan PendingOcrWaitLogInterval => TimeSpan.FromSeconds(45);
     }
 }

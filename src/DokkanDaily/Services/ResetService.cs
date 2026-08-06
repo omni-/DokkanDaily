@@ -31,6 +31,10 @@ namespace DokkanDaily.Services
         {
             _logger.LogInformation("Starting daily reset...");
 
+            // Registering an upload and entering reset are mutually exclusive. Once this lease is
+            // held, new uploads are rejected until every registered analysis has been scored.
+            await using IAsyncDisposable resetBarrier = await _azureBlobService.AcquireResetBarrierAsync();
+
             // Capture this before draining OCR: a reset beginning just before midnight still owns
             // that day's bucket even if the remaining analysis crosses into the next UTC day.
             DateTime date = DateTime.UtcNow - TimeSpan.FromDays(daysAgo);
@@ -63,7 +67,7 @@ namespace DokkanDaily.Services
             if (!isAdhoc)
                 await _azureBlobService.PruneContainers(30);
 
-            await _azureBlobService.WaitForPendingAnalysis(InternalConstants.PendingOcrDrainTimeout);
+            await _azureBlobService.WaitForPendingAnalysis(InternalConstants.PendingOcrWaitLogInterval);
 
             // upload clears for the day
             string tag = date.GetTagFromDate();

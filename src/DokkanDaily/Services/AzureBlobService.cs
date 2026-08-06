@@ -20,25 +20,29 @@ namespace DokkanDaily.Services
         private readonly DokkanDailySettings _settings;
         private readonly ILogger<AzureBlobService> _logger;
         private readonly IOcrService _ocrService;
+        private readonly IRngHelperService _rngHelperService;
         private readonly IUploadAttemptLimiter _uploadAttemptLimiter;
         private readonly string _connectionString;
         private readonly string _containerName;
 
         private static readonly SemaphoreSlim _ocrThrottle = new(Math.Max(1, Environment.ProcessorCount / 2));
         private static readonly ConcurrentDictionary<Guid, Task> _pendingAnalysis = new();
-        private static readonly ConcurrentDictionary<string, SemaphoreSlim> _uploaderLocks = new();
+        private static readonly SemaphoreSlim _resetBarrier = new(1, 1);
 
         private const int maxFileSize = 1024 * 8192;
+        private const string ResetInProgressMessage = "Daily results are being calculated. Please try your upload again shortly";
+        private const string ChallengeChangedMessage = "The daily challenge changed while this page was open. Refresh the page and try again";
 
         private string TodaysBucketFullName => GetBucketNameForDate(DokkanDailyHelper.GetUtcNowDateTag());
 
-        public AzureBlobService(IOptions<DokkanDailySettings> settings, ILogger<AzureBlobService> logger, IOcrService ocrService, IUploadAttemptLimiter uploadAttemptLimiter)
+        public AzureBlobService(IOptions<DokkanDailySettings> settings, ILogger<AzureBlobService> logger, IOcrService ocrService, IRngHelperService rngHelperService, IUploadAttemptLimiter uploadAttemptLimiter)
         {
             _settings = settings.Value;
             _logger = logger;
             _connectionString = _settings.AzureBlobConnectionString;
             _containerName = _settings.AzureBlobContainerName;
             _ocrService = ocrService;
+            _rngHelperService = rngHelperService;
             _uploadAttemptLimiter = uploadAttemptLimiter;
         }
 
@@ -51,26 +55,34 @@ namespace DokkanDaily.Services
         {
             Guid analysisId = Guid.NewGuid();
             TaskCompletionSource analysisLifecycle = new(TaskCreationOptions.RunContinuationsAsynchronously);
-            _pendingAnalysis[analysisId] = analysisLifecycle.Task;
-
-            SemaphoreSlim uploaderLock = string.IsNullOrWhiteSpace(discordId)
-                ? null
-                : _uploaderLocks.GetOrAdd(discordId, _ => new SemaphoreSlim(1, 1));
-            bool uploaderLockHeld = false;
+            bool lifecycleRegistered = false;
             bool lifecycleHandedToAnalysis = false;
             MemoryStream uploadStream = null;
 
             try
             {
+                if (!await _resetBarrier.WaitAsync(0))
+                    throw new UploadRejectedException(ResetInProgressMessage);
+
+                try
+                {
+                    _pendingAnalysis[analysisId] = analysisLifecycle.Task;
+                    lifecycleRegistered = true;
+                }
+                finally
+                {
+                    _resetBarrier.Release();
+                }
+
+                Challenge currentChallenge = await _rngHelperService.GetDailyChallenge();
+                if (model is null || currentChallenge is null || model.Date != currentChallenge.Date)
+                    throw new UploadRejectedException(ChallengeChangedMessage);
+
+                model = currentChallenge;
+
                 UploadAdmission admission = await _uploadAttemptLimiter.TryAcceptAsync(discordId, remoteIp);
                 if (!admission.Accepted)
                     throw new UploadRejectedException(admission.RejectionMessage);
-
-                if (uploaderLock != null)
-                {
-                    await uploaderLock.WaitAsync();
-                    uploaderLockHeld = true;
-                }
 
                 var (container, _) = await GetOrCreate(bucket);
 
@@ -95,7 +107,6 @@ namespace DokkanDaily.Services
                 _logger.LogInformation("Finished Azure upload.");
 
                 MemoryStream analysisStream = uploadStream;
-                bool releaseUploaderLock = uploaderLockHeld;
 
                 _ = Task.Run(async () =>
                 {
@@ -110,9 +121,6 @@ namespace DokkanDaily.Services
                         var tags = BuildTagDict(model, metadata, discordUsername, discordId, remoteIp, userAgent);
                         await blob.SetMetadataAsync(tags);
                         _logger.LogInformation("Finished updating Azure metadata.");
-
-                        if (metadata != null)
-                            await DeletePreviousUploads(container, blob, discordId);
                     }
                     catch (Exception ex)
                     {
@@ -121,7 +129,6 @@ namespace DokkanDaily.Services
                     finally
                     {
                         if (throttleHeld) _ocrThrottle.Release();
-                        if (releaseUploaderLock) uploaderLock.Release();
                         try
                         {
                             await analysisStream.DisposeAsync();
@@ -134,7 +141,6 @@ namespace DokkanDaily.Services
                 });
 
                 uploadStream = null;
-                uploaderLockHeld = false;
                 lifecycleHandedToAnalysis = true;
 
                 return blob;
@@ -150,35 +156,34 @@ namespace DokkanDaily.Services
             }
             finally
             {
-                if (uploaderLockHeld) uploaderLock.Release();
                 if (uploadStream != null) await uploadStream.DisposeAsync();
-                if (!lifecycleHandedToAnalysis) CompletePendingAnalysis(analysisId, analysisLifecycle);
+                if (lifecycleRegistered && !lifecycleHandedToAnalysis)
+                    CompletePendingAnalysis(analysisId, analysisLifecycle);
             }
         }
 
-        public async Task WaitForPendingAnalysis(TimeSpan timeout)
+        public async Task<IAsyncDisposable> AcquireResetBarrierAsync()
         {
-            DateTimeOffset deadline = DateTimeOffset.UtcNow.Add(timeout);
+            await _resetBarrier.WaitAsync();
+            return new ResetBarrierLease(_resetBarrier);
+        }
+
+        public async Task WaitForPendingAnalysis(TimeSpan warningInterval)
+        {
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(warningInterval, TimeSpan.Zero);
 
             while (true)
             {
                 Task[] pending = [.. _pendingAnalysis.Values];
                 if (pending.Length == 0) return;
 
-                TimeSpan remaining = deadline - DateTimeOffset.UtcNow;
-                if (remaining <= TimeSpan.Zero)
-                {
-                    _logger.LogWarning("Timed out waiting for OCR to finish. {Count} clear(s) remain pending and will be skipped.", _pendingAnalysis.Count);
-                    return;
-                }
-
-                _logger.LogInformation("Waiting up to {Timeout} for {Count} in-flight OCR task(s) to finish.", remaining, pending.Length);
+                _logger.LogInformation("Waiting for {Count} in-flight OCR task(s) to finish.", pending.Length);
 
                 Task all = Task.WhenAll(pending);
-                if (await Task.WhenAny(all, Task.Delay(remaining)) != all)
+                if (await Task.WhenAny(all, Task.Delay(warningInterval)) != all)
                 {
-                    _logger.LogWarning("Timed out waiting for OCR to finish. {Count} clear(s) remain pending and will be skipped.", _pendingAnalysis.Count);
-                    return;
+                    _logger.LogWarning("OCR is still running after {Interval}. Continuing to wait for {Count} clear(s) so they are not skipped.", warningInterval, _pendingAnalysis.Count);
+                    continue;
                 }
             }
         }
@@ -367,34 +372,6 @@ namespace DokkanDaily.Services
             return dict.Where(kv => !string.IsNullOrEmpty(kv.Value)).ToDictionary();
         }
 
-        private async Task DeletePreviousUploads(BlobContainerClient container, BlobClient replacement, string discordId)
-        {
-            string prefix = DokkanDailyHelper.GetUserBlobPrefix(discordId);
-            if (prefix == null) return;
-
-            try
-            {
-                DateTimeOffset? replacementCreatedOn = (await replacement.GetPropertiesAsync()).Value.CreatedOn;
-                if (replacementCreatedOn == null) return;
-
-                await foreach (BlobItem existing in container.GetBlobsAsync(BlobTraits.None, BlobStates.None, prefix, CancellationToken.None))
-                {
-                    if (existing.Name == replacement.Name ||
-                        existing.Properties.CreatedOn == null ||
-                        existing.Properties.CreatedOn >= replacementCreatedOn)
-                    {
-                        continue;
-                    }
-
-                    await container.DeleteBlobIfExistsAsync(existing.Name, DeleteSnapshotsOption.IncludeSnapshots);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning(ex, "Could not remove prior uploads for Discord user `{DiscordId}`.", discordId);
-            }
-        }
-
         private async Task<(BlobContainerClient, bool)> GetOrCreate(string bucket)
         {
             bool created = false;
@@ -412,6 +389,17 @@ namespace DokkanDaily.Services
             }
 
             return (container, created);
+        }
+
+        private sealed class ResetBarrierLease(SemaphoreSlim resetBarrier) : IAsyncDisposable
+        {
+            private SemaphoreSlim _resetBarrier = resetBarrier;
+
+            public ValueTask DisposeAsync()
+            {
+                Interlocked.Exchange(ref _resetBarrier, null)?.Release();
+                return ValueTask.CompletedTask;
+            }
         }
     }
 }
