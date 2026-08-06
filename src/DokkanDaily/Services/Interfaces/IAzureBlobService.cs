@@ -12,6 +12,10 @@ namespace DokkanDaily.Services.Interfaces
 
         Task<int> GetFileCountForTag(string tagName, string bucket = null);
 
+        Task<IAsyncDisposable> AcquireResetBarrierAsync();
+
+        Task WaitForPendingAnalysis(TimeSpan warningInterval);
+
         string GetBlobSasTokenByFile(string fileName, string bucket = null);
 
         Task PruneContainers(int daysToKeep);

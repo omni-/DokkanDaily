@@ -1,0 +1,28 @@
+# Host build output contains platform-specific paths and must never enter a Linux image build.
+**/bin/
+**/obj/
+**/publish/
+**/TestResults/
+
+# Source control and CI metadata are not build inputs.
+.git/
+.gitignore
+.gitattributes
+.github/
+
+# IDE and editor state.
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Docker reads these before constructing the build context.
+Dockerfile
+.dockerignore
+
+# Database artifacts are built and published separately.
+Dacpac/
+**/*.dacpac

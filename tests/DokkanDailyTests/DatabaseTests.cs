@@ -24,7 +24,7 @@ namespace DokkanDailyTests
         public void OneTimeSetup()
         {
             Mock<ILogger<DokkanDailyRepository>> mock = new(MockBehavior.Loose);
-            string sqlServerConnectionString = "Data Source=.,1433;Initial Catalog=mydatabase;Persist Security Info=True;User ID=SA;Password=<YourStrong@Passw0rd>;TrustServerCertificate=True;";
+            string sqlServerConnectionString = "Data Source=127.0.0.1,1433;Initial Catalog=mydatabase;Persist Security Info=True;User ID=SA;Password=<YourStrong@Passw0rd>;TrustServerCertificate=True;";
             conn = new(sqlServerConnectionString);
 
             // todo: docker stuff here
@@ -42,7 +42,7 @@ namespace DokkanDailyTests
         public async Task Setup()
         {
             await conn.OpenAsync();
-            await conn.ExecuteReaderAsync("delete from Core.StageClear; delete from Core.DokkanDailyUser; delete from Core.DailyChallenge;", new());
+            await conn.ExecuteReaderAsync("delete from Core.StageClear; delete from Core.DokkanDailyUser; delete from Core.DailyChallenge; delete from Core.UploadAttempt;", new());
             await conn.CloseAsync();
         }
 
@@ -80,6 +80,70 @@ namespace DokkanDailyTests
             var list = result.ToList();
             Assert.That(list, Has.Count.EqualTo(2), "the returned leaderboard should have the correct number of elements");
             Assert.That(list.Any(x => x.DiscordId == "112089455933792256"), Is.True, "an element should contain a discord id");
+        }
+
+        [Test]
+        public async Task ADiscordIdBackfillsTheMatchingLegacyUserWithoutCreatingADuplicate()
+        {
+            await conn.OpenAsync();
+            await conn.ExecuteAsync("INSERT INTO Core.DokkanDailyUser (DokkanNickname, DiscordUsername) VALUES ('legacy', 'legacy-user')");
+            await conn.CloseAsync();
+
+            await repository.InsertDailyClears([
+                new DbClear
+                {
+                    DokkanNickname = "legacy",
+                    DiscordUsername = "legacy-user",
+                    DiscordId = "123456789",
+                    ItemlessClear = false,
+                    ClearTime = "0'10\"00.0"
+                }
+            ], DateTime.UtcNow.Date);
+
+            await conn.OpenAsync();
+            var users = (await conn.QueryAsync<(int Count, string DiscordId)>(
+                "SELECT COUNT(*) AS [Count], MAX(DiscordId) AS DiscordId FROM Core.DokkanDailyUser WHERE DiscordUsername = 'legacy-user' GROUP BY DiscordUsername")).Single();
+            await conn.CloseAsync();
+
+            Assert.That(users.Count, Is.EqualTo(1));
+            Assert.That(users.DiscordId, Is.EqualTo("123456789"));
+        }
+
+        [Test]
+        public async Task ConcurrentResetWritesCreateOnlyOneClearPerUserAndDay()
+        {
+            DateTime date = DateTime.UtcNow.Date;
+            DbClear clear = new()
+            {
+                DokkanNickname = "concurrent-user",
+                ItemlessClear = true,
+                IsDailyHighscore = true,
+                ClearTime = "0'10\"00.0"
+            };
+
+            await Task.WhenAll(Enumerable.Range(0, 12)
+                .Select(_ => repository.InsertDailyClears([clear], date)));
+
+            await conn.OpenAsync();
+            int count = await conn.QuerySingleAsync<int>(
+                "SELECT COUNT(*) FROM Core.StageClear C INNER JOIN Core.DokkanDailyUser U ON U.DokkanDailyUserId = C.DokkanDailyUserId WHERE U.DokkanNickname = 'concurrent-user' AND C.ClearDate = @date",
+                new { date });
+            await conn.CloseAsync();
+
+            Assert.That(count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task UploadAttemptAdmissionIsAtomicAcrossConcurrentConnectionsAndUtcDays()
+        {
+            DateOnly firstDay = new(2026, 8, 5);
+
+            bool[] admissions = await Task.WhenAll(Enumerable.Range(0, 40)
+                .Select(_ => repository.TryAcceptUploadAttempt("discord:concurrent", firstDay)));
+
+            Assert.That(admissions.Count(x => x), Is.EqualTo(5));
+            Assert.That(await repository.TryAcceptUploadAttempt("discord:concurrent", firstDay), Is.False);
+            Assert.That(await repository.TryAcceptUploadAttempt("discord:concurrent", firstDay.AddDays(1)), Is.True);
         }
 
         [Test]

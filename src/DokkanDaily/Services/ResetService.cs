@@ -31,6 +31,14 @@ namespace DokkanDaily.Services
         {
             _logger.LogInformation("Starting daily reset...");
 
+            // Registering an upload and entering reset are mutually exclusive. Once this lease is
+            // held, new uploads are rejected until every registered analysis has been scored.
+            await using IAsyncDisposable resetBarrier = await _azureBlobService.AcquireResetBarrierAsync();
+
+            // Capture this before draining OCR: a reset beginning just before midnight still owns
+            // that day's bucket even if the remaining analysis crosses into the next UTC day.
+            DateTime date = DateTime.UtcNow - TimeSpan.FromDays(daysAgo);
+
             // get old challenge
             var todaysChallenge = await _rngHelperService.GetDailyChallenge();
 
@@ -56,10 +64,10 @@ namespace DokkanDaily.Services
                 }
             }
 
-            // delete old clears
-            await _azureBlobService.PruneContainers(30);
+            if (!isAdhoc)
+                await _azureBlobService.PruneContainers(30);
 
-            DateTime date = DateTime.UtcNow - TimeSpan.FromDays(daysAgo);
+            await _azureBlobService.WaitForPendingAnalysis(InternalConstants.PendingOcrWaitLogInterval);
 
             // upload clears for the day
             string tag = date.GetTagFromDate();
@@ -74,6 +82,16 @@ namespace DokkanDaily.Services
                     var props = await clear.GetPropertiesAsync();
                     var tags = props.Value.Metadata;
 
+                    bool hasUploadStatus = tags.TryGetValue(AzureConstants.UPLOAD_STATUS_TAG, out string uploadStatus);
+                    bool finalized = hasUploadStatus
+                        ? string.Equals(uploadStatus, AzureConstants.UPLOAD_STATUS_VALID, StringComparison.OrdinalIgnoreCase)
+                        : tags.ContainsKey(AzureConstants.CLEAR_TIME_TAG) && tags.ContainsKey(AzureConstants.ITEMLESS_TAG);
+                    if (!finalized)
+                    {
+                        _logger.LogWarning("Upload is not finalized as valid ({Status}). Skipping clear.", hasUploadStatus ? uploadStatus : "legacy-incomplete");
+                        continue;
+                    }
+
                     // skip upload in case we don't know who the clear belongs to or it was marked invalid
                     if (tags.TryGetValue(AzureConstants.INVALID_TAG, out string invalid))
                     {
@@ -86,11 +104,12 @@ namespace DokkanDaily.Services
                         continue;
                     }
 
-                    if (!tags.TryGetValue(AzureConstants.ITEMLESS_TAG, out string itemless))
+                    if (!tags.TryGetValue(AzureConstants.ITEMLESS_TAG, out string itemless) || !bool.TryParse(itemless, out bool itemlessClear))
                     {
-                        _logger.LogWarning("`ITEMLESS` tag missing. Defaulting to false.");
+                        _logger.LogWarning("`ITEMLESS` tag missing or unparseable. Defaulting to false.");
+                        itemlessClear = false;
                     }
-                ;
+
                     if (!tags.TryGetValue(AzureConstants.CLEAR_TIME_TAG, out string clearTime) || !DokkanDailyHelper.TryParseDokkanTimeSpan(clearTime, out TimeSpan timeSpan))
                     {
                         _logger.LogWarning("`CLEARTIME` tag missing. Defaulting to TimeSpan.MaxValue.");
@@ -103,7 +122,7 @@ namespace DokkanDaily.Services
                         DiscordUsername = tags.TryGetValue(AzureConstants.DISCORD_NAME_TAG, out string discord) ? discord : null,
                         DiscordId = tags.TryGetValue(AzureConstants.DISCORD_ID, out string discordId) ? discordId : null,
                         ClearTime = clearTime,
-                        ItemlessClear = bool.Parse(itemless),
+                        ItemlessClear = itemlessClear,
                         ClearTimeSpan = timeSpan
                     });
                 }
@@ -113,7 +132,9 @@ namespace DokkanDaily.Services
                 }
             }
 
-            var dailyWinner = clears.MinBy(x => x.ClearTimeSpan);
+            DbClear dailyWinner = clears.Count == 1
+                ? clears[0]
+                : clears.Where(x => x.ClearTimeSpan != TimeSpan.MaxValue).MinBy(x => x.ClearTimeSpan);
             if (dailyWinner is not null) dailyWinner.IsDailyHighscore = true;
 
             _logger.LogInformation("Calculated {@Clear} to be the fastest today.", dailyWinner);
@@ -121,11 +142,22 @@ namespace DokkanDaily.Services
             try
             {
                 clears = clears
-                    .GroupBy(x => x.DokkanNickname)
+                    .GroupBy(GetIdentityKey)
                     .Select(group =>
-                        group.FirstOrDefault(x => x.IsDailyHighscore)
-                        ?? group.FirstOrDefault(x => x.ItemlessClear)
-                        ?? group.MinBy(x => x.ClearTimeSpan))
+                    {
+                        DbClear best = group.FirstOrDefault(x => x.IsDailyHighscore)
+                            ?? group.MinBy(x => x.ClearTimeSpan);
+                        return new DbClear
+                        {
+                            DokkanNickname = best.DokkanNickname,
+                            DiscordUsername = best.DiscordUsername,
+                            DiscordId = best.DiscordId,
+                            ItemlessClear = group.Any(x => x.ItemlessClear),
+                            ClearTime = best.ClearTime,
+                            IsDailyHighscore = best.IsDailyHighscore,
+                            ClearTimeSpan = best.ClearTimeSpan
+                        };
+                    })
                     .ToList();
 
                 await _repository.InsertDailyClears(clears, date);
@@ -143,6 +175,13 @@ namespace DokkanDaily.Services
             _logger.LogInformation("Leaderboard updated.");
 
             _logger.LogInformation("Reset completed with no critical errors.");
+        }
+
+        private static string GetIdentityKey(DbClear clear)
+        {
+            if (!string.IsNullOrWhiteSpace(clear.DiscordId)) return $"discordid:{clear.DiscordId}";
+            if (!string.IsNullOrWhiteSpace(clear.DiscordUsername)) return $"discord:{clear.DiscordUsername}";
+            return $"nickname:{clear.DokkanNickname}";
         }
 
         public async Task ProcessLeaderboard()

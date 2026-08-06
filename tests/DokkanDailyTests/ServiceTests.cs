@@ -206,8 +206,17 @@ namespace DokkanDailyTests
                         { AzureConstants.CLEAR_TIME_TAG, "0'30\"10.8" },
                         { AzureConstants.ITEMLESS_TAG, "true" }
                     }),
+                    new MockBlobClient(new Dictionary<string, string>()
+                    {
+                        { AzureConstants.USER_NAME_TAG, "still-processing" },
+                        { AzureConstants.UPLOAD_STATUS_TAG, AzureConstants.UPLOAD_STATUS_PENDING }
+                    }),
                 ]);
             abMock.Setup(x => x.PruneContainers(30)).Returns(Task.CompletedTask);
+            var resetBarrierMock = mocks.Create<IAsyncDisposable>();
+            resetBarrierMock.Setup(x => x.DisposeAsync()).Returns(ValueTask.CompletedTask);
+            abMock.Setup(x => x.AcquireResetBarrierAsync()).ReturnsAsync(resetBarrierMock.Object);
+            abMock.Setup(x => x.WaitForPendingAnalysis(It.IsAny<TimeSpan>())).Returns(Task.CompletedTask);
             abMock.Setup(x => x.GetBucketNameForDate(It.IsAny<string>())).Returns(It.IsAny<string>());
 
             repoMock
@@ -233,8 +242,8 @@ namespace DokkanDailyTests
 
             List<DbClear> exp =
             [
-                new() { DokkanNickname = "omni", ClearTime = "0'20\"10.8", IsDailyHighscore = false, ItemlessClear = true, ClearTimeSpan = new TimeSpan(0, 0, 20, 10, 800) },
-                new() { DokkanNickname = "owl", ClearTime = "0'18\"10.8", IsDailyHighscore = true, ItemlessClear = false, ClearTimeSpan = new TimeSpan(0, 0, 18, 10, 800) },
+                new() { DokkanNickname = "omni", ClearTime = "0'19\"10.8", IsDailyHighscore = false, ItemlessClear = true, ClearTimeSpan = new TimeSpan(0, 0, 19, 10, 800) },
+                new() { DokkanNickname = "owl", ClearTime = "0'18\"10.8", IsDailyHighscore = true, ItemlessClear = true, ClearTimeSpan = new TimeSpan(0, 0, 18, 10, 800) },
                 new() { DokkanNickname = "rabs", ClearTime = "0'30\"10.8", IsDailyHighscore = false, ItemlessClear = true, ClearTimeSpan = new TimeSpan(0, 0, 30, 10, 800) }
             ];
 
@@ -248,6 +257,8 @@ namespace DokkanDailyTests
             lbMock.VerifyNoOtherCalls();
 
             abMock.Verify(x => x.PruneContainers(It.IsAny<int>()), Times.Once);
+            abMock.Verify(x => x.AcquireResetBarrierAsync(), Times.Once);
+            abMock.Verify(x => x.WaitForPendingAnalysis(It.IsAny<TimeSpan>()), Times.Once);
             abMock.Verify(x => x.GetBucketNameForDate(It.IsAny<string>()));
             abMock.Verify(x => x.GetFilesForTag(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             abMock.VerifyNoOtherCalls();
@@ -255,6 +266,8 @@ namespace DokkanDailyTests
             repoMock.Verify(x => x.InsertDailyClears(It.IsAny<IEnumerable<DbClear>>(), It.IsAny<DateTime>()), Times.Once);
             repoMock.Verify(x => x.InsertChallenge(It.IsAny<Challenge>()), Times.Once);
             repoMock.VerifyNoOtherCalls();
+
+            resetBarrierMock.Verify(x => x.DisposeAsync(), Times.Once);
 
             webhookMock.Verify(x => x.PostAsync(It.IsAny<WebhookMessage>()), Times.Once);
             webhookMock.VerifyNoOtherCalls();
