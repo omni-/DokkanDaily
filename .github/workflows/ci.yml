@@ -191,7 +191,7 @@ jobs:
 
       - name: Build and push
         run: |
-          docker build . -t ghcr.io/dokkandaily/dokkandaily:${{ github.sha }}
+          docker build . --build-arg BUILD_SHA=${{ github.sha }} -t ghcr.io/dokkandaily/dokkandaily:${{ github.sha }}
           docker push ghcr.io/dokkandaily/dokkandaily:${{ github.sha }}
 
       - name: Deploy to Azure Web App
