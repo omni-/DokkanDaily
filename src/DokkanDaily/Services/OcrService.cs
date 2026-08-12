@@ -301,8 +301,9 @@ namespace DokkanDaily.Services
 
             using Page itemlessTextPage = engine.Process(itemlessPix, PageSegMode.SingleBlock);
             string itemlessText = itemlessTextPage.GetText().Trim();
+            _logger.LogDebug("Itemless OCR text: {ItemlessText}", itemlessText);
 
-            return itemlessText == Provider.None;
+            return itemlessText.EndsWith(Provider.None, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
