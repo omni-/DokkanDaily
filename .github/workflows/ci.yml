@@ -138,41 +138,43 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write
+      packages: write
     needs: [build, db-deploy]
     if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
     steps:
-    - uses: actions/checkout@v4
-    
-    # - name: Check for source changes
-      # id: changes
-      # uses: dorny/paths-filter@v3
-      # with:
-        # filters: |
-          # src:
-            # - 'src'
-            
-    - name: Docker login
-      uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
-        
-    - name: Docker Build
-      run: |
-        docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}
-        
-    - name: Docker push
-      run: |
-        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}
-        
-    - name: Deploy to Azure WebApp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: DokkanDaily
-        publish-profile: ${{ secrets.DOKKANDAILYPUBLISHSETTINGS }}
-        images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}  
+      - uses: actions/checkout@v4
+  
+      - name: Login to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+  
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+  
+      - name: Build container
+        run: |
+          docker build . \
+            -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }} \
+            -t ghcr.io/omni-/dokkandaily:${{ github.sha }}
+  
+      - name: Push containers
+        run: |
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}
+          docker push ghcr.io/omni-/dokkandaily:${{ github.sha }}
+  
+      - name: Deploy existing ACR image
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: DokkanDaily
+          publish-profile: ${{ secrets.DOKKANDAILYPUBLISHSETTINGS }}
+          images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}
       
   db-deploy:
     runs-on: windows-latest
