@@ -51,21 +51,46 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
         
-    # - name: Install Dependencies
-      # run: |
-        # sudo apt-get update \
-        # && sudo apt-get install -y --allow-unauthenticated \
-            # libleptonica-dev \
-            # libtesseract-dev \
-        # && sudo rm -rf /var/lib/apt/lists/*
-        # sudo mkdir -p "$GITHUB_WORKSPACE"/tests/DokkanDailyTests/bin/${{ env.CONFIGURATION }}/net8.0/x64
-        # sudo ln -s /usr/lib/x86_64-linux-gnu/liblept.so.5 "$GITHUB_WORKSPACE"/tests/DokkanDailyTests/bin/${{ env.CONFIGURATION }}/net8.0/x64/libleptonica-1.82.0.so
+    - name: Install OCR native dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends \
+          libc6-dev \
+          libdrm2 \
+          libgtk-3-0 \
+          libleptonica-dev \
+          libtesseract-dev
         
     - name: Restore
-      run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
+      run: dotnet restore ./tests/DokkanDailyTests/DokkanDailyTests.csproj
       
     - name: Build
-      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+      run: dotnet build ./tests/DokkanDailyTests/DokkanDailyTests.csproj --configuration ${{ env.CONFIGURATION }} --no-restore
+
+    - name: Configure OCR native libraries
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        target_framework="$(dotnet msbuild ./tests/DokkanDailyTests/DokkanDailyTests.csproj \
+          -getProperty:TargetFramework \
+          -property:Configuration=${CONFIGURATION})"
+        native_directory="$GITHUB_WORKSPACE/tests/DokkanDailyTests/bin/${CONFIGURATION}/${target_framework}/x64"
+        mkdir -p "$native_directory"
+
+        tesseract_library="$(ldconfig -p | awk '$1 ~ /^libtesseract\.so(\.|$)/ { print $NF; exit }')"
+        leptonica_library="$(ldconfig -p | awk '$1 ~ /^liblept\.so(\.|$)/ { print $NF; exit }')"
+        dl_library="$(ldconfig -p | awk '$1 == "libdl.so.2" { print $NF; exit }')"
+
+        test -n "$tesseract_library"
+        test -n "$leptonica_library"
+        test -n "$dl_library"
+
+        ln -sf "$tesseract_library" "$native_directory/libtesseract50.so"
+        ln -sf "$leptonica_library" "$native_directory/libleptonica-1.82.0.so"
+        ln -sf "$dl_library" "$native_directory/libdl.so"
+
+        printf 'LD_LIBRARY_PATH=%s:%s\n' "$native_directory" "${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
       
     - name: Download artifact (Database)
       uses: actions/download-artifact@v4
@@ -78,10 +103,32 @@ jobs:
         cd src/DokkanDailyDB/
         docker build . --build-arg PASSWORD="<YourStrong@Passw0rd>" -t mydatabase:1.0 --no-cache
         docker run -p 127.0.0.1:1433:1433 --name sqldb -d mydatabase:1.0
+
+        for attempt in {1..60}; do
+          if docker exec sqldb /opt/mssql-tools18/bin/sqlcmd \
+            -S localhost \
+            -U sa \
+            -P "<YourStrong@Passw0rd>" \
+            -C \
+            -d mydatabase \
+            -Q "SELECT 1" > /dev/null 2>&1; then
+            echo "SQL Server is ready."
+            break
+          fi
+
+          if [ "$attempt" -eq 60 ]; then
+            echo "SQL Server did not become ready within 60 seconds."
+            docker logs sqldb
+            exit 1
+          fi
+
+          sleep 1
+        done
+
         cd ../..
       
     - name: Test
-      run: dotnet test ./tests/DokkanDailyTests/DokkanDailyTests.csproj -v n #-c R --logger trx --collect:"XPlat Code Coverage"
+      run: dotnet test ./tests/DokkanDailyTests/DokkanDailyTests.csproj --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal
       
     # - name: Combine Coverage Reports 
       # uses: danielpalme/ReportGenerator-GitHub-Action@v5.4.3
@@ -138,41 +185,43 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write
+      packages: write
     needs: [build, db-deploy]
     if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
     steps:
-    - uses: actions/checkout@v4
-    
-    # - name: Check for source changes
-      # id: changes
-      # uses: dorny/paths-filter@v3
-      # with:
-        # filters: |
-          # src:
-            # - 'src'
-            
-    - name: Docker login
-      uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
-        
-    - name: Docker Build
-      run: |
-        docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}
-        
-    - name: Docker push
-      run: |
-        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}
-        
-    - name: Deploy to Azure WebApp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: DokkanDaily
-        publish-profile: ${{ secrets.DOKKANDAILYPUBLISHSETTINGS }}
-        images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}  
+      - uses: actions/checkout@v4
+  
+      - name: Login to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+  
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+  
+      - name: Build container
+        run: |
+          docker build . \
+            -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }} \
+            -t ghcr.io/omni-/dokkandaily:${{ github.sha }}
+  
+      - name: Push containers
+        run: |
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}
+          docker push ghcr.io/omni-/dokkandaily:${{ github.sha }}
+  
+      - name: Deploy existing ACR image
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: DokkanDaily
+          publish-profile: ${{ secrets.DOKKANDAILYPUBLISHSETTINGS }}
+          images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}
       
   db-deploy:
     runs-on: windows-latest

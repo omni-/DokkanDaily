@@ -4,7 +4,6 @@ using DokkanDaily.Models;
 using DokkanDaily.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework.Internal;
 using System.Collections.Concurrent;
@@ -14,15 +13,6 @@ namespace DokkanDailyTests
     [TestFixture]
     public class OcrTests
     {
-        [OneTimeSetUp]
-        public void Setup()
-        {
-            if (Environment.GetEnvironmentVariable("CI") == "true")
-            {
-                Assert.Ignore("Skipping OCR tests as they currently can't run on remote");
-            }
-        }
-
         private static string GetDataDirectory()
         {
             string workingDirectory = Directory.GetCurrentDirectory();
@@ -103,8 +93,9 @@ namespace DokkanDailyTests
 
         private ClearMetadata? ProcessImage(string imagePath)
         {
-            Mock<ILogger<OcrService>> loggerMock = new();
-            OcrService service = new(loggerMock.Object, Options.Create(new DokkanDaily.Configuration.DokkanDailySettings() { FeatureFlags = new() { EnableJapaneseParsing = true } }), new OcrFormatProvider());
+            using ILoggerFactory loggerFactory = Microsoft.Extensions.Logging.LoggerFactory.Create(builder =>
+                builder.SetMinimumLevel(LogLevel.Debug).AddSimpleConsole(options => options.SingleLine = true));
+            OcrService service = new(loggerFactory.CreateLogger<OcrService>(), Options.Create(new DokkanDaily.Configuration.DokkanDailySettings() { FeatureFlags = new() { EnableJapaneseParsing = true } }), new OcrFormatProvider());
             MemoryStream ms = new();
             File.OpenRead(imagePath).CopyTo(ms);
             ClearMetadata? result = service.ProcessImage(ms);
