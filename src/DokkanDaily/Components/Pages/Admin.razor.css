@@ -30,7 +30,14 @@
     text-transform: uppercase;
 }
 
-.seed-summary {
+.admin-header-summary {
+    align-items: stretch;
+    display: flex;
+    gap: 0.75rem;
+}
+
+.seed-summary,
+.version-summary {
     background: rgba(20, 24, 31, 0.88);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
@@ -39,7 +46,8 @@
     padding: 0.8rem 1rem;
 }
 
-.seed-summary span {
+.seed-summary span,
+.version-summary span {
     color: #c9d3df;
     display: block;
     font-family: Arial, sans-serif;
@@ -54,6 +62,17 @@
     line-height: 1.1;
     margin-top: 0.15rem;
     overflow-wrap: anywhere;
+}
+
+.version-summary {
+    margin: 0;
+    min-width: min(25rem, 42vw);
+}
+
+.version-summary .form-control {
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 0.8rem;
+    margin-top: 0.35rem;
 }
 
 .admin-grid {
@@ -264,6 +283,7 @@ textarea.form-control {
     }
 
     .admin-header,
+    .admin-header-summary,
     .inline-options,
     .split-action,
     .dump-layout {
@@ -271,7 +291,9 @@ textarea.form-control {
         flex-direction: column;
     }
 
-    .seed-summary {
+    .seed-summary,
+    .version-summary {
+        min-width: 0;
         width: 100%;
     }
 

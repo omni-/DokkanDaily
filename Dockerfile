@@ -41,6 +41,9 @@ FROM build AS publish
 RUN dotnet publish "src/DokkanDaily/DokkanDaily.csproj" -c Release -o /app
 
 FROM base AS final
+ARG BUILD_SHA=development
+ENV DOKKANDAILY_BUILD_SHA=${BUILD_SHA}
+LABEL org.opencontainers.image.revision="${BUILD_SHA}"
 WORKDIR /app
 COPY --from=publish /app .
 COPY --from=ghcr.io/shimat/opencvsharp/ubuntu24-dotnet10-opencv4.13.0:20260214 /usr/lib/libOpenCvSharpExtern.so /app/runtimes/linux-x64/native/libOpenCvSharpExtern.so
