@@ -7,7 +7,7 @@ on:
   schedule:
       - cron: '30 15 * * WED'
   workflow_dispatch:
-  
+
 permissions:
     id-token: write
     contents: read
@@ -43,6 +43,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     needs: db-build
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
     steps:
     - uses: actions/checkout@v4
     
@@ -128,58 +132,45 @@ jobs:
         cd ../..
       
     - name: Test
-      run: dotnet test ./tests/DokkanDailyTests/DokkanDailyTests.csproj --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal
+      run: >-
+        dotnet test ./tests/DokkanDailyTests/DokkanDailyTests.csproj
+        --configuration ${{ env.CONFIGURATION }}
+        --no-build
+        --verbosity normal
+        --collect:"XPlat Code Coverage"
+        --logger trx
+        --results-directory "${{ github.workspace }}/TestResults"
       
-    # - name: Combine Coverage Reports 
-      # uses: danielpalme/ReportGenerator-GitHub-Action@v5.4.3
-      # with:
-        # reports: "**/*.cobertura.xml" 
-        # targetdir: "${{ github.workspace }}" 
-        # reporttypes: "Cobertura" 
-        # verbosity: "Info" 
-        # title: "Code Coverage" 
-        # tag: "${{ github.run_number }}_${{ github.run_id }}"
-        # toolpath: "reportgeneratortool"
-        
-    # - name: Upload Combined Coverage XML
-      # uses: actions/upload-artifact@v4
-      # with:
-        # name: coverage
-        # path: ${{ github.workspace }}/Cobertura.xml
-        # retention-days: 5
-        
-    # - name: Publish Code Coverage Report
-      # uses: irongut/CodeCoverageSummary@v1.3.0
-      # with:
-        # filename: "Cobertura.xml"
-        # badge: true
-        # fail_below_min: false
-        # format: markdown
-        # hide_branch_rate: false
-        # hide_complexity: false
-        # indicators: true
-        # output: both
-        # thresholds: "10 30"
-        
-    # - name: Add Coverage PR Comment
-      # uses: marocchino/sticky-pull-request-comment@v2
-      # if: github.event_name == 'pull_request'
-      # with:
-        # recreate: true
-        # path: code-coverage-results.md
-    
-    # - name: Upload Test Result Files
-      # uses: actions/upload-artifact@v4
-      # with:
-        # name: test-results
-        # path: ${{ github.workspace }}/**/TestResults/**/*
-        # retention-days: 5
-        
-    # - name: Publish Test Results
-      # uses: EnricoMi/publish-unit-test-result-action@v2.18.0
-      # if: always()
-      # with:
-        # trx_files: "${{ github.workspace }}/**/*.trx"
+    - name: Summarize code coverage
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: TestResults/**/coverage.cobertura.xml
+        badge: true
+        format: markdown
+        output: both
+        thresholds: "10 30"
+
+    - name: Add coverage PR comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]' && github.event.pull_request.head.repo.full_name == github.repository
+      with:
+        recreate: true
+        path: code-coverage-results.md
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: test-results
+        path: TestResults
+        retention-days: 5
+
+    - name: Publish test results
+      uses: EnricoMi/publish-unit-test-result-action@v2.23.0
+      if: ${{ !cancelled() && github.actor != 'dependabot[bot]' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+      with:
+        files: TestResults/**/*.trx
+        comment_mode: off
       
   deploy:
     runs-on: ubuntu-latest
@@ -191,38 +182,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
   
-      - name: Login to Azure Container Registry
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-  
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: dokkandaily
           password: ${{ secrets.GHCR_TOKEN }}
-      
-      - name: Build container
+
+      - name: Build and push
         run: |
-          docker build . \
-            -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }} \
-            -t ghcr.io/dokkandaily/dokkandaily:${{ github.sha }}
-      
-      - name: Push containers
-        run: |
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}
+          docker build . -t ghcr.io/dokkandaily/dokkandaily:${{ github.sha }}
           docker push ghcr.io/dokkandaily/dokkandaily:${{ github.sha }}
-  
-      - name: Deploy existing ACR image
+
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: DokkanDaily
           publish-profile: ${{ secrets.DOKKANDAILYPUBLISHSETTINGS }}
-          images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/dokkandaily:${{ github.sha }}
-      
+          images: ghcr.io/dokkandaily/dokkandaily:${{ github.sha }}
+
   db-deploy:
     runs-on: windows-latest
     needs: build

@@ -23,6 +23,7 @@
 @inject NavigationManager NavManager
 @inject DiscordWebhookClient WebhookSvc
 @inject IOptions<DokkanDailySettings> settings
+@inject IConfiguration Configuration
 
 <PageTitle>Badmin!</PageTitle>
 
@@ -47,9 +48,15 @@
                             <p class="eyebrow">Admin Console</p>
                             <h1>Welcome back.</h1>
                         </div>
-                        <div class="seed-summary">
-                            <span>Current Seed</span>
-                            <strong>@Seed</strong>
+                        <div class="admin-header-summary">
+                            <div class="seed-summary">
+                                <span>Current Seed</span>
+                                <strong>@Seed</strong>
+                            </div>
+                            <label class="version-summary">
+                                <span>Running Version</span>
+                                <input class="form-control" value="@BuildSha" readonly aria-label="Running container version" />
+                            </label>
                         </div>
                     </header>
 
@@ -237,6 +244,8 @@
 
 @code {
     bool AuthorizedUser { get; set; }
+
+    string BuildSha => Configuration["DOKKANDAILY_BUILD_SHA"] ?? "development";
 
     string Seed { get; set; }
 
