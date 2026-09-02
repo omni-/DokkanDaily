@@ -1,4 +1,4 @@
-﻿@page "/leaderboard"
+@page "/leaderboard"
 @rendermode InteractiveServer
 
 @using DokkanDaily.Components.Shared
@@ -19,8 +19,6 @@
         margin: 0 auto;
     }
 </style>
-
-<Logo dailyType="@RngSvc.GetTodaysDailyType()?.ToString()" />
 
 <div class="container leaderboard text-center">
     <i style="float:left" @onclick="decSeason" hidden="@leftArrowHidden" class="arrow oi oi-chevron-left"></i>
@@ -51,6 +49,7 @@
 
 @code {
     List<LeaderboardUser> leaderboard;
+    bool pendingFetch;
 
     string displayText => string.IsNullOrEmpty(errorText) ? "Sorry, there's nothing here yet!" : errorText;
     string errorText;
@@ -60,16 +59,32 @@
     async void incSeason()
     {
         if (selectedSeason == currentSeason) return;
+        if (pendingFetch) return;
         selectedSeason++;
-        leaderboard = await LeaderboardSvc.GetLeaderboardBySeason(selectedSeason);
-        StateHasChanged();
+        await NavigateSeason();
     }
+
     async void decSeason()
     {
         if (selectedSeason == 0) return;
+        if (pendingFetch) return;
         selectedSeason--;
-        leaderboard = await LeaderboardSvc.GetLeaderboardBySeason(selectedSeason);
+        await NavigateSeason();
+    }
+
+    private async Task NavigateSeason()
+    {
+        pendingFetch = true;
         StateHasChanged();
+        try
+        {
+            leaderboard = await LeaderboardSvc.GetLeaderboardBySeason(selectedSeason);
+        }
+        finally
+        {
+            pendingFetch = false;
+            StateHasChanged();
+        }
     }
 
     int currentSeason = 0;
