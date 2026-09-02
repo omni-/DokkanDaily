@@ -192,6 +192,8 @@ namespace DokkanDaily.Constants
             new("Epic Battle of Divine Scale", "Super Saiyan God Goku", Tier.Z),
             new("Grand Assault Leading Allies", "Super Saiyan 3 Goku (Mini) (DAIMA)", Tier.Z),
             new("Blinding Radiance of the Decisive Strike", "Gohan (Beast)", Tier.Z),
+            new("Furious Fighter's Immense Power", "Super Saiyan Goku", Tier.Z),
+            new("Key Figure of the Demon Realm Journey", "Panzy", Tier.A),
             //extreme
             new("Crashing Maelstrom", "Omega Shenron", Tier.E),
             new("Emperor's True Splendor", "Golden Frieza (Angel)", Tier.F),
@@ -262,6 +264,8 @@ namespace DokkanDaily.Constants
             new("Earth-Blanketing Army", "Metal Cooler Army", Tier.Z),
             new("Supreme Tree of Might", "Turles", Tier.S),
             new("Cataclysmic Calamity", "Cell Max", Tier.Z),
+            new("Supreme Ruler's Vicious Power", "Frieza (Final Form)", Tier.Z),
+            new("Ambition for the Future of the Demon Realm", "Dr. Arinsu", Tier.A),
         ];
         #endregion
 
@@ -464,6 +468,10 @@ namespace DokkanDaily.Constants
             new("Ultimate Red Zone: RE [Super Hero Edition]", Tier.ZPlus, "SH_RZ_RE", 3),
             new("Supreme Magnificent Battle: RE [DAIMA Edition]", Tier.Z, "SMB_DAIMA_RE"),
             new("Supreme Magnificent Battle: RE [DAIMA Edition]", Tier.Z, "SMB_DAIMA_RE", 2),
+            new("Special Battle 2026", Tier.Z, "SB26"),
+            new("Special Battle 2026", Tier.ZPlus, "SB26", 2),
+            new("Collection of Epic Battles", Tier.ZPlus, "CEB"),
+            new("Collection of Epic Battles", Tier.ZPlus, "CEB", 2),
         ];
         #endregion
 
