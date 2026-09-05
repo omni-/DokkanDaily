@@ -1,0 +1,25 @@
+@using DokkanDaily.Models
+@using DokkanDaily.Helpers
+
+<div class="roster-caption"><span>Fighter standings</span><span>@Users.Count @(Users.Count == 1 ? "fighter" : "fighters")</span></div>
+<table class="standings-table">
+    <caption class="visually-hidden">Players ordered by total points, then daily highscores, then itemless clears.</caption>
+    <thead><tr><th scope="col">Rank</th><th scope="col">Fighter</th><th scope="col" class="points-column">Points</th></tr></thead>
+    <tbody>
+        @for (var i = 0; i < Users.Count; i++)
+        {
+            var user = Users[i];
+            <tr class="@(i < 3 ? $"podium rank-{i + 1}" : null)">
+                <td><span class="rank-number">@(i + 1)</span></td>
+                <th scope="row"><span class="fighter-name">@user.GetDisplayName()</span>
+                    <span class="fighter-record">@user.ItemlessClears itemless &middot; @user.TotalHighscores @(user.TotalHighscores == 1 ? "daily highscore" : "daily highscores")</span>
+                </th>
+                <td class="points-column"><strong class="score">@user.TotalScore</strong><span class="score-unit">PTS</span></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter, EditorRequired] public IReadOnlyList<LeaderboardUser> Users { get; set; } = [];
+}

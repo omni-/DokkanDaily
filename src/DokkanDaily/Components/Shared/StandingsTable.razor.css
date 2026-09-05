@@ -1,0 +1,41 @@
+.roster-caption {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px 24px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    color: #71583c;
+}
+.standings-table { width: 100%; table-layout: fixed; border-collapse: collapse; text-align: left; }
+thead { background: #e6d4b1; border-block: 1px solid #c4aa82; }
+thead th { padding: 10px 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+thead th:first-child { width: 86px; text-align: center; }
+thead th:last-child { width: 104px; }
+tbody td, tbody th { padding: 18px 16px; border-bottom: 1px solid #d7c3a0; }
+tbody tr:last-child td, tbody tr:last-child th { border-bottom: 0; }
+tbody tr:nth-child(even) { background: #efdfc2; }
+tbody .podium { background: #f7e5b8; }
+tbody .rank-1 { background: #ffdc89; }
+.rank-number { display: grid; place-items: center; width: 38px; height: 38px; margin: auto; font-weight: 900; font-size: 19px; }
+.podium .rank-number { border: 2px solid var(--ink); border-radius: 50%; background: #efd5a0; box-shadow: 2px 2px 0 var(--ink); }
+.rank-1 .rank-number { background: var(--orange); }
+.rank-2 .rank-number { background: #e1dfd5; }
+.rank-3 .rank-number { background: #dba571; }
+.fighter-name { display: block; overflow-wrap: anywhere; font-size: 17px; line-height: 1.3; }
+.fighter-record { display: block; font-size: 12px; font-weight: normal; color: #665038; margin-top: 6px; }
+.points-column { text-align: right; }
+.score { display: block; font: italic 900 28px/1.1 'Helvetica Neue', Impact, sans-serif; }
+.score-unit { font-size: 10px; letter-spacing: 1px; color: #665038; }
+@media (max-width: 540px) {
+    .roster-caption { padding: 16px 12px; font-size: 10px; letter-spacing: .8px; }
+    thead th:first-child { width: 58px; }
+    thead th:last-child { width: 76px; }
+    thead th, tbody td, tbody th { padding: 14px 9px; }
+    .rank-number { width: 30px; height: 30px; font-size: 16px; }
+    .fighter-name { font-size: 15px; }
+    .fighter-record { font-size: 11px; }
+    .score { font-size: 25px; }
+}

@@ -68,6 +68,12 @@ jobs:
     - name: Sync into wwwroot
       run: node scripts/sync-character-data.mjs --scraper "$SCRAPER_DIR" --summary "$RUNNER_TEMP/sync-summary.md"
 
+    - name: Test stage link sync
+      run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+
+    - name: Sync stage links
+      run: python3 scripts/sync-stage-links.py --summary "$RUNNER_TEMP/stage-link-summary.md"
+
     - name: Check for changes
       id: changes
       run: |
@@ -96,6 +102,8 @@ jobs:
         {
           cat "$RUNNER_TEMP/sync-summary.md"
           echo
+          cat "$RUNNER_TEMP/stage-link-summary.md"
+          echo
           echo "---"
           echo
           echo "Opened by the \`refresh-character-data\` workflow. This is the mechanical half of a content update:"
@@ -110,6 +118,7 @@ jobs:
         branch: data/character-refresh
         add-paths: |
           src/DokkanDaily/wwwroot/data/DokkanCharacterData.json
+          src/DokkanDaily/wwwroot/data/DokkanStageLinks.json
           src/DokkanDaily/wwwroot/images/thumbs
         commit-message: 'New unit json'
         title: 'New unit json'

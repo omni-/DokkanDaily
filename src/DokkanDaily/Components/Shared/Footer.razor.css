@@ -1,26 +1,6 @@
-﻿@media only screen and (max-width: 475px) {
-    footer {
-        font-size: 0.85rem;
-        left: 0;
-    }
-}
-@media only screen and (max-width: 375px) {
-    footer {
-        font-size: 0.77rem;
-    }
-}
-
-@media only screen and (max-width: 420px) {
-    img {
-        width:24px;
-        height:24px;
-    } 
-}
-
-footer {
-    display:flex;
-    justify-content: center;
-}
-button {
-    margin-bottom: 1vh;
-}
+.community-footer { position: static; width: 100%; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 20px; padding: 22px 0 28px; color: #e5d8c3; font-size: 12px; }
+.community-footer a { display: inline-flex; align-items: center; gap: 6px; color: #fff1dc; text-decoration: none; }
+.community-footer a:hover { text-decoration: underline; }
+.community-footer img { width: 21px; height: 21px; object-fit: contain; }
+.community-footer > span { opacity: .8; }
+@media (max-width: 540px) { .community-footer { gap: 16px; } .community-footer > span { width: 100%; } }
