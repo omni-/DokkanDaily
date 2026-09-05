@@ -1,21 +1,33 @@
-﻿@inject NavigationManager NavManager
+@inject NavigationManager NavManager
+@inject IJSRuntime JSRuntime
 
-<div style="max-width: fit-content;margin-left: auto;margin-right: auto;height: auto;">
-    <img style="cursor:pointer" @onclick=OnClick src="images/logo/logo.png" />
-    @if (!string.IsNullOrEmpty(dailyType))
-    {
-        <p style="color:white;padding-left:.5em;">Today's challenge type is: @dailyType!</p>
-    }
-</div>
-
+<header class="site-header">
+    <a class="brand" href="/daily" aria-label="Dokkandle home"><img src="images/logo/logo.png" alt="Dokkandle!" /></a>
+    <nav aria-label="Main navigation">
+        <NavLink href="daily">Daily challenge</NavLink>
+        <NavLink href="clears">Clears</NavLink>
+        <NavLink href="leaderboard">Leaderboard</NavLink>
+    </nav>
+    <div class="account-action">
+    <Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
+        <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+            <Authorized>
+                <button @onclick=OnClick>Log out</button>
+            </Authorized>
+            <NotAuthorized>
+                <button @onclick="@(()=>NavManager.NavigateTo("/auth", true))">Login</button>
+            </NotAuthorized>
+        </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+    </Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
+    </div>
+</header>
 <BannerNotice />
 
 @code {
-    [Parameter]
-    public string dailyType { get; set; }
-
+    [Parameter] public string dailyType { get; set; }
     void OnClick()
     {
+        JSRuntime.InvokeVoidAsync("open", $"{NavManager.BaseUri}deauth", "_blank");
         NavManager.NavigateTo("/daily", true);
     }
 }

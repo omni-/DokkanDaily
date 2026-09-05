@@ -35,48 +35,75 @@
 }
 else
 {
-    <div class="challenge-box">
-        <div style="margin: 0 1em 0 1em">
-            @if (TodaysChallenge.DailyType == DailyType.LinkSkill)
-            {
-                <p class="challenge-text"><b>Challenge!</b> defeat <b>@TodaysChallenge?.TodaysEvent?.Name</b>, <b>Stage @TodaysChallenge.TodaysEvent.StageNumber</b> using only units that have the Link Skill <div class="dokkan-link-wrapper"><div class="dokkan-link"><div class="text">@TodaysChallenge.LinkSkill.Name</div></div></div><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
-            }
-            @if (TodaysChallenge.DailyType == DailyType.Category)
-            {
-                <p class="challenge-text"><b>Challenge!</b> defeat <b>@TodaysChallenge?.TodaysEvent?.Name</b>, <b>Stage @TodaysChallenge.TodaysEvent.StageNumber</b> using only units belonging to:<br /><img src="@TodaysChallenge.Category.ImageURL" /><div class="challenge-text friend-text">(Friend Unit excluded)</div></p>
-            }
-            @if (TodaysChallenge.DailyType == DailyType.Character)
-            {
-                <p class="challenge-text"><b>Challenge!</b> build a team using 
-                    <span class="card-art">
-                        <img class="card-thumb-bg" src="@BgUrl" />
-                        <img class="card-thumb-character" src="@TodaysChallenge.TodaysUnit.ImageUrl" />
-                        <img class="card-rarity" src="@RarityUrl" />
-                        <img class="card-element" src="@TypeUrl" />
+    <section class="challenge-box" aria-labelledby="challenge-heading">
+        <header class="challenge-heading">
+            <div><span class="eyebrow">A new battle every day</span><h1 id="challenge-heading">Today's challenge</h1></div>
+            <span class="challenge-type">@TodaysDailyType</span>
+        </header>
+        <div class="challenge-body">
+            <section class="mission-rule" aria-label="Team requirement">
+                <span class="step-label">01 / Build your team</span>
+                @if (TodaysChallenge.DailyType == DailyType.Character)
+                {
+                    <div class="leader-line">
+                    <a class="card-art unit-info-link" href="@($"https://dokkaninfo.com/cards/{TodaysChallenge.TodaysUnit.Id}")" target="_blank" rel="noopener noreferrer" aria-label="@($"View {TodaysChallenge.Leader.Name} on Dokkan Info (opens in a new tab)")" title="View unit on Dokkan Info">
+                        <img class="card-thumb-bg" src="@BgUrl" alt="" />
+                        <img class="card-thumb-character" src="@TodaysChallenge.TodaysUnit.ImageUrl" alt="" />
+                        <img class="card-rarity" src="@RarityUrl" alt="" />
+                        <img class="card-element" src="@TypeUrl" alt="" />
                         @if (TodaysChallenge.TodaysUnit.Rarity == "LR")
                         {
-                            <img class="card-lightning" src="images/misc/LR_lightning.png"/>
+                            <img class="card-lightning" src="images/misc/LR_lightning.png" alt="" />
                         }
-                    </span> <b style="color:@typeColor">[@TodaysChallenge.Leader.Title] @TodaysChallenge?.Leader?.Name</b> as the Leader and defeat <b>@TodaysChallenge?.TodaysEvent?.Name</b>, <b>Stage @TodaysChallenge?.TodaysEvent?.StageNumber</b>!<div class="challenge-text friend-text">(Only one required - you may use a Friend Unit)</div></p>
-            }
-            @if ( TodaysChallenge?.TodaysEvent?.WallpaperImagePath is not null)
-            {
-                <p>
-                    <img class="event-banner" src="@TodaysChallenge.TodaysEvent.BannerImagePath" />
-                </p>
-            }
-            <div class="clear-box">
-                @if (!isDuringReset)
-                {
-                    <p>@dailyFileCount clear(s) uploaded today</p>
+                    </a>
+                        <div><p class="unit-title">@TodaysChallenge.Leader.Title</p><h2>@TodaysChallenge.Leader.Name</h2><p class="friend-text">Use as your leader or friend unit. Only one required.</p></div>
+                    </div>
                 }
-                <button disabled="@isDuringReset" type="button" class="btn btn-secondary btn-lg" @onclick=OnClick>
-                    Go to clears
-                </button>
+                @if (TodaysChallenge.DailyType == DailyType.LinkSkill)
+                {
+                    <h2>One link. A whole team.</h2>
+                    <p>Use only units with this Link Skill:</p>
+                    <div class="dokkan-link-wrapper"><div class="dokkan-link"><div class="text">@TodaysChallenge.LinkSkill.Name</div></div></div>
+                    <p class="friend-text">Your friend unit is exempt.</p>
+                }
+                @if (TodaysChallenge.DailyType == DailyType.Category)
+                {
+                    <h2>Assemble your category team</h2>
+                    <p>Use only units belonging to:</p>
+                    <img class="category-art" src="@TodaysChallenge.Category.ImageURL" alt="@TodaysChallenge.Category.Name" />
+                    <p class="friend-text">Your friend unit is exempt.</p>
+                }
+            </section>
+            <section class="mission-event" aria-label="Target stage">
+                <span class="step-label">02 / Take on the stage</span>
+                <div class="event-heading"><h2>@TodaysChallenge.TodaysEvent.Name</h2><span class="stage-number">Stage @TodaysChallenge.TodaysEvent.StageNumber</span></div>
+                @if (!string.IsNullOrEmpty(TodaysChallenge.TodaysEvent.BannerImagePath))
+                {
+                    @if (TodaysChallenge.TodaysEvent.DokkanInfoUrl is string stageUrl)
+                    {
+                        <a class="stage-info-link" href="@stageUrl" target="_blank" rel="noopener noreferrer" aria-label="@($"View {TodaysChallenge.TodaysEvent.FullName} on Dokkan Info (opens in a new tab)")">
+                            <img class="event-banner" src="@TodaysChallenge.TodaysEvent.BannerImagePath" alt="@TodaysChallenge.TodaysEvent.Name" />
+                            <span class="stage-info-caption">Stage details on Dokkan Info <span aria-hidden="true">&nearr;</span></span>
+                        </a>
+                    }
+                    else
+                    {
+                        <img class="event-banner" src="@TodaysChallenge.TodaysEvent.BannerImagePath" alt="@TodaysChallenge.TodaysEvent.Name" />
+                    }
+                }
+            </section>
+            <div class="challenge-actions">
+                <div><strong>Think you can clear it?</strong>
+                    @if (!isDuringReset)
+                    {
+                        <p>@dailyFileCount @(dailyFileCount == 1 ? "clear" : "clears") uploaded today</p>
+                    }
+                </div>
+                <button disabled="@isDuringReset" type="button" class="battle-button" @onclick="OnClick">View clears <span aria-hidden="true">&nearr;</span></button>
             </div>
-            <p>@TimeUntil</p>
         </div>
-    </div>
+        <div class="reset-status">@TimeUntil</div>
+    </section>
 
     <Footer />
 }

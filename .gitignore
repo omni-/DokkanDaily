@@ -361,3 +361,5 @@ MigrationBackup/
 FodyWeavers.xsd
 
 Dacpac/
+# Python script caches
+__pycache__/

@@ -1,4 +1,4 @@
-﻿using DokkanDaily.Constants;
+using DokkanDaily.Constants;
 using DokkanDaily.Helpers;
 using DokkanDaily.Models;
 using DokkanDaily.Models.Enums;
@@ -9,6 +9,16 @@ namespace DokkanDailyTests
     [TestFixture]
     public class HelperTests
     {
+        [Test]
+        public void EveryCurrentStageHasAValidDokkanInfoDestination()
+        {
+            foreach (var stage in DokkanConstants.Stages)
+            {
+                Assert.That(stage.DokkanInfoUrl, Does.Match(@"^https://dokkaninfo\.com/events/challenge/[0-9]+(?:/[0-9]+)?$"), stage.FullName);
+            }
+            Assert.That(new Stage("Unknown future event", Tier.S, "unknown").DokkanInfoUrl, Is.Null);
+        }
+
         [Test]
         [TestCase("cats.png", null, @"^cats-[0-9a-f]{32}\.png$")]
         [TestCase("../../escape.png", null, @"^escape-[0-9a-f]{32}\.png$")]

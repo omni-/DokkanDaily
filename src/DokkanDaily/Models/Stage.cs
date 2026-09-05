@@ -1,4 +1,4 @@
-﻿using DokkanDaily.Models.Enums;
+using DokkanDaily.Models.Enums;
 
 namespace DokkanDaily.Models
 {
@@ -15,6 +15,8 @@ namespace DokkanDaily.Models
         public string WallpaperImagePath => $"images/events/{folder}/wall.png";
 
         public string BannerImagePath => $"images/events/{folder}/banner.png";
+
+        public string DokkanInfoUrl => Helpers.DokkanInfoLinks.ForStage(FullName);
 
         public int StageNumber { get; init; } = stage;
     }

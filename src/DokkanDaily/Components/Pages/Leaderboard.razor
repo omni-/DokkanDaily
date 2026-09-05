@@ -1,4 +1,4 @@
-﻿@page "/leaderboard"
+@page "/leaderboard"
 @rendermode InteractiveServer
 
 @using DokkanDaily.Components.Shared
@@ -7,7 +7,7 @@
 @using DokkanDaily.Helpers;
 
 @inject ILeaderboardService LeaderboardSvc;
-@inject IRngHelperService RngSvc;
+@inject ILogger<Leaderboard> Logger;
 
 <PageTitle>Dokkandle!</PageTitle>
 
@@ -20,73 +20,100 @@
     }
 </style>
 
-<Logo dailyType="@RngSvc.GetTodaysDailyType()?.ToString()" />
+<Logo />
 
-<div class="container leaderboard text-center">
-    <i style="float:left" @onclick="decSeason" hidden="@leftArrowHidden" class="arrow oi oi-chevron-left"></i>
-    <i style="float:right" @onclick="incSeason" hidden="@rightArrowHidden" class="arrow oi oi-chevron-right"></i>
-    <h3>@currentStandingsText</h3>
-    <p class="italic">@bonusText</p>
-    @if (leaderboard != null && leaderboard.Any())
-    {
-        <div class="box">
-            @for (int i = 1; i < leaderboard.Count + 1; i++)
-            {
-                <p>@i. @leaderboard[i - 1].GetDisplayName() - @leaderboard[i - 1].TotalScore points 
-                @if (@leaderboard[i - 1].TotalHighscores > 0)
-                {
-                        <p class="subtext italic">(@leaderboard[i - 1].TotalHighscores @pluralize("highscore", @leaderboard[i - 1].TotalHighscores)!)</p>
-                }
-                </p>
-            }
-        </div>
-    }
-    else
-    {
-        <p>@displayText</p>
-    }
-</div>
+<section class="leaderboard" aria-labelledby="standings-title">
+    <header class="standings-header">
+        <div><span class="eyebrow">The world tournament</span><h1 id="standings-title">Leaderboard</h1></div>
+        <span class="tournament-seal" aria-hidden="true">&#9733;</span>
+    </header>
+    <div class="season-picker">
+        <button class="season-arrow" aria-label="Previous season" disabled="@(leftArrowHidden || pendingFetch)" @onclick="decSeason">&larr;</button>
+        <div><h2>@currentStandingsText</h2><span class="season-caption">@(selectedSeason == 0 ? "Where it all began" : selectedSeason == currentSeason ? "The competition is on" : "From the tournament archives")</span></div>
+        <button class="season-arrow" aria-label="Next season" disabled="@(rightArrowHidden || pendingFetch)" @onclick="incSeason">&rarr;</button>
+    </div>
+    <div class="standings-content" aria-busy="@pendingFetch.ToString().ToLowerInvariant()">
+        @if (pendingFetch)
+        {
+            <div class="standings-state" role="status"><h2>Gathering the fighters...</h2><p>Loading this season's standings.</p></div>
+        }
+        else if (!string.IsNullOrEmpty(errorText))
+        {
+            <div class="standings-state" role="alert"><h2>A brief intermission</h2><p>@errorText</p><button class="battle-button" @onclick="RetrySeason">Try again</button></div>
+        }
+        else if (leaderboard is { Count: > 0 })
+        {
+            <StandingsTable Users="leaderboard" />
+        }
+        else
+        {
+            <div class="standings-state"><span class="empty-star" aria-hidden="true">&#9734;</span><h2>The arena is waiting.</h2><p>No scores for this season yet. Your next clear could put you on the board.</p><a class="battle-button" href="/daily">Take the challenge &nearr;</a></div>
+        }
+    </div>
+    <footer class="scoring-note">
+        @if (selectedSeason == 0)
+        {
+            <p>Hall of Fame records celebrate clears from before the season system.</p>
+        }
+        else
+        {
+            <strong>Every clear counts.</strong><p>1 point for a clear. +1 for no items or Support Memories. +1 for the day's fastest clear.</p>
+        }
+    </footer>
+</section>
 
 <Footer />
 
 @code {
     List<LeaderboardUser> leaderboard;
-
-    string displayText => string.IsNullOrEmpty(errorText) ? "Sorry, there's nothing here yet!" : errorText;
+    bool pendingFetch;
     string errorText;
-
-    string pluralize(string s, int ct) => ct > 1 ? $"{s}s" : s; 
-
-    async void incSeason()
-    {
-        if (selectedSeason == currentSeason) return;
-        selectedSeason++;
-        leaderboard = await LeaderboardSvc.GetLeaderboardBySeason(selectedSeason);
-        StateHasChanged();
-    }
-    async void decSeason()
-    {
-        if (selectedSeason == 0) return;
-        selectedSeason--;
-        leaderboard = await LeaderboardSvc.GetLeaderboardBySeason(selectedSeason);
-        StateHasChanged();
-    }
-
-    int currentSeason = 0;
-    int selectedSeason = 0;
+    int currentSeason;
+    int selectedSeason;
     bool leftArrowHidden => selectedSeason <= 0;
     bool rightArrowHidden => selectedSeason >= currentSeason;
-    string currentStandingsText => selectedSeason == 0 ? "Hall of Fame" : selectedSeason == currentSeason ? $"Season {selectedSeason} (Current)" : $"Season {selectedSeason}";
-    string bonusText => selectedSeason == 0 ? "Points from clears submitted prior to the implementation of the Season system" : string.Empty;
+    string currentStandingsText => selectedSeason == 0 ? "Hall of Fame" : $"Season {selectedSeason}";
+
+    async Task incSeason()
+    {
+        if (rightArrowHidden || pendingFetch) return;
+        selectedSeason++;
+        await NavigateSeason();
+    }
+
+    async Task decSeason()
+    {
+        if (leftArrowHidden || pendingFetch) return;
+        selectedSeason--;
+        await NavigateSeason();
+    }
+
+    private Task RetrySeason() => NavigateSeason(force: true);
+
+    private async Task NavigateSeason(bool force = false)
+    {
+        pendingFetch = true;
+        errorText = null;
+        try
+        {
+            leaderboard = await LeaderboardSvc.GetLeaderboardBySeason(selectedSeason, force);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Unable to load leaderboard for season {Season}", selectedSeason);
+            leaderboard = null;
+            errorText = "We couldn't load the standings. Please try again.";
+        }
+        finally
+        {
+            pendingFetch = false;
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            leaderboard = await LeaderboardSvc.GetCurrentLeaderboard();
-            currentSeason = LeaderboardSvc.GetCurrentSeason();
-            selectedSeason = currentSeason;
-        }
-        catch(Exception e) { errorText = e.Message; }
+        currentSeason = LeaderboardSvc.GetCurrentSeason();
+        selectedSeason = currentSeason;
+        await NavigateSeason();
     }
 }

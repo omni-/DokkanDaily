@@ -1,44 +1,23 @@
-﻿.leaderboard {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 2em .5em 1em .5em;
-    background-color: #EFCFA7;
-    border: solid;
-    text-align: left;
-    width: 470px;
-    overflow-y: scroll;
-    max-height: 70vh;
-    max-width:80vw;
-}
-
-.arrow {
-    margin-top: 1vh;
-    cursor: pointer;
-}
-
-.italic {
-    font-size: x-small;
-    font-family: sans-serif;
-    font-style: italic;
-    font-weight: normal;
-}
-
-.box {
-    text-align: left;
-    padding-left: 10%;
-}
-
-.subtext {
-    margin-bottom: -0.75rem;
-}
-
-@media(max-width: 420px) {
-    h3 {
-        font-size: larger;
-    }
-    .box {
-        padding-left: 0;
-    }
+.leaderboard { margin: 30px auto 36px; background: var(--paper); border: 3px solid var(--ink); box-shadow: 7px 7px 0 var(--ink); width: min(100%, 760px); text-align: left; }
+.standings-header { display: flex; align-items: center; justify-content: space-between; padding: 22px 28px; background: var(--ink); color: var(--paper); border-bottom: 5px solid var(--orange); }
+.eyebrow { color: #ffbd67; font-size: 11px; text-transform: uppercase; letter-spacing: 1.8px; font-weight: bold; }
+h1 { margin: 4px 0 0; font-size: clamp(32px, 6vw, 42px); }
+.tournament-seal { display: grid; place-items: center; width: 56px; height: 56px; background: var(--orange); color: #a3381e; border: 3px solid var(--paper); border-radius: 50%; font-size: 30px; transform: rotate(10deg); }
+.season-picker { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 24px; border-bottom: 2px solid var(--ink); text-align: center; }
+.season-picker h2 { margin: 0; font-size: 27px; }
+.season-caption { color: #71583c; font-size: 12px; }
+.season-arrow { flex-shrink: 0; width: 44px; height: 44px; background: #ead6af; border: 2px solid var(--ink); font-size: 23px; font-weight: bold; }
+.season-arrow:hover:enabled { background: var(--orange); }
+.season-arrow:disabled { opacity: .3; }
+.standings-state { text-align: center; padding: 48px 24px; }
+.standings-state h2 { font-size: 28px; }
+.standings-state p { color: #71583c; font-size: 14px; max-width: 380px; margin: 12px auto 24px; }
+.empty-star { font-size: 54px; color: #a96819; }
+.scoring-note { position: static; display: block; width: auto; padding: 18px 24px; background: #e8d6b7; border-top: 2px solid var(--ink); font-size: 12px; }
+.scoring-note p { margin: 4px 0 0; color: #604c36; }
+@media (max-width: 540px) {
+    .leaderboard { box-shadow: 4px 4px 0 var(--ink); }
+    .standings-header { padding: 20px 16px; }
+    .season-picker { padding: 18px 12px; gap: 8px; }
+    .tournament-seal { width: 46px; height: 46px; font-size: 24px; }
 }

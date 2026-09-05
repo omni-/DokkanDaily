@@ -1,4 +1,4 @@
-﻿@page "/clears"
+@page "/clears"
 @rendermode InteractiveServer
 
 @using DokkanDaily.Components.Shared
@@ -27,7 +27,7 @@
     margin: 0 auto;
     }
 </style>
-<div style="height:100vh;">
+<div class="clears-page">
 
     <Logo dailyType="@RngSvc.GetTodaysDailyType()?.ToString()" />
 
@@ -38,9 +38,12 @@
         </div>
     }
     <div class="container clear-box text-center">
-        <div style="padding-top:2vh;" class="row">
+        <h1>Today's clears</h1>
+        <p class="page-intro">Show your team. Share your victory.</p>
+        <div class="upload-zone">
             <div>
-                <label>
+                <label class="upload-label">
+                    <span>Choose your clear screenshot</span>
                     <InputFile class="form-control" disabled="@fileLoading" accept=".jpg,.jpeg,.png,.webp,.avif" style="width:100%;" OnChange="@OnInputFileChange" single />
                 </label>
                 @if (fileLoading)
@@ -49,8 +52,8 @@
                 }
             </div>
             <div style="padding-top:1vh;">
-                <button type="button" disabled="@fileLoading" class="btn btn-secondary btn-md" @onclick="OnUploadSubmit">
-                    Upload File
+                <button type="button" disabled="@fileLoading" class="battle-button" @onclick="OnUploadSubmit">
+                    Submit clear
                 </button>
             </div>
         </div>
@@ -79,7 +82,7 @@
             }
             else
             {
-                <p style="margin-top:25vh;">No clears yet!</p>
+                <div class="empty-clears"><h2>The first victory could be yours.</h2><p>No clears yet. Upload your result above to get things started.</p></div>
             }
         </div>
         <p class="italic">Note: leaderboard points will be accrued as follows: 1 for submitting a clear, 1 for not using items or Support Memories, and 1 for having the fastest clear of the day.</p>
