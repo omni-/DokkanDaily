@@ -35,8 +35,11 @@ namespace DokkanDaily.Services
 
                     if (!_inFlight.TryGetValue(season, out fetchTask))
                     {
-                        fetchTask = FetchAndCache(season);
+                        TaskCompletionSource<List<LeaderboardUser>> completion = new(
+                            TaskCreationOptions.RunContinuationsAsynchronously);
+                        fetchTask = completion.Task;
                         _inFlight[season] = fetchTask;
+                        _ = CompleteRegisteredFetch(season, completion);
                     }
                 }
 
@@ -46,6 +49,41 @@ namespace DokkanDaily.Services
             // Force path: bypass cache and deduplication
             var result = await FetchAndCache(season);
             return result;
+        }
+
+        private async Task CompleteRegisteredFetch(
+            int season,
+            TaskCompletionSource<List<LeaderboardUser>> completion)
+        {
+            List<LeaderboardUser> result = null;
+            Exception error = null;
+
+            try
+            {
+                result = await FetchAndCache(season);
+            }
+            catch (Exception ex)
+            {
+                error = ex;
+            }
+
+            lock (_lock)
+            {
+                if (_inFlight.TryGetValue(season, out var registeredTask)
+                    && ReferenceEquals(registeredTask, completion.Task))
+                {
+                    _inFlight.Remove(season);
+                }
+            }
+
+            if (error is null)
+            {
+                completion.SetResult(result!);
+            }
+            else
+            {
+                completion.SetException(error);
+            }
         }
 
         private async Task<List<LeaderboardUser>> FetchAndCache(int season)
@@ -77,7 +115,6 @@ namespace DokkanDaily.Services
             lock (_lock)
             {
                 _leaderboards[season] = leaderboard;
-                _inFlight.Remove(season, out _);
             }
 
             return leaderboard;
