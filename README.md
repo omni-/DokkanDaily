@@ -39,3 +39,17 @@ suite flags missing links before merge. Rebuild/restart after regenerating the c
 - Collection of Epic Battles -> 1769: the renewed two-stage Saiyan/Planet Namek event used by our current catalog, rather than original event 760.
 
 Run parser/matching tests with `python -m unittest discover -s scripts/tests -p "test_*.py"`.
+
+### Minimum clear difficulty
+
+Stages can set an optional `minimumDifficulty` in `DokkanConstants.Stages`, for example
+`new("Event name", Tier.Z, "EventFolder", 2, StageDifficulty.SUPER3)`.
+The game difficulty is separate from the challenge balancing `Tier`. An omitted
+minimum preserves the existing submission behavior. Special Battle entries require
+SUPER3, the highest option verified for those events.
+
+OCR reads the printed difficulty label in Global and JP clear-details screenshots.
+For stages with a minimum, submissions wait for validation and receive an error if
+the label is unreadable or too low. Accepted uploads store their recognized
+`difficulty` in blob metadata. Existing uploads are not reclassified automatically.
+The challenge page, upload page, and challenge announcement text display the minimum.

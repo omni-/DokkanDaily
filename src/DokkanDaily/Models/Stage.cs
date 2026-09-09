@@ -2,7 +2,7 @@ using DokkanDaily.Models.Enums;
 
 namespace DokkanDaily.Models
 {
-    public class Stage(string name, Tier d, string path, int stage = 1) : ITieredObject
+    public class Stage(string name, Tier d, string path, int stage = 1, StageDifficulty? minimumDifficulty = null) : ITieredObject
     {
         public string Name { get; init; } = name;
 
@@ -19,5 +19,7 @@ namespace DokkanDaily.Models
         public string DokkanInfoUrl => Helpers.DokkanInfoLinks.ForStage(FullName);
 
         public int StageNumber { get; init; } = stage;
+
+        public StageDifficulty? MinimumDifficulty { get; init; } = minimumDifficulty;
     }
 }
