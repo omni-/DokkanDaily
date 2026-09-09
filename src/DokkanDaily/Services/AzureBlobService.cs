@@ -84,16 +84,34 @@ namespace DokkanDaily.Services
                 if (!admission.Accepted)
                     throw new UploadRejectedException(admission.RejectionMessage);
 
-                var (container, _) = await GetOrCreate(bucket);
-
-                string fileName = DokkanDailyHelper.BuildBlobName(userFileName, discordId);
-
-                BlobClient blob = container.GetBlobClient(fileName);
-
                 uploadStream = new MemoryStream();
                 using Stream fileStream = browserFile.OpenReadStream(maxFileSize);
                 await fileStream.CopyToAsync(uploadStream);
                 uploadStream.Position = 0;
+
+                // Required difficulties must be checked before accepting the upload so the
+                // caller can display a rejection and no ineligible clear reaches scoring.
+                bool validateBeforeUpload = model.TodaysEvent.MinimumDifficulty.HasValue;
+                ClearMetadata parsedClear = null;
+                if (validateBeforeUpload)
+                {
+                    await _ocrThrottle.WaitAsync();
+                    try
+                    {
+                        parsedClear = _ocrService.ProcessImage(uploadStream);
+                    }
+                    finally
+                    {
+                        _ocrThrottle.Release();
+                    }
+
+                    ValidateMinimumDifficulty(model.TodaysEvent, parsedClear);
+                    uploadStream.Position = 0;
+                }
+
+                var (container, _) = await GetOrCreate(bucket);
+                string fileName = DokkanDailyHelper.BuildBlobName(userFileName, discordId);
+                BlobClient blob = container.GetBlobClient(fileName);
 
                 _logger.LogInformation("Uploading to `{Container}/{File}`...", container.Name, fileName);
 
@@ -101,10 +119,14 @@ namespace DokkanDaily.Services
                 {
                     HttpHeaders = new BlobHttpHeaders { ContentType = contentType },
                     Tags = new Dictionary<string, string> { { AzureConstants.DATE_TAG, DokkanDailyHelper.GetUtcNowDateTag() } },
-                    Metadata = BuildIdentityTagDict(model, discordUsername, discordId, remoteIp, userAgent)
+                    Metadata = validateBeforeUpload
+                        ? BuildTagDict(model, parsedClear, discordUsername, discordId, remoteIp, userAgent)
+                        : BuildIdentityTagDict(model, discordUsername, discordId, remoteIp, userAgent)
                 });
 
                 _logger.LogInformation("Finished Azure upload.");
+
+                if (validateBeforeUpload) return blob;
 
                 MemoryStream analysisStream = uploadStream;
 
@@ -353,8 +375,22 @@ namespace DokkanDaily.Services
             return dict.Where(kv => !string.IsNullOrEmpty(kv.Value)).ToDictionary();
         }
 
-        private static Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata, string discordUsername, string discordId, string remoteIp, string userAgent)
+        internal static void ValidateMinimumDifficulty(Stage stage, ClearMetadata metadata)
         {
+            if (stage.MinimumDifficulty is not StageDifficulty minimum) return;
+
+            if (metadata?.Difficulty is not string label ||
+                !Enum.TryParse<StageDifficulty>(label, out var difficulty) ||
+                !Enum.IsDefined(difficulty) || label != difficulty.ToString())
+                throw new UploadRejectedException($"Could not read the difficulty. This challenge requires {minimum} or higher. Upload a clear-details screenshot with the difficulty label visible");
+
+            if (difficulty < minimum)
+                throw new UploadRejectedException($"This challenge requires {minimum} or higher; your screenshot shows {difficulty}");
+        }
+
+        internal static Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata, string discordUsername, string discordId, string remoteIp, string userAgent)
+        {
+            ValidateMinimumDifficulty(model.TodaysEvent, metadata);
             Dictionary<string, string> dict = BuildIdentityTagDict(model, discordUsername, discordId, remoteIp, userAgent);
 
             if (metadata == null)
@@ -368,6 +404,7 @@ namespace DokkanDaily.Services
             dict[AzureConstants.USER_NAME_TAG] = metadata.Nickname?.EscapeUnicode();
             dict[AzureConstants.ITEMLESS_TAG] = metadata.ItemlessClear.ToString();
             dict[AzureConstants.CLEAR_TIME_TAG] = metadata.ClearTime;
+            dict[AzureConstants.DIFFICULTY_TAG] = metadata.Difficulty;
 
             return dict.Where(kv => !string.IsNullOrEmpty(kv.Value)).ToDictionary();
         }

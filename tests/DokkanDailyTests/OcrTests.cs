@@ -36,6 +36,8 @@ namespace DokkanDailyTests
             foreach (string imagePath in Directory
                 .EnumerateFiles(GetDataDirectory(), "*", SearchOption.AllDirectories)
                 .Where(file => imageExtensions.Contains(Path.GetExtension(file).ToLower()))
+                // Difficulty fixtures have their own explicit expectations in DifficultyTests.
+                .Where(file => Path.GetDirectoryName(file) != Path.Combine(GetDataDirectory(), "difficulty"))
             )
             {
                 TestCaseData testCase = new TestCaseData(imagePath)

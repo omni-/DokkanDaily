@@ -5,6 +5,12 @@ namespace DokkanDaily.Ocr
     public class ClearScreenUI(int width, int height, string boundingBoxImagePath)
     {
         private readonly Dictionary<string, RegionLoader.RelativeRegion> Regions = RegionLoader.LoadUIRegions(boundingBoxImagePath);
+
+        // The Latin difficulty label occupies the same strip in Global and JP.
+        // Stop before the stars, which are not part of the difficulty string.
+        public Rectangle GetDifficultyRegion() => new(
+            (int)(width * 0.12f), (int)(height * 0.17f),
+            (int)(width * 0.40f), (int)(height * 0.06f));
         public Rectangle GetStageClearDetailsRegion()
         {
             RegionLoader.RelativeRegion normalizedStageClearDetailsRegion = Regions["stageClearDetails"];

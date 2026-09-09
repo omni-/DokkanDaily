@@ -7,5 +7,7 @@
         public bool ItemlessClear { get; init; }
 
         public string ClearTime { get; init; }
+
+        public string Difficulty { get; init; }
     }
 }
