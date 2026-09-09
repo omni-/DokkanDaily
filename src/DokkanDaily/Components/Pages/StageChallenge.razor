@@ -37,12 +37,11 @@ else
 {
     <section class="challenge-box" aria-labelledby="challenge-heading">
         <header class="challenge-heading">
-            <div><span class="eyebrow">A new battle every day</span><h1 id="challenge-heading">Today's challenge</h1></div>
+            <div><h1 id="challenge-heading">Today's challenge</h1></div>
             <span class="challenge-type">@TodaysDailyType</span>
         </header>
         <div class="challenge-body">
             <section class="mission-rule" aria-label="Team requirement">
-                <span class="step-label">01 / Build your team</span>
                 @if (TodaysChallenge.DailyType == DailyType.Character)
                 {
                     <div class="leader-line">
@@ -61,21 +60,18 @@ else
                 }
                 @if (TodaysChallenge.DailyType == DailyType.LinkSkill)
                 {
-                    <h2>One link. A whole team.</h2>
-                    <p>Use only units with this Link Skill:</p>
+                    <h2>Use only units with this Link Skill:</h2>
                     <div class="dokkan-link-wrapper"><div class="dokkan-link"><div class="text">@TodaysChallenge.LinkSkill.Name</div></div></div>
                     <p class="friend-text">Your friend unit is exempt.</p>
                 }
                 @if (TodaysChallenge.DailyType == DailyType.Category)
                 {
-                    <h2>Assemble your category team</h2>
-                    <p>Use only units belonging to:</p>
+                    <h2>Use only units belonging to:</h2>
                     <img class="category-art" src="@TodaysChallenge.Category.ImageURL" alt="@TodaysChallenge.Category.Name" />
                     <p class="friend-text">Your friend unit is exempt.</p>
                 }
             </section>
             <section class="mission-event" aria-label="Target stage">
-                <span class="step-label">02 / Take on the stage</span>
                 <div class="event-heading"><h2>@TodaysChallenge.TodaysEvent.Name</h2><span class="stage-number">Stage @TodaysChallenge.TodaysEvent.StageNumber</span></div>
                 @if (!string.IsNullOrEmpty(TodaysChallenge.TodaysEvent.BannerImagePath))
                 {
@@ -93,10 +89,10 @@ else
                 }
             </section>
             <div class="challenge-actions">
-                <div><strong>Think you can clear it?</strong>
+                <div>
                     @if (!isDuringReset)
                     {
-                        <p>@dailyFileCount @(dailyFileCount == 1 ? "clear" : "clears") uploaded today</p>
+                        <p><strong>@dailyFileCount @(dailyFileCount == 1 ? "clear" : "clears") uploaded today</strong></p>
                     }
                 </div>
                 <button disabled="@isDuringReset" type="button" class="battle-button" @onclick="OnClick">View clears <span aria-hidden="true">&nearr;</span></button>
