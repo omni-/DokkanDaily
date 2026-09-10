@@ -30,7 +30,8 @@ namespace DokkanDaily.Models
                 DailyType.LinkSkill => $"only units with the link skill {star}{LinkSkill.Name}{star}",
                 _ => throw new ArgumentException($"Unknown daily type '{DailyType}'")
             };
-            return $"Defeat {star}{star}{TodaysEvent.FullName}{star}{star} using {text}";
+            string difficulty = TodaysEvent.MinimumDifficulty is { } minimum ? $" on {minimum} or higher" : "";
+            return $"Defeat {star}{star}{TodaysEvent.FullName}{star}{star}{difficulty} using {text}";
         }
     }
 }

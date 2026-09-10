@@ -54,8 +54,9 @@ namespace DokkanDaily.Services
                 using var engine = Provider.CreateTesseractEngine();
 
                 using ResourcesTracker t = new();
+                Mat color = t.T(Mat.FromImageData(arr));
                 Mat gray = t.NewMat();
-                Cv2.CvtColor(t.T(Mat.FromImageData(arr)), gray, ColorConversionCodes.BGR2GRAY);
+                Cv2.CvtColor(color, gray, ColorConversionCodes.BGR2GRAY);
                 // ShapeUtils.PreviewImage("Gray", gray, 0);
 
                 Mat binaryBlackOnWhite = t.NewMat();
@@ -65,7 +66,7 @@ namespace DokkanDaily.Services
                 Mat brightWhiteOnBlack = t.NewMat();
                 Cv2.Threshold(gray, brightWhiteOnBlack, 180, 255, ThresholdTypes.Binary);
 
-                ParseResult darkLineResult = TryParseWithLineDetectionRegion(engine, t, binaryBlackOnWhite, binaryBlackOnWhite, useRelaxedLineDetection: false);
+                ParseResult darkLineResult = TryParseWithLineDetectionRegion(engine, t, color, binaryBlackOnWhite, binaryBlackOnWhite, useRelaxedLineDetection: false);
                 if (darkLineResult.Success)
                 {
                     return darkLineResult;
@@ -79,7 +80,7 @@ namespace DokkanDaily.Services
                 Mat brightAndDarkLineDetectionRegion = t.NewMat();
                 Cv2.BitwiseOr(binaryBlackOnWhite, brightWhiteOnBlack, brightAndDarkLineDetectionRegion);
 
-                ParseResult brightLineResult = TryParseWithLineDetectionRegion(engine, t, binaryBlackOnWhite, brightAndDarkLineDetectionRegion, useRelaxedLineDetection: true);
+                ParseResult brightLineResult = TryParseWithLineDetectionRegion(engine, t, color, binaryBlackOnWhite, brightAndDarkLineDetectionRegion, useRelaxedLineDetection: true);
                 if (brightLineResult.Success || brightLineResult.Error != null)
                 {
                     return brightLineResult;
@@ -93,7 +94,7 @@ namespace DokkanDaily.Services
             }
         }
 
-        private ParseResult TryParseWithLineDetectionRegion(TesseractEngine engine, ResourcesTracker t, Mat binaryBlackOnWhite, Mat lineDetectionRegion, bool useRelaxedLineDetection)
+        private ParseResult TryParseWithLineDetectionRegion(TesseractEngine engine, ResourcesTracker t, Mat color, Mat binaryBlackOnWhite, Mat lineDetectionRegion, bool useRelaxedLineDetection)
         {
             try
             {
@@ -208,6 +209,8 @@ namespace DokkanDaily.Services
                     return new ParseResult(false, null, null);
                 }
 
+                string difficulty = ParseDifficulty(color, ui.GetDifficultyRegion().ToCv2Rect().Add(boundingRect.TopLeft));
+
                 string nicknameText = ParseNickname(engine, t, binaryBlackOnWhite, nicknameRect.ToCv2Rect(), boundingRect, scaleFactor);
 
                 string clearTimeText = ParseClearTime(engine, t, binaryBlackOnWhite, clearTimeRect.ToCv2Rect(), boundingRect, scaleFactor);
@@ -221,6 +224,7 @@ namespace DokkanDaily.Services
 
                 return new ParseResult(true, new()
                 {
+                    Difficulty = difficulty,
                     Nickname = nicknameText,
                     ClearTime = clearTimeText,
                     ItemlessClear = itemless
@@ -230,6 +234,60 @@ namespace DokkanDaily.Services
             {
                 return new ParseResult(false, null, ex);
             }
+        }
+
+        private string ParseDifficulty(Mat color, Rect region)
+        {
+            using Mat crop = color.SubMat(region);
+            using Mat hsv = new();
+            Cv2.CvtColor(crop, hsv, ColorConversionCodes.BGR2HSV);
+            using Mat value = new();
+            Cv2.ExtractChannel(hsv, value, 2);
+            Cv2.Resize(value, value, new Size(600, 160), 0, 0, InterpolationFlags.Cubic);
+            Cv2.Threshold(value, value, 0, 255, ThresholdTypes.BinaryInv | ThresholdTypes.Otsu);
+            using Pix pix = Pix.LoadFromMemory(value.ToBytes());
+            // JP also displays these labels in Latin characters.
+            using var engine = new TesseractEngine(Provider.TrainDataPath, "eng", EngineMode.LstmOnly);
+            string text;
+            Tesseract.Rect suffix = default;
+            using (Page page = engine.Process(pix, PageSegMode.SingleLine))
+            {
+                text = page.GetText().Trim();
+                _logger.LogDebug("Difficulty OCR text: {Difficulty}", text);
+                if (text == "SUPERS")
+                {
+                    using var iterator = page.GetIterator();
+                    iterator.Begin();
+                    do
+                    {
+                        if (iterator.TryGetBoundingBox(PageIteratorLevel.Symbol, out var box)) suffix = box;
+                    } while (iterator.Next(PageIteratorLevel.Symbol));
+                }
+            }
+            if (suffix.Width > 0 && suffix.Height > 0)
+            {
+                // The italic 3 is often recognized as S. Re-read that glyph with
+                // the supported numeric suffixes, rather than mapping S to 3.
+                using Mat glyph = value.SubMat(new Rect(suffix.X1, suffix.Y1, suffix.Width, suffix.Height));
+                using Mat padded = new();
+                Cv2.CopyMakeBorder(glyph, padded, 20, 20, 20, 20, BorderTypes.Constant, Scalar.White);
+                using Pix digitPix = Pix.LoadFromMemory(padded.ToBytes());
+                engine.SetVariable("tessedit_char_whitelist", "23");
+                using var digitPage = engine.Process(digitPix, PageSegMode.SingleChar);
+                string digit = digitPage.GetText().Trim();
+                _logger.LogDebug("Difficulty suffix OCR text: {Digit}", digit);
+                text = digit.Length == 1 ? "SUPER" + digit : null;
+            }
+            return NormalizeDifficulty(text);
+        }
+
+        internal static string NormalizeDifficulty(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return null;
+            string normalized = string.Concat(text.ToUpperInvariant().Where(c => !char.IsWhiteSpace(c))).Replace("Z-HARD", "ZHARD");
+            return Enum.TryParse<StageDifficulty>(normalized, out var difficulty)
+                && Enum.IsDefined(difficulty) && normalized == difficulty.ToString()
+                ? normalized : null;
         }
 
         private static bool IsNearlyHorizontal(int dx, int dy)

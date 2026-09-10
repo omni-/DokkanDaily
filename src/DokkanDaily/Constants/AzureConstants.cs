@@ -14,6 +14,8 @@
 
         public static string CLEAR_TIME_TAG => "cleartime";
 
+        public const string DIFFICULTY_TAG = "difficulty";
+
         public static string ITEMLESS_TAG => "itemless";
 
         public static string DISCORD_NAME_TAG => "discordusername";

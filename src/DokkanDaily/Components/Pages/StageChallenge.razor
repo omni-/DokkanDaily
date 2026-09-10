@@ -73,6 +73,10 @@ else
             </section>
             <section class="mission-event" aria-label="Target stage">
                 <div class="event-heading"><h2>@TodaysChallenge.TodaysEvent.Name</h2><span class="stage-number">Stage @TodaysChallenge.TodaysEvent.StageNumber</span></div>
+                @if (TodaysChallenge.TodaysEvent.MinimumDifficulty is { } minimum)
+                {
+                    <p>Required difficulty: <strong>@minimum or higher</strong></p>
+                }
                 @if (!string.IsNullOrEmpty(TodaysChallenge.TodaysEvent.BannerImagePath))
                 {
                     @if (TodaysChallenge.TodaysEvent.DokkanInfoUrl is string stageUrl)

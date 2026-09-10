@@ -39,6 +39,10 @@
     }
     <div class="container clear-box text-center">
         <h1>Today's clears</h1>
+        @if (challengeModel?.TodaysEvent.MinimumDifficulty is { } minimum)
+        {
+            <p>Required difficulty: <strong>@minimum or higher</strong>. Keep the difficulty label visible in your clear-details screenshot.</p>
+        }
         <div class="upload-zone">
             <div>
                 <label class="upload-label">
@@ -178,6 +182,7 @@
         }
 
         fileLoading = true;
+        warningMessage = "";
         this.StateHasChanged();
 
         try
