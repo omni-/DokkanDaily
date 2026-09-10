@@ -1,4 +1,5 @@
 .challenge-box { width: min(100%, 700px); margin: 30px auto 36px; background: var(--paper); border: 3px solid var(--ink); box-shadow: 7px 7px 0 var(--ink); text-align: left; }
+.mission-rule { text-align: center; }
 .challenge-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 28px; color: var(--paper); background: var(--ink); border-bottom: 5px solid var(--orange); }
 .eyebrow, .step-label { display: block; font: 700 11px/1.5 Arial, sans-serif; text-transform: uppercase; letter-spacing: 1.8px; }
 .eyebrow { color: #ffbd67; margin-bottom: 4px; }
@@ -92,8 +93,8 @@ p { margin-bottom: 10px; }
     .eyebrow { letter-spacing: 1px; font-size: 10px; }
     .leader-line { gap: 10px; }
     .leader-line .card-art { width: 76px; height: 76px; }
-    .event-heading { flex-direction: column; gap: 4px; }
-    .challenge-actions { align-items: stretch; flex-direction: column; gap: 14px; }
+    .event-heading { flex-direction: column; gap: 4px; align-items: center; }
+    .challenge-actions { flex-direction: column; gap: 14px; }
 }
 
 .unit-info-link:hover { filter: brightness(1.12); }
