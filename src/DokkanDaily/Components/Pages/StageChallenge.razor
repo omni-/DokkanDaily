@@ -96,7 +96,7 @@ else
                 <div>
                     @if (!isDuringReset)
                     {
-                        <p><strong>@dailyFileCount @(dailyFileCount == 1 ? "clear" : "clears") uploaded today</strong></p>
+                        <strong>@dailyFileCount @(dailyFileCount == 1 ? "clear" : "clears") uploaded today</strong>
                     }
                 </div>
                 <button disabled="@isDuringReset" type="button" class="battle-button" @onclick="OnClick">View clears <span aria-hidden="true">&nearr;</span></button>
