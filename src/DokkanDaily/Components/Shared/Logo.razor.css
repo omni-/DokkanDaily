@@ -7,7 +7,7 @@ nav ::deep a:hover, nav ::deep a.active { color: #ffb448; border-bottom-color: v
 .account-action { margin-left: auto;}
 @media (max-width: 720px) {
     .site-header { flex-wrap: wrap; gap: 8px; }
-    .brand img { width: 175px; }
-    nav { order: 3; width: 100%; justify-content: center; gap: 24px; }
+    .brand img { display: none; }
+    nav { width: 100%; justify-content: center; display: flex; position: absolute; left: 35%; transform: translateX(-50%); gap: 24px;}
     nav ::deep a { font-size: 13px; }
 }
