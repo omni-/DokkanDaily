@@ -31,8 +31,8 @@ namespace DokkanDailyTests
         {
             var repository = new Mock<IDokkanDailyRepository>();
             repository.Setup(x => x.GetChallengeList(It.IsAny<DateTime?>())).ReturnsAsync(Array.Empty<DbChallenge>());
-            var service = new RngHelperServiceV2(repository.Object, Options.Create(new DokkanDailySettings()),
-                Microsoft.Extensions.Logging.Abstractions.NullLogger<RngHelperServiceV2>.Instance);
+            var service = new RngService(repository.Object, Options.Create(new DokkanDailySettings()),
+                Microsoft.Extensions.Logging.Abstractions.NullLogger<RngService>.Instance);
             int seed = service.GetRawSeed();
             await service.RollDailySeed();
             Assert.That(service.GetRawSeed(), Is.EqualTo(seed + 1));
@@ -48,7 +48,7 @@ namespace DokkanDailyTests
         public void RngServiceDoesNotThrow()
         {
             var repoMock = mocks.Create<IDokkanDailyRepository>();
-            IRngHelperService rngHelperService = new RngHelperServiceV2(repoMock.Object, Options.Create(new DokkanDailySettings() { EventRepeatLimitDays = 99999999, StageRepeatLimitDays = 99999999 }), mocks.Create<ILogger<RngHelperServiceV2>>(MockBehavior.Loose).Object);
+            IRngHelperService rngHelperService = new RngService(repoMock.Object, Options.Create(new DokkanDailySettings() { EventRepeatLimitDays = 99999999, StageRepeatLimitDays = 99999999 }), mocks.Create<ILogger<RngService>>(MockBehavior.Loose).Object);
 
             var stages = new List<Stage>(DokkanConstants.Stages);
             stages.RemoveAll(x => x.Name.Contains("Frieza"));
@@ -114,7 +114,7 @@ namespace DokkanDailyTests
 
 
             var repoMock = mocks.Create<IDokkanDailyRepository>();
-            var rngHelperService = new RngHelperServiceV2(repoMock.Object, Options.Create(new DokkanDailySettings() { EventRepeatLimitDays = 0, StageRepeatLimitDays = 999999999 }), mocks.Create<ILogger<RngHelperServiceV2>>(MockBehavior.Loose).Object);
+            var rngHelperService = new RngService(repoMock.Object, Options.Create(new DokkanDailySettings() { EventRepeatLimitDays = 0, StageRepeatLimitDays = 999999999 }), mocks.Create<ILogger<RngService>>(MockBehavior.Loose).Object);
 
             repoMock.Setup(x => x.GetChallengeList(It.IsAny<DateTime?>())).ReturnsAsync(dbChallenges);
 

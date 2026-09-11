@@ -17,8 +17,8 @@ public class ChallengeConcurrencyTests
         public DateTimeOffset Now = new(2026, 9, 10, 12, 0, 0, TimeSpan.Zero);
         public override DateTimeOffset GetUtcNow() => Now;
     }
-    private static RngHelperServiceV2 Create(Mock<IDokkanDailyRepository> repo, TimeProvider clock = null)
-        => new(repo.Object, Options.Create(new DokkanDailySettings()), NullLogger<RngHelperServiceV2>.Instance, clock);
+    private static RngService Create(Mock<IDokkanDailyRepository> repo, TimeProvider clock = null)
+        => new(repo.Object, Options.Create(new DokkanDailySettings()), NullLogger<RngService>.Instance, clock);
 
     [Test]
     public async Task ConcurrentCacheMissesGenerateOnceAndQueuedOverrideWins()
@@ -75,7 +75,7 @@ public class ChallengeConcurrencyTests
             new DbChallenge { Event = null, DailyTypeName = "retired-type", LeaderFullName = "removed" },
             new DbChallenge { Event = stage.Name, Stage = stage.StageNumber, DailyTypeName = "Category", Date = DateTime.UtcNow }
         });
-        var service = new RngHelperServiceV2(repo.Object, Options.Create(new DokkanDailySettings { StageRepeatLimitDays = 1 }), NullLogger<RngHelperServiceV2>.Instance);
+        var service = new RngService(repo.Object, Options.Create(new DokkanDailySettings { StageRepeatLimitDays = 1 }), NullLogger<RngService>.Instance);
         for (int seed = 0; seed < 100; seed++)
         {
             await service.SetDailySeed(seed);

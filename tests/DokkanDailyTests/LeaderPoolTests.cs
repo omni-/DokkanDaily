@@ -17,7 +17,7 @@ namespace DokkanDailyTests
         {
             Leader matched = new("Matched title", "Matched name", Tier.A);
             Leader unmatched = new("Missing title", "Missing name", Tier.A);
-            RngHelperServiceV2 service = CreateService();
+            RngService service = CreateService();
 
             IReadOnlyList<Leader> pool = service.BuildEligibleLeaderBasePool(
                 [matched, unmatched],
@@ -31,7 +31,7 @@ namespace DokkanDailyTests
         {
             Leader matched = new("Matched title", "Matched name", Tier.A);
             Leader unmatched = new("Missing title", "Missing name", Tier.A);
-            RngHelperServiceV2 service = CreateService();
+            RngService service = CreateService();
             IReadOnlyList<Leader> basePool = service.BuildEligibleLeaderBasePool(
                 [matched, unmatched],
                 [new Unit { Title = matched.Title, Name = matched.Name }]);
@@ -45,8 +45,8 @@ namespace DokkanDailyTests
         [Test]
         public void EmptyEligibleBasePoolFailsWithClearError()
         {
-            Mock<ILogger<RngHelperServiceV2>> logger = new();
-            RngHelperServiceV2 service = CreateService(logger.Object);
+            Mock<ILogger<RngService>> logger = new();
+            RngService service = CreateService(logger.Object);
 
             Action build = () => service.BuildEligibleLeaderBasePool(
                 [new Leader("Missing title", "Missing name", Tier.A)],
@@ -77,10 +77,10 @@ namespace DokkanDailyTests
             Assert.That(picks, Has.Length.EqualTo(2));
         }
 
-        private static RngHelperServiceV2 CreateService(ILogger<RngHelperServiceV2> logger = null)
+        private static RngService CreateService(ILogger<RngService> logger = null)
             => new(
                 Mock.Of<IDokkanDailyRepository>(),
                 Options.Create(new DokkanDailySettings()),
-                logger ?? Mock.Of<ILogger<RngHelperServiceV2>>());
+                logger ?? Mock.Of<ILogger<RngService>>());
     }
 }

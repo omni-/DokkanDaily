@@ -10,20 +10,20 @@ using Microsoft.Extensions.Options;
 
 namespace DokkanDaily.Services
 {
-    public class RngHelperServiceV2 : IRngHelperService
+    public class RngService : IRngHelperService
     {
         private DateTime Now => _timeProvider.GetUtcNow().UtcDateTime;
         private readonly TimeProvider _timeProvider;
 
         private readonly IDokkanDailyRepository _dokkanDailyRepository;
-        private readonly ILogger<RngHelperServiceV2> _logger;
+        private readonly ILogger<RngService> _logger;
         private readonly DokkanDailySettings _settings;
         private readonly SemaphoreSlim _challengeLock = new(1, 1);
 
         private volatile Challenge _challenge;
         private int _seed;
 
-        public RngHelperServiceV2(IDokkanDailyRepository repository, IOptions<DokkanDailySettings> settings, ILogger<RngHelperServiceV2> logger, TimeProvider timeProvider = null)
+        public RngService(IDokkanDailyRepository repository, IOptions<DokkanDailySettings> settings, ILogger<RngService> logger, TimeProvider timeProvider = null)
         {
             _timeProvider = timeProvider ?? TimeProvider.System;
             _logger = logger;
@@ -149,7 +149,7 @@ namespace DokkanDaily.Services
             return challenge is not null && Now < challenge.Date + TimeSpan.FromDays(1);
         }
 
-        // Called only with the generation lock held. Publish only after successful calculation.
+        // Call only with the generation lock held. Publish only after successful calculation.
         private async Task Recalculate(int seed, DateTime date)
         {
             var challenge = await CalcChallenge(seed, date);
@@ -162,8 +162,8 @@ namespace DokkanDaily.Services
             _logger.LogInformation("Calculating challenge using seed {Seed}", seed);
             Random r = new(seed);
 
-            // Materialize this once and retain it as the only source for filtering and fallback.
-            // A leader with no matching unit entry has no card art to render, so never offer one.
+            // Build once and retain for filtering and fallback.
+            // Skip leaders with missing data
             IReadOnlyList<Leader> baseLeaders = BuildEligibleLeaderBasePool(DokkanConstants.Leaders, DokkanConstants.UnitDB);
             IEnumerable<Leader> leaders = baseLeaders;
             IEnumerable<LinkSkill> linkSkills = DokkanConstants.LinkSkills;
@@ -178,7 +178,6 @@ namespace DokkanDaily.Services
             {
                 IEnumerable<DbChallengeProjection> recentChallenges = await GetRecentChallenges(baseLeaders);
 
-                // create comparers
                 EqualityComparer<Stage> stageComparer = EqualityComparer<Stage>.Create((x, y) => x.FullName == y.FullName, x => x.FullName.GetHashCode());
                 EqualityComparer<Leader> leaderComparer = EqualityComparer<Leader>.Create((x, y) => x.FullName == y.FullName, x => x.FullName.GetHashCode());
                 EqualityComparer<LinkSkill> linkSkillComparer = EqualityComparer<LinkSkill>.Create((x, y) => x.Name == y.Name, x => x.Name.GetHashCode());
@@ -273,26 +272,25 @@ namespace DokkanDaily.Services
             return challenge;
         }
 
-        /// <summary>
-        /// Materialises the persisted challenge history into the in-memory model, most recent first.
-        /// </summary>
         private async Task<IEnumerable<DbChallengeProjection>> GetRecentChallenges(IReadOnlyList<Leader> baseLeaders)
         {
             IEnumerable<DbChallenge> dbChallenges = await _dokkanDailyRepository.GetChallengeList(null);
 
             _logger.LogInformation("Retrieved {count} challenges.", dbChallenges.Count());
 
-            return [.. dbChallenges.OrderByDescending(x => x.Date).Select(x =>
-            {
-                DailyType? type = Enum.TryParse<DailyType>(x.DailyTypeName, out var parsed) && Enum.IsDefined(parsed) ? parsed : null;
-                // Older rows may contain truncated names.
-                Stage stage = ResolveHistory(DokkanConstants.Stages.Where(y => y.StageNumber == x.Stage), x.Event, y => y.Name);
-                Leader leader = x.LeaderFullName is null ? null : ResolveHistory(baseLeaders, x.LeaderFullName, y => y.FullName);
-                LinkSkill skill = x.LinkSkill is null ? null : DokkanConstants.LinkSkillMap.GetValueOrDefault(x.LinkSkill);
-                Category category = x.Category is null ? null : DokkanConstants.CategoryMap.GetValueOrDefault(x.Category);
+            return dbChallenges
+                .OrderByDescending(x => x.Date)
+                .Select(x =>
+                {
+                    DailyType? type = Enum.TryParse<DailyType>(x.DailyTypeName, out var parsed) && Enum.IsDefined(parsed) ? parsed : null;
+                    // Older rows may contain truncated names.
+                    Stage stage = ResolveHistory(DokkanConstants.Stages.Where(y => y.StageNumber == x.Stage), x.Event, y => y.Name);
+                    Leader leader = x.LeaderFullName is null ? null : ResolveHistory(baseLeaders, x.LeaderFullName, y => y.FullName);
+                    LinkSkill skill = x.LinkSkill is null ? null : DokkanConstants.LinkSkillMap.GetValueOrDefault(x.LinkSkill);
+                    Category category = x.Category is null ? null : DokkanConstants.CategoryMap.GetValueOrDefault(x.Category);
 
-                return new DbChallengeProjection(type, stage, skill, category, leader);
-            })];
+                    return new DbChallengeProjection(type, stage, skill, category, leader);
+                });
         }
 
         // Prefer exact names. Only accept an unambiguous legacy truncated prefix.
