@@ -60,14 +60,12 @@ namespace DokkanDaily.Services
 
         public int GetRawSeed() => Volatile.Read(ref _seed);
 
-        public async Task OverrideChallenge(DailyType type, Stage e, LinkSkill link, Category cat, Leader l, Challenge expected = null)
+        public async Task OverrideChallenge(DailyType type, Stage e, LinkSkill link, Category cat, Leader l)
         {
             await _challengeLock.WaitAsync();
             try
             {
-                if (expected is not null && !ReferenceEquals(expected, _challenge))
-                    throw new InvalidOperationException("The challenge changed while this edit was pending. Retry the edit.");
-                var replacement = new Challenge(type, e, link, cat, l, DokkanDailyHelper.GetUnitOrDefault(l), expected?.Date ?? Now);
+                var replacement = new Challenge(type, e, link, cat, l, DokkanDailyHelper.GetUnitOrDefault(l), _challenge?.Date ?? Now);
                 if (e is null || !HasTargetFor(replacement, type))
                     throw new ArgumentException("The override must have a stage and a valid target.");
                 _challenge = replacement;
@@ -75,14 +73,11 @@ namespace DokkanDaily.Services
             finally { _challengeLock.Release(); }
         }
 
-        public async Task OverrideChallengeType(DailyType type, Challenge expected)
+        public async Task OverrideChallengeType(DailyType type)
         {
-            ArgumentNullException.ThrowIfNull(expected);
             await _challengeLock.WaitAsync();
             try
             {
-                if (!ReferenceEquals(expected, _challenge))
-                    throw new InvalidOperationException("The challenge changed while this edit was pending. Retry the edit.");
                 var current = _challenge;
                 if (current is null || !HasTargetFor(current, type))
                     throw new InvalidOperationException("The current challenge has no target for that daily type.");

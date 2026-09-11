@@ -63,5 +63,3 @@ Existing public containers are rejected. Exclude the key container from storage 
 retain old keys so existing cookies and protected session data remain readable. Azure Storage
 protects stored blobs at rest; this configuration does not add application-level XML key encryption.
 Switching from the previous local ring can require a one-time sign-in; local keys are not imported.
-
-See [reliability recovery notes](docs/reliability-recovery.md) for validation and behavior details.

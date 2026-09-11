@@ -17,9 +17,9 @@ namespace DokkanDaily.Services.Interfaces
 
         Task Reset();
 
-        Task OverrideChallenge(DailyType type, Stage e, LinkSkill link, Category cat, Leader l, Challenge expected = null);
+        Task OverrideChallenge(DailyType type, Stage e, LinkSkill link, Category cat, Leader l);
 
-        Task OverrideChallengeType(DailyType type, Challenge expected);
+        Task OverrideChallengeType(DailyType type);
 
         int GetRawSeed();
     }

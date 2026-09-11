@@ -56,7 +56,7 @@ public class ChallengeConcurrencyTests
         int seed = service.GetRawSeed();
         var oldType = old.DailyType;
         var newType = oldType == DailyType.Category ? DailyType.Character : DailyType.Category;
-        await service.OverrideChallengeType(newType, old);
+        await service.OverrideChallengeType(newType);
         Assert.That(old.DailyType, Is.EqualTo(oldType));
         Assert.That((await service.GetDailyChallenge()).DailyType, Is.EqualTo(newType));
         clock.Now = new DateTimeOffset(2026, 9, 11, 0, 0, 0, TimeSpan.Zero);
@@ -64,56 +64,6 @@ public class ChallengeConcurrencyTests
         Assert.That(current.Date, Is.EqualTo(clock.Now.UtcDateTime.Date));
         Assert.That(service.GetRawSeed(), Is.EqualTo(seed + 100));
         repo.Verify(x => x.GetChallengeList(null), Times.Exactly(2));
-    }
-
-    [Test]
-    public async Task StaleAdminEditCannotOverwriteNewGeneration()
-    {
-        var repo = new Mock<IDokkanDailyRepository>();
-        repo.Setup(x => x.GetChallengeList(null)).ReturnsAsync(Array.Empty<DbChallenge>());
-        var service = Create(repo);
-        var original = await service.GetDailyChallenge();
-        var history = new TaskCompletionSource<IEnumerable<DbChallenge>>(TaskCreationOptions.RunContinuationsAsynchronously);
-        repo.Setup(x => x.GetChallengeList(null)).Returns(history.Task);
-        var generation = service.RollDailySeed();
-        var staleEdit = service.OverrideChallenge(DailyType.Category, original.TodaysEvent, original.LinkSkill,
-            original.Category, original.Leader, original);
-        history.SetResult([]);
-        await generation;
-        Assert.ThrowsAsync<InvalidOperationException>(async () => await staleEdit);
-        Assert.That(await service.GetDailyChallenge(), Is.Not.SameAs(original));
-    }
-
-    [Test]
-    public async Task StaleTypeOnlyEditCannotChangeScheduledChallenge()
-    {
-        var repo = new Mock<IDokkanDailyRepository>();
-        repo.Setup(x => x.GetChallengeList(null)).ReturnsAsync(Array.Empty<DbChallenge>());
-        var service = Create(repo, new Clock());
-        var original = await service.GetDailyChallenge();
-        var history = new TaskCompletionSource<IEnumerable<DbChallenge>>(TaskCreationOptions.RunContinuationsAsynchronously);
-        repo.Setup(x => x.GetChallengeList(null)).Returns(history.Task);
-        var generation = service.UpdateDailyChallenge();
-
-        // The admin reads the cached snapshot while scheduled generation holds the lock.
-        var expected = await service.GetDailyChallenge();
-        Assert.That(expected, Is.SameAs(original));
-        var staleEdit = service.OverrideChallengeType(DailyType.Category, expected);
-        Assert.That(staleEdit.IsCompleted, Is.False);
-        history.SetResult([]);
-        var generated = await generation;
-
-        var error = Assert.ThrowsAsync<InvalidOperationException>(async () => await staleEdit);
-        Assert.That(error.Message, Does.Contain("Retry the edit"));
-        Assert.That(await service.GetDailyChallenge(), Is.SameAs(generated));
-        Assert.That(generated.Date, Is.EqualTo(original.Date.AddDays(1)));
-
-        // A fresh retry succeeds and retains the scheduled date, proving the lock was released.
-        var newType = generated.DailyType == DailyType.Category ? DailyType.Character : DailyType.Category;
-        await service.OverrideChallengeType(newType, generated);
-        var edited = await service.GetDailyChallenge();
-        Assert.That(edited.DailyType, Is.EqualTo(newType));
-        Assert.That(edited.Date, Is.EqualTo(generated.Date));
     }
 
     [Test]

@@ -371,15 +371,14 @@
 
     async Task SetDailyType()
     {
-        var chall = await RngSvc.GetDailyChallenge();
-        await RngSvc.OverrideChallengeType(Enum.Parse<DailyType>(DailyTypeOverride), chall);
+        await RngSvc.OverrideChallengeType(Enum.Parse<DailyType>(DailyTypeOverride));
     }
 
     async Task SetStage()
     {
         var sp = Stage?.Trim()?.Split(", Stage ");
         var chall = await RngSvc.GetDailyChallenge();
-        await RngSvc.OverrideChallenge(chall.DailyType, DokkanConstants.Stages.First(x => x.Name == sp?.FirstOrDefault() && x.StageNumber == int.Parse(sp?.Skip(1)?.FirstOrDefault())), chall.LinkSkill, chall.Category, chall.Leader, chall);
+        await RngSvc.OverrideChallenge(chall.DailyType, DokkanConstants.Stages.First(x => x.Name == sp?.FirstOrDefault() && x.StageNumber == int.Parse(sp?.Skip(1)?.FirstOrDefault())), chall.LinkSkill, chall.Category, chall.Leader);
     }
 
     async Task SetUnit()
@@ -387,19 +386,19 @@
         var sp = Unit?.Trim()?.Split("] ");
 
         var chall = await RngSvc.GetDailyChallenge();
-        await RngSvc.OverrideChallenge(DailyType.Character, chall.TodaysEvent, chall.LinkSkill, chall.Category, DokkanConstants.Leaders.First(x => x.Name == sp?.Skip(1)?.FirstOrDefault() && x.Title == sp?.FirstOrDefault()?.Replace("[", "")), chall);
+        await RngSvc.OverrideChallenge(DailyType.Character, chall.TodaysEvent, chall.LinkSkill, chall.Category, DokkanConstants.Leaders.First(x => x.Name == sp?.Skip(1)?.FirstOrDefault() && x.Title == sp?.FirstOrDefault()?.Replace("[", "")));
     }
 
     async Task SetLinkSkill()
     {
         var chall = await RngSvc.GetDailyChallenge();
-        await RngSvc.OverrideChallenge(DailyType.LinkSkill, chall.TodaysEvent, DokkanConstants.LinkSkillMap[LinkSkill?.Trim()], chall.Category, chall.Leader, chall);
+        await RngSvc.OverrideChallenge(DailyType.LinkSkill, chall.TodaysEvent, DokkanConstants.LinkSkillMap[LinkSkill?.Trim()], chall.Category, chall.Leader);
     }
 
     async Task SetCategory()
     {
         var chall = await RngSvc.GetDailyChallenge();
-        await RngSvc.OverrideChallenge(DailyType.Category, chall.TodaysEvent, chall.LinkSkill, DokkanConstants.CategoryMap[Category?.Trim()], chall.Leader, chall);
+        await RngSvc.OverrideChallenge(DailyType.Category, chall.TodaysEvent, chall.LinkSkill, DokkanConstants.CategoryMap[Category?.Trim()], chall.Leader);
     }
 
     async Task SendWebhook()
