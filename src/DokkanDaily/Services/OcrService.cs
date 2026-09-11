@@ -31,7 +31,7 @@ namespace DokkanDaily.Services
             _logger.LogInformation("Attempting to parse as English...");
             Provider.SetParsingMode(ParsingMode.English);
             var result = TryParse(arr);
-            if (result.Success) return result.ClearMetadata;
+            if (result.Success) return WithTitles(arr, result.ClearMetadata);
             if (result.Error != null) _logger.LogError(result.Error, "Exception encountered during parsing English");
 
             if (_settings.FeatureFlags.EnableJapaneseParsing)
@@ -39,12 +39,29 @@ namespace DokkanDaily.Services
                 _logger.LogInformation("English parsing failed. Attempting to parse as Japanese...");
                 Provider.SetParsingMode(ParsingMode.Japanese);
                 result = TryParse(arr);
-                if (result.Success) return result.ClearMetadata;
+                if (result.Success) return WithTitles(arr, result.ClearMetadata);
                 if (result.Error != null) _logger.LogError(result.Error, "Exception encountered during parsing Japanese");
 
                 _logger.LogError("Failed both English and Japanese parse attempts.");
             }
             return null;
+        }
+
+        private ClearMetadata WithTitles(byte[] image, ClearMetadata metadata)
+        {
+            StageTitleReading titles = null;
+            try { titles = StageTitleReader.Read(image, Provider); }
+            catch (Exception ex)
+            {
+                // Title failure is insufficient evidence; retain independently read metadata.
+                _logger.LogError(ex, "Could not observe stage titles");
+            }
+            return new ClearMetadata
+            {
+                EventTitle = titles?.EventTitle, StageTitle = titles?.StageTitle,
+                Nickname = metadata.Nickname, Difficulty = metadata.Difficulty,
+                ClearTime = metadata.ClearTime, ItemlessClear = metadata.ItemlessClear
+            };
         }
 
         private ParseResult TryParse(byte[] arr)
@@ -211,7 +228,7 @@ namespace DokkanDaily.Services
 
                 string difficulty = ParseDifficulty(color, ui.GetDifficultyRegion().ToCv2Rect().Add(boundingRect.TopLeft));
 
-                string nicknameText = ParseNickname(engine, t, binaryBlackOnWhite, nicknameRect.ToCv2Rect(), boundingRect, scaleFactor);
+                string nicknameText = ParseNickname(engine, t, color, binaryBlackOnWhite, nicknameRect.ToCv2Rect(), boundingRect, scaleFactor);
 
                 string clearTimeText = ParseClearTime(engine, t, binaryBlackOnWhite, clearTimeRect.ToCv2Rect(), boundingRect, scaleFactor);
 
@@ -221,6 +238,15 @@ namespace DokkanDaily.Services
                 }
 
                 bool itemless = ParseItemsUsed(engine, t, binaryBlackOnWhite, itemlessRect.ToCv2Rect(), boundingRect, scaleFactor);
+                if (Provider.IsJapanese && !itemless)
+                {
+                    // A fixed threshold can lose the strokes in なし. Keep a successful first
+                    // reading, and retry with Otsu only when the Japanese label was not found.
+                    Mat itemInput = t.NewMat();
+                    Cv2.CvtColor(color, itemInput, ColorConversionCodes.BGR2GRAY);
+                    Cv2.Threshold(itemInput, itemInput, 0, 255, ThresholdTypes.BinaryInv | ThresholdTypes.Otsu);
+                    itemless = ParseItemsUsed(engine, t, itemInput, itemlessRect.ToCv2Rect(), boundingRect, scaleFactor);
+                }
 
                 return new ParseResult(true, new()
                 {
@@ -307,7 +333,7 @@ namespace DokkanDaily.Services
             Mat stageClearDetailsSection = t.T(binaryBlackOnWhite.SubMat(stageClearDetailsRect.Add(boundingRect.TopLeft)));
             Cv2.Resize(stageClearDetailsSection, stageClearDetailsSection, new Size(0, 0), scaleFactor, scaleFactor, InterpolationFlags.Linear);
             Cv2.Dilate(stageClearDetailsSection, stageClearDetailsSection, null, iterations: 1);
-            Pix stageClearDetailsPix = Pix.LoadFromMemory(stageClearDetailsSection.ToBytes());
+            using Pix stageClearDetailsPix = Pix.LoadFromMemory(stageClearDetailsSection.ToBytes());
             stageClearDetailsPix.XRes = 300;
             stageClearDetailsPix.YRes = 300;
 
@@ -315,31 +341,60 @@ namespace DokkanDaily.Services
             return stageClearDetailsPage.GetText().Trim();
         }
 
-        private string ParseNickname(TesseractEngine engine, ResourcesTracker t, Mat binaryBlackOnWhite, Rect nicknameRect, Rect boundingRect, float scaleFactor)
+        private string ParseNickname(TesseractEngine engine, ResourcesTracker t, Mat color, Mat binaryBlackOnWhite, Rect nicknameRect, Rect boundingRect, float scaleFactor)
         {
             Mat nicknameSection = t.T(binaryBlackOnWhite.SubMat(nicknameRect.Add(boundingRect.TopLeft)));
             Cv2.Resize(nicknameSection, nicknameSection, new Size(0, 0), scaleFactor, scaleFactor, InterpolationFlags.Linear);
             Cv2.Dilate(nicknameSection, nicknameSection, null, iterations: 1);
-            Pix nicknamePix = Pix.LoadFromMemory(nicknameSection.ToBytes());
-            nicknamePix.XRes = 300;
-            nicknamePix.YRes = 300;
+            if (Provider.IsJapanese)
+            {
+                Cv2.CopyMakeBorder(nicknameSection, nicknameSection, 10, 10, 10, 10, BorderTypes.Constant, Scalar.White);
+            }
 
-            using Page nicknameTextPage = engine.Process(nicknamePix, PageSegMode.SingleBlock);
-            string nicknameText = nicknameTextPage.GetText().Trim();
+            var (nicknameText, confidence) = ReadNickname(engine, nicknameSection);
+            // Confidence is a retry heuristic, not a calibrated probability. Grayscale
+            // preserves thin letters that thresholding can erase in small English names.
+            if (!Provider.IsJapanese && confidence < 0.6f)
+            {
+                using Mat crop = color.SubMat(nicknameRect.Add(boundingRect.TopLeft));
+                using Mat gray = new();
+                Cv2.CvtColor(crop, gray, ColorConversionCodes.BGR2GRAY);
+                Cv2.BitwiseNot(gray, gray);
+                Cv2.Resize(gray, gray, new Size(0, 0), scaleFactor, scaleFactor, InterpolationFlags.Linear);
+                Cv2.Dilate(gray, gray, null, iterations: 1);
+                var retry = ReadNickname(engine, gray);
+                if (retry.Confidence > confidence && retry.Text.Length > 0)
+                {
+                    nicknameText = retry.Text;
+                }
+            }
             nicknameText = DokkanDailyHelper.FixUsername(nicknameText); // some concessions for the OCR
             if (nicknameText.Length == 0) nicknameText = null;
 
             return nicknameText;
         }
 
+        private static (string Text, float Confidence) ReadNickname(TesseractEngine engine, Mat image)
+        {
+            using Pix pix = Pix.LoadFromMemory(image.ToBytes());
+            pix.XRes = pix.YRes = 300;
+            using Page page = engine.Process(pix, PageSegMode.SingleBlock);
+            return (page.GetText().Trim(), page.GetMeanConfidence());
+        }
+
         private string ParseClearTime(TesseractEngine engine, ResourcesTracker t, Mat binaryBlackOnWhite, Rect clearTimeRect, Rect boundingRect, float scaleFactor)
         {
             Mat clearTimeSection = t.T(binaryBlackOnWhite.SubMat(clearTimeRect.Add(boundingRect.TopLeft)));
             Cv2.Resize(clearTimeSection, clearTimeSection, new Size(0, 0), scaleFactor, scaleFactor, InterpolationFlags.Linear);
-            Pix clearTimePix = Pix.LoadFromMemory(clearTimeSection.ToBytes());
+            using Pix clearTimePix = Pix.LoadFromMemory(clearTimeSection.ToBytes());
             clearTimePix.XRes = 300;
             clearTimePix.YRes = 300;
 
+            // Both layouts use the same numeric glyphs. The Japanese model confuses 1 and 7.
+            using var numericEngine = Provider.IsJapanese
+                ? new TesseractEngine(Provider.TrainDataPath, "eng", EngineMode.LstmOnly)
+                : null;
+            engine = numericEngine ?? engine;
             engine.SetVariable("tessedit_char_whitelist", "0123456789.'\"");
             using Page clearTimeTextPage = engine.Process(clearTimePix, PageSegMode.SingleBlock);
             string clearTimeText = clearTimeTextPage.GetText().Trim();
@@ -353,7 +408,7 @@ namespace DokkanDaily.Services
         {
             Mat itemlessSection = t.T(binaryBlackOnWhite.SubMat(itemlessRect.Add(boundingRect.TopLeft)));
             Cv2.Resize(itemlessSection, itemlessSection, new Size(0, 0), scaleFactor, scaleFactor, InterpolationFlags.Linear);
-            Pix itemlessPix = Pix.LoadFromMemory(itemlessSection.ToBytes());
+            using Pix itemlessPix = Pix.LoadFromMemory(itemlessSection.ToBytes());
             itemlessPix.XRes = 300;
             itemlessPix.YRes = 300;
 

@@ -25,6 +25,8 @@
 
   <ItemGroup>
     <EmbeddedResource Include="wwwroot/data/DokkanStageLinks.json" />
+    <EmbeddedResource Include="Ocr/UnicodeCaseFold.json" />
+    <EmbeddedResource Include="Ocr/StageTitleAliases.json" />
     <Content Update="wwwroot\**\*.*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -211,6 +211,14 @@ namespace DokkanDailyTests
                         { AzureConstants.USER_NAME_TAG, "still-processing" },
                         { AzureConstants.UPLOAD_STATUS_TAG, AzureConstants.UPLOAD_STATUS_PENDING }
                     }),
+                    new MockBlobClient(new Dictionary<string, string>()
+                    {
+                        { AzureConstants.USER_NAME_TAG, "unverified-fast-clear" },
+                        { AzureConstants.CLEAR_TIME_TAG, "0'00\"01.0" },
+                        { AzureConstants.ITEMLESS_TAG, "true" },
+                        { AzureConstants.UPLOAD_STATUS_TAG, AzureConstants.UPLOAD_STATUS_UNKNOWN },
+                        { AzureConstants.STAGE_VALIDATION_TAG, "unknown" }
+                    }),
                 ]);
             abMock.Setup(x => x.PruneContainers(30)).Returns(Task.CompletedTask);
             var resetBarrierMock = mocks.Create<IAsyncDisposable>();

@@ -9,6 +9,7 @@ using DokkanDaily.Exceptions;
 using DokkanDaily.Helpers;
 using DokkanDaily.Models;
 using DokkanDaily.Models.Enums;
+using DokkanDaily.Ocr;
 using DokkanDaily.Services.Interfaces;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Options;
@@ -51,12 +52,11 @@ namespace DokkanDaily.Services
             return $"{_containerName}-{formattedDateTag}";
         }
 
-        public async Task<BlobClient> UploadToAzureAsync(string userFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null, string userAgent = null, string discordUsername = null, string discordId = null, string remoteIp = null)
+        public async Task<ScreenshotUploadResult> UploadToAzureAsync(string userFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null, string userAgent = null, string discordUsername = null, string discordId = null, string remoteIp = null)
         {
             Guid analysisId = Guid.NewGuid();
             TaskCompletionSource analysisLifecycle = new(TaskCreationOptions.RunContinuationsAsynchronously);
             bool lifecycleRegistered = false;
-            bool lifecycleHandedToAnalysis = false;
             MemoryStream uploadStream = null;
 
             try
@@ -89,25 +89,13 @@ namespace DokkanDaily.Services
                 await fileStream.CopyToAsync(uploadStream);
                 uploadStream.Position = 0;
 
-                // Required difficulties must be checked before accepting the upload so the
-                // caller can display a rejection and no ineligible clear reaches scoring.
-                bool validateBeforeUpload = model.TodaysEvent.MinimumDifficulty.HasValue;
-                ClearMetadata parsedClear = null;
-                if (validateBeforeUpload)
-                {
-                    await _ocrThrottle.WaitAsync();
-                    try
-                    {
-                        parsedClear = _ocrService.ProcessImage(uploadStream);
-                    }
-                    finally
-                    {
-                        _ocrThrottle.Release();
-                    }
-
-                    ValidateMinimumDifficulty(model.TodaysEvent, parsedClear);
-                    uploadStream.Position = 0;
-                }
+                // Observe once without the assignment, then compare with the server challenge.
+                ClearMetadata parsedClear;
+                await _ocrThrottle.WaitAsync();
+                try { parsedClear = _ocrService.ProcessImage(uploadStream); }
+                finally { _ocrThrottle.Release(); }
+                var tags = BuildTagDict(model, parsedClear, discordUsername, discordId, remoteIp, userAgent);
+                uploadStream.Position = 0;
 
                 var (container, _) = await GetOrCreate(bucket);
                 string fileName = DokkanDailyHelper.BuildBlobName(userFileName, discordId);
@@ -119,53 +107,12 @@ namespace DokkanDaily.Services
                 {
                     HttpHeaders = new BlobHttpHeaders { ContentType = contentType },
                     Tags = new Dictionary<string, string> { { AzureConstants.DATE_TAG, DokkanDailyHelper.GetUtcNowDateTag() } },
-                    Metadata = validateBeforeUpload
-                        ? BuildTagDict(model, parsedClear, discordUsername, discordId, remoteIp, userAgent)
-                        : BuildIdentityTagDict(model, discordUsername, discordId, remoteIp, userAgent)
+                    Metadata = tags
                 });
 
                 _logger.LogInformation("Finished Azure upload.");
 
-                if (validateBeforeUpload) return blob;
-
-                MemoryStream analysisStream = uploadStream;
-
-                _ = Task.Run(async () =>
-                {
-                    bool throttleHeld = false;
-                    try
-                    {
-                        await _ocrThrottle.WaitAsync();
-                        throttleHeld = true;
-
-                        var metadata = _ocrService.ProcessImage(analysisStream);
-                        _logger.LogInformation("Finished processing image.");
-                        var tags = BuildTagDict(model, metadata, discordUsername, discordId, remoteIp, userAgent);
-                        await blob.SetMetadataAsync(tags);
-                        _logger.LogInformation("Finished updating Azure metadata.");
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "Unhandled exception in background OCR task");
-                    }
-                    finally
-                    {
-                        if (throttleHeld) _ocrThrottle.Release();
-                        try
-                        {
-                            await analysisStream.DisposeAsync();
-                        }
-                        finally
-                        {
-                            CompletePendingAnalysis(analysisId, analysisLifecycle);
-                        }
-                    }
-                });
-
-                uploadStream = null;
-                lifecycleHandedToAnalysis = true;
-
-                return blob;
+                return new(blob, new(tags[AzureConstants.STAGE_VALIDATION_TAG], tags[AzureConstants.STAGE_VALIDATION_REASON_TAG]));
             }
             catch (UploadRejectedException)
             {
@@ -179,7 +126,7 @@ namespace DokkanDaily.Services
             finally
             {
                 if (uploadStream != null) await uploadStream.DisposeAsync();
-                if (lifecycleRegistered && !lifecycleHandedToAnalysis)
+                if (lifecycleRegistered)
                     CompletePendingAnalysis(analysisId, analysisLifecycle);
             }
         }
@@ -375,32 +322,39 @@ namespace DokkanDaily.Services
             return dict.Where(kv => !string.IsNullOrEmpty(kv.Value)).ToDictionary();
         }
 
-        internal static void ValidateMinimumDifficulty(Stage stage, ClearMetadata metadata)
+        internal static StageTextResult ValidateScreenshot(Stage stage, ClearMetadata metadata)
         {
-            if (stage.MinimumDifficulty is not StageDifficulty minimum) return;
-
-            if (metadata?.Difficulty is not string label ||
-                !Enum.TryParse<StageDifficulty>(label, out var difficulty) ||
-                !Enum.IsDefined(difficulty) || label != difficulty.ToString())
-                throw new UploadRejectedException($"Could not read the difficulty. This challenge requires {minimum} or higher. Upload a clear-details screenshot with the difficulty label visible");
-
-            if (difficulty < minimum)
+            // Minimum difficulty is an independent eligibility requirement, even when titles
+            // or catalog coverage are insufficient. Missing difficulty remains unknown.
+            if (stage.MinimumDifficulty is { } minimum && metadata?.Difficulty is string label &&
+                Enum.TryParse<StageDifficulty>(label, out var difficulty) && Enum.IsDefined(difficulty) &&
+                label == difficulty.ToString() && difficulty < minimum)
                 throw new UploadRejectedException($"This challenge requires {minimum} or higher; your screenshot shows {difficulty}");
+            var result = StageTextValidator.Validate(new(metadata?.EventTitle, metadata?.StageTitle,
+                metadata?.Difficulty == "ZHARD" ? "Z-HARD" : metadata?.Difficulty, metadata is not null), StageTitleCatalog.ForStage(stage));
+            if (result.IsMismatch)
+                throw new UploadRejectedException(result.Outcome switch
+                {
+                    "event-mismatch" => "The screenshot shows a different event. Upload the clear-details screenshot for this challenge's event",
+                    "stage-mismatch" => "The screenshot shows a different stage. Upload the clear-details screenshot for this challenge's stage",
+                    _ => $"This challenge requires {stage.MinimumDifficulty} or higher"
+                });
+            return result;
         }
 
         internal static Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata, string discordUsername, string discordId, string remoteIp, string userAgent)
         {
-            ValidateMinimumDifficulty(model.TodaysEvent, metadata);
+            var validation = ValidateScreenshot(model.TodaysEvent, metadata);
             Dictionary<string, string> dict = BuildIdentityTagDict(model, discordUsername, discordId, remoteIp, userAgent);
 
-            if (metadata == null)
-            {
-                dict[AzureConstants.UPLOAD_STATUS_TAG] = AzureConstants.UPLOAD_STATUS_INVALID;
-                dict[AzureConstants.INVALID_TAG] = true.ToString();
-                return dict;
-            }
-
-            dict[AzureConstants.UPLOAD_STATUS_TAG] = AzureConstants.UPLOAD_STATUS_VALID;
+            dict[AzureConstants.STAGE_VALIDATION_TAG] = validation.Outcome;
+            dict[AzureConstants.STAGE_VALIDATION_REASON_TAG] = validation.Reason;
+            dict[AzureConstants.UPLOAD_STATUS_TAG] = validation.Outcome == "match"
+                ? AzureConstants.UPLOAD_STATUS_VALID : AzureConstants.UPLOAD_STATUS_UNKNOWN;
+            if (metadata == null) return dict;
+            // OCR titles can wrap; Azure metadata is sent as single-line HTTP headers.
+            dict[AzureConstants.OBSERVED_EVENT_TAG] = metadata.EventTitle?.ReplaceLineEndings(" ").EscapeUnicode();
+            dict[AzureConstants.OBSERVED_STAGE_TAG] = metadata.StageTitle?.ReplaceLineEndings(" ").EscapeUnicode();
             dict[AzureConstants.USER_NAME_TAG] = metadata.Nickname?.EscapeUnicode();
             dict[AzureConstants.ITEMLESS_TAG] = metadata.ItemlessClear.ToString();
             dict[AzureConstants.CLEAR_TIME_TAG] = metadata.ClearTime;

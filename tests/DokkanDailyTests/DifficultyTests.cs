@@ -36,10 +36,10 @@ public class DifficultyTests
         Assert.That(result?.Difficulty, Is.EqualTo(expected));
 
         var stage = new Stage("Test stage", Tier.Z, "test", minimumDifficulty: StageDifficulty.SUPER3);
-        if (expected == "SUPER3")
-            Assert.DoesNotThrow(() => AzureBlobService.ValidateMinimumDifficulty(stage, result));
+        if (expected is "SUPER3" or null)
+            Assert.DoesNotThrow(() => AzureBlobService.ValidateScreenshot(stage, result));
         else
-            Assert.Throws<UploadRejectedException>(() => AzureBlobService.ValidateMinimumDifficulty(stage, result));
+            Assert.Throws<UploadRejectedException>(() => AzureBlobService.ValidateScreenshot(stage, result));
     }
 
     [TestCase(null, "SUPER3", true)]
@@ -48,18 +48,18 @@ public class DifficultyTests
     [TestCase(StageDifficulty.SUPER2, "SUPER2", true)]
     [TestCase(StageDifficulty.SUPER2, "SUPER3", true)]
     [TestCase(StageDifficulty.SUPER3, "SUPER2", false)]
-    [TestCase(StageDifficulty.SUPER3, null, false)]
-    [TestCase(StageDifficulty.SUPER3, "SUPERS", false)]
-    [TestCase(StageDifficulty.SUPER3, "99", false)]
-    [TestCase(StageDifficulty.SUPER3, "SUPER4", false)]
+    [TestCase(StageDifficulty.SUPER3, null, true)]
+    [TestCase(StageDifficulty.SUPER3, "SUPERS", true)]
+    [TestCase(StageDifficulty.SUPER3, "99", true)]
+    [TestCase(StageDifficulty.SUPER3, "SUPER4", true)]
     public void EnforcesConfiguredMinimum(StageDifficulty? minimum, string label, bool accepted)
     {
         var stage = new Stage("Test stage", Tier.Z, "test", minimumDifficulty: minimum);
         var metadata = new ClearMetadata { Difficulty = label };
         if (accepted)
-            Assert.DoesNotThrow(() => AzureBlobService.ValidateMinimumDifficulty(stage, metadata));
+            Assert.DoesNotThrow(() => AzureBlobService.ValidateScreenshot(stage, metadata));
         else
-            Assert.Throws<UploadRejectedException>(() => AzureBlobService.ValidateMinimumDifficulty(stage, metadata));
+            Assert.Throws<UploadRejectedException>(() => AzureBlobService.ValidateScreenshot(stage, metadata));
     }
 
     [TestCase("SUPER 2", "SUPER2")]
@@ -86,15 +86,14 @@ public class DifficultyTests
         Assert.Multiple(() =>
         {
             Assert.That(tags[AzureConstants.DIFFICULTY_TAG], Is.EqualTo("SUPER3"));
-            Assert.That(tags[AzureConstants.UPLOAD_STATUS_TAG], Is.EqualTo(AzureConstants.UPLOAD_STATUS_VALID));
+            Assert.That(tags[AzureConstants.UPLOAD_STATUS_TAG], Is.EqualTo(AzureConstants.UPLOAD_STATUS_UNKNOWN));
         });
         Assert.Throws<UploadRejectedException>(() => AzureBlobService.BuildTagDict(challenge,
             new ClearMetadata { Difficulty = "SUPER2" }, null, null, null, null));
-        Assert.Throws<UploadRejectedException>(() => AzureBlobService.BuildTagDict(challenge, null, null, null, null, null));
+        Assert.That(AzureBlobService.BuildTagDict(challenge, null, null, null, null, null)[AzureConstants.UPLOAD_STATUS_TAG], Is.EqualTo(AzureConstants.UPLOAD_STATUS_UNKNOWN));
     }
 
     [TestCase("SUPER2")]
-    [TestCase(null)]
     public async Task RejectsBeforeStorageUsingServerRequirementAndReleasesPendingAnalysis(string label)
     {
         var stage = new Stage("Test stage", Tier.Z, "test", minimumDifficulty: StageDifficulty.SUPER3);

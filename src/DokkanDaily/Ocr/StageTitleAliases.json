@@ -1,0 +1,2184 @@
+[
+  {
+    "eventId": 741,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Fighting Legend: Goku [GT Edition]",
+        "stageTitle": "Fighting Legend: Goku [GT Edition]",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 742,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Fighting Legend: Vegeta",
+        "stageTitle": "Fighting Legend: Vegeta",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 750,
+    "stageNumber": 13,
+    "aliases": [
+      {
+        "eventTitle": "壮絶!超絶!破壊神集結",
+        "stageTitle": "破壊神たちの共闘1",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Epic! Transcendent! Gods of Destruction Assemble",
+        "stageTitle": "Gods of Destruction Unite 1",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 750,
+    "stageNumber": 14,
+    "aliases": [
+      {
+        "eventTitle": "壮絶!超絶!破壊神集結",
+        "stageTitle": "破壊神たちの共闘2",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Epic! Transcendent! Gods of Destruction Assemble",
+        "stageTitle": "Gods of Destruction Unite 2",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 750,
+    "stageNumber": 15,
+    "aliases": [
+      {
+        "eventTitle": "壮絶!超絶!破壊神集結",
+        "stageTitle": "破壊神たちの共闘3",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Epic! Transcendent! Gods of Destruction Assemble",
+        "stageTitle": "Gods of Destruction Unite 3",
+        "provenance": "Numbered Japanese community catalog; English localization by Codex, independently of submitted metadata."
+      }
+    ]
+  },
+  {
+    "eventId": 761,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "目醒める恐怖!セルマックス",
+        "stageTitle": "目醒める恐怖!セルマックス",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Fearsome Activation! Cell Max",
+        "stageTitle": "Fearsome Activation! Cell Max",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 761,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Fearsome Activation! Cell Max",
+        "stageTitle": "Horrendous Calamity",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 765,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "When Wishes Backfire! Birth of the Shadow Dragons",
+        "stageTitle": "Haze Shenron",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 765,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "When Wishes Backfire! Birth of the Shadow Dragons",
+        "stageTitle": "Rage Shenron",
+        "provenance": "public game-data catalog mirror; not submitted metadata"
+      }
+    ]
+  },
+  {
+    "eventId": 765,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "When Wishes Backfire! Birth of the Shadow Dragons",
+        "stageTitle": "Oceanus Shenron",
+        "provenance": "public game-data catalog mirror; not submitted metadata"
+      }
+    ]
+  },
+  {
+    "eventId": 765,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "When Wishes Backfire! Birth of the Shadow Dragons",
+        "stageTitle": "Naturon Shenron",
+        "provenance": "public game-data catalog mirror; not submitted metadata"
+      }
+    ]
+  },
+  {
+    "eventId": 765,
+    "stageNumber": 5,
+    "aliases": [
+      {
+        "eventTitle": "When Wishes Backfire! Birth of the Shadow Dragons",
+        "stageTitle": "Nuova Shenron",
+        "provenance": "public game-data catalog mirror; not submitted metadata"
+      }
+    ]
+  },
+  {
+    "eventId": 765,
+    "stageNumber": 6,
+    "aliases": [
+      {
+        "eventTitle": "When Wishes Backfire! Birth of the Shadow Dragons",
+        "stageTitle": "Eis Shenron",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 765,
+    "stageNumber": 7,
+    "aliases": [
+      {
+        "eventTitle": "願いの逆流!邪悪龍誕生",
+        "stageTitle": "一星龍",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "When Wishes Backfire! Birth of the Shadow Dragons",
+        "stageTitle": "Syn Shenron",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 765,
+    "stageNumber": 8,
+    "aliases": [
+      {
+        "eventTitle": "When Wishes Backfire! Birth of the Shadow Dragons",
+        "stageTitle": "Omega Shenron",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "願いの逆流!邪悪龍誕生",
+        "stageTitle": "超一星龍",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 765,
+    "stageNumber": 9,
+    "aliases": [
+      {
+        "eventTitle": "When Wishes Backfire! Birth of the Shadow Dragons",
+        "stageTitle": "Boss Rush",
+        "provenance": "public game-data catalog mirror; not submitted metadata"
+      }
+    ]
+  },
+  {
+    "eventId": 774,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone",
+        "stageTitle": "Red Ribbon Army Edition Stage 2",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 774,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone",
+        "stageTitle": "Red Ribbon Army Edition Stage 4",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 774,
+    "stageNumber": 5,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone",
+        "stageTitle": "Red Ribbon Army Edition Stage 5",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "究極のレッドゾーン",
+        "stageTitle": "レッドリボン軍編ステージ5",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Red Ribbon Army Edition]",
+        "stageTitle": "Vs. Gamma 1 & Gamma 2",
+        "provenance": "Numbered Japanese community catalog; English localization by Codex, independently of submitted metadata."
+      }
+    ]
+  },
+  {
+    "eventId": 775,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Dismal Future Edition]",
+        "stageTitle": "Vs. #17 (Future) & #18 (Future)",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 775,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone",
+        "stageTitle": "Dismal Future Edition Stage 2",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Dismal Future Edition]",
+        "stageTitle": "Vs. Cell (1st Form)",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 775,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Dismal Future Edition]",
+        "stageTitle": "Vs. Goku Black",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "究極のレッドゾーン 絶望の未来編",
+        "stageTitle": "VSゴクウブラック",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Dismal Future Edition]",
+        "stageTitle": "25 Aug 2023",
+        "provenance": "indexed community catalog; direct page blocked; stage numbers cross-referenced with repository event catalog"
+      }
+    ]
+  },
+  {
+    "eventId": 775,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Dismal Future Edition]",
+        "stageTitle": "Vs. Zamasu",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "究極のレッドゾーン 絶望の未来編",
+        "stageTitle": "VSザマス",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Dismal Future Edition]",
+        "stageTitle": "8 Sep 2023",
+        "provenance": "indexed community catalog; direct page blocked; stage numbers cross-referenced with repository event catalog"
+      }
+    ]
+  },
+  {
+    "eventId": 775,
+    "stageNumber": 5,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Dismal Future Edition]",
+        "stageTitle": "Vs. Fusion Zamasu",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "究極のレッドゾーン 絶望の未来編",
+        "stageTitle": "VS合体ザマス",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Dismal Future Edition]",
+        "stageTitle": "22 Sep 2023",
+        "provenance": "indexed community catalog; direct page blocked; stage numbers cross-referenced with repository event catalog"
+      }
+    ]
+  },
+  {
+    "eventId": 776,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Movie Edition 2]",
+        "stageTitle": "Vs. Mercenary Tao",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 776,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Movie Edition 2]",
+        "stageTitle": "Vs. Dr. Wheelo",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 776,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Movie Edition 2]",
+        "stageTitle": "Vs. Broly",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 776,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Movie Edition 2]",
+        "stageTitle": "Vs. Bio-Broly",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 776,
+    "stageNumber": 5,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Movie Edition 2]",
+        "stageTitle": "Vs. Hirudegarn",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone",
+        "stageTitle": "Movie Edition 2 Stage 5",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Movie Edition 2]",
+        "stageTitle": "19 Jan 2024",
+        "provenance": "indexed community catalog; direct page blocked; stage numbers cross-referenced with repository event catalog"
+      }
+    ]
+  },
+  {
+    "eventId": 776,
+    "stageNumber": 6,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Movie Edition 2]",
+        "stageTitle": "Vs. Beerus",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 776,
+    "stageNumber": 7,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Movie Edition 2]",
+        "stageTitle": "Vs. Golden Frieza",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 781,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Divine Wrath and Mortal Will",
+        "stageTitle": "Rise Up and Fight Back",
+        "provenance": "public game-data catalog mirror; not submitted metadata"
+      }
+    ]
+  },
+  {
+    "eventId": 781,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Divine Wrath and Mortal Will",
+        "stageTitle": "Goku Black Attacks",
+        "provenance": "public game-data catalog mirror; not submitted metadata"
+      }
+    ]
+  },
+  {
+    "eventId": 781,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Divine Wrath and Mortal Will",
+        "stageTitle": "Goku's Test of Strength",
+        "provenance": "public game-data catalog mirror; not submitted metadata"
+      }
+    ]
+  },
+  {
+    "eventId": 781,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "Divine Wrath and Mortal Will",
+        "stageTitle": "Zero Mortals Plan",
+        "provenance": "public game-data catalog mirror; not submitted metadata"
+      }
+    ]
+  },
+  {
+    "eventId": 781,
+    "stageNumber": 5,
+    "aliases": [
+      {
+        "eventTitle": "Divine Wrath and Mortal Will",
+        "stageTitle": "The Real Warrior Race",
+        "provenance": "public game-data catalog mirror; not submitted metadata"
+      }
+    ]
+  },
+  {
+    "eventId": 781,
+    "stageNumber": 6,
+    "aliases": [
+      {
+        "eventTitle": "Divine Wrath and Mortal Will",
+        "stageTitle": "Final Judgment",
+        "provenance": "public game-data catalog mirror; not submitted metadata"
+      }
+    ]
+  },
+  {
+    "eventId": 781,
+    "stageNumber": 7,
+    "aliases": [
+      {
+        "eventTitle": "Divine Wrath and Mortal Will",
+        "stageTitle": "Supreme Fusion",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "神の怒りと人間の意志",
+        "stageTitle": "究極合体",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 781,
+    "stageNumber": 8,
+    "aliases": [
+      {
+        "eventTitle": "Divine Wrath and Mortal Will",
+        "stageTitle": "Divine Wrath",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "神の怒りと人間の意志",
+        "stageTitle": "神の怒り",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 781,
+    "stageNumber": 9,
+    "aliases": [
+      {
+        "eventTitle": "Divine Wrath and Mortal Will",
+        "stageTitle": "Mortal Will",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 781,
+    "stageNumber": 10,
+    "aliases": [
+      {
+        "eventTitle": "Divine Wrath and Mortal Will",
+        "stageTitle": "Boss Rush [Extreme Type]",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 781,
+    "stageNumber": 11,
+    "aliases": [
+      {
+        "eventTitle": "神の怒りと人間の意志",
+        "stageTitle": "BOSSラッシュ 超属性",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Divine Wrath and Mortal Will",
+        "stageTitle": "Boss Rush [Super Type]",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 786,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Dragon Ball Super: Memorable Battles [Movie Edition]",
+        "stageTitle": "Vs. Broly",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 786,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Dragon Ball Super: Memorable Battles [Movie Edition]",
+        "stageTitle": "Vs. Gogeta",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "ドラゴンボール超 劇場版メモリアルバトル",
+        "stageTitle": "VSゴジータ",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 786,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "ドラゴンボール超 劇場版メモリアルバトル",
+        "stageTitle": "VSガンマ1号&2号",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Dragon Ball Super: Memorable Battles [Movie Edition]",
+        "stageTitle": "Vs. Gamma 1 & Gamma 2",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 786,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "Dragon Ball Super: Memorable Battles [Movie Edition]",
+        "stageTitle": "Vs. Gohan & Piccolo",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 787,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Majin Buu Saga]",
+        "stageTitle": "Vs. Babidi's Forces",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "究極のレッドゾーン 魔人ブウ編",
+        "stageTitle": "VSバビディ一味",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 787,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Majin Buu Saga]",
+        "stageTitle": "Vs. Buu (Super)",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 787,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Majin Buu Saga]",
+        "stageTitle": "Vs. Majin Buu (Absorption)",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 788,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "最凶フリーザ伝",
+        "stageTitle": "最凶フリーザ伝",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Fighting Legend: Frieza",
+        "stageTitle": "Fighting Legend: Frieza",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 790,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle\n[Dragon Ball Super Edition]",
+        "stageTitle": "Vs. Super Saiyan God Goku",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 790,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "至上のバトルスペクタクル ドラゴンボール超編",
+        "stageTitle": "VS超サイヤ人ゴッドSS孫悟空",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle\n[Dragon Ball Super Edition]",
+        "stageTitle": "Vs. Super Saiyan God SS Goku",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 790,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "至上のバトルスペクタクル ドラゴンボール超編",
+        "stageTitle": "VS超サイヤ人トランクス(未来)",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle\n[Dragon Ball Super Edition]",
+        "stageTitle": "Vs. Super Saiyan Trunks (Future)",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 790,
+    "stageNumber": 5,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle",
+        "stageTitle": "Dragon Ball Super Edition Stage 5",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle [Dragon Ball Super Edition]",
+        "stageTitle": "Vs. Super Saiyan God SS Evolved Vegeta",
+        "provenance": "public game-data stage catalog; event/stage ID cross-reference"
+      }
+    ]
+  },
+  {
+    "eventId": 790,
+    "stageNumber": 6,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle",
+        "stageTitle": "Dragon Ball Super Edition Stage 6",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 790,
+    "stageNumber": 7,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle\n[Dragon Ball Super Edition]",
+        "stageTitle": "Vs. Super Saiyan God SS Gogeta",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 790,
+    "stageNumber": 8,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle\n[Dragon Ball Super Edition]",
+        "stageTitle": "Vs. Gohan (Beast)",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "至上のバトルスペクタクル ドラゴンボール超編",
+        "stageTitle": "VS孫悟飯(ビースト)",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 793,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Heart-Pounding Heroine Battle",
+        "stageTitle": "Vs. Chi-Chi",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 793,
+    "stageNumber": 6,
+    "aliases": [
+      {
+        "eventTitle": "ドキドキ♥ヒロインバトル",
+        "stageTitle": "VS人造人間18号",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Heart-Pounding Heroine Battle",
+        "stageTitle": "Vs. Android #18",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 793,
+    "stageNumber": 8,
+    "aliases": [
+      {
+        "eventTitle": "Heart-Pounding Heroine Battle",
+        "stageTitle": "Vs. Mai (Future)",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "ドキドキ♥ヒロインバトル",
+        "stageTitle": "VSマイ(未来)",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 795,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle [Universe Survival Saga]",
+        "stageTitle": "Vs. Master Roshi",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "至上のバトルスペクタクル 宇宙サバイバル編",
+        "stageTitle": "VS亀仙人",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 795,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle [Universe Survival Saga]",
+        "stageTitle": "Vs. Androids #17 & #18",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "至上のバトルスペクタクル 宇宙サバイバル編",
+        "stageTitle": "VS人造人間17号&18号",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 795,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle [Universe Survival Saga]",
+        "stageTitle": "Vs. Gohan & Piccolo",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 795,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle [Universe Survival Saga]",
+        "stageTitle": "Vs. Super Saiyan God SS Evolved Vegeta",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 795,
+    "stageNumber": 5,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle",
+        "stageTitle": "Universe Survival Saga Stage 5",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle [Universe Survival Saga]",
+        "stageTitle": "Vs. Goku (Ultra Instinct)",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 795,
+    "stageNumber": 6,
+    "aliases": [
+      {
+        "eventTitle": "至上のバトルスペクタクル",
+        "stageTitle": "宇宙サバイバル編ステージ6",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle [Universe Survival Saga]",
+        "stageTitle": "Vs. Goku & Frieza",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 796,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Dragon Ball Z: Memorable Battles [Movie Edition]",
+        "stageTitle": "Vs. Super Saiyan Goku",
+        "provenance": "Japanese catalog repeats Legendary Super Saiyan Broly at stages 6/8 and Super Saiyan Goku at stages 1/5. Codex localization. Title pair cannot distinguish these stages."
+      }
+    ]
+  },
+  {
+    "eventId": 796,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Dragon Ball Z: Memorable Battles [Movie Edition]",
+        "stageTitle": "Vs. Cooler (Final Form)",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "ドラゴンボールZ 劇場版メモリアルバトル",
+        "stageTitle": "VSクウラ(最終形態)",
+        "provenance": "Numbered Japanese catalog; English name localized by Codex (stage 7 also cross-checked against DokkanStats 7960075)."
+      }
+    ]
+  },
+  {
+    "eventId": 796,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Dragon Ball Z: Memorable Battles [Movie Edition]",
+        "stageTitle": "Vs. Goku & Vegeta",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "ドラゴンボールZ 劇場版メモリアルバトル",
+        "stageTitle": "VS孫悟空&ベジータ",
+        "provenance": "Numbered Japanese catalog; English name localized by Codex (stage 7 also cross-checked against DokkanStats 7960075)."
+      }
+    ]
+  },
+  {
+    "eventId": 796,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "Dragon Ball Z: Memorable Battles [Movie Edition]",
+        "stageTitle": "Vs. Metal Cooler",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "ドラゴンボールZ 劇場版メモリアルバトル",
+        "stageTitle": "VSメタルクウラ",
+        "provenance": "Numbered Japanese catalog; English name localized by Codex (stage 7 also cross-checked against DokkanStats 7960075)."
+      }
+    ]
+  },
+  {
+    "eventId": 796,
+    "stageNumber": 5,
+    "aliases": [
+      {
+        "eventTitle": "Dragon Ball Z: Memorable Battles [Movie Edition]",
+        "stageTitle": "Vs. Super Saiyan Goku",
+        "provenance": "Japanese catalog repeats Legendary Super Saiyan Broly at stages 6/8 and Super Saiyan Goku at stages 1/5. Codex localization. Title pair cannot distinguish these stages."
+      }
+    ]
+  },
+  {
+    "eventId": 796,
+    "stageNumber": 6,
+    "aliases": [
+      {
+        "eventTitle": "Dragon Ball Z: Memorable Battles [Movie Edition]",
+        "stageTitle": "Vs. Legendary Super Saiyan Broly",
+        "provenance": "Japanese catalog repeats Legendary Super Saiyan Broly at stages 6/8 and Super Saiyan Goku at stages 1/5. Codex localization. Title pair cannot distinguish these stages."
+      }
+    ]
+  },
+  {
+    "eventId": 796,
+    "stageNumber": 7,
+    "aliases": [
+      {
+        "eventTitle": "Dragon Ball Z: Memorable Battles [Movie Edition]",
+        "stageTitle": "Vs. Super Saiyan Gohan (Teen)",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "ドラゴンボールZ 劇場版メモリアルバトル",
+        "stageTitle": "VS超サイヤ人孫悟飯(青年期)",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 796,
+    "stageNumber": 8,
+    "aliases": [
+      {
+        "eventTitle": "Dragon Ball Z: Memorable Battles [Movie Edition]",
+        "stageTitle": "Vs. Legendary Super Saiyan Broly",
+        "provenance": "Japanese catalog repeats Legendary Super Saiyan Broly at stages 6/8 and Super Saiyan Goku at stages 1/5. Codex localization. Title pair cannot distinguish these stages."
+      }
+    ]
+  },
+  {
+    "eventId": 796,
+    "stageNumber": 9,
+    "aliases": [
+      {
+        "eventTitle": "Dragon Ball Z: Memorable Battles [Movie Edition]",
+        "stageTitle": "Vs. Super Gogeta",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "ドラゴンボールZ 劇場版メモリアルバトル",
+        "stageTitle": "VS超ゴジータ",
+        "provenance": "Numbered Japanese catalog; English name localized by Codex (stage 7 also cross-checked against DokkanStats 7960075)."
+      }
+    ]
+  },
+  {
+    "eventId": 796,
+    "stageNumber": 10,
+    "aliases": [
+      {
+        "eventTitle": "Dragon Ball Z: Memorable Battles [Movie Edition]",
+        "stageTitle": "Vs. Super Janemba",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "ドラゴンボールZ 劇場版メモリアルバトル",
+        "stageTitle": "VSスーパージャネンバ",
+        "provenance": "Numbered Japanese catalog; English name localized by Codex (stage 7 also cross-checked against DokkanStats 7960075)."
+      }
+    ]
+  },
+  {
+    "eventId": 797,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle [Movie Edition]",
+        "stageTitle": "Vs. Goku (Youth)",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 797,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle",
+        "stageTitle": "Movie Edition Stage 2",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle [Movie Edition]",
+        "stageTitle": "Vs. Goku & Piccolo",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 797,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "至上のバトルスペクタクル 劇場版",
+        "stageTitle": "VS三大超サイヤ人",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle",
+        "stageTitle": "Movie Edition Stage 3",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle [Movie Edition]",
+        "stageTitle": "Vs. Three Great Super Saiyans",
+        "provenance": "public game-data stage catalog; event/stage ID cross-reference"
+      }
+    ]
+  },
+  {
+    "eventId": 797,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle [Movie Edition]",
+        "stageTitle": "Vs. Super Saiyan Goku",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 797,
+    "stageNumber": 5,
+    "aliases": [
+      {
+        "eventTitle": "至上のバトルスペクタクル 劇場版",
+        "stageTitle": "VS超サイヤ人2孫悟飯(少年期)",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle [Movie Edition]",
+        "stageTitle": "Vs. Super Saiyan 2 Gohan (Youth)",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle",
+        "stageTitle": "Movie Edition Stage 5",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 797,
+    "stageNumber": 6,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle [Movie Edition]",
+        "stageTitle": "Vs. Super Saiyan Gohan (Teen)",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle",
+        "stageTitle": "Movie Edition Stage 6",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 797,
+    "stageNumber": 7,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle",
+        "stageTitle": "Movie Edition Stage 7",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle [Movie Edition]",
+        "stageTitle": "Vs. Trunks & Goten",
+        "provenance": "public game-data stage catalog; event/stage ID cross-reference"
+      }
+    ]
+  },
+  {
+    "eventId": 798,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Tremble with Fear! The Devil Awakens",
+        "stageTitle": "The Devil Awakens Stage 1",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 798,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Tremble with Fear! The Devil Awakens",
+        "stageTitle": "The Devil Awakens Stage 2",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 798,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "恐怖!戦慄!悪魔の目覚め",
+        "stageTitle": "悪魔の目覚め ステージ3",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Tremble with Fear! The Devil Awakens",
+        "stageTitle": "The Devil Awakens Stage 3",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1701,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle",
+        "stageTitle": "Gathering of Super Warriors Edition Stage 1",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "至上のバトルスペクタクル 超戦士集結編",
+        "stageTitle": "ドラゴンボール",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle [Gathering of Super Warriors Edition]",
+        "stageTitle": "Dragon Ball",
+        "provenance": "public game-data stage catalog; event/stage ID cross-reference"
+      }
+    ]
+  },
+  {
+    "eventId": 1701,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle\n[Gathering of Super Warriors Edition]",
+        "stageTitle": "Dragon Ball Z Part 1",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "至上のバトルスペクタクル 超戦士集結編",
+        "stageTitle": "ドラゴンボールZ 前期",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1701,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle\n[Gathering of Super Warriors Edition]",
+        "stageTitle": "Dragon Ball Z Part 2",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "至上のバトルスペクタクル 超戦士集結編",
+        "stageTitle": "ドラゴンボールZ 後期",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1701,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "至上のバトルスペクタクル 超戦士集結編",
+        "stageTitle": "ドラゴンボールGT",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle\n[Gathering of Super Warriors Edition]",
+        "stageTitle": "Dragon Ball GT",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1701,
+    "stageNumber": 5,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle",
+        "stageTitle": "Gathering of Super Warriors Edition Stage 5",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle\n[Gathering of Super Warriors Edition]",
+        "stageTitle": "Dragon Ball Super Part 1",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "至上のバトルスペクタクル 超戦士集結編",
+        "stageTitle": "ドラゴンボール超 前期",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1701,
+    "stageNumber": 6,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle\n[Gathering of Super Warriors Edition]",
+        "stageTitle": "Dragon Ball Super Part 2",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "至上のバトルスペクタクル 超戦士集結編",
+        "stageTitle": "ドラゴンボール超 後期",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1702,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
+        "stageTitle": "Saiyan Saga",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1702,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
+        "stageTitle": "Planet Namek Saga",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1702,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
+        "stageTitle": "Androids/Cell Saga",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "究極のレッドゾーン 孫悟空の軌跡編",
+        "stageTitle": "人造人間/セル編",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1702,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "究極のレッドゾーン 孫悟空の軌跡編",
+        "stageTitle": "魔人ブウ編",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
+        "stageTitle": "Majin Buu Saga",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1702,
+    "stageNumber": 5,
+    "aliases": [
+      {
+        "eventTitle": "究極のレッドゾーン 孫悟空の軌跡編",
+        "stageTitle": "破壊神ビルス編",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
+        "stageTitle": "God of Destruction Beerus Saga",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1702,
+    "stageNumber": 6,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone",
+        "stageTitle": "Goku's Story Edition Stage 6",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1702,
+    "stageNumber": 7,
+    "aliases": [
+      {
+        "eventTitle": "究極のレッドゾーン 孫悟空の軌跡編",
+        "stageTitle": "破壊神シャンパ編",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
+        "stageTitle": "Universe 6 Saga",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1702,
+    "stageNumber": 8,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
+        "stageTitle": "Future Trunks Saga",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "究極のレッドゾーン 孫悟空の軌跡編",
+        "stageTitle": "未来トランクス編",
+        "provenance": "Codex Japanese localization of visually audited text; numbered English stage independently catalog-verified. Human localization confirmation not claimed."
+      }
+    ]
+  },
+  {
+    "eventId": 1702,
+    "stageNumber": 9,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
+        "stageTitle": "Universe Survival Saga",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "究極のレッドゾーン 孫悟空の軌跡編",
+        "stageTitle": "宇宙サバイバル編",
+        "provenance": "Codex Japanese localization of visually audited text; numbered English stage independently catalog-verified. Human localization confirmation not claimed."
+      }
+    ]
+  },
+  {
+    "eventId": 1703,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone",
+        "stageTitle": "Vegeta's Story Edition Stage 1",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1703,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "究極のレッドゾーン ベジータの軌跡編",
+        "stageTitle": "ナメック星編",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Vegeta's Story Edition]",
+        "stageTitle": "Planet Namek Saga",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1703,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "究極のレッドゾーン ベジータの軌跡編",
+        "stageTitle": "人造人間/セル編",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Vegeta's Story Edition]",
+        "stageTitle": "Androids/Cell Saga",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1703,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "究極のレッドゾーン ベジータの軌跡編",
+        "stageTitle": "魔人ブウ編",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Vegeta's Story Edition]",
+        "stageTitle": "Majin Buu Saga",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1703,
+    "stageNumber": 5,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Vegeta's Story Edition]",
+        "stageTitle": "God of Destruction Beerus Saga",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "究極のレッドゾーン ベジータの軌跡編",
+        "stageTitle": "破壊神ビルス編",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1703,
+    "stageNumber": 6,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone",
+        "stageTitle": "Vegeta's Story Edition Stage 6",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1703,
+    "stageNumber": 7,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Vegeta's Story Edition]",
+        "stageTitle": "Universe 6 Saga",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1703,
+    "stageNumber": 9,
+    "aliases": [
+      {
+        "eventTitle": "究極のレッドゾーン ベジータの軌跡編",
+        "stageTitle": "宇宙サバイバル編",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone",
+        "stageTitle": "Vegeta's Story Edition Stage 9",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Vegeta's Story Edition]",
+        "stageTitle": "Universe Survival Saga",
+        "provenance": "Numbered Japanese community catalog; English localization by Codex, independently of submitted metadata."
+      }
+    ]
+  },
+  {
+    "eventId": 1705,
+    "stageNumber": 14,
+    "aliases": [
+      {
+        "eventTitle": "10th Anniv.! Anniversary Battle",
+        "stageTitle": "9th Anniversary Part 1",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1705,
+    "stageNumber": 15,
+    "aliases": [
+      {
+        "eventTitle": "10周年!Anniversary Battle",
+        "stageTitle": "9th anniversary 後編",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "10th Anniv.! Anniversary Battle",
+        "stageTitle": "9th Anniversary Part 2",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1705,
+    "stageNumber": 16,
+    "aliases": [
+      {
+        "eventTitle": "10周年!Anniversary Battle",
+        "stageTitle": "10th anniversary 前編",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "10th Anniv.! Anniversary Battle",
+        "stageTitle": "10th Anniversary Part 1",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1705,
+    "stageNumber": 17,
+    "aliases": [
+      {
+        "eventTitle": "10周年!Anniversary Battle",
+        "stageTitle": "10th anniversary 後編",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1715,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "究極のレッドゾーン 少年編",
+        "stageTitle": "VSピラフ一味",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [DB Saga]",
+        "stageTitle": "Vs. Reich Pilaf",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1715,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [DB Saga]",
+        "stageTitle": "The 21st World Tournament",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "究極のレッドゾーン 少年編",
+        "stageTitle": "第21回天下一武道会",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1715,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [DB Saga]",
+        "stageTitle": "Vs. Red Ribbon Army",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone",
+        "stageTitle": "DB Saga Stage 3",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1715,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "究極のレッドゾーン 少年編",
+        "stageTitle": "VS占いババの闘士",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [DB Saga]",
+        "stageTitle": "Vs. Baba's Fighters",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1715,
+    "stageNumber": 5,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [DB Saga]",
+        "stageTitle": "The 22nd World Tournament",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "究極のレッドゾーン 少年編",
+        "stageTitle": "第22回天下一武道会",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1715,
+    "stageNumber": 6,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [DB Saga]",
+        "stageTitle": "Vs. Demon King Piccolo",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone",
+        "stageTitle": "DB Saga Stage 6",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1716,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "本気対本気!ガチバトル",
+        "stageTitle": "VS超サイヤ人ゴッドSS孫悟空",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Seriously Serious! All-Out Battles",
+        "stageTitle": "Vs. Super Saiyan God SS Goku",
+        "provenance": "public game-data catalog mirror; not submitted metadata"
+      }
+    ]
+  },
+  {
+    "eventId": 1716,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "本気対本気!ガチバトル",
+        "stageTitle": "VS孫悟空(少年期)",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Seriously Serious! All-Out Battles",
+        "stageTitle": "Vs. Goku (Youth)",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1716,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Seriously Serious! All-Out Battles",
+        "stageTitle": "Vs. Super Saiyan Trunks (Future)",
+        "provenance": "public game-data catalog mirror; not submitted metadata"
+      }
+    ]
+  },
+  {
+    "eventId": 1716,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "Seriously Serious! All-Out Battles",
+        "stageTitle": "Vs. Buu (Super)",
+        "provenance": "public game-data catalog mirror; not submitted metadata"
+      }
+    ]
+  },
+  {
+    "eventId": 1716,
+    "stageNumber": 5,
+    "aliases": [
+      {
+        "eventTitle": "Seriously Serious! All-Out Battles",
+        "stageTitle": "Vs. Super Saiyan Broly",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1716,
+    "stageNumber": 6,
+    "aliases": [
+      {
+        "eventTitle": "Seriously Serious! All-Out Battles",
+        "stageTitle": "Vs. Goku (GT)",
+        "provenance": "public game-data catalog mirror; not submitted metadata"
+      }
+    ]
+  },
+  {
+    "eventId": 1716,
+    "stageNumber": 7,
+    "aliases": [
+      {
+        "eventTitle": "Seriously Serious! All-Out Battles",
+        "stageTitle": "Vs. Giant Gomah",
+        "provenance": "public game-data catalog mirror; not submitted metadata"
+      }
+    ]
+  },
+  {
+    "eventId": 1716,
+    "stageNumber": 8,
+    "aliases": [
+      {
+        "eventTitle": "Seriously Serious! All-Out Battles",
+        "stageTitle": "Vs. Cell (1st Form)",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1716,
+    "stageNumber": 9,
+    "aliases": [
+      {
+        "eventTitle": "Seriously Serious! All-Out Battles",
+        "stageTitle": "Vs. Cell Max",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1722,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "SPECIAL BATTLE 2025",
+        "stageTitle": "ステージ1",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Special Battle 2025",
+        "stageTitle": "Stage 1",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1722,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Special Battle 2025",
+        "stageTitle": "Stage 2",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "SPECIAL BATTLE 2025",
+        "stageTitle": "ステージ2",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1722,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Special Battle 2025",
+        "stageTitle": "Stage 3",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "SPECIAL BATTLE 2025",
+        "stageTitle": "ステージ3",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1722,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "Special Battle 2025",
+        "stageTitle": "Stage 4",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "SPECIAL BATTLE 2025",
+        "stageTitle": "ステージ4",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1723,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "超連携!!タッグバトル",
+        "stageTitle": "ピッコロの切り札",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Perfect Cooperation! Team Battle",
+        "stageTitle": "Piccolo's Trump Card",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1723,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "超連携!!タッグバトル",
+        "stageTitle": "ベジータの秘策",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Perfect Cooperation! Team Battle",
+        "stageTitle": "Vegeta's Strategy",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1723,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "超連携!!タッグバトル",
+        "stageTitle": "人間の力",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Perfect Cooperation! Team Battle",
+        "stageTitle": "The Power of Mortals",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1723,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "Perfect Cooperation! Team Battle",
+        "stageTitle": "Miracle-Makers Never Surrender",
+        "provenance": "public game-data catalog mirror; not submitted metadata"
+      }
+    ]
+  },
+  {
+    "eventId": 1723,
+    "stageNumber": 5,
+    "aliases": [
+      {
+        "eventTitle": "Perfect Cooperation! Team Battle",
+        "stageTitle": "Goku and #18's Double Attack",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1723,
+    "stageNumber": 6,
+    "aliases": [
+      {
+        "eventTitle": "Perfect Cooperation! Team Battle",
+        "stageTitle": "Super Saiyan 4 Duo",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "超連携!!タッグバトル",
+        "stageTitle": "ふたりの超サイヤ人4",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1723,
+    "stageNumber": 7,
+    "aliases": [
+      {
+        "eventTitle": "Perfect Cooperation! Team Battle",
+        "stageTitle": "Little Fighters of Hope",
+        "provenance": "public game-data catalog mirror; not submitted metadata"
+      }
+    ]
+  },
+  {
+    "eventId": 1723,
+    "stageNumber": 8,
+    "aliases": [
+      {
+        "eventTitle": "Perfect Cooperation! Team Battle",
+        "stageTitle": "Strength Forged in a Year",
+        "provenance": "public game-data catalog mirror; not submitted metadata"
+      }
+    ]
+  },
+  {
+    "eventId": 1723,
+    "stageNumber": 9,
+    "aliases": [
+      {
+        "eventTitle": "Perfect Cooperation! Team Battle",
+        "stageTitle": "Temporary Alliance",
+        "provenance": "public game-data catalog mirror; not submitted metadata"
+      }
+    ]
+  },
+  {
+    "eventId": 1726,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle",
+        "stageTitle": "Next-Generation Saiyans Edition Stage 1",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle\n[Next-Generation Saiyans Edition]",
+        "stageTitle": "Vs. Goten (Kid)",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1726,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "至上のバトルスペクタクル 次世代のサイヤ人編",
+        "stageTitle": "VSトランクス(幼年期)",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "至上のバトルスペクタクル",
+        "stageTitle": "次世代のサイヤ人編ステージ2",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle",
+        "stageTitle": "Next-Generation Saiyans Edition Stage 2",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle [Next-Generation Saiyans Edition]",
+        "stageTitle": "Vs. Trunks (Kid)",
+        "provenance": "Numbered Japanese community catalog; English localization by Codex, independently of submitted metadata."
+      }
+    ]
+  },
+  {
+    "eventId": 1726,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle\n[Next-Generation Saiyans Edition]",
+        "stageTitle": "Vs. Gohan & Goten & Trunks Part 1",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1729,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone",
+        "stageTitle": "Pure Saiyans Edition Stage 3",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1729,
+    "stageNumber": 5,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone",
+        "stageTitle": "Pure Saiyans Edition Stage 5",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1729,
+    "stageNumber": 6,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone",
+        "stageTitle": "Pure Saiyans Edition Stage 6",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1733,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone",
+        "stageTitle": "DAIMA Edition Stage 2",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1733,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone",
+        "stageTitle": "DAIMA Edition Stage 3",
+        "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "究極のレッドゾーン",
+        "stageTitle": "DAIMA編ステージ3",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1736,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone",
+        "stageTitle": "Artificial Life Forms Edition Stage 2",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1736,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone",
+        "stageTitle": "Artificial Life Forms Edition Stage 4",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1743,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "11th Anniversary! Special Battle Part 2",
+        "stageTitle": "Stage 1",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1751,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Seriously Serious! All-Out Battles 2",
+        "stageTitle": "Stage 1",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1751,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Seriously Serious! All-Out Battles 2",
+        "stageTitle": "Stage 3",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1751,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "Seriously Serious! All-Out Battles 2",
+        "stageTitle": "Stage 4",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1766,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle: RE [DAIMA Edition]",
+        "stageTitle": "Vs. Vegeta",
+        "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1766,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle: RE [DAIMA Edition]",
+        "stageTitle": "Vs. Goku",
+        "provenance": "Public game-data catalog mirror; numbered event/stage and English title verified."
+      }
+    ]
+  }
+]

@@ -37,8 +37,13 @@
             <strong>Error!</strong> @warningMessage.
         </div>
     }
+    @if (validationMessage.Length > 0)
+    {
+        <div class="alert alert-warning" role="status">@validationMessage.</div>
+    }
     <div class="container clear-box text-center">
         <h1>Today's clears</h1>
+        <p>Keep the event name, stage name, and difficulty visible in your clear-details screenshot.</p>
         @if (challengeModel?.TodaysEvent.MinimumDifficulty is { } minimum)
         {
             <p>Required difficulty: <strong>@minimum or higher</strong>. Keep the difficulty label visible in your clear-details screenshot.</p>
@@ -97,6 +102,7 @@
 @code {
     private string warningMessage = "";
     private string displayMessage = "";
+    private string validationMessage = "";
     private List<IBrowserFile> loadedFiles = new();
     private bool fileLoading;
     private string Message = "No file(s) selected";
@@ -183,11 +189,13 @@
 
         fileLoading = true;
         warningMessage = "";
+        validationMessage = "";
+        displayMessage = "";
         this.StateHasChanged();
 
         try
         {
-            var blobClient = await BlobSvc.UploadToAzureAsync(
+            var uploaded = await BlobSvc.UploadToAzureAsync(
                 file.Name,
                 file.ContentType,
                 file, challengeModel,
@@ -195,6 +203,7 @@
                 discordUsername: discordUsername,
                 discordId: discordId,
                 remoteIp: RemoteIpAddress);
+            var blobClient = uploaded.Blob;
 
             FileUploadViewModel fileUploadViewModel = new FileUploadViewModel()
             {
@@ -203,8 +212,17 @@
                 ContentType = file.ContentType
             };
 
-            fileUploadViewModels.Add(fileUploadViewModel);
-            Message = file.Name + " Uploaded!!";
+            if (uploaded.Validation.Outcome == "unknown")
+            {
+                validationMessage = uploaded.Validation.Reason == "missing-target-localized-names"
+                    ? "Screenshot saved, but stage-name verification is not available for this challenge yet. It will not count toward scoring while unverified"
+                    : "Screenshot saved, but we could not verify the event, stage, or difficulty. It will not count toward scoring while unverified. If the details are hard to read, try a clearer screenshot";
+            }
+            else
+            {
+                fileUploadViewModels.Add(fileUploadViewModel);
+                displayMessage = file.Name + " uploaded";
+            }
         }
         catch (UploadRejectedException ex)
         {

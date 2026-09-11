@@ -1,0 +1,102 @@
+[
+  {
+    "id": "seed-heroine-global-chi-chi",
+    "sourceSha256": "f8888d0d4c63f1bcc2635426501145a98d762df1083f3e692a26f0d082dbfa56",
+    "version": "offline-observation-v3-inset1",
+    "eventTitle": "Heart-Pounding Heroine Battle",
+    "stageTitle": "Vs, Chi-Chi",
+    "difficulty": "SUPER2",
+    "applicationAccepted": true,
+    "applicationPrediction": {
+      "Nickname": "Beatmj",
+      "ItemlessClear": true,
+      "ClearTime": "0'05\"38.4",
+      "Difficulty": "SUPER2"
+    },
+    "inferredLayout": "global",
+    "japaneseScriptObserved": false,
+    "candidateSelected": false,
+    "bounds": [
+      15,
+      198,
+      688,
+      1205
+    ],
+    "lineCoordinates": [
+      [
+        158,
+        323,
+        406,
+        29
+      ],
+      [
+        284,
+        357,
+        146,
+        25
+      ]
+    ],
+    "candidateCropInset": 0,
+    "geometryStatus": "automatic-lines",
+    "seconds": 0.1194173,
+    "sourcePath": "tests/DokkanDailyTests/Data/difficulty/heroine-global-super2-small.jpg",
+    "linuxMetadata": {
+      "EventTitle": "Heart-Pounding Heroine Battle",
+      "StageTitle": "Vs, Chi-Chi",
+      "Nickname": "Beatmj",
+      "ItemlessClear": true,
+      "ClearTime": "0'05\"38.4",
+      "Difficulty": "SUPER2"
+    }
+  },
+  {
+    "id": "seed-heroine-jp-android18",
+    "sourceSha256": "93648232732dcb95f747d3bf01cc1c4e08ed3ed0c2f0876b1f13fa4833497fb5",
+    "version": "offline-observation-v3-inset1",
+    "eventTitle": "ドキ ドキ ゃ ゥ ヒロ イン バト ル",
+    "stageTitle": "VS 人 造 人 間 18 号",
+    "difficulty": "SUPER2",
+    "applicationAccepted": true,
+    "applicationPrediction": {
+      "Nickname": "FELIX",
+      "ItemlessClear": true,
+      "ClearTime": "0'06\"41.8",
+      "Difficulty": "SUPER2"
+    },
+    "inferredLayout": "japanese",
+    "japaneseScriptObserved": true,
+    "candidateSelected": true,
+    "bounds": [
+      31,
+      363,
+      1377,
+      2402
+    ],
+    "lineCoordinates": [
+      [
+        360,
+        580,
+        744,
+        56
+      ],
+      [
+        449,
+        698,
+        522,
+        59
+      ]
+    ],
+    "candidateCropInset": 1,
+    "geometryStatus": "automatic-lines",
+    "seconds": 0.6267757,
+    "sourcePath": "tests/DokkanDailyTests/Data/difficulty/heroine-jp-super2-android18.jpg",
+    "linuxMetadata": {
+      "EventTitle": "ドキ ドキ ゃ ? ゥ ヒロ イン バト ル",
+      "StageTitle": "VS 人 造 人 間 18 号",
+      "Nickname": "FELIX",
+      "ItemlessClear": true,
+      "ClearTime": "0'06\"41.8",
+      "Difficulty": "SUPER2"
+    }
+  }
+]
