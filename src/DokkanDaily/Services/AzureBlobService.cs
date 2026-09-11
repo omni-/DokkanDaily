@@ -352,8 +352,9 @@ namespace DokkanDaily.Services
             dict[AzureConstants.UPLOAD_STATUS_TAG] = validation.Outcome == "match"
                 ? AzureConstants.UPLOAD_STATUS_VALID : AzureConstants.UPLOAD_STATUS_UNKNOWN;
             if (metadata == null) return dict;
-            dict[AzureConstants.OBSERVED_EVENT_TAG] = metadata.EventTitle?.EscapeUnicode();
-            dict[AzureConstants.OBSERVED_STAGE_TAG] = metadata.StageTitle?.EscapeUnicode();
+            // OCR titles can wrap; Azure metadata is sent as single-line HTTP headers.
+            dict[AzureConstants.OBSERVED_EVENT_TAG] = metadata.EventTitle?.ReplaceLineEndings(" ").EscapeUnicode();
+            dict[AzureConstants.OBSERVED_STAGE_TAG] = metadata.StageTitle?.ReplaceLineEndings(" ").EscapeUnicode();
             dict[AzureConstants.USER_NAME_TAG] = metadata.Nickname?.EscapeUnicode();
             dict[AzureConstants.ITEMLESS_TAG] = metadata.ItemlessClear.ToString();
             dict[AzureConstants.CLEAR_TIME_TAG] = metadata.ClearTime;
