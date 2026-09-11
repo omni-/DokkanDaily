@@ -59,7 +59,13 @@ BEGIN
                    AND C.DokkanNickname IS NOT NULL
                    AND DDU.DokkanNickname = C.DokkanNickname
                    AND DDU.DiscordId IS NULL
-                   AND DDU.DiscordUsername IS NULL)
+                   AND DDU.DiscordUsername IS NULL
+                   -- A shared nickname cannot identify which Discord account owns this history.
+                   AND NOT EXISTS (
+                       SELECT 1 FROM @Clears OtherClear
+                       WHERE OtherClear.DokkanNickname = C.DokkanNickname
+                         AND OtherClear.DiscordId <> C.DiscordId
+                   ))
             ORDER BY
                 CASE
                     WHEN C.DiscordId IS NOT NULL AND DDU.DiscordId = C.DiscordId THEN 1

@@ -177,6 +177,43 @@ namespace DokkanDailyTests
 
         [TestCase(null)]
         [TestCase("other-id")]
+        public async Task CompetingDiscordClaimsKeepTheirClearsAndAnonymousHistorySeparate(string existingDiscordId)
+        {
+            var date = new DateTime(2026, 8, 1);
+            await repository.InsertDailyClears([
+                new DbClear { DokkanNickname = "shared-name", ClearTime = "0'03\"00.0" }
+            ], date);
+            int anonymousId = await conn.QuerySingleAsync<int>("SELECT DokkanDailyUserId FROM Core.DokkanDailyUser");
+            if (existingDiscordId is not null)
+                await conn.ExecuteAsync("INSERT INTO Core.DokkanDailyUser (DokkanNickname, DiscordUsername, DiscordId) VALUES ('shared-name', 'second-user', @existingDiscordId)", new { existingDiscordId });
+
+            DbClear[] claims = [
+                new() { DokkanNickname = "shared-name", DiscordUsername = "first-user", DiscordId = "first-id", ClearTime = "0'01\"00.0", IsDailyHighscore = true },
+                new() { DokkanNickname = "shared-name", DiscordUsername = "second-user", DiscordId = existingDiscordId ?? "second-id", ClearTime = "0'02\"00.0", ItemlessClear = true }
+            ];
+            await repository.InsertDailyClears(claims, date.AddDays(1));
+            await repository.InsertDailyClears(claims.Reverse(), date.AddDays(1));
+
+            Assert.That(await conn.QuerySingleAsync<int>("SELECT COUNT(*) FROM Core.DokkanDailyUser"), Is.EqualTo(3));
+            Assert.That(await conn.QuerySingleAsync<int>("SELECT COUNT(*) FROM Core.DokkanDailyUser WHERE DokkanDailyUserId = @anonymousId AND DiscordId IS NULL AND DiscordUsername IS NULL", new { anonymousId }), Is.EqualTo(1));
+            Assert.That(await conn.QuerySingleAsync<int>("SELECT COUNT(*) FROM Core.StageClear WHERE DokkanDailyUserId = @anonymousId", new { anonymousId }), Is.EqualTo(1));
+            var rows = (await conn.QueryAsync<(string DiscordId, string ClearTime, bool ItemlessClear, bool IsDailyHighscore)>("""
+                SELECT U.DiscordId, C.ClearTime, C.ItemlessClear, C.IsDailyHighscore
+                FROM Core.StageClear C JOIN Core.DokkanDailyUser U ON U.DokkanDailyUserId = C.DokkanDailyUserId
+                WHERE C.ClearDate = @clearDate
+                """, new { clearDate = date.AddDays(1) })).ToArray();
+            Assert.That(rows, Has.Length.EqualTo(2));
+            foreach (var claim in claims)
+            {
+                var row = rows.Single(x => x.DiscordId == claim.DiscordId);
+                Assert.That(row.ClearTime, Is.EqualTo(claim.ClearTime));
+                Assert.That(row.ItemlessClear, Is.EqualTo(claim.ItemlessClear));
+                Assert.That(row.IsDailyHighscore, Is.EqualTo(claim.IsDailyHighscore));
+            }
+        }
+
+        [TestCase(null)]
+        [TestCase("other-id")]
         public async Task FirstDiscordSubmissionDoesNotClaimAnotherDiscordUsersNickname(string existingDiscordId)
         {
             await conn.ExecuteAsync("INSERT INTO Core.DokkanDailyUser (DokkanNickname, DiscordUsername, DiscordId) VALUES ('shared-name', 'other-user', @existingDiscordId)", new { existingDiscordId });
