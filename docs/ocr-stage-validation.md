@@ -1,14 +1,19 @@
 # Screenshot stage validation
 
 Uploads independently read the visible event title, stage title and difficulty, then
-compare them with the server-assigned challenge. Supported matches can score;
+compare them with the server-assigned challenge. Accepted uploads can score;
 clear event/stage mismatches and known lower difficulties reject before storage.
-Unknown results are saved as unscored uploads. Missing aliases remain unknown:
-118 of the current 156 configured stages have usable alias pairs. This is an
+Unknown results are accepted for display and scoring.
+Missing data never establishes a mismatch. Validation outcomes
+remain in metadata for diagnostics. Missing aliases remain unknown.
+All 156 current configured stages have sourced English alias pairs. This is an
 accidental-upload check, not proof of completion or team compliance.
 
 The production implementation preserves the final September 2026 OCR candidate:
-geometry, routing, matching thresholds, localized aliases and model are frozen.
+geometry, routing, matching thresholds and model are frozen. The alias catalog is
+maintained by `python scripts/sync-stage-links.py` alongside stage links. It fetches
+English event names and numbered stage titles from Dokkan Info, preserves reviewed
+localizations and historical contrast entries, and refuses incomplete coverage.
 The [research release](https://github.com/omni-/DokkanDaily/releases/tag/ocr-test)
 contains the full September 2026 research/evaluation provenance, including the
 completed held-out evaluation. Corpora, training tools and exhaustive evaluation

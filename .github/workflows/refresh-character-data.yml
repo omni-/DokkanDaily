@@ -71,14 +71,14 @@ jobs:
     - name: Test stage link sync
       run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
 
-    - name: Sync stage links
+    - name: Sync stage links and OCR aliases
       run: python3 scripts/sync-stage-links.py --summary "$RUNNER_TEMP/stage-link-summary.md"
 
     - name: Check for changes
       id: changes
       run: |
         # --porcelain rather than `git diff`, so newly downloaded (untracked) thumbs count too.
-        if [ -z "$(git status --porcelain -- src/DokkanDaily/wwwroot/data src/DokkanDaily/wwwroot/images/thumbs)" ]; then
+        if [ -z "$(git status --porcelain -- src/DokkanDaily/wwwroot/data src/DokkanDaily/wwwroot/images/thumbs src/DokkanDaily/Ocr/StageTitleAliases.json)" ]; then
           echo "changed=false" >> "$GITHUB_OUTPUT"
         else
           echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -94,7 +94,7 @@ jobs:
     # unit, every leader/category/stage image exists on disk, and the JSON deserializes.
     - name: Validate data
       if: steps.changes.outputs.changed == 'true'
-      run: dotnet test ./tests/DokkanDailyTests/DokkanDailyTests.csproj --filter "FullyQualifiedName~HelperTests" -v n
+      run: dotnet test ./tests/DokkanDailyTests/DokkanDailyTests.csproj --filter "FullyQualifiedName~HelperTests|FullyQualifiedName~CatalogEnrichesExistingStagesWithoutInventingMissingNames" -v n
 
     - name: Build PR body
       if: steps.changes.outputs.changed == 'true'
@@ -119,6 +119,7 @@ jobs:
         add-paths: |
           src/DokkanDaily/wwwroot/data/DokkanCharacterData.json
           src/DokkanDaily/wwwroot/data/DokkanStageLinks.json
+          src/DokkanDaily/Ocr/StageTitleAliases.json
           src/DokkanDaily/wwwroot/images/thumbs
         commit-message: 'New unit json'
         title: 'New unit json'

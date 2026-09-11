@@ -349,8 +349,9 @@ namespace DokkanDaily.Services
 
             dict[AzureConstants.STAGE_VALIDATION_TAG] = validation.Outcome;
             dict[AzureConstants.STAGE_VALIDATION_REASON_TAG] = validation.Reason;
-            dict[AzureConstants.UPLOAD_STATUS_TAG] = validation.Outcome == "match"
-                ? AzureConstants.UPLOAD_STATUS_VALID : AzureConstants.UPLOAD_STATUS_UNKNOWN;
+            // Unknown evidence is diagnostic, not a reason to withhold a clear.
+            // Confirmed mismatches have already thrown before reaching storage.
+            dict[AzureConstants.UPLOAD_STATUS_TAG] = AzureConstants.UPLOAD_STATUS_VALID;
             if (metadata == null) return dict;
             // OCR titles can wrap; Azure metadata is sent as single-line HTTP headers.
             dict[AzureConstants.OBSERVED_EVENT_TAG] = metadata.EventTitle?.ReplaceLineEndings(" ").EscapeUnicode();

@@ -96,11 +96,11 @@ public class StageValidationTests
     public void CatalogEnrichesExistingStagesWithoutInventingMissingNames()
     {
         var stages = DokkanConstants.Stages.DistinctBy(s => s.FullName).ToArray();
-        var covered = stages.Where(s => StageTitleCatalog.ForStage(s).Aliases.Length > 0).ToArray();
+        var covered = stages.Where(s => StageTitleCatalog.ForStage(s).Aliases.Any(a =>
+            !string.IsNullOrWhiteSpace(a.EventTitle) && !string.IsNullOrWhiteSpace(a.StageTitle))).ToArray();
         Assert.Multiple(() =>
         {
-            Assert.That(stages, Has.Length.EqualTo(156));
-            Assert.That(covered, Has.Length.EqualTo(118));
+            Assert.That(covered, Is.EquivalentTo(stages), "Every configured stage must have sourced title aliases; run scripts/sync-stage-links.py");
             Assert.That(StageTitleCatalog.ForStage(new("Unconfigured", Tier.Z, "test")).Aliases, Is.Empty);
         });
     }
@@ -137,11 +137,35 @@ public class StageValidationTests
         var unknown = Tags(new() { Difficulty = "SUPER3" });
         Assert.Multiple(() =>
         {
-            Assert.That(unknown[AzureConstants.UPLOAD_STATUS_TAG], Is.EqualTo("unknown"));
+            Assert.That(unknown[AzureConstants.UPLOAD_STATUS_TAG], Is.EqualTo("valid"));
             Assert.That(unknown[AzureConstants.STAGE_VALIDATION_TAG], Is.EqualTo("unknown"));
             Assert.That(unknown.ContainsKey(AzureConstants.INVALID_TAG), Is.False);
-            Assert.That(Tags(null)[AzureConstants.UPLOAD_STATUS_TAG], Is.EqualTo("unknown"));
+            Assert.That(Tags(null)[AzureConstants.UPLOAD_STATUS_TAG], Is.EqualTo("valid"));
         });
+    }
+
+    [Test]
+    public void MissingCatalogNamesDoNotWithholdUploads()
+    {
+        var stage = new Stage("Unconfigured future event", Tier.Z, "test");
+        var challenge = new Challenge(DailyType.Category, stage, null, new Category("Test", Tier.Z), null, null, DateTime.Today);
+        var tags = AzureBlobService.BuildTagDict(challenge, new() { Difficulty = "SUPER3" }, null, null, null, null);
+        Assert.That(tags[AzureConstants.UPLOAD_STATUS_TAG], Is.EqualTo("valid"));
+        Assert.That(tags[AzureConstants.STAGE_VALIDATION_REASON_TAG], Is.EqualTo("missing-target-localized-names"));
+    }
+
+    [TestCase(1, "Saiyan Saga", "Planet Namek Saga")]
+    [TestCase(2, "Planet Namek Saga", "Saiyan Saga")]
+    public void CollectionOfEpicBattlesUsesTheRenewedEvent(int number, string correctTitle, string wrongTitle)
+    {
+        var stage = DokkanConstants.Stages.First(s => s.Name == "Collection of Epic Battles" && s.StageNumber == number);
+        Assert.That(StageTitleCatalog.ForStage(stage).EventId, Is.EqualTo(1769));
+        Assert.That(AzureBlobService.ValidateScreenshot(stage, new() {
+            EventTitle = stage.Name, StageTitle = correctTitle, Difficulty = "SUPER3"
+        }).Outcome, Is.EqualTo("match"));
+        Assert.Throws<UploadRejectedException>(() => AzureBlobService.ValidateScreenshot(stage, new() {
+            EventTitle = stage.Name, StageTitle = wrongTitle, Difficulty = "SUPER3"
+        }));
     }
 
     [TestCase("Fearsome Activation! Cell Max", "Fearsome Activation! Cell Max", "different stage")]

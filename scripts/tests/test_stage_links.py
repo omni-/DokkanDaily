@@ -9,6 +9,47 @@ spec.loader.exec_module(sync)
 
 
 class StageLinkTests(unittest.TestCase):
+    def test_catalog_includes_minimum_difficulties_and_rejects_unknown_syntax(self):
+        source = '''private static readonly List<Stage> stages = [
+            new("Battle", Tier.A, "battle", minimumDifficulty: StageDifficulty.SUPER3),
+            new("Battle", Tier.A, "battle", 2, StageDifficulty.SUPER3),
+        ];'''
+        self.assertEqual(sync.local_stages(source), [("Battle", 1), ("Battle", 2)])
+        with self.assertRaises(ValueError):
+            sync.local_stages(source.replace('2, StageDifficulty.SUPER3', 'stage: 2'))
+
+    def test_alias_sync_preserves_reviewed_names_and_refreshes_scraped_names(self):
+        events = [{"id": 1769, "name": "Collection of Epic Battles"}]
+        page = '''<div>Level 2: Planet Namek Saga</div>
+            <a href="/events/challenge/1769/17690025">SUPER3</a>'''
+        details = {1769: sync.parse_stage_details(page, 1769)}
+        links = {"Collection of Epic Battles, Stage 2": sync.BASE + "/events/challenge/1769/17690025"}
+        reviewed = dict(eventTitle="日本語イベント", stageTitle="日本語ステージ", provenance="reviewed")
+        previous = [dict(eventId=1769, stageNumber=2, aliases=[reviewed,
+            dict(eventTitle="Old", stageTitle="Old", provenance=sync.SCRAPED + "old")]),
+            dict(eventId=760, stageNumber=1, aliases=[reviewed])]
+        result = sync.build_aliases(links, events, details, previous)
+        aliases = result[1]["aliases"]
+        self.assertEqual(result[0], previous[1])  # Historical event retained.
+        self.assertEqual(aliases[0], reviewed)
+        self.assertEqual(aliases[1]["stageTitle"], "Planet Namek Saga")
+        self.assertEqual(aliases[1]["eventTitle"], "Collection of Epic Battles")
+        self.assertEqual(result, sync.build_aliases(links, events, details, result))
+        self.assertEqual(previous[0]["aliases"][1]["stageTitle"], "Old")  # Inputs untouched.
+
+    def test_missing_or_conflicting_visible_names_fail_alias_sync(self):
+        events = [{"id": 7, "name": "Battle"}]
+        links = {"Battle, Stage 1": sync.BASE + "/events/challenge/7"}
+        for headings in ["<div>Level 1:</div>", "<div>Level 1: A</div><div>Level 1: B</div>"]:
+            details = {7: sync.parse_stage_details(headings + '<a href="/events/challenge/7/70015">SUPER</a>', 7)}
+            with self.assertRaises(ValueError):
+                sync.build_aliases(links, events, details, [])
+
+    def test_titles_decode_entities_and_preserve_visible_numbers(self):
+        details = sync.parse_stage_details('<div>Level 7: Goku &amp; Vegeta\n Stage 2</div>'
+            '<a href="/events/challenge/7/70075">SUPER</a>', 7)
+        self.assertEqual(details.titles[7], {"Goku & Vegeta Stage 2"})
+
     def test_catalog_excludes_comments_and_deduplicates(self):
         source = '''private static readonly List<Stage> stages = [
             //new("Old", Tier.A, "old"),

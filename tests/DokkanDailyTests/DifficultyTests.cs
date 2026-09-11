@@ -86,11 +86,11 @@ public class DifficultyTests
         Assert.Multiple(() =>
         {
             Assert.That(tags[AzureConstants.DIFFICULTY_TAG], Is.EqualTo("SUPER3"));
-            Assert.That(tags[AzureConstants.UPLOAD_STATUS_TAG], Is.EqualTo(AzureConstants.UPLOAD_STATUS_UNKNOWN));
+            Assert.That(tags[AzureConstants.UPLOAD_STATUS_TAG], Is.EqualTo(AzureConstants.UPLOAD_STATUS_VALID));
         });
         Assert.Throws<UploadRejectedException>(() => AzureBlobService.BuildTagDict(challenge,
             new ClearMetadata { Difficulty = "SUPER2" }, null, null, null, null));
-        Assert.That(AzureBlobService.BuildTagDict(challenge, null, null, null, null, null)[AzureConstants.UPLOAD_STATUS_TAG], Is.EqualTo(AzureConstants.UPLOAD_STATUS_UNKNOWN));
+        Assert.That(AzureBlobService.BuildTagDict(challenge, null, null, null, null, null)[AzureConstants.UPLOAD_STATUS_TAG], Is.EqualTo(AzureConstants.UPLOAD_STATUS_VALID));
     }
 
     [TestCase("SUPER2")]

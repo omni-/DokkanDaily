@@ -24,15 +24,18 @@ __Project TODO List:__
 ### Stage/Event hyperlinks
 
 After adding or renaming stages, run `python scripts/sync-stage-links.py` (Python 3.10+ and curl).
-The monthly `refresh-character-data` workflow runs this too and includes link changes in its PR.
+The monthly `refresh-character-data` workflow runs this too and includes link and OCR alias changes in its PR.
 Use `--dry-run` to review matches without writing, or `--summary <file>` for a Markdown report.
 
 The script matches normalized event names, reads numbered stage links from Dokkan Info, and
-writes `wwwroot/data/DokkanStageLinks.json`. The app embeds this catalog at build time: visitors
+writes `wwwroot/data/DokkanStageLinks.json` and `Ocr/StageTitleAliases.json`. It reads the visible
+`Level N: Title` headings using the same curl transport and numbered headings as DokkanWebScraper.
+Scraped English alias pairs are refreshed while reviewed localizations and historical contrasts are retained.
+The app embeds these catalogs at build time: visitors
 make no extra requests. Stages with several difficulties link to the event's difficulty choices.
-Network/parser failures or loss of an existing active match leave the previous catalog intact.
-New unmatched/ambiguous stages appear in the report and render without a link; the data validation
-suite flags missing links before merge. Rebuild/restart after regenerating the catalog.
+Network/parser failures, ambiguous names, or any missing configured stage stop the sync before
+either catalog is written. The data validation suite also requires alias coverage for every configured
+stage. Missing runtime data still permits uploads. Rebuild/restart after regenerating the catalogs.
 
 `scripts/stage-link-overrides.json` holds only reviewed name exceptions:
 - Global Campaign! Special Battle 2025 -> 1722: now named Special Battle 2025; its missions still use the old campaign name.
