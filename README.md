@@ -3,19 +3,21 @@
 
 [>> SITE LINK <<](https://dokkandle.net/daily)
 
-### Coming Soon(tm)
+## Coming Soon(tm)
 * ~~Announcement banner~~
 * ~~Full support of JP clears~~
 * ~~Seasonal leaderboard~~
 * Festival of Battles Day
 
-### Feedback/Suggestions
+## Feedback/Suggestions
 Please submit an [Issue](https://github.com/omni-/DokkanDaily/issues) if you have feedback or suggestions!
 
 Or, if you're more technically inclined, [Submit a Pull Request](https://github.com/omni-/DokkanDaily/pulls) *(no promises on merging!)*
 
-### Nerdy stuff
-__Project TODO List:__
+## Nerdy stuff
+
+### Project TODO List
+
 * ~~Allow merging of username pairs~~
 * Support multiple webhook destinations
 * ~~Set up modified scraper as an azure job/Script updating character json (github actions?)~~
