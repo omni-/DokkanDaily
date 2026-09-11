@@ -14,15 +14,15 @@ namespace Discord.OAuth2
     {
         protected override async Task<AuthenticationTicket> CreateTicketAsync(ClaimsIdentity identity, AuthenticationProperties properties, OAuthTokenResponse tokens)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, Options.UserInformationEndpoint);
+            using var request = new HttpRequestMessage(HttpMethod.Get, Options.UserInformationEndpoint);
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", tokens.AccessToken);
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var response = await Backchannel.SendAsync(request, Context.RequestAborted);
+            using var response = await Backchannel.SendAsync(request, Context.RequestAborted);
             if (!response.IsSuccessStatusCode)
                 throw new HttpRequestException($"Failed to retrieve Discord user information ({response.StatusCode}).");
 
-            var payload = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+            using var payload = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
             var context = new OAuthCreatingTicketContext(new ClaimsPrincipal(identity), properties, Context, Scheme, Options, Backchannel, tokens, payload.RootElement);
 
             context.RunClaimActions();

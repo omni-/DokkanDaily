@@ -27,42 +27,21 @@ namespace DokkanDailyTests
         }
 
         [Test]
-        public void TestRngService()
+        public async Task TestRngService()
         {
-            var mock = mocks.Create<IDokkanDailyRepository>();
-            IRngHelperService rngHelperService = new RngHelperServiceV2(mock.Object, Options.Create<DokkanDailySettings>(new()), mocks.Create<ILogger<RngHelperServiceV2>>().Object);
-
-            mock
-                .Setup(x => x.GetChallengeList(It.IsAny<DateTime?>()))
-                .Returns(Task.FromResult<IEnumerable<DbChallenge>>([]));
-
-            var seed1 = rngHelperService.GetRawSeed();
-            rngHelperService.RollDailySeed();
-            var seed2 = rngHelperService.GetRawSeed();
-
-            Assert.That(seed1, Is.Not.EqualTo(seed2));
-
-            List<string> leaders = [];
-            List<string> categories = [];
-            List<string> linkSkills = [];
-            List<string> dailyTypes = [];
-
-            Assert.DoesNotThrow(() =>
-            {
-                rngHelperService.RollDailySeed();
-
-                rngHelperService.UpdateDailyChallenge();
-
-                rngHelperService.GetDailyChallenge();
-
-                rngHelperService.SetDailySeed(9);
-
-                rngHelperService.Reset();
-
-                Assert.That(rngHelperService.GetRawSeed(), Is.EqualTo(seed1));
-
-                dailyTypes.Add(rngHelperService.GetTodaysDailyType().ToString());
-            });
+            var repository = new Mock<IDokkanDailyRepository>();
+            repository.Setup(x => x.GetChallengeList(It.IsAny<DateTime?>())).ReturnsAsync(Array.Empty<DbChallenge>());
+            var service = new RngHelperServiceV2(repository.Object, Options.Create(new DokkanDailySettings()),
+                Microsoft.Extensions.Logging.Abstractions.NullLogger<RngHelperServiceV2>.Instance);
+            int seed = service.GetRawSeed();
+            await service.RollDailySeed();
+            Assert.That(service.GetRawSeed(), Is.EqualTo(seed + 1));
+            await service.UpdateDailyChallenge();
+            Assert.That((await service.GetDailyChallenge()).Date, Is.EqualTo(DateTime.UtcNow.Date.AddDays(1)));
+            await service.SetDailySeed(9);
+            Assert.That(service.GetRawSeed(), Is.EqualTo(9));
+            await service.Reset();
+            Assert.That(service.GetRawSeed(), Is.EqualTo(seed));
         }
 
         [Test]
@@ -106,7 +85,7 @@ namespace DokkanDailyTests
                 .Setup(x => x.GetChallengeList(It.IsAny<DateTime?>()))
                 .Returns(Task.FromResult(list2.AsEnumerable()));
 
-            Assert.DoesNotThrowAsync(rngHelperService.GetDailyChallenge);
+            Assert.DoesNotThrowAsync(rngHelperService.Reset);
         }
 
         [Test]

@@ -1,4 +1,4 @@
-﻿using DokkanDaily.Models;
+using DokkanDaily.Models;
 using DokkanDaily.Models.Enums;
 
 namespace DokkanDaily.Services.Interfaces
@@ -17,9 +17,9 @@ namespace DokkanDaily.Services.Interfaces
 
         Task Reset();
 
-        void OverrideChallenge(DailyType type, Stage e, LinkSkill link, Category cat, Leader l);
+        Task OverrideChallenge(DailyType type, Stage e, LinkSkill link, Category cat, Leader l, Challenge expected = null);
 
-        void OverrideChallengeType(DailyType type);
+        Task OverrideChallengeType(DailyType type);
 
         int GetRawSeed();
     }

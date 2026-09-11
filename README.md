@@ -44,3 +44,24 @@ stage. Missing runtime data still permits uploads. Rebuild/restart after regener
 Run parser/matching tests with `python -m unittest discover -s scripts/tests -p "test_*.py"`.
 
 See [screenshot stage validation](docs/ocr-stage-validation.md) for conservative upload behavior, runtime verification and research provenance.
+
+### Shared authentication keys
+
+Data Protection keys are stored privately in `data-protection/keys.xml` using
+`DokkanDailySettings:AzureBlobConnectionString`. Production and staging require this
+setting; Development can use local keys only when the connection string is absent.
+Configured storage failures stop startup rather than falling back to incompatible local keys.
+The startup check also reads/protects/unprotects through the key ring before serving requests.
+
+Optional settings (also supported with the existing `DOTNET_` prefix):
+- `DokkanDailySettings:DataProtectionContainerName` (default `data-protection`)
+- `DokkanDailySettings:DataProtectionApplicationName` (default `DokkanDaily`)
+
+Keep both stable across replicas/restarts. Use separate containers for unrelated environments.
+The connection needs container creation/access-policy-read and key blob read/write permissions.
+Existing public containers are rejected. Exclude the key container from storage lifecycle deletion;
+retain old keys so existing cookies and protected session data remain readable. Azure Storage
+protects stored blobs at rest; this configuration does not add application-level XML key encryption.
+Switching from the previous local ring can require a one-time sign-in; local keys are not imported.
+
+See [reliability recovery notes](docs/reliability-recovery.md) for validation and behavior details.

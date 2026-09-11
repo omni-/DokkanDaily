@@ -47,6 +47,48 @@ namespace DokkanDailyTests
         }
 
         [Test]
+        public async Task RepositoryPersistsTheChallengeDateRatherThanTheCurrentDay()
+        {
+            var date = new DateTime(2025, 1, 2);
+            var challenge = new Challenge(DailyType.Category,
+                new Stage("test-stage", Tier.A, "test"), null, new Category("test-category", Tier.A), null, null, date);
+            await repository.InsertChallenge(challenge);
+            var rows = (await repository.GetChallengeList(null)).ToArray();
+            Assert.That(rows, Has.Length.EqualTo(1));
+            Assert.That(rows[0].Date, Is.EqualTo(date));
+        }
+
+        [Test]
+        public async Task DailyWritesAreConcurrentIdempotentAndPreserveLongNames()
+        {
+            var date = new DateTime(2025, 1, 2);
+            // Exercise procedure widths directly, including same-day times and concurrent retries.
+            async Task Write(int stage)
+            {
+                using var connection = new SqlConnection(conn.ConnectionString);
+                await connection.ExecuteAsync("Core.DailyInsert", new {
+                    Event = new string('E', 150), Stage = stage, Date = date.AddHours(stage),
+                    DailyTypeName = "Character", LeaderFullName = new string('L', 200)
+                }, commandType: System.Data.CommandType.StoredProcedure);
+            }
+            await Task.WhenAll(Enumerable.Range(1, 12).Select(Write));
+            await Write(13);
+            var rows = (await repository.GetChallengeList(null)).ToList();
+            Assert.That(rows, Has.Count.EqualTo(1));
+            Assert.That(rows[0].Event, Has.Length.EqualTo(150));
+            Assert.That(rows[0].LeaderFullName, Has.Length.EqualTo(200));
+            Assert.That(rows[0].Date, Is.EqualTo(date));
+            Assert.That(rows[0].Stage, Is.EqualTo(13));
+            using var invalid = new SqlConnection(conn.ConnectionString);
+            Assert.ThrowsAsync<SqlException>(async () => await invalid.ExecuteAsync("Core.DailyInsert", new {
+                Event = "invalid", Stage = 1, Date = date, DailyTypeName = "Character"
+            }, commandType: System.Data.CommandType.StoredProcedure));
+            Assert.That((await repository.GetChallengeList(null)).Single().Stage, Is.EqualTo(13), "constraint failure must roll back the update");
+            await Write(14);
+            Assert.That((await repository.GetChallengeList(null)).Single().Stage, Is.EqualTo(14), "failed writes must release their transaction locks");
+        }
+
+        [Test]
         public async Task TheDatabaseCanRecordNullUsernames()
         {
             List<DbClear> dbClears = [];

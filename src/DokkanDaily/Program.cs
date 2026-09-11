@@ -69,6 +69,8 @@ namespace DokkanDaily
 
             IConfigurationSection configuration = builder.Configuration.GetSection(nameof(DokkanDailySettings));
 
+            DataProtectionConfiguration.Configure(builder.Services, configuration.Get<DokkanDailySettings>(), builder.Environment.IsDevelopment());
+
             builder.Services
                 .Configure<DokkanDailySettings>(configuration)
                 .AddAuthentication(opt =>
