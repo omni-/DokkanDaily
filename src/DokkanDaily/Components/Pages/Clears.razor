@@ -180,7 +180,7 @@
         if (file == null) return;
 
         List<string> allowedFileTypes = [".jpg", ".jpeg", ".png", ".webp", ".avif"];
-        if (!allowedFileTypes.Contains(Path.GetExtension(file.Name)))
+        if (!allowedFileTypes.Contains(Path.GetExtension(file.Name), StringComparer.OrdinalIgnoreCase))
         {
             warningMessage = $"Unsupported file type! Supported filetypes are {string.Join(',', allowedFileTypes)}";
             selectedFiles = [];
@@ -236,7 +236,7 @@
         return attachment?.FileStorageUrl?.AddSasTokenToUri(sasToken);
     }
 
-    private async void OnFileViewClick(FileUploadViewModel attachment)
+    private async Task OnFileViewClick(FileUploadViewModel attachment)
     {
         try
         {

@@ -1,4 +1,4 @@
-﻿using DokkanDaily.Constants;
+using DokkanDaily.Constants;
 using DokkanDaily.Models;
 using DokkanDaily.Services;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -26,7 +26,7 @@ namespace DokkanDaily.Helpers
         #region Helper Functions
         public static IEnumerable<Unit> BuildCharacterDb()
         {
-            Stream s = File.OpenRead("./wwwroot/data/DokkanCharacterData.json");
+            using Stream s = File.OpenRead("./wwwroot/data/DokkanCharacterData.json");
 
             var result = JsonSerializer.Deserialize<IEnumerable<Unit>>(s, InternalConstants.DefaultSerializeOptions);
 
@@ -73,6 +73,9 @@ namespace DokkanDaily.Helpers
 
         public static Unit GetUnit(Leader leader)
             => DokkanConstants.UnitDB.First(x => x.Name == leader.Name && x.Title == leader.Title);
+
+        public static Unit GetUnitOrDefault(Leader leader)
+            => leader is null ? null : DokkanConstants.UnitDB.FirstOrDefault(x => x.Name == leader.Name && x.Title == leader.Title);
 
         public static string FixUsername(string username)
         {

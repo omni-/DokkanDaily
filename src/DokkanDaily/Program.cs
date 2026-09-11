@@ -49,7 +49,7 @@ namespace DokkanDaily
             builder.Services.AddHostedService<Worker>();
 
             builder.Services.AddSingleton<ILeaderboardService, LeaderboardService>();
-            builder.Services.AddSingleton<IRngHelperService, RngHelperServiceV2>();
+            builder.Services.AddSingleton<IRngHelperService, RngService>();
             builder.Services.AddSingleton<IBannerService, BannerService>();
 
             builder.Services.AddTransient<OcrFormatProvider>();
@@ -68,6 +68,8 @@ namespace DokkanDaily
             builder.Services.AddHttpClient<DiscordWebhookClient>();
 
             IConfigurationSection configuration = builder.Configuration.GetSection(nameof(DokkanDailySettings));
+
+            DataProtectionConfiguration.Configure(builder.Services, configuration.Get<DokkanDailySettings>(), builder.Environment.IsDevelopment());
 
             builder.Services
                 .Configure<DokkanDailySettings>(configuration)

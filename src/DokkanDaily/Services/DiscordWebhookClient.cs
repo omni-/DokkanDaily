@@ -32,7 +32,7 @@ namespace DokkanDaily.Services
             _logger.LogInformation("Sending webhooks request: {Msg}", message);
             try
             {
-                MultipartFormDataContent content = new()
+                using MultipartFormDataContent content = new()
                 {
                     { new StringContent(message), "content" }
                 };
@@ -45,7 +45,8 @@ namespace DokkanDaily.Services
                     }
                     catch (Exception e) { _logger.LogError(e, "Failed to add file to MultiPartFormData request"); }
                 }
-                await _httpClient.PostAsync((string)null, content, new CancellationToken());
+                using var response = await _httpClient.PostAsync((string)null, content, CancellationToken.None);
+                response.EnsureSuccessStatusCode();
             }
             catch (Exception ex)
             {

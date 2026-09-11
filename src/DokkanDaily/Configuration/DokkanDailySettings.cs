@@ -4,6 +4,10 @@
     {
         public string AzureBlobConnectionString { get; init; }
 
+        // Keep these stable across instances/restarts; isolate environments with separate containers.
+        public string DataProtectionContainerName { get; init; } = "data-protection";
+        public string DataProtectionApplicationName { get; init; } = "DokkanDaily";
+
         public string AzureBlobContainerName { get; init; }
 
         public string SqlServerConnectionString { get; init; }

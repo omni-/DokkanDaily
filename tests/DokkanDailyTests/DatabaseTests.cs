@@ -47,6 +47,48 @@ namespace DokkanDailyTests
         }
 
         [Test]
+        public async Task RepositoryPersistsTheChallengeDateRatherThanTheCurrentDay()
+        {
+            var date = new DateTime(2025, 1, 2);
+            var challenge = new Challenge(DailyType.Category,
+                new Stage("test-stage", Tier.A, "test"), null, new Category("test-category", Tier.A), null, null, date);
+            await repository.InsertChallenge(challenge);
+            var rows = (await repository.GetChallengeList(null)).ToArray();
+            Assert.That(rows, Has.Length.EqualTo(1));
+            Assert.That(rows[0].Date, Is.EqualTo(date));
+        }
+
+        [Test]
+        public async Task DailyWritesAreConcurrentIdempotentAndPreserveLongNames()
+        {
+            var date = new DateTime(2025, 1, 2);
+            // Exercise procedure widths directly, including same-day times and concurrent retries.
+            async Task Write(int stage)
+            {
+                using var connection = new SqlConnection(conn.ConnectionString);
+                await connection.ExecuteAsync("Core.DailyInsert", new {
+                    Event = new string('E', 150), Stage = stage, Date = date.AddHours(stage),
+                    DailyTypeName = "Character", LeaderFullName = new string('L', 200)
+                }, commandType: System.Data.CommandType.StoredProcedure);
+            }
+            await Task.WhenAll(Enumerable.Range(1, 12).Select(Write));
+            await Write(13);
+            var rows = (await repository.GetChallengeList(null)).ToList();
+            Assert.That(rows, Has.Count.EqualTo(1));
+            Assert.That(rows[0].Event, Has.Length.EqualTo(150));
+            Assert.That(rows[0].LeaderFullName, Has.Length.EqualTo(200));
+            Assert.That(rows[0].Date, Is.EqualTo(date));
+            Assert.That(rows[0].Stage, Is.EqualTo(13));
+            using var invalid = new SqlConnection(conn.ConnectionString);
+            Assert.ThrowsAsync<SqlException>(async () => await invalid.ExecuteAsync("Core.DailyInsert", new {
+                Event = "invalid", Stage = 1, Date = date, DailyTypeName = "Character"
+            }, commandType: System.Data.CommandType.StoredProcedure));
+            Assert.That((await repository.GetChallengeList(null)).Single().Stage, Is.EqualTo(13), "constraint failure must roll back the update");
+            await Write(14);
+            Assert.That((await repository.GetChallengeList(null)).Single().Stage, Is.EqualTo(14), "failed writes must release their transaction locks");
+        }
+
+        [Test]
         public async Task TheDatabaseCanRecordNullUsernames()
         {
             List<DbClear> dbClears = [];
@@ -107,6 +149,98 @@ namespace DokkanDailyTests
 
             Assert.That(users.Count, Is.EqualTo(1));
             Assert.That(users.DiscordId, Is.EqualTo("123456789"));
+        }
+
+        [Test]
+        public async Task FirstDiscordSubmissionAttachesToAnonymousHistory()
+        {
+            var date = new DateTime(2026, 8, 1);
+            DbClear clear = new() { DokkanNickname = "anonymous-first", ClearTime = "0'01\"00.0", ItemlessClear = true };
+            await repository.InsertDailyClears([clear], date);
+            int originalId = await conn.QuerySingleAsync<int>("SELECT DokkanDailyUserId FROM Core.DokkanDailyUser");
+
+            clear = new DbClear
+            {
+                DokkanNickname = clear.DokkanNickname, ClearTime = clear.ClearTime, ItemlessClear = true,
+                DiscordUsername = "new-discord-user", DiscordId = "123456789"
+            };
+            await repository.InsertDailyClears([clear], date.AddDays(1));
+            await repository.InsertDailyClears([clear], date.AddDays(1));
+
+            var user = await conn.QuerySingleAsync<(int Id, string DiscordId, string DiscordUsername)>(
+                "SELECT DokkanDailyUserId AS Id, DiscordId, DiscordUsername FROM Core.DokkanDailyUser");
+            Assert.That(user.Id, Is.EqualTo(originalId));
+            Assert.That(user.DiscordId, Is.EqualTo(clear.DiscordId));
+            Assert.That(user.DiscordUsername, Is.EqualTo(clear.DiscordUsername));
+            Assert.That(await conn.QuerySingleAsync<int>("SELECT COUNT(*) FROM Core.StageClear WHERE DokkanDailyUserId = @originalId", new { originalId }), Is.EqualTo(2));
+        }
+
+        [TestCase(null)]
+        [TestCase("other-id")]
+        public async Task CompetingDiscordClaimsKeepTheirClearsAndAnonymousHistorySeparate(string existingDiscordId)
+        {
+            var date = new DateTime(2026, 8, 1);
+            await repository.InsertDailyClears([
+                new DbClear { DokkanNickname = "shared-name", ClearTime = "0'03\"00.0" }
+            ], date);
+            int anonymousId = await conn.QuerySingleAsync<int>("SELECT DokkanDailyUserId FROM Core.DokkanDailyUser");
+            if (existingDiscordId is not null)
+                await conn.ExecuteAsync("INSERT INTO Core.DokkanDailyUser (DokkanNickname, DiscordUsername, DiscordId) VALUES ('shared-name', 'second-user', @existingDiscordId)", new { existingDiscordId });
+
+            DbClear[] claims = [
+                new() { DokkanNickname = "shared-name", DiscordUsername = "first-user", DiscordId = "first-id", ClearTime = "0'01\"00.0", IsDailyHighscore = true },
+                new() { DokkanNickname = "shared-name", DiscordUsername = "second-user", DiscordId = existingDiscordId ?? "second-id", ClearTime = "0'02\"00.0", ItemlessClear = true }
+            ];
+            await repository.InsertDailyClears(claims, date.AddDays(1));
+            await repository.InsertDailyClears(claims.Reverse(), date.AddDays(1));
+
+            Assert.That(await conn.QuerySingleAsync<int>("SELECT COUNT(*) FROM Core.DokkanDailyUser"), Is.EqualTo(3));
+            Assert.That(await conn.QuerySingleAsync<int>("SELECT COUNT(*) FROM Core.DokkanDailyUser WHERE DokkanDailyUserId = @anonymousId AND DiscordId IS NULL AND DiscordUsername IS NULL", new { anonymousId }), Is.EqualTo(1));
+            Assert.That(await conn.QuerySingleAsync<int>("SELECT COUNT(*) FROM Core.StageClear WHERE DokkanDailyUserId = @anonymousId", new { anonymousId }), Is.EqualTo(1));
+            var rows = (await conn.QueryAsync<(string DiscordId, string ClearTime, bool ItemlessClear, bool IsDailyHighscore)>("""
+                SELECT U.DiscordId, C.ClearTime, C.ItemlessClear, C.IsDailyHighscore
+                FROM Core.StageClear C JOIN Core.DokkanDailyUser U ON U.DokkanDailyUserId = C.DokkanDailyUserId
+                WHERE C.ClearDate = @clearDate
+                """, new { clearDate = date.AddDays(1) })).ToArray();
+            Assert.That(rows, Has.Length.EqualTo(2));
+            foreach (var claim in claims)
+            {
+                var row = rows.Single(x => x.DiscordId == claim.DiscordId);
+                Assert.That(row.ClearTime, Is.EqualTo(claim.ClearTime));
+                Assert.That(row.ItemlessClear, Is.EqualTo(claim.ItemlessClear));
+                Assert.That(row.IsDailyHighscore, Is.EqualTo(claim.IsDailyHighscore));
+            }
+        }
+
+        [TestCase(null)]
+        [TestCase("other-id")]
+        public async Task FirstDiscordSubmissionDoesNotClaimAnotherDiscordUsersNickname(string existingDiscordId)
+        {
+            await conn.ExecuteAsync("INSERT INTO Core.DokkanDailyUser (DokkanNickname, DiscordUsername, DiscordId) VALUES ('shared-name', 'other-user', @existingDiscordId)", new { existingDiscordId });
+            await repository.InsertDailyClears([
+                new DbClear { DokkanNickname = "shared-name", DiscordUsername = "new-user", DiscordId = "new-id", ClearTime = "0'01\"00.0" }
+            ], new DateTime(2026, 8, 1));
+
+            Assert.That(await conn.QuerySingleAsync<int>("SELECT COUNT(*) FROM Core.DokkanDailyUser"), Is.EqualTo(2));
+            Assert.That(await conn.QuerySingleAsync<string>("SELECT DiscordId FROM Core.DokkanDailyUser WHERE DiscordUsername = 'other-user'"), Is.EqualTo(existingDiscordId));
+        }
+
+        [TestCase(null)]
+        [TestCase("existing-id")]
+        public async Task ExistingDiscordAccountTakesPriorityOverAnAnonymousNickname(string existingDiscordId)
+        {
+            await conn.ExecuteAsync("""
+                INSERT INTO Core.DokkanDailyUser (DokkanNickname) VALUES ('shared-name');
+                INSERT INTO Core.DokkanDailyUser (DokkanNickname, DiscordUsername, DiscordId)
+                VALUES ('old-name', 'existing-user', @existingDiscordId);
+                """, new { existingDiscordId });
+            int existingId = await conn.QuerySingleAsync<int>("SELECT DokkanDailyUserId FROM Core.DokkanDailyUser WHERE DiscordUsername = 'existing-user'");
+            await repository.InsertDailyClears([
+                new DbClear { DokkanNickname = "shared-name", DiscordUsername = "existing-user", DiscordId = "existing-id", ClearTime = "0'01\"00.0" }
+            ], new DateTime(2026, 8, 1));
+
+            Assert.That(await conn.QuerySingleAsync<int>("SELECT DokkanDailyUserId FROM Core.StageClear"), Is.EqualTo(existingId));
+            Assert.That(await conn.QuerySingleAsync<int>("SELECT COUNT(*) FROM Core.DokkanDailyUser WHERE DiscordUsername IS NULL AND DiscordId IS NULL"), Is.EqualTo(1));
         }
 
         [Test]

@@ -55,10 +55,22 @@ BEGIN
                OR (C.DiscordId IS NULL
                    AND C.DokkanNickname IS NOT NULL
                    AND DDU.DokkanNickname = C.DokkanNickname)
+               OR (C.DiscordId IS NOT NULL
+                   AND C.DokkanNickname IS NOT NULL
+                   AND DDU.DokkanNickname = C.DokkanNickname
+                   AND DDU.DiscordId IS NULL
+                   AND DDU.DiscordUsername IS NULL
+                   -- A shared nickname cannot identify which Discord account owns this history.
+                   AND NOT EXISTS (
+                       SELECT 1 FROM @Clears OtherClear
+                       WHERE OtherClear.DokkanNickname = C.DokkanNickname
+                         AND OtherClear.DiscordId <> C.DiscordId
+                   ))
             ORDER BY
                 CASE
                     WHEN C.DiscordId IS NOT NULL AND DDU.DiscordId = C.DiscordId THEN 1
-                    WHEN C.DiscordId IS NOT NULL AND DDU.DiscordId IS NULL THEN 2
+                    WHEN C.DiscordId IS NOT NULL AND DDU.DiscordId IS NULL
+                        AND DDU.DiscordUsername = C.DiscordUsername THEN 2
                     WHEN C.DiscordUsername IS NOT NULL AND DDU.DiscordUsername = C.DiscordUsername THEN 3
                     WHEN C.DokkanNickname IS NOT NULL AND DDU.DokkanNickname = C.DokkanNickname THEN 4
                     ELSE 5

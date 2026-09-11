@@ -64,7 +64,7 @@ namespace DokkanDaily.Repository
             DynamicParameters dp = new();
             dp.Add("Event", challenge.TodaysEvent.Name);
             dp.Add("Stage", challenge.TodaysEvent.StageNumber);
-            dp.Add("Date", DateTime.UtcNow.Date);
+            dp.Add("Date", challenge.Date);
             dp.Add("DailyTypeName", challenge.DailyType.ToString());
             switch (challenge.DailyType)
             {
