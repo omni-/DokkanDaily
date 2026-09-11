@@ -371,7 +371,8 @@
 
     async Task SetDailyType()
     {
-        await RngSvc.OverrideChallengeType(Enum.Parse<DailyType>(DailyTypeOverride));
+        var chall = await RngSvc.GetDailyChallenge();
+        await RngSvc.OverrideChallengeType(Enum.Parse<DailyType>(DailyTypeOverride), chall);
     }
 
     async Task SetStage()

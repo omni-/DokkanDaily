@@ -75,11 +75,14 @@ namespace DokkanDaily.Services
             finally { _challengeLock.Release(); }
         }
 
-        public async Task OverrideChallengeType(DailyType type)
+        public async Task OverrideChallengeType(DailyType type, Challenge expected)
         {
+            ArgumentNullException.ThrowIfNull(expected);
             await _challengeLock.WaitAsync();
             try
             {
+                if (!ReferenceEquals(expected, _challenge))
+                    throw new InvalidOperationException("The challenge changed while this edit was pending. Retry the edit.");
                 var current = _challenge;
                 if (current is null || !HasTargetFor(current, type))
                     throw new InvalidOperationException("The current challenge has no target for that daily type.");
