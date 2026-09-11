@@ -35,5 +35,10 @@
         public const string UPLOAD_STATUS_VALID = "valid";
 
         public const string UPLOAD_STATUS_INVALID = "invalid";
+        public const string UPLOAD_STATUS_UNKNOWN = "unknown";
+        public const string STAGE_VALIDATION_TAG = "stagevalidation";
+        public const string STAGE_VALIDATION_REASON_TAG = "stagevalidationreason";
+        public const string OBSERVED_EVENT_TAG = "observedevent";
+        public const string OBSERVED_STAGE_TAG = "observedstage";
     }
 }

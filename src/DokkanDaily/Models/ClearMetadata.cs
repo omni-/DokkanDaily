@@ -2,6 +2,10 @@
 {
     public class ClearMetadata
     {
+        public string EventTitle { get; init; }
+
+        public string StageTitle { get; init; }
+
         public string Nickname { get; init; }
 
         public bool ItemlessClear { get; init; }

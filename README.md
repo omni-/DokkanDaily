@@ -39,3 +39,5 @@ suite flags missing links before merge. Rebuild/restart after regenerating the c
 - Collection of Epic Battles -> 1769: the renewed two-stage Saiyan/Planet Namek event used by our current catalog, rather than original event 760.
 
 Run parser/matching tests with `python -m unittest discover -s scripts/tests -p "test_*.py"`.
+
+See [screenshot stage validation](docs/ocr-stage-validation.md) for conservative upload behavior, runtime verification and research provenance.
