@@ -142,7 +142,7 @@
                     }
 
                     bool finalized = metadata.Value.Metadata.TryGetValue(AzureConstants.UPLOAD_STATUS_TAG, out string uploadStatus)
-                        ? uploadStatus == AzureConstants.UPLOAD_STATUS_VALID
+                    ? uploadStatus == AzureConstants.UPLOAD_STATUS_VALID
                         : metadata.Value.Metadata.ContainsKey(AzureConstants.CLEAR_TIME_TAG)
                             && metadata.Value.Metadata.ContainsKey(AzureConstants.ITEMLESS_TAG);
 
@@ -212,17 +212,8 @@
                 ContentType = file.ContentType
             };
 
-            if (uploaded.Validation.Outcome == "unknown")
-            {
-                validationMessage = uploaded.Validation.Reason == "missing-target-localized-names"
-                    ? "Screenshot saved, but stage-name verification is not available for this challenge yet. It will not count toward scoring while unverified"
-                    : "Screenshot saved, but we could not verify the event, stage, or difficulty. It will not count toward scoring while unverified. If the details are hard to read, try a clearer screenshot";
-            }
-            else
-            {
-                fileUploadViewModels.Add(fileUploadViewModel);
-                displayMessage = file.Name + " uploaded";
-            }
+            fileUploadViewModels.Add(fileUploadViewModel);
+            displayMessage = file.Name + " uploaded";
         }
         catch (UploadRejectedException ex)
         {

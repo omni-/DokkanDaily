@@ -207,12 +207,39 @@
   },
   {
     "eventId": 774,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Red Ribbon Army Edition]",
+        "stageTitle": "Vs. Red Ribbon Army",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/774"
+      }
+    ]
+  },
+  {
+    "eventId": 774,
     "stageNumber": 2,
     "aliases": [
       {
         "eventTitle": "Ultimate Red Zone",
         "stageTitle": "Red Ribbon Army Edition Stage 2",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Red Ribbon Army Edition]",
+        "stageTitle": "Vs. #19 & Dr. Gero",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/774"
+      }
+    ]
+  },
+  {
+    "eventId": 774,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Red Ribbon Army Edition]",
+        "stageTitle": "Vs. #16, #17 & #18",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/774"
       }
     ]
   },
@@ -224,6 +251,11 @@
         "eventTitle": "Ultimate Red Zone",
         "stageTitle": "Red Ribbon Army Edition Stage 4",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Red Ribbon Army Edition]",
+        "stageTitle": "Vs. Cell",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/774"
       }
     ]
   },
@@ -245,6 +277,17 @@
         "eventTitle": "Ultimate Red Zone [Red Ribbon Army Edition]",
         "stageTitle": "Vs. Gamma 1 & Gamma 2",
         "provenance": "Numbered Japanese community catalog; English localization by Codex, independently of submitted metadata."
+      }
+    ]
+  },
+  {
+    "eventId": 774,
+    "stageNumber": 6,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Red Ribbon Army Edition]",
+        "stageTitle": "Vs. Cell Max",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/774"
       }
     ]
   },
@@ -654,6 +697,17 @@
     ]
   },
   {
+    "eventId": 787,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Majin Buu Saga]",
+        "stageTitle": "Vs. Buu (Kid)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/787"
+      }
+    ]
+  },
+  {
     "eventId": 788,
     "stageNumber": 1,
     "aliases": [
@@ -736,6 +790,11 @@
         "eventTitle": "Supreme Magnificent Battle",
         "stageTitle": "Dragon Ball Super Edition Stage 6",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle [Dragon Ball Super Edition]",
+        "stageTitle": "Vs. Goku (Ultra Instinct)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/790"
       }
     ]
   },
@@ -1235,6 +1294,11 @@
         "eventTitle": "至上のバトルスペクタクル 超戦士集結編",
         "stageTitle": "ドラゴンボールZ 後期",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle [Gathering of Super Warriors Edition]",
+        "stageTitle": "Dragon Ball Z Part 2 (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1701"
       }
     ]
   },
@@ -1251,6 +1315,11 @@
         "eventTitle": "Supreme Magnificent Battle\n[Gathering of Super Warriors Edition]",
         "stageTitle": "Dragon Ball GT",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle [Gathering of Super Warriors Edition]",
+        "stageTitle": "Dragon Ball GT (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1701"
       }
     ]
   },
@@ -1272,6 +1341,11 @@
         "eventTitle": "至上のバトルスペクタクル 超戦士集結編",
         "stageTitle": "ドラゴンボール超 前期",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle [Gathering of Super Warriors Edition]",
+        "stageTitle": "Dragon Ball Super Part 1 (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1701"
       }
     ]
   },
@@ -1288,6 +1362,11 @@
         "eventTitle": "至上のバトルスペクタクル 超戦士集結編",
         "stageTitle": "ドラゴンボール超 後期",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle [Gathering of Super Warriors Edition]",
+        "stageTitle": "Dragon Ball Super Part 2 (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1701"
       }
     ]
   },
@@ -1299,6 +1378,11 @@
         "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
         "stageTitle": "Saiyan Saga",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
+        "stageTitle": "Saiyan Saga (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1702"
       }
     ]
   },
@@ -1310,6 +1394,11 @@
         "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
         "stageTitle": "Planet Namek Saga",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
+        "stageTitle": "Planet Namek Saga (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1702"
       }
     ]
   },
@@ -1326,6 +1415,11 @@
         "eventTitle": "究極のレッドゾーン 孫悟空の軌跡編",
         "stageTitle": "人造人間/セル編",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
+        "stageTitle": "Androids/Cell Saga (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1702"
       }
     ]
   },
@@ -1342,6 +1436,11 @@
         "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
         "stageTitle": "Majin Buu Saga",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
+        "stageTitle": "Majin Buu Saga (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1702"
       }
     ]
   },
@@ -1358,6 +1457,11 @@
         "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
         "stageTitle": "God of Destruction Beerus Saga",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
+        "stageTitle": "God of Destruction Beerus Saga (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1702"
       }
     ]
   },
@@ -1369,6 +1473,11 @@
         "eventTitle": "Ultimate Red Zone",
         "stageTitle": "Goku's Story Edition Stage 6",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
+        "stageTitle": "Revival of Frieza Saga (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1702"
       }
     ]
   },
@@ -1385,6 +1494,11 @@
         "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
         "stageTitle": "Universe 6 Saga",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
+        "stageTitle": "Universe 6 Saga (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1702"
       }
     ]
   },
@@ -1401,6 +1515,11 @@
         "eventTitle": "究極のレッドゾーン 孫悟空の軌跡編",
         "stageTitle": "未来トランクス編",
         "provenance": "Codex Japanese localization of visually audited text; numbered English stage independently catalog-verified. Human localization confirmation not claimed."
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
+        "stageTitle": "Future Trunks Saga (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1702"
       }
     ]
   },
@@ -1417,6 +1536,11 @@
         "eventTitle": "究極のレッドゾーン 孫悟空の軌跡編",
         "stageTitle": "宇宙サバイバル編",
         "provenance": "Codex Japanese localization of visually audited text; numbered English stage independently catalog-verified. Human localization confirmation not claimed."
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Goku's Story Edition]",
+        "stageTitle": "Universe Survival Saga (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1702"
       }
     ]
   },
@@ -1428,6 +1552,11 @@
         "eventTitle": "Ultimate Red Zone",
         "stageTitle": "Vegeta's Story Edition Stage 1",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Vegeta's Story Edition]",
+        "stageTitle": "Saiyan Saga (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1703"
       }
     ]
   },
@@ -1444,6 +1573,11 @@
         "eventTitle": "Ultimate Red Zone [Vegeta's Story Edition]",
         "stageTitle": "Planet Namek Saga",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Vegeta's Story Edition]",
+        "stageTitle": "Planet Namek Saga (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1703"
       }
     ]
   },
@@ -1460,6 +1594,11 @@
         "eventTitle": "Ultimate Red Zone [Vegeta's Story Edition]",
         "stageTitle": "Androids/Cell Saga",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Vegeta's Story Edition]",
+        "stageTitle": "Androids/Cell Saga (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1703"
       }
     ]
   },
@@ -1476,6 +1615,11 @@
         "eventTitle": "Ultimate Red Zone [Vegeta's Story Edition]",
         "stageTitle": "Majin Buu Saga",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Vegeta's Story Edition]",
+        "stageTitle": "Majin Buu Saga (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1703"
       }
     ]
   },
@@ -1492,6 +1636,11 @@
         "eventTitle": "究極のレッドゾーン ベジータの軌跡編",
         "stageTitle": "破壊神ビルス編",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Vegeta's Story Edition]",
+        "stageTitle": "God of Destruction Beerus Saga (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1703"
       }
     ]
   },
@@ -1503,6 +1652,11 @@
         "eventTitle": "Ultimate Red Zone",
         "stageTitle": "Vegeta's Story Edition Stage 6",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Vegeta's Story Edition]",
+        "stageTitle": "Revival of Frieza Saga (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1703"
       }
     ]
   },
@@ -1514,6 +1668,22 @@
         "eventTitle": "Ultimate Red Zone [Vegeta's Story Edition]",
         "stageTitle": "Universe 6 Saga",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Vegeta's Story Edition]",
+        "stageTitle": "Universe 6 Saga (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1703"
+      }
+    ]
+  },
+  {
+    "eventId": 1703,
+    "stageNumber": 8,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Vegeta's Story Edition]",
+        "stageTitle": "Future Trunks Saga (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1703"
       }
     ]
   },
@@ -1535,6 +1705,11 @@
         "eventTitle": "Ultimate Red Zone [Vegeta's Story Edition]",
         "stageTitle": "Universe Survival Saga",
         "provenance": "Numbered Japanese community catalog; English localization by Codex, independently of submitted metadata."
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Vegeta's Story Edition]",
+        "stageTitle": "Universe Survival Saga (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1703"
       }
     ]
   },
@@ -1589,6 +1764,11 @@
         "eventTitle": "10周年!Anniversary Battle",
         "stageTitle": "10th anniversary 後編",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "10th Anniv.! Anniversary Battle",
+        "stageTitle": "10th Anniversary Part 2",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1705"
       }
     ]
   },
@@ -1605,6 +1785,11 @@
         "eventTitle": "Ultimate Red Zone [DB Saga]",
         "stageTitle": "Vs. Reich Pilaf",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [DB Saga]",
+        "stageTitle": "Vs. Reich Pilaf (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1715"
       }
     ]
   },
@@ -1621,6 +1806,11 @@
         "eventTitle": "究極のレッドゾーン 少年編",
         "stageTitle": "第21回天下一武道会",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [DB Saga]",
+        "stageTitle": "The 21st World Tournament (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1715"
       }
     ]
   },
@@ -1637,6 +1827,11 @@
         "eventTitle": "Ultimate Red Zone",
         "stageTitle": "DB Saga Stage 3",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [DB Saga]",
+        "stageTitle": "Vs. Red Ribbon Army (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1715"
       }
     ]
   },
@@ -1653,6 +1848,11 @@
         "eventTitle": "Ultimate Red Zone [DB Saga]",
         "stageTitle": "Vs. Baba's Fighters",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [DB Saga]",
+        "stageTitle": "Vs. Baba's Fighters (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1715"
       }
     ]
   },
@@ -1669,6 +1869,11 @@
         "eventTitle": "究極のレッドゾーン 少年編",
         "stageTitle": "第22回天下一武道会",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [DB Saga]",
+        "stageTitle": "The 22nd World Tournament (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1715"
       }
     ]
   },
@@ -1685,6 +1890,11 @@
         "eventTitle": "Ultimate Red Zone",
         "stageTitle": "DB Saga Stage 6",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [DB Saga]",
+        "stageTitle": "Vs. Demon King Piccolo (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1715"
       }
     ]
   },
@@ -1993,6 +2203,11 @@
         "eventTitle": "Supreme Magnificent Battle\n[Next-Generation Saiyans Edition]",
         "stageTitle": "Vs. Goten (Kid)",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle [Next-Generation Saiyans Edition]",
+        "stageTitle": "Vs. Goten (Kid) (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1726"
       }
     ]
   },
@@ -2019,6 +2234,22 @@
         "eventTitle": "Supreme Magnificent Battle [Next-Generation Saiyans Edition]",
         "stageTitle": "Vs. Trunks (Kid)",
         "provenance": "Numbered Japanese community catalog; English localization by Codex, independently of submitted metadata."
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle [Next-Generation Saiyans Edition]",
+        "stageTitle": "Vs. Trunks (Kid) (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1726"
+      }
+    ]
+  },
+  {
+    "eventId": 1726,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle [Next-Generation Saiyans Edition]",
+        "stageTitle": "Vs. Gohan (Teen) (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1726"
       }
     ]
   },
@@ -2030,6 +2261,44 @@
         "eventTitle": "Supreme Magnificent Battle\n[Next-Generation Saiyans Edition]",
         "stageTitle": "Vs. Gohan & Goten & Trunks Part 1",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Supreme Magnificent Battle [Next-Generation Saiyans Edition]",
+        "stageTitle": "Vs. Gohan & Goten & Trunks Part 1 (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1726"
+      }
+    ]
+  },
+  {
+    "eventId": 1726,
+    "stageNumber": 5,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle [Next-Generation Saiyans Edition]",
+        "stageTitle": "Vs. Gohan & Goten & Trunks Part 2 (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1726"
+      }
+    ]
+  },
+  {
+    "eventId": 1729,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Pure Saiyans Edition]",
+        "stageTitle": "Vs. Raditz (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1729"
+      }
+    ]
+  },
+  {
+    "eventId": 1729,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Pure Saiyans Edition]",
+        "stageTitle": "Vs. Nappa & Vegeta (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1729"
       }
     ]
   },
@@ -2041,6 +2310,22 @@
         "eventTitle": "Ultimate Red Zone",
         "stageTitle": "Pure Saiyans Edition Stage 3",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Pure Saiyans Edition]",
+        "stageTitle": "Vs. Majin Vegeta (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1729"
+      }
+    ]
+  },
+  {
+    "eventId": 1729,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Pure Saiyans Edition]",
+        "stageTitle": "Vs. Cabba (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1729"
       }
     ]
   },
@@ -2052,6 +2337,11 @@
         "eventTitle": "Ultimate Red Zone",
         "stageTitle": "Pure Saiyans Edition Stage 5",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Pure Saiyans Edition]",
+        "stageTitle": "Vs. Caulifla & Kale (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1729"
       }
     ]
   },
@@ -2063,6 +2353,22 @@
         "eventTitle": "Ultimate Red Zone",
         "stageTitle": "Pure Saiyans Edition Stage 6",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Pure Saiyans Edition]",
+        "stageTitle": "Vs. Broly (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1729"
+      }
+    ]
+  },
+  {
+    "eventId": 1733,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [DAIMA Edition]",
+        "stageTitle": "Stage 1 (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1733"
       }
     ]
   },
@@ -2074,6 +2380,11 @@
         "eventTitle": "Ultimate Red Zone",
         "stageTitle": "DAIMA Edition Stage 2",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [DAIMA Edition]",
+        "stageTitle": "Stage 2 (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1733"
       }
     ]
   },
@@ -2090,6 +2401,22 @@
         "eventTitle": "究極のレッドゾーン",
         "stageTitle": "DAIMA編ステージ3",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [DAIMA Edition]",
+        "stageTitle": "Stage 3 (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1733"
+      }
+    ]
+  },
+  {
+    "eventId": 1736,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Artificial Life Forms Edition]",
+        "stageTitle": "Vs. Meta-Rilldo (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1736"
       }
     ]
   },
@@ -2101,6 +2428,22 @@
         "eventTitle": "Ultimate Red Zone",
         "stageTitle": "Artificial Life Forms Edition Stage 2",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Artificial Life Forms Edition]",
+        "stageTitle": "Vs. Baby (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1736"
+      }
+    ]
+  },
+  {
+    "eventId": 1736,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Artificial Life Forms Edition]",
+        "stageTitle": "Vs. Metal Cooler (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1736"
       }
     ]
   },
@@ -2112,6 +2455,44 @@
         "eventTitle": "Ultimate Red Zone",
         "stageTitle": "Artificial Life Forms Edition Stage 4",
         "provenance": "retained-v2-corpus-alias"
+      },
+      {
+        "eventTitle": "Ultimate Red Zone [Artificial Life Forms Edition]",
+        "stageTitle": "Vs. Bio-Broly (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1736"
+      }
+    ]
+  },
+  {
+    "eventId": 1736,
+    "stageNumber": 5,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Artificial Life Forms Edition]",
+        "stageTitle": "Vs. Gamma 1 & Gamma 2 (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1736"
+      }
+    ]
+  },
+  {
+    "eventId": 1736,
+    "stageNumber": 6,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone [Artificial Life Forms Edition]",
+        "stageTitle": "Vs. Cell Max (5 Attempts Max)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1736"
+      }
+    ]
+  },
+  {
+    "eventId": 1742,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "11th Anniversary! Special Battle Part 1",
+        "stageTitle": "Stage 1",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1742"
       }
     ]
   },
@@ -2127,6 +2508,72 @@
     ]
   },
   {
+    "eventId": 1745,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone: RE [GT Edition]",
+        "stageTitle": "Vs. Formidable Foes of the Universe",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1745"
+      }
+    ]
+  },
+  {
+    "eventId": 1745,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone: RE [GT Edition]",
+        "stageTitle": "Vs. Super #17",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1745"
+      }
+    ]
+  },
+  {
+    "eventId": 1745,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone: RE [GT Edition]",
+        "stageTitle": "Vs. Omega Shenron",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1745"
+      }
+    ]
+  },
+  {
+    "eventId": 1746,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle: RE [Universe Survival Saga]",
+        "stageTitle": "Vs. Fighters of Universe 7",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1746"
+      }
+    ]
+  },
+  {
+    "eventId": 1746,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle: RE [Universe Survival Saga]",
+        "stageTitle": "Vs. Goku & Vegeta",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1746"
+      }
+    ]
+  },
+  {
+    "eventId": 1746,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle: RE [Universe Survival Saga]",
+        "stageTitle": "Vs. Goku & Frieza",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1746"
+      }
+    ]
+  },
+  {
     "eventId": 1751,
     "stageNumber": 1,
     "aliases": [
@@ -2134,6 +2581,17 @@
         "eventTitle": "Seriously Serious! All-Out Battles 2",
         "stageTitle": "Stage 1",
         "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1751,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Seriously Serious! All-Out Battles 2",
+        "stageTitle": "Stage 2",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1751"
       }
     ]
   },
@@ -2160,6 +2618,127 @@
     ]
   },
   {
+    "eventId": 1751,
+    "stageNumber": 5,
+    "aliases": [
+      {
+        "eventTitle": "Seriously Serious! All-Out Battles 2",
+        "stageTitle": "Stage 5",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1751"
+      }
+    ]
+  },
+  {
+    "eventId": 1752,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle: RE [vs. Five Great Super Saiyans]",
+        "stageTitle": "Vs. Hybrid Saiyans",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1752"
+      }
+    ]
+  },
+  {
+    "eventId": 1752,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle: RE [vs. Five Great Super Saiyans]",
+        "stageTitle": "Vs. Vegeta",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1752"
+      }
+    ]
+  },
+  {
+    "eventId": 1752,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle: RE [vs. Five Great Super Saiyans]",
+        "stageTitle": "Vs. Goku",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1752"
+      }
+    ]
+  },
+  {
+    "eventId": 1761,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle: RE [Battle of Gods]",
+        "stageTitle": "Vs. Vegeta",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1761"
+      }
+    ]
+  },
+  {
+    "eventId": 1761,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle: RE [Battle of Gods]",
+        "stageTitle": "Vs. Goku",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1761"
+      }
+    ]
+  },
+  {
+    "eventId": 1762,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle: RE [The Tree of Might]",
+        "stageTitle": "Vs. Gohan (Kid)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1762"
+      }
+    ]
+  },
+  {
+    "eventId": 1762,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle: RE [The Tree of Might]",
+        "stageTitle": "Vs. Goku",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1762"
+      }
+    ]
+  },
+  {
+    "eventId": 1765,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone: RE [Super Hero Edition]",
+        "stageTitle": "Vs. Gamma 2",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1765"
+      }
+    ]
+  },
+  {
+    "eventId": 1765,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone: RE [Super Hero Edition]",
+        "stageTitle": "Vs. Gamma 1",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1765"
+      }
+    ]
+  },
+  {
+    "eventId": 1765,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone: RE [Super Hero Edition]",
+        "stageTitle": "Vs. Cell Max",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1765"
+      }
+    ]
+  },
+  {
     "eventId": 1766,
     "stageNumber": 1,
     "aliases": [
@@ -2178,6 +2757,50 @@
         "eventTitle": "Supreme Magnificent Battle: RE [DAIMA Edition]",
         "stageTitle": "Vs. Goku",
         "provenance": "Public game-data catalog mirror; numbered event/stage and English title verified."
+      }
+    ]
+  },
+  {
+    "eventId": 1768,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Special Battle 2026",
+        "stageTitle": "Stage 1",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1768"
+      }
+    ]
+  },
+  {
+    "eventId": 1768,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Special Battle 2026",
+        "stageTitle": "Stage 2",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1768"
+      }
+    ]
+  },
+  {
+    "eventId": 1769,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Collection of Epic Battles",
+        "stageTitle": "Saiyan Saga",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1769"
+      }
+    ]
+  },
+  {
+    "eventId": 1769,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Collection of Epic Battles",
+        "stageTitle": "Planet Namek Saga",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1769"
       }
     ]
   }
