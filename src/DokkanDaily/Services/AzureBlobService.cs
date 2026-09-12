@@ -100,11 +100,15 @@ namespace DokkanDaily.Services
                 var (container, _) = await GetOrCreate(bucket);
                 string fileName = DokkanDailyHelper.BuildBlobName(userFileName, discordId);
                 _logger.LogInformation("Uploading to `{Container}/{File}`...", container.Name, fileName);
-                BlobClient blob = await StoreClearAsync(container, fileName, contentType, uploadStream, tags,
-                    remoteIp, parsedClear?.Nickname, confirmReplacement);
+                ClearStorageResult stored = await StoreClearAsync(container, fileName, contentType, uploadStream, tags,
+                    remoteIp, parsedClear?.Nickname, confirmReplacement, _logger);
                 _logger.LogInformation("Finished Azure upload.");
 
-                return new(blob, new(tags[AzureConstants.STAGE_VALIDATION_TAG], tags[AzureConstants.STAGE_VALIDATION_REASON_TAG]));
+                return new(stored.Blob, new(tags[AzureConstants.STAGE_VALIDATION_TAG], tags[AzureConstants.STAGE_VALIDATION_REASON_TAG]))
+                {
+                    RemovedClearNames = stored.RemovedClearNames,
+                    ReplacementIncomplete = stored.ReplacementIncomplete
+                };
             }
             catch (UploadRejectedException)
             {
@@ -123,9 +127,11 @@ namespace DokkanDaily.Services
             }
         }
 
-        internal static async Task<BlobClient> StoreClearAsync(BlobContainerClient container, string fileName,
+        internal sealed record ClearStorageResult(BlobClient Blob, IReadOnlyList<string> RemovedClearNames, bool ReplacementIncomplete);
+
+        internal static async Task<ClearStorageResult> StoreClearAsync(BlobContainerClient container, string fileName,
             string contentType, Stream uploadStream, IDictionary<string, string> metadata,
-            string remoteIp, string nickname, Func<IEnumerable<string>, Task<bool>> confirmReplacement)
+            string remoteIp, string nickname, Func<IEnumerable<string>, Task<bool>> confirmReplacement, ILogger logger = null)
         {
             List<BlobItem> previousClears = await FindPreviousClears(container, remoteIp, nickname);
             if (previousClears.Count > 0 && (confirmReplacement is null ||
@@ -141,8 +147,7 @@ namespace DokkanDaily.Services
                 Tags = new Dictionary<string, string> { { AzureConstants.DATE_TAG, DokkanDailyHelper.GetUtcNowDateTag() } },
                 Metadata = metadata
             });
-            await DeletePreviousClears(container, blob, previousClears);
-            return blob;
+            return await DeletePreviousClears(container, blob, previousClears, logger);
         }
 
         internal static bool HasSameClearIdentity(IDictionary<string, string> metadata, string remoteIp, string nickname)
@@ -175,30 +180,42 @@ namespace DokkanDaily.Services
             return previousClears;
         }
 
-        private static async Task DeletePreviousClears(BlobContainerClient container, BlobClient replacement, IReadOnlyList<BlobItem> previousClears)
+        private static async Task<ClearStorageResult> DeletePreviousClears(BlobContainerClient container, BlobClient replacement,
+            IReadOnlyList<BlobItem> previousClears, ILogger logger)
         {
-            int deletedCount = 0;
-            try
+            List<string> removedClearNames = [];
+            bool replacementIncomplete = false;
+            foreach (BlobItem clear in previousClears)
             {
-                foreach (BlobItem clear in previousClears)
+                // Without the observed version, deletion would be unconditional.
+                if (clear.Properties.ETag is null)
+                {
+                    replacementIncomplete = true;
+                    logger?.LogWarning("Cannot replace clear `{File}` without an observed ETag", clear.Name);
+                    continue;
+                }
+                try
                 {
                     // Do not delete a clear that changed while the confirmation was open.
                     await container.GetBlobClient(clear.Name).DeleteAsync(
                         DeleteSnapshotsOption.IncludeSnapshots,
                         new BlobRequestConditions { IfMatch = clear.Properties.ETag });
-                    deletedCount++;
+                    removedClearNames.Add(clear.Name);
+                }
+                catch (RequestFailedException ex) when (ex.Status == 404)
+                {
+                    // Another request already removed this clear.
+                    removedClearNames.Add(clear.Name);
+                }
+                catch (Exception ex)
+                {
+                    // The new clear is committed. A delete response may have been lost;
+                    // rolling it back could discard the only remaining screenshot.
+                    replacementIncomplete = true;
+                    logger?.LogWarning(ex, "New clear saved, but previous clear `{File}` could not be removed", clear.Name);
                 }
             }
-            catch (RequestFailedException ex) when (deletedCount == 0 && ex.Status is 404 or 412)
-            {
-                await replacement.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
-                throw new UploadRejectedException("Your previous clear changed during replacement, so this upload was canceled");
-            }
-            catch
-            {
-                // A delete may have succeeded even if its response was lost. Keep the new clear.
-                throw new UploadRejectedException("Your new clear was saved, but the previous screenshot could not be removed. You do not need to upload again");
-            }
+            return new(replacement, removedClearNames.ToArray(), replacementIncomplete);
         }
 
         public async Task<IAsyncDisposable> AcquireResetBarrierAsync()

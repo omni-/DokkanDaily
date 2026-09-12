@@ -41,6 +41,10 @@
     {
         <div class="alert alert-warning" role="status">@validationMessage.</div>
     }
+    @if (replacementMessage.Length > 0)
+    {
+        <div class="alert alert-warning" role="status">@replacementMessage.</div>
+    }
     <div class="container clear-box text-center">
         <h1>Today's clears</h1>
         <p>Keep the event name, stage name, and difficulty visible in your clear-details screenshot.</p>
@@ -115,6 +119,7 @@
     private string warningMessage = "";
     private string displayMessage = "";
     private string validationMessage = "";
+    private string replacementMessage = "";
     private List<IBrowserFile> loadedFiles = new();
     private bool fileLoading;
     private string Message = "No file(s) selected";
@@ -182,7 +187,10 @@
     }
     private async Task OnUploadSubmit()
     {
-        if (fileLoading) return;
+        if (fileLoading)
+        {
+            return;
+        }
         fileLoading = true;
         try
         {
@@ -203,7 +211,7 @@
         string discordUsername = await authStateProvider.GetUsernameFromDiscordAuthClaim();
         string discordId = await authStateProvider.GetIdFromDiscordAuthClaim();
 
-        var file = selectedFiles.FirstOrDefault();
+        IBrowserFile file = selectedFiles.FirstOrDefault();
         if (file == null) return;
 
         List<string> allowedFileTypes = [".jpg", ".jpeg", ".png", ".webp", ".avif"];
@@ -216,13 +224,13 @@
 
         warningMessage = "";
         validationMessage = "";
+        replacementMessage = "";
         displayMessage = "";
         this.StateHasChanged();
 
-        IEnumerable<string> replacedClearNames = [];
         try
         {
-            var uploaded = await BlobSvc.UploadToAzureAsync(
+            ScreenshotUploadResult uploaded = await BlobSvc.UploadToAzureAsync(
                 file.Name,
                 file.ContentType,
                 file, challengeModel,
@@ -233,11 +241,9 @@
                 confirmReplacement: async previousClears =>
                 {
                     await using IJSObjectReference dialogModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/clear-replacement.js");
-                    bool confirmed = await dialogModule.InvokeAsync<bool>("confirmReplacement", CancellationToken.None, replacementDialog);
-                    if (confirmed) replacedClearNames = previousClears;
-                    return confirmed;
+                    return await dialogModule.InvokeAsync<bool>("confirmReplacement", CancellationToken.None, replacementDialog);
                 });
-            var blobClient = uploaded.Blob;
+            Azure.Storage.Blobs.BlobClient blobClient = uploaded.Blob;
 
             FileUploadViewModel fileUploadViewModel = new FileUploadViewModel()
             {
@@ -246,9 +252,13 @@
                 ContentType = file.ContentType
             };
 
-            fileUploadViewModels.RemoveAll(clear => replacedClearNames.Contains(clear.FileName));
+            fileUploadViewModels.RemoveAll(clear => uploaded.RemovedClearNames.Contains(clear.FileName));
             fileUploadViewModels.Add(fileUploadViewModel);
             displayMessage = file.Name + " uploaded";
+            if (uploaded.ReplacementIncomplete)
+            {
+                replacementMessage = "Your new clear was saved, but one or more previous screenshots could not be removed. You do not need to upload again";
+            }
         }
         catch (UploadRejectedException ex)
         {

@@ -37,21 +37,23 @@ public class ClearReplacementTests
     [TestCase(false, false, 0)]
     [TestCase(true, false, 0)]
     [TestCase(true, true, 0)]
+    [TestCase(true, false, 404)]
     [TestCase(true, false, 412)]
     [TestCase(true, false, 500)]
-    public async Task OnlyDeletesAfterConfirmationAndSuccessfulUpload(bool confirmed, bool uploadFails, int deleteStatus)
+    [TestCase(true, false, 0, false)]
+    public async Task OnlyDeletesAfterConfirmationAndSuccessfulUpload(bool confirmed, bool uploadFails, int deleteStatus, bool hasEtag = true)
     {
         List<string> operations = [];
-        var container = new Mock<BlobContainerClient>();
-        var previous = new Mock<BlobClient>();
-        var replacement = new Mock<BlobClient>();
-        var etag = new ETag("previous-version");
-        var previousItem = BlobsModelFactory.BlobItem(name: "previous.png",
+        Mock<BlobContainerClient> container = new Mock<BlobContainerClient>();
+        Mock<BlobClient> previous = new Mock<BlobClient>();
+        Mock<BlobClient> replacement = new Mock<BlobClient>();
+        ETag etag = new ETag("previous-version");
+        BlobItem previousItem = BlobsModelFactory.BlobItem(name: "previous.png",
             metadata: Identity("192.0.2.1", "Goku"),
-            properties: BlobsModelFactory.BlobItemProperties(accessTierInferred: false, eTag: etag));
-        var otherItem = BlobsModelFactory.BlobItem(name: "other.png",
+            properties: BlobsModelFactory.BlobItemProperties(accessTierInferred: false, eTag: hasEtag ? etag : null));
+        BlobItem otherItem = BlobsModelFactory.BlobItem(name: "other.png",
             metadata: Identity("192.0.2.1", "Vegeta"));
-        var page = Page<BlobItem>.FromValues([previousItem, otherItem], null, Mock.Of<Response>());
+        Page<BlobItem> page = Page<BlobItem>.FromValues([previousItem, otherItem], null, Mock.Of<Response>());
         container.Setup(c => c.GetBlobsAsync(BlobTraits.Metadata, BlobStates.None, null, default))
             .Returns(AsyncPageable<BlobItem>.FromPages([page]));
         container.Setup(c => c.GetBlobClient("previous.png")).Returns(previous.Object);
@@ -69,12 +71,8 @@ public class ClearReplacementTests
             .Returns(() => deleteStatus == 0
                 ? Task.FromResult(Mock.Of<Response>())
                 : Task.FromException<Response>(new RequestFailedException(deleteStatus, "Delete failed")));
-        replacement.Setup(b => b.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots, null, default))
-            .Callback(() => operations.Add("rollback"))
-            .ReturnsAsync(Response.FromValue(true, Mock.Of<Response>()));
-
-        using var stream = new MemoryStream([1, 2, 3]);
-        Task<BlobClient> Store() => AzureBlobService.StoreClearAsync(container.Object, "replacement.png", "image/png",
+        using MemoryStream stream = new MemoryStream([1, 2, 3]);
+        Task<AzureBlobService.ClearStorageResult> Store() => AzureBlobService.StoreClearAsync(container.Object, "replacement.png", "image/png",
             stream, Identity("192.0.2.1", "Goku"), "192.0.2.1", "Goku", names =>
             {
                 Assert.That(names, Is.EqualTo(new[] { "previous.png" }));
@@ -92,26 +90,54 @@ public class ClearReplacementTests
             Assert.ThrowsAsync<IOException>(async () => await Store());
             Assert.That(operations, Is.EqualTo(new[] { "confirm", "upload" }));
         }
-        else if (deleteStatus != 0)
-        {
-            var error = Assert.ThrowsAsync<UploadRejectedException>(async () => await Store());
-            if (deleteStatus == 412)
-            {
-                Assert.That(operations, Is.EqualTo(new[] { "confirm", "upload", "delete", "rollback" }));
-                Assert.That(error.Message, Does.Contain("this upload was canceled"));
-            }
-            else
-            {
-                Assert.That(operations, Is.EqualTo(new[] { "confirm", "upload", "delete" }));
-                Assert.That(error.Message, Does.Contain("new clear was saved"));
-                Assert.That(error.Message, Does.Contain("You do not need to upload again"));
-            }
-        }
         else
         {
-            Assert.That(await Store(), Is.SameAs(replacement.Object));
-            Assert.That(operations, Is.EqualTo(new[] { "confirm", "upload", "delete" }));
+            AzureBlobService.ClearStorageResult result = await Store();
+            Assert.That(result.Blob, Is.SameAs(replacement.Object));
+            bool removed = hasEtag && deleteStatus is 0 or 404;
+            Assert.That(result.ReplacementIncomplete, Is.EqualTo(!removed));
+            Assert.That(result.RemovedClearNames, Is.EqualTo(removed ? new[] { "previous.png" } : Array.Empty<string>()));
+            Assert.That(operations, Is.EqualTo(hasEtag ? new[] { "confirm", "upload", "delete" } : new[] { "confirm", "upload" }));
         }
+        replacement.Verify(b => b.DeleteIfExistsAsync(It.IsAny<DeleteSnapshotsOption>(), It.IsAny<BlobRequestConditions>(), default), Times.Never);
         container.Verify(c => c.GetBlobClient("other.png"), Times.Never);
+    }
+
+    [TestCase(412)]
+    [TestCase(500)]
+    [TestCase(0)] // Lost response: deletion may have reached storage.
+    public async Task ReportsPartialCleanupAndContinuesAfterAFailedDelete(int status)
+    {
+        Mock<BlobContainerClient> container = new();
+        Mock<BlobClient> replacement = new();
+        List<BlobItem> items = [];
+        foreach (string name in new[] { "first.png", "failed.png", "last.png" })
+        {
+            ETag etag = new(name);
+            items.Add(BlobsModelFactory.BlobItem(name: name, metadata: Identity("192.0.2.1", "Goku"),
+                properties: BlobsModelFactory.BlobItemProperties(accessTierInferred: false, eTag: etag)));
+            Mock<BlobClient> previous = new(MockBehavior.Strict);
+            previous.Setup(b => b.DeleteAsync(DeleteSnapshotsOption.IncludeSnapshots,
+                    It.Is<BlobRequestConditions>(c => c.IfMatch == etag), default))
+                .Returns(() => name == "failed.png"
+                    ? Task.FromException<Response>(status == 0 ? new IOException("Response lost") : new RequestFailedException(status, "Delete failed"))
+                    : Task.FromResult(Mock.Of<Response>()));
+            container.Setup(c => c.GetBlobClient(name)).Returns(previous.Object);
+        }
+        Page<BlobItem> page = Page<BlobItem>.FromValues(items, null, Mock.Of<Response>());
+        container.Setup(c => c.GetBlobsAsync(BlobTraits.Metadata, BlobStates.None, null, default))
+            .Returns(AsyncPageable<BlobItem>.FromPages([page]));
+        container.Setup(c => c.GetBlobClient("replacement.png")).Returns(replacement.Object);
+        replacement.Setup(b => b.UploadAsync(It.IsAny<Stream>(), It.IsAny<BlobUploadOptions>(), default))
+            .ReturnsAsync(Response.FromValue(BlobsModelFactory.BlobContentInfo(default, default, null, null, 0), Mock.Of<Response>()));
+
+        using MemoryStream stream = new([1, 2, 3]);
+        AzureBlobService.ClearStorageResult result = await AzureBlobService.StoreClearAsync(container.Object,
+            "replacement.png", "image/png", stream, Identity("192.0.2.1", "Goku"), "192.0.2.1", "Goku", _ => Task.FromResult(true));
+
+        Assert.That(result.Blob, Is.SameAs(replacement.Object));
+        Assert.That(result.ReplacementIncomplete, Is.True);
+        Assert.That(result.RemovedClearNames, Is.EqualTo(new[] { "first.png", "last.png" }));
+        replacement.Verify(b => b.DeleteIfExistsAsync(It.IsAny<DeleteSnapshotsOption>(), It.IsAny<BlobRequestConditions>(), default), Times.Never);
     }
 }

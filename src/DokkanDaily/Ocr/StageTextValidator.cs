@@ -5,14 +5,14 @@ using System.Text.RegularExpressions;
 namespace DokkanDaily.Ocr;
 
 public sealed record StageTitleAlias(string EventTitle, string StageTitle, string Provenance = null);
-public sealed record StageTextContrast(IEnumerable<string> Events, IEnumerable<string> Stages);
+public sealed record StageTextContrast(string[] Events, string[] Stages);
 public sealed record StageTextTarget
 {
     public int? EventId { get; init; }
     public int StageNumber { get; init; }
     public string MinimumDifficulty { get; init; }
-    public IEnumerable<StageTitleAlias> Aliases { get; init; } = [];
-    public IEnumerable<string> EventNames { get; init; }
+    public StageTitleAlias[] Aliases { get; init; } = [];
+    public string[] EventNames { get; init; }
     public StageTextContrast Contrast { get; init; }
 }
 public sealed record StageTextObservation(string EventTitle, string StageTitle, string Difficulty, bool ApplicationAccepted = true);
@@ -216,30 +216,35 @@ public static partial class StageTextValidator
 
     public static StageTextTarget Prepare(StageTextTarget target, IReadOnlyList<StageTextTarget> catalog)
     {
-        IEnumerable<StageTitleAlias> catalogAliases = catalog
-            .SelectMany(entry => entry.Aliases);
+        StageTitleAlias[] catalogAliases = catalog
+            .SelectMany(entry => entry.Aliases)
+            .ToArray();
 
         IEnumerable<StageTitleAlias> sameEventAliases = catalog
             .Where(entry => target.EventId.HasValue && entry.EventId == target.EventId)
             .SelectMany(entry => entry.Aliases);
 
-        IEnumerable<string> eventNames = target.Aliases
+        // Prepared targets are cached by StageTitleCatalog and reused across uploads.
+        string[] eventNames = target.Aliases
             .Select(alias => alias.EventTitle)
             .Concat(sameEventAliases.Select(alias => alias.EventTitle))
             .Distinct()
-            .Order(StringComparer.Ordinal);
+            .Order(StringComparer.Ordinal)
+            .ToArray();
 
         HashSet<string> normalizedEventNames = eventNames.Select(Normalize).ToHashSet();
-        IEnumerable<string> contrastEvents = catalogAliases
+        string[] contrastEvents = catalogAliases
             .Select(alias => alias.EventTitle)
             .Distinct()
-            .Order(StringComparer.Ordinal);
-        IEnumerable<string> contrastStages = catalogAliases
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+        string[] contrastStages = catalogAliases
             .Where(alias => normalizedEventNames
                 .Contains(Normalize(alias.EventTitle)))
             .Select(alias => alias.StageTitle)
             .Distinct()
-            .Order(StringComparer.Ordinal);
+            .Order(StringComparer.Ordinal)
+            .ToArray();
         return target with
         {
             EventNames = eventNames,
@@ -270,9 +275,10 @@ public static partial class StageTextValidator
         {
             target = Prepare(target, catalog);
         }
-        IEnumerable<StageTitleAlias> aliases = target.Aliases
-            .Where(alias => Normalize(alias.EventTitle).Length > 0 && Normalize(alias.StageTitle).Length > 0);
-        if (!aliases.Any())
+        StageTitleAlias[] aliases = target.Aliases
+            .Where(alias => Normalize(alias.EventTitle).Length > 0 && Normalize(alias.StageTitle).Length > 0)
+            .ToArray();
+        if (aliases.Length == 0)
         {
             return new("unknown", "missing-target-localized-names");
         }
