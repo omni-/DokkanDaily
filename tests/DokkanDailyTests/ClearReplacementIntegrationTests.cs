@@ -51,23 +51,23 @@ public class ClearReplacementIntegrationTests
         file.Setup(f => f.OpenReadStream(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .Returns(() => new MemoryStream(screenshot));
 
-        Task<ScreenshotUploadResult> Upload(Func<IEnumerable<string>, Task<bool>> confirm) =>
+        Task<ScreenshotUploadResult> Upload(Func<IEnumerable<string>, CancellationToken, Task<bool>> confirm) =>
             service.UploadToAzureAsync("clear.jpg", "image/jpeg", file.Object, challenge,
                 bucket: bucket, remoteIp: "192.0.2.1", confirmReplacement: confirm);
 
         try
         {
-            ScreenshotUploadResult first = await Upload(_ => throw new AssertionException("First upload must not ask for replacement"));
+            ScreenshotUploadResult first = await Upload((_, _) => throw new AssertionException("First upload must not ask for replacement"));
             Assert.That((await first.Blob.DownloadContentAsync()).Value.Content.ToArray(), Is.EqualTo(screenshot));
 
-            Assert.ThrowsAsync<UploadRejectedException>(() => Upload(names =>
+            Assert.ThrowsAsync<UploadRejectedException>(() => Upload((names, _) =>
             {
                 Assert.That(names, Is.EqualTo(new[] { first.Blob.Name }));
                 return Task.FromResult(false);
             }));
             Assert.That((await first.Blob.ExistsAsync()).Value, Is.True);
 
-            ScreenshotUploadResult second = await Upload(names =>
+            ScreenshotUploadResult second = await Upload((names, _) =>
             {
                 Assert.That(names, Is.EqualTo(new[] { first.Blob.Name }));
                 return Task.FromResult(true);
@@ -76,7 +76,7 @@ public class ClearReplacementIntegrationTests
             Assert.That(second.RemovedClearNames, Is.EqualTo(new[] { first.Blob.Name }));
             Assert.That((await first.Blob.ExistsAsync()).Value, Is.False);
 
-            ScreenshotUploadResult third = await Upload(async names =>
+            ScreenshotUploadResult third = await Upload(async (names, _) =>
             {
                 Assert.That(names, Is.EqualTo(new[] { second.Blob.Name }));
                 Response<BlobProperties> properties = await second.Blob.GetPropertiesAsync();

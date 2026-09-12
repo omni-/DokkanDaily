@@ -34,6 +34,100 @@ public class ClearReplacementTests
         Assert.That(AzureBlobService.HasSameClearIdentity(Identity("192.0.2.1", "悟空"), "192.0.2.1", "悟空"), Is.True);
     }
 
+    private static AzureBlobService CreateService() => new(
+        Microsoft.Extensions.Options.Options.Create(new DokkanDaily.Configuration.DokkanDailySettings()),
+        Microsoft.Extensions.Logging.Abstractions.NullLogger<AzureBlobService>.Instance, null, null, null);
+
+    [Test]
+    public async Task ResetCancelsUnansweredConfirmationAndDoesNotWaitForTheBrowser()
+    {
+        AzureBlobService service = CreateService();
+        CancellationToken resetCancellation = await AzureBlobService.CaptureUploadCancellationAsync();
+        Mock<BlobContainerClient> container = new(MockBehavior.Strict);
+        BlobItem previous = BlobsModelFactory.BlobItem(name: "previous.png",
+            metadata: Identity("192.0.2.1", "Goku"));
+        Page<BlobItem> page = Page<BlobItem>.FromValues([previous], null, Mock.Of<Response>());
+        container.Setup(c => c.GetBlobsAsync(BlobTraits.Metadata, BlobStates.None, null, default))
+            .Returns(AsyncPageable<BlobItem>.FromPages([page]));
+        TaskCompletionSource<bool> confirmation = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        TaskCompletionSource dialogOpened = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        using MemoryStream stream = new([1, 2, 3]);
+        Task<AzureBlobService.ClearStorageResult> store = AzureBlobService.StoreClearAsync(container.Object,
+            "replacement.png", "image/png", stream, Identity("192.0.2.1", "Goku"), "2000-01-01",
+            "192.0.2.1", "Goku", (_, token) =>
+            {
+                Assert.That(token, Is.EqualTo(resetCancellation));
+                dialogOpened.SetResult();
+                return confirmation.Task; // Deliberately ignore cancellation, like a missing browser response.
+            }, resetCancellation: resetCancellation);
+        await dialogOpened.Task.WaitAsync(TimeSpan.FromSeconds(5));
+
+        await using (await service.AcquireResetBarrierAsync())
+        {
+            Assert.That(resetCancellation.IsCancellationRequested, Is.True);
+            await service.WaitForPendingAnalysis(TimeSpan.FromMilliseconds(10)).WaitAsync(TimeSpan.FromSeconds(5));
+            Assert.That(confirmation.Task.IsCompleted, Is.False);
+            Assert.ThrowsAsync<UploadRejectedException>(async () => await AzureBlobService.CaptureUploadCancellationAsync());
+            Assert.CatchAsync<OperationCanceledException>(async () => await store.WaitAsync(TimeSpan.FromSeconds(5)));
+        }
+
+        confirmation.SetResult(true);
+        await confirmation.Task;
+        container.Verify(c => c.GetBlobClient(It.IsAny<string>()), Times.Never);
+        CancellationToken nextDay = await AzureBlobService.CaptureUploadCancellationAsync();
+        Assert.That(nextDay.IsCancellationRequested, Is.False);
+        Assert.That(resetCancellation.IsCancellationRequested, Is.True);
+    }
+
+    [Test]
+    public async Task ConfirmationArrivingAfterResetCannotCommitToTheNewDay()
+    {
+        AzureBlobService service = CreateService();
+        CancellationToken resetCancellation = await AzureBlobService.CaptureUploadCancellationAsync();
+        Mock<BlobContainerClient> container = new(MockBehavior.Strict);
+        BlobItem previous = BlobsModelFactory.BlobItem(name: "previous.png",
+            metadata: Identity("192.0.2.1", "Goku"));
+        Page<BlobItem> page = Page<BlobItem>.FromValues([previous], null, Mock.Of<Response>());
+        container.Setup(c => c.GetBlobsAsync(BlobTraits.Metadata, BlobStates.None, null, default))
+            .Returns(AsyncPageable<BlobItem>.FromPages([page]));
+        using MemoryStream stream = new([1, 2, 3]);
+        Assert.CatchAsync<OperationCanceledException>(async () =>
+            await AzureBlobService.StoreClearAsync(container.Object, "replacement.png", "image/png", stream,
+                Identity("192.0.2.1", "Goku"), "2000-01-01", "192.0.2.1", "Goku", async (_, _) =>
+                {
+                    await using (await service.AcquireResetBarrierAsync()) { }
+                    return true;
+                }, resetCancellation: resetCancellation));
+        container.Verify(c => c.GetBlobClient(It.IsAny<string>()), Times.Never);
+    }
+
+    [Test]
+    public async Task ResetDrainsAnAlreadyStartedStorageCommit()
+    {
+        AzureBlobService service = CreateService();
+        CancellationToken token = await AzureBlobService.CaptureUploadCancellationAsync();
+        Mock<BlobContainerClient> container = new();
+        Mock<BlobClient> replacement = new();
+        container.Setup(c => c.GetBlobClient("replacement.png")).Returns(replacement.Object);
+        TaskCompletionSource<Response<BlobContentInfo>> upload = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        replacement.Setup(b => b.UploadAsync(It.IsAny<Stream>(), It.IsAny<BlobUploadOptions>(), default))
+            .Returns(upload.Task);
+        using MemoryStream stream = new([1, 2, 3]);
+        Task<AzureBlobService.ClearStorageResult> store = AzureBlobService.StoreClearAsync(container.Object,
+            "replacement.png", "image/png", stream, new Dictionary<string, string>(), "2000-01-01",
+            null, null, null, resetCancellation: token);
+        replacement.Verify(b => b.UploadAsync(It.IsAny<Stream>(), It.IsAny<BlobUploadOptions>(), default), Times.Once);
+
+        await using (await service.AcquireResetBarrierAsync())
+        {
+            Task drain = service.WaitForPendingAnalysis(TimeSpan.FromSeconds(1));
+            Assert.That(drain.IsCompleted, Is.False);
+            upload.SetResult(Response.FromValue(BlobsModelFactory.BlobContentInfo(default, default, null, null, 0), Mock.Of<Response>()));
+            await store.WaitAsync(TimeSpan.FromSeconds(5));
+            await drain.WaitAsync(TimeSpan.FromSeconds(5));
+        }
+    }
+
     [TestCase(false, false, 0)]
     [TestCase(true, false, 0)]
     [TestCase(true, true, 0)]
@@ -73,7 +167,7 @@ public class ClearReplacementTests
                 : Task.FromException<Response>(new RequestFailedException(deleteStatus, "Delete failed")));
         using MemoryStream stream = new MemoryStream([1, 2, 3]);
         Task<AzureBlobService.ClearStorageResult> Store() => AzureBlobService.StoreClearAsync(container.Object, "replacement.png", "image/png",
-            stream, Identity("192.0.2.1", "Goku"), "192.0.2.1", "Goku", names =>
+            stream, Identity("192.0.2.1", "Goku"), "2000-01-01", "192.0.2.1", "Goku", (names, _) =>
             {
                 Assert.That(names, Is.EqualTo(new[] { "previous.png" }));
                 operations.Add("confirm");
@@ -98,6 +192,10 @@ public class ClearReplacementTests
             Assert.That(result.ReplacementIncomplete, Is.EqualTo(!removed));
             Assert.That(result.RemovedClearNames, Is.EqualTo(removed ? new[] { "previous.png" } : Array.Empty<string>()));
             Assert.That(operations, Is.EqualTo(hasEtag ? new[] { "confirm", "upload", "delete" } : new[] { "confirm", "upload" }));
+            // Storage must use the date selected with the container, not today's UTC date
+            // after a potentially midnight-spanning confirmation.
+            replacement.Verify(b => b.UploadAsync(It.IsAny<Stream>(),
+                It.Is<BlobUploadOptions>(options => options.Tags[AzureConstants.DATE_TAG] == "2000-01-01"), default), Times.Once);
         }
         replacement.Verify(b => b.DeleteIfExistsAsync(It.IsAny<DeleteSnapshotsOption>(), It.IsAny<BlobRequestConditions>(), default), Times.Never);
         container.Verify(c => c.GetBlobClient("other.png"), Times.Never);
@@ -133,7 +231,7 @@ public class ClearReplacementTests
 
         using MemoryStream stream = new([1, 2, 3]);
         AzureBlobService.ClearStorageResult result = await AzureBlobService.StoreClearAsync(container.Object,
-            "replacement.png", "image/png", stream, Identity("192.0.2.1", "Goku"), "192.0.2.1", "Goku", _ => Task.FromResult(true));
+            "replacement.png", "image/png", stream, Identity("192.0.2.1", "Goku"), "2000-01-01", "192.0.2.1", "Goku", (_, _) => Task.FromResult(true));
 
         Assert.That(result.Blob, Is.SameAs(replacement.Object));
         Assert.That(result.ReplacementIncomplete, Is.True);

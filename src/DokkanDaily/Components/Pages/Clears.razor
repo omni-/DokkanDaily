@@ -238,10 +238,17 @@
                 discordUsername: discordUsername,
                 discordId: discordId,
                 remoteIp: RemoteIpAddress,
-                confirmReplacement: async previousClears =>
+                confirmReplacement: async (previousClears, resetCancellation) =>
                 {
                     await using IJSObjectReference dialogModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/clear-replacement.js");
-                    return await dialogModule.InvokeAsync<bool>("confirmReplacement", CancellationToken.None, replacementDialog);
+                    try
+                    {
+                        return await dialogModule.InvokeAsync<bool>("confirmReplacement", resetCancellation, replacementDialog);
+                    }
+                    finally
+                    {
+                        await dialogModule.InvokeVoidAsync("closeReplacement", replacementDialog);
+                    }
                 });
             Azure.Storage.Blobs.BlobClient blobClient = uploaded.Blob;
 

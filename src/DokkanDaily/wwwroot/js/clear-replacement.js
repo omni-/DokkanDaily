@@ -5,3 +5,7 @@ export function confirmReplacement(dialog) {
         dialog.showModal();
     });
 }
+
+export function closeReplacement(dialog) {
+    if (dialog.open) dialog.close("cancel");
+}
