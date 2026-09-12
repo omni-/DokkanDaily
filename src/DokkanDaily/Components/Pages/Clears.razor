@@ -41,6 +41,10 @@
     {
         <div class="alert alert-warning" role="status">@validationMessage.</div>
     }
+    @if (replacementMessage.Length > 0)
+    {
+        <div class="alert alert-warning" role="status">@replacementMessage.</div>
+    }
     <div class="container clear-box text-center">
         <h1>Today's clears</h1>
         <p>Keep the event name, stage name, and difficulty visible in your clear-details screenshot.</p>
@@ -97,12 +101,25 @@
     </div>
 </div>
 
+<dialog @ref="replacementDialog" class="replacement-dialog" aria-labelledby="replacement-title" aria-describedby="replacement-description">
+    <form method="dialog">
+        <p class="dialog-eyebrow">TODAY'S CLEAR</p>
+        <h2 id="replacement-title">Replace your clear?</h2>
+        <p id="replacement-description">You already have a clear for today with this Dokkan name. Once the new upload succeeds, <strong>your previous screenshot will be deleted.</strong></p>
+        <div class="replacement-actions">
+            <button type="submit" value="cancel" class="battle-button keep-clear" autofocus>Keep previous</button>
+            <button type="submit" value="replace" class="battle-button">Replace clear</button>
+        </div>
+    </form>
+</dialog>
+
 <Footer />
 
 @code {
     private string warningMessage = "";
     private string displayMessage = "";
     private string validationMessage = "";
+    private string replacementMessage = "";
     private List<IBrowserFile> loadedFiles = new();
     private bool fileLoading;
     private string Message = "No file(s) selected";
@@ -110,6 +127,7 @@
     private List<FileUploadViewModel> fileUploadViewModels = [];
     private const string defaultWarning = "Something went wrong! Please try again.";
     private Challenge challengeModel;
+    private ElementReference replacementDialog;
 
     // HttpContext is valid during prerendering but not during interactive events. Blazor restores
     // this protected value when the component becomes interactive, so anonymous admission remains
@@ -169,6 +187,23 @@
     }
     private async Task OnUploadSubmit()
     {
+        if (fileLoading)
+        {
+            return;
+        }
+        fileLoading = true;
+        try
+        {
+            await UploadSelectedFile();
+        }
+        finally
+        {
+            fileLoading = false;
+        }
+    }
+
+    private async Task UploadSelectedFile()
+    {
         string remoteUserAgent = null;
 
         try { remoteUserAgent = await jsRuntime.InvokeAsync<string>("getUserAgent"); } catch { }
@@ -176,7 +211,7 @@
         string discordUsername = await authStateProvider.GetUsernameFromDiscordAuthClaim();
         string discordId = await authStateProvider.GetIdFromDiscordAuthClaim();
 
-        var file = selectedFiles.FirstOrDefault();
+        IBrowserFile file = selectedFiles.FirstOrDefault();
         if (file == null) return;
 
         List<string> allowedFileTypes = [".jpg", ".jpeg", ".png", ".webp", ".avif"];
@@ -187,23 +222,35 @@
             return;
         }
 
-        fileLoading = true;
         warningMessage = "";
         validationMessage = "";
+        replacementMessage = "";
         displayMessage = "";
         this.StateHasChanged();
 
         try
         {
-            var uploaded = await BlobSvc.UploadToAzureAsync(
+            ScreenshotUploadResult uploaded = await BlobSvc.UploadToAzureAsync(
                 file.Name,
                 file.ContentType,
                 file, challengeModel,
                 userAgent: remoteUserAgent,
                 discordUsername: discordUsername,
                 discordId: discordId,
-                remoteIp: RemoteIpAddress);
-            var blobClient = uploaded.Blob;
+                remoteIp: RemoteIpAddress,
+                confirmReplacement: async (previousClears, resetCancellation) =>
+                {
+                    await using IJSObjectReference dialogModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/clear-replacement.js");
+                    try
+                    {
+                        return await dialogModule.InvokeAsync<bool>("confirmReplacement", resetCancellation, replacementDialog);
+                    }
+                    finally
+                    {
+                        await dialogModule.InvokeVoidAsync("closeReplacement", replacementDialog);
+                    }
+                });
+            Azure.Storage.Blobs.BlobClient blobClient = uploaded.Blob;
 
             FileUploadViewModel fileUploadViewModel = new FileUploadViewModel()
             {
@@ -212,8 +259,13 @@
                 ContentType = file.ContentType
             };
 
+            fileUploadViewModels.RemoveAll(clear => uploaded.RemovedClearNames.Contains(clear.FileName));
             fileUploadViewModels.Add(fileUploadViewModel);
             displayMessage = file.Name + " uploaded";
+            if (uploaded.ReplacementIncomplete)
+            {
+                replacementMessage = "Your new clear was saved, but one or more previous screenshots could not be removed. You do not need to upload again";
+            }
         }
         catch (UploadRejectedException ex)
         {
@@ -225,7 +277,6 @@
             warningMessage = defaultWarning;
         }
 
-        fileLoading = false;
         this.StateHasChanged();
     }
 

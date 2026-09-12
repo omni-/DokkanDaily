@@ -118,6 +118,35 @@ public class StageValidationTests
     public void UsesUnicodeCaseFolding(string observed, string expected) =>
         Assert.That(StageTextValidator.Normalize(observed), Is.EqualTo(StageTextValidator.Normalize(expected)));
 
+    [TestCase("Stage 01", "Stage 1", "stage-mismatch")]
+    [TestCase("Stage ١", "Stage 1", "stage-mismatch")]
+    [TestCase("Stage 999999999999999999999999999999", "Stage 999999999999999999999999999998", "stage-mismatch")]
+    [TestCase("Stage １", "Stage 1", "match")]
+    [TestCase("Android 018", "Android 18", "unknown")]
+    public void DigitTokensRemainText(string observed, string target, string expected)
+    {
+        Assert.That(StageTextValidator.Validate(new("Movie Battle", observed, "SUPER3"),
+            Target("Movie Battle", target)).Outcome, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void PreparedNamesDoNotReenumerateTheCatalog()
+    {
+        StageTextTarget target = Target("Movie Battle", "Vs. Goku") with { EventId = 1 };
+        List<StageTextTarget> catalog = [target, Target("Movie Battle", "Vs. Vegeta"), Target("Other Battle", "Other Stage")];
+        StageTextTarget prepared = StageTextValidator.Prepare(target, catalog);
+        catalog.Clear();
+
+        Assert.That(prepared.EventNames, Is.EqualTo(new[] { "Movie Battle" }));
+        Assert.That(prepared.Contrast.Events, Is.EqualTo(new[] { "Movie Battle", "Other Battle" }));
+        Assert.That(prepared.Contrast.Stages, Is.EqualTo(new[] { "Vs. Goku", "Vs. Vegeta" }));
+        for (int validation = 0; validation < 2; validation++)
+        {
+            Assert.That(StageTextValidator.Validate(new("Movie Battle", "Vs. Vegeta", "SUPER3"), prepared).Outcome,
+                Is.EqualTo("stage-mismatch"));
+        }
+    }
+
     [Test]
     public void PackagedCandidateModelIsFrozen()
     {
