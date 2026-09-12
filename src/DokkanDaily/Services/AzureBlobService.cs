@@ -52,7 +52,7 @@ namespace DokkanDaily.Services
             return $"{_containerName}-{formattedDateTag}";
         }
 
-        public async Task<ScreenshotUploadResult> UploadToAzureAsync(string userFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null, string userAgent = null, string discordUsername = null, string discordId = null, string remoteIp = null)
+        public async Task<ScreenshotUploadResult> UploadToAzureAsync(string userFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null, string userAgent = null, string discordUsername = null, string discordId = null, string remoteIp = null, Func<IEnumerable<string>, Task<bool>> confirmReplacement = null)
         {
             Guid analysisId = Guid.NewGuid();
             TaskCompletionSource analysisLifecycle = new(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -99,17 +99,9 @@ namespace DokkanDaily.Services
 
                 var (container, _) = await GetOrCreate(bucket);
                 string fileName = DokkanDailyHelper.BuildBlobName(userFileName, discordId);
-                BlobClient blob = container.GetBlobClient(fileName);
-
                 _logger.LogInformation("Uploading to `{Container}/{File}`...", container.Name, fileName);
-
-                await blob.UploadAsync(uploadStream, options: new BlobUploadOptions()
-                {
-                    HttpHeaders = new BlobHttpHeaders { ContentType = contentType },
-                    Tags = new Dictionary<string, string> { { AzureConstants.DATE_TAG, DokkanDailyHelper.GetUtcNowDateTag() } },
-                    Metadata = tags
-                });
-
+                BlobClient blob = await StoreClearAsync(container, fileName, contentType, uploadStream, tags,
+                    remoteIp, parsedClear?.Nickname, confirmReplacement);
                 _logger.LogInformation("Finished Azure upload.");
 
                 return new(blob, new(tags[AzureConstants.STAGE_VALIDATION_TAG], tags[AzureConstants.STAGE_VALIDATION_REASON_TAG]));
@@ -128,6 +120,84 @@ namespace DokkanDaily.Services
                 if (uploadStream != null) await uploadStream.DisposeAsync();
                 if (lifecycleRegistered)
                     CompletePendingAnalysis(analysisId, analysisLifecycle);
+            }
+        }
+
+        internal static async Task<BlobClient> StoreClearAsync(BlobContainerClient container, string fileName,
+            string contentType, Stream uploadStream, IDictionary<string, string> metadata,
+            string remoteIp, string nickname, Func<IEnumerable<string>, Task<bool>> confirmReplacement)
+        {
+            List<BlobItem> previousClears = await FindPreviousClears(container, remoteIp, nickname);
+            if (previousClears.Count > 0 && (confirmReplacement is null ||
+                !await confirmReplacement(previousClears.Select(clear => clear.Name))))
+            {
+                throw new UploadRejectedException("Upload canceled. Your previous clear has been kept");
+            }
+
+            BlobClient blob = container.GetBlobClient(fileName);
+            await blob.UploadAsync(uploadStream, new BlobUploadOptions
+            {
+                HttpHeaders = new BlobHttpHeaders { ContentType = contentType },
+                Tags = new Dictionary<string, string> { { AzureConstants.DATE_TAG, DokkanDailyHelper.GetUtcNowDateTag() } },
+                Metadata = metadata
+            });
+            await DeletePreviousClears(container, blob, previousClears);
+            return blob;
+        }
+
+        internal static bool HasSameClearIdentity(IDictionary<string, string> metadata, string remoteIp, string nickname)
+        {
+            // A missing OCR name cannot establish ownership. Never fall back to IP alone.
+            return !string.IsNullOrWhiteSpace(nickname) &&
+                UploadAttemptLimiter.TryNormalizeIpAddress(remoteIp, out string normalizedIp) &&
+                metadata.TryGetValue(AzureConstants.IP_TAG, out string previousIp) &&
+                UploadAttemptLimiter.TryNormalizeIpAddress(previousIp, out string normalizedPreviousIp) &&
+                normalizedIp == normalizedPreviousIp &&
+                metadata.TryGetValue(AzureConstants.USER_NAME_TAG, out string previousNickname) &&
+                previousNickname == nickname.EscapeUnicode();
+        }
+
+        private static async Task<List<BlobItem>> FindPreviousClears(BlobContainerClient container, string remoteIp, string nickname)
+        {
+            List<BlobItem> previousClears = [];
+            if (string.IsNullOrWhiteSpace(nickname) || !UploadAttemptLimiter.TryNormalizeIpAddress(remoteIp, out _))
+            {
+                return previousClears;
+            }
+
+            await foreach (BlobItem clear in container.GetBlobsAsync(BlobTraits.Metadata, BlobStates.None, null, default))
+            {
+                if (HasSameClearIdentity(clear.Metadata, remoteIp, nickname))
+                {
+                    previousClears.Add(clear);
+                }
+            }
+            return previousClears;
+        }
+
+        private static async Task DeletePreviousClears(BlobContainerClient container, BlobClient replacement, IReadOnlyList<BlobItem> previousClears)
+        {
+            int deletedCount = 0;
+            try
+            {
+                foreach (BlobItem clear in previousClears)
+                {
+                    // Do not delete a clear that changed while the confirmation was open.
+                    await container.GetBlobClient(clear.Name).DeleteAsync(
+                        DeleteSnapshotsOption.IncludeSnapshots,
+                        new BlobRequestConditions { IfMatch = clear.Properties.ETag });
+                    deletedCount++;
+                }
+            }
+            catch (RequestFailedException ex) when (deletedCount == 0 && ex.Status is 404 or 412)
+            {
+                await replacement.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
+                throw new UploadRejectedException("Your previous clear changed during replacement, so this upload was canceled");
+            }
+            catch
+            {
+                // A delete may have succeeded even if its response was lost. Keep the new clear.
+                throw new UploadRejectedException("Your new clear was saved, but the previous screenshot could not be removed. You do not need to upload again");
             }
         }
 

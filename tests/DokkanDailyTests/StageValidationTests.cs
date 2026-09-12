@@ -87,7 +87,7 @@ public class StageValidationTests
     {
         var edition = Target("Supreme Magnificent Battle RE", "Vs. Goku");
         var old = Target("Supreme Magnificent Battle", "Vs. Goku");
-        Assert.That(StageTextValidator.Validate(new(old.Aliases[0].EventTitle, "Vs. Goku", "SUPER3"), edition, [edition, old]).Outcome, Is.EqualTo("event-mismatch"));
+        Assert.That(StageTextValidator.Validate(new(old.Aliases.First().EventTitle, "Vs. Goku", "SUPER3"), edition, [edition, old]).Outcome, Is.EqualTo("event-mismatch"));
         var target = Target("Movie Battle", "Vs. Goku");
         Assert.That(StageTextValidator.Validate(new("Movie Battle", "Vs. Gokx", "SUPER3"), target, [target, Target("Movie Battle", "Vs. Goki")]).Reason, Is.EqualTo("indistinguishable-ocr-alternatives"));
     }
