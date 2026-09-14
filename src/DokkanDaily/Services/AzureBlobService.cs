@@ -31,6 +31,7 @@ namespace DokkanDaily.Services
         private static readonly SemaphoreSlim _resetBarrier = new(1, 1);
 
         private const int maxFileSize = 1024 * 8192;
+        private static CancellationTokenSource _uploadCancellation = new();
         private const string ResetInProgressMessage = "Daily results are being calculated. Please try your upload again shortly";
         private const string ChallengeChangedMessage = "The daily challenge changed while this page was open. Refresh the page and try again";
 
@@ -52,27 +53,13 @@ namespace DokkanDaily.Services
             return $"{_containerName}-{formattedDateTag}";
         }
 
-        public async Task<ScreenshotUploadResult> UploadToAzureAsync(string userFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null, string userAgent = null, string discordUsername = null, string discordId = null, string remoteIp = null)
+        public async Task<ScreenshotUploadResult> UploadToAzureAsync(string userFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null, string userAgent = null, string discordUsername = null, string discordId = null, string remoteIp = null, Func<IEnumerable<string>, CancellationToken, Task<bool>> confirmReplacement = null)
         {
-            Guid analysisId = Guid.NewGuid();
-            TaskCompletionSource analysisLifecycle = new(TaskCreationOptions.RunContinuationsAsynchronously);
-            bool lifecycleRegistered = false;
             MemoryStream uploadStream = null;
 
             try
             {
-                if (!await _resetBarrier.WaitAsync(0))
-                    throw new UploadRejectedException(ResetInProgressMessage);
-
-                try
-                {
-                    _pendingAnalysis[analysisId] = analysisLifecycle.Task;
-                    lifecycleRegistered = true;
-                }
-                finally
-                {
-                    _resetBarrier.Release();
-                }
+                CancellationToken resetCancellation = await CaptureUploadCancellationAsync();
 
                 Challenge currentChallenge = await _rngHelperService.GetDailyChallenge();
                 if (model is null || currentChallenge is null || model.Date != currentChallenge.Date)
@@ -86,33 +73,35 @@ namespace DokkanDaily.Services
 
                 uploadStream = new MemoryStream();
                 using Stream fileStream = browserFile.OpenReadStream(maxFileSize);
-                await fileStream.CopyToAsync(uploadStream);
+                await fileStream.CopyToAsync(uploadStream, resetCancellation);
                 uploadStream.Position = 0;
 
                 // Observe once without the assignment, then compare with the server challenge.
                 ClearMetadata parsedClear;
-                await _ocrThrottle.WaitAsync();
+                await _ocrThrottle.WaitAsync(resetCancellation);
                 try { parsedClear = _ocrService.ProcessImage(uploadStream); }
                 finally { _ocrThrottle.Release(); }
+                resetCancellation.ThrowIfCancellationRequested();
                 var tags = BuildTagDict(model, parsedClear, discordUsername, discordId, remoteIp, userAgent);
                 uploadStream.Position = 0;
 
-                var (container, _) = await GetOrCreate(bucket);
+                string uploadDateTag = DokkanDailyHelper.GetUtcNowDateTag();
+                var (container, _) = await GetOrCreate(bucket ?? GetBucketNameForDate(uploadDateTag));
                 string fileName = DokkanDailyHelper.BuildBlobName(userFileName, discordId);
-                BlobClient blob = container.GetBlobClient(fileName);
-
                 _logger.LogInformation("Uploading to `{Container}/{File}`...", container.Name, fileName);
-
-                await blob.UploadAsync(uploadStream, options: new BlobUploadOptions()
-                {
-                    HttpHeaders = new BlobHttpHeaders { ContentType = contentType },
-                    Tags = new Dictionary<string, string> { { AzureConstants.DATE_TAG, DokkanDailyHelper.GetUtcNowDateTag() } },
-                    Metadata = tags
-                });
-
+                ClearStorageResult stored = await StoreClearAsync(container, fileName, contentType, uploadStream, tags, uploadDateTag,
+                    remoteIp, parsedClear?.Nickname, confirmReplacement, _logger, resetCancellation);
                 _logger.LogInformation("Finished Azure upload.");
 
-                return new(blob, new(tags[AzureConstants.STAGE_VALIDATION_TAG], tags[AzureConstants.STAGE_VALIDATION_REASON_TAG]));
+                return new(stored.Blob, new(tags[AzureConstants.STAGE_VALIDATION_TAG], tags[AzureConstants.STAGE_VALIDATION_REASON_TAG]))
+                {
+                    RemovedClearNames = stored.RemovedClearNames,
+                    ReplacementIncomplete = stored.ReplacementIncomplete
+                };
+            }
+            catch (OperationCanceledException)
+            {
+                throw new UploadRejectedException("Daily reset canceled this upload. Your previous clear has been kept");
             }
             catch (UploadRejectedException)
             {
@@ -126,14 +115,142 @@ namespace DokkanDaily.Services
             finally
             {
                 if (uploadStream != null) await uploadStream.DisposeAsync();
-                if (lifecycleRegistered)
-                    CompletePendingAnalysis(analysisId, analysisLifecycle);
             }
+        }
+
+        internal sealed record ClearStorageResult(BlobClient Blob, IReadOnlyList<string> RemovedClearNames, bool ReplacementIncomplete);
+
+        internal static async Task<ClearStorageResult> StoreClearAsync(BlobContainerClient container, string fileName,
+            string contentType, Stream uploadStream, IDictionary<string, string> metadata, string uploadDateTag,
+            string remoteIp, string nickname, Func<IEnumerable<string>, CancellationToken, Task<bool>> confirmReplacement, ILogger logger = null,
+            CancellationToken resetCancellation = default)
+        {
+            List<BlobItem> previousClears = await FindPreviousClears(container, remoteIp, nickname).WaitAsync(resetCancellation);
+            if (previousClears.Count > 0)
+            {
+                bool confirmed = confirmReplacement is not null &&
+                    await confirmReplacement(previousClears.Select(clear => clear.Name), resetCancellation)
+                        .WaitAsync(resetCancellation);
+                if (!confirmed)
+                {
+                    throw new UploadRejectedException("Upload canceled. Your previous clear has been kept");
+                }
+            }
+
+            // Only storage commits participate in reset draining. Admission and reset use
+            // the same gate, so an upload canceled by reset can never commit later.
+            Guid analysisId = Guid.NewGuid();
+            TaskCompletionSource analysisLifecycle = new(TaskCreationOptions.RunContinuationsAsynchronously);
+            if (!await _resetBarrier.WaitAsync(0))
+                throw new UploadRejectedException(ResetInProgressMessage);
+            try
+            {
+                resetCancellation.ThrowIfCancellationRequested();
+                _pendingAnalysis[analysisId] = analysisLifecycle.Task;
+            }
+            finally
+            {
+                _resetBarrier.Release();
+            }
+
+            try
+            {
+                BlobClient blob = container.GetBlobClient(fileName);
+                await blob.UploadAsync(uploadStream, new BlobUploadOptions
+                {
+                    HttpHeaders = new BlobHttpHeaders { ContentType = contentType },
+                    Tags = new Dictionary<string, string> { { AzureConstants.DATE_TAG, uploadDateTag } },
+                    Metadata = metadata
+                });
+                return await DeletePreviousClears(container, blob, previousClears, logger);
+            }
+            finally
+            {
+                CompletePendingAnalysis(analysisId, analysisLifecycle);
+            }
+        }
+
+        internal static async Task<CancellationToken> CaptureUploadCancellationAsync()
+        {
+            if (!await _resetBarrier.WaitAsync(0))
+                throw new UploadRejectedException(ResetInProgressMessage);
+            try { return _uploadCancellation.Token; }
+            finally { _resetBarrier.Release(); }
+        }
+
+        internal static bool HasSameClearIdentity(IDictionary<string, string> metadata, string remoteIp, string nickname)
+        {
+            // A missing OCR name cannot establish ownership. Never fall back to IP alone.
+            return !string.IsNullOrWhiteSpace(nickname) &&
+                UploadAttemptLimiter.TryNormalizeIpAddress(remoteIp, out string normalizedIp) &&
+                metadata.TryGetValue(AzureConstants.IP_TAG, out string previousIp) &&
+                UploadAttemptLimiter.TryNormalizeIpAddress(previousIp, out string normalizedPreviousIp) &&
+                normalizedIp == normalizedPreviousIp &&
+                metadata.TryGetValue(AzureConstants.USER_NAME_TAG, out string previousNickname) &&
+                previousNickname == nickname.EscapeUnicode();
+        }
+
+        private static async Task<List<BlobItem>> FindPreviousClears(BlobContainerClient container, string remoteIp, string nickname)
+        {
+            List<BlobItem> previousClears = [];
+            if (string.IsNullOrWhiteSpace(nickname) || !UploadAttemptLimiter.TryNormalizeIpAddress(remoteIp, out _))
+            {
+                return previousClears;
+            }
+
+            await foreach (BlobItem clear in container.GetBlobsAsync(BlobTraits.Metadata, BlobStates.None, null, default))
+            {
+                if (HasSameClearIdentity(clear.Metadata, remoteIp, nickname))
+                {
+                    previousClears.Add(clear);
+                }
+            }
+            return previousClears;
+        }
+
+        private static async Task<ClearStorageResult> DeletePreviousClears(BlobContainerClient container, BlobClient replacement,
+            IReadOnlyList<BlobItem> previousClears, ILogger logger)
+        {
+            List<string> removedClearNames = [];
+            bool replacementIncomplete = false;
+            foreach (BlobItem clear in previousClears)
+            {
+                // Without the observed version, deletion would be unconditional.
+                if (clear.Properties.ETag is null)
+                {
+                    replacementIncomplete = true;
+                    logger?.LogWarning("Cannot replace clear `{File}` without an observed ETag", clear.Name);
+                    continue;
+                }
+                try
+                {
+                    // Do not delete a clear that changed while the confirmation was open.
+                    await container.GetBlobClient(clear.Name).DeleteAsync(
+                        DeleteSnapshotsOption.IncludeSnapshots,
+                        new BlobRequestConditions { IfMatch = clear.Properties.ETag });
+                    removedClearNames.Add(clear.Name);
+                }
+                catch (RequestFailedException ex) when (ex.Status == 404)
+                {
+                    // Another request already removed this clear.
+                    removedClearNames.Add(clear.Name);
+                }
+                catch (Exception ex)
+                {
+                    // The new clear is committed. A delete response may have been lost;
+                    // rolling it back could discard the only remaining screenshot.
+                    replacementIncomplete = true;
+                    logger?.LogWarning(ex, "New clear saved, but previous clear `{File}` could not be removed", clear.Name);
+                }
+            }
+            return new(replacement, removedClearNames.ToArray(), replacementIncomplete);
         }
 
         public async Task<IAsyncDisposable> AcquireResetBarrierAsync()
         {
             await _resetBarrier.WaitAsync();
+            // Invalidate all pre-commit uploads, including unanswered browser dialogs.
+            await _uploadCancellation.CancelAsync();
             return new ResetBarrierLease(_resetBarrier);
         }
 
@@ -146,12 +263,12 @@ namespace DokkanDaily.Services
                 Task[] pending = [.. _pendingAnalysis.Values];
                 if (pending.Length == 0) return;
 
-                _logger.LogInformation("Waiting for {Count} in-flight OCR task(s) to finish.", pending.Length);
+                _logger.LogInformation("Waiting for {Count} in-flight storage commit(s) to finish.", pending.Length);
 
                 Task all = Task.WhenAll(pending);
                 if (await Task.WhenAny(all, Task.Delay(warningInterval)) != all)
                 {
-                    _logger.LogWarning("OCR is still running after {Interval}. Continuing to wait for {Count} clear(s) so they are not skipped.", warningInterval, _pendingAnalysis.Count);
+                    _logger.LogWarning("Storage is still running after {Interval}. Continuing to wait for {Count} clear(s) so they are not skipped.", warningInterval, _pendingAnalysis.Count);
                     continue;
                 }
             }
@@ -389,7 +506,13 @@ namespace DokkanDaily.Services
 
             public ValueTask DisposeAsync()
             {
-                Interlocked.Exchange(ref _resetBarrier, null)?.Release();
+                SemaphoreSlim barrier = Interlocked.Exchange(ref _resetBarrier, null);
+                if (barrier is not null)
+                {
+                    _uploadCancellation.Dispose();
+                    _uploadCancellation = new CancellationTokenSource();
+                    barrier.Release();
+                }
                 return ValueTask.CompletedTask;
             }
         }

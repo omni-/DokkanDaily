@@ -15,3 +15,29 @@ h1 { font-size: 36px; margin-bottom: 4px; }
 .empty-clears h2 { font-size: 26px; }
 .empty-clears p { font-size: 14px; }
 @media (max-width: 540px) { .clear-box { padding: 20px 14px; box-shadow: 4px 4px 0 var(--ink); } .upload-zone { padding: 18px 10px; } }
+
+.replacement-dialog {
+    width: min(520px, calc(100% - 40px));
+    max-height: calc(100% - 40px);
+    margin: auto;
+    padding: 30px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    box-shadow: 7px 7px 0 var(--ink);
+    text-align: left;
+}
+.replacement-dialog::backdrop { background: rgba(15, 12, 9, .72); }
+.dialog-eyebrow { color: #755533; font-size: 12px; font-weight: bold; letter-spacing: .12em; margin: 0 0 8px; }
+.replacement-dialog h2 { font-size: 34px; margin: 0 0 16px; }
+.replacement-dialog p { line-height: 1.6; }
+.replacement-actions { display: flex; justify-content: flex-end; gap: 16px; margin-top: 26px; }
+.replacement-actions .battle-button { font-size: 19px; padding: 10px 16px; }
+.replacement-actions .keep-clear { background: #fff5e2; }
+.replacement-actions .keep-clear:hover { background: #e9d8b8; }
+@media (max-width: 540px) {
+    .replacement-dialog { padding: 22px; box-shadow: 4px 4px 0 var(--ink); }
+    .replacement-dialog h2 { font-size: 30px; }
+    .replacement-actions { flex-direction: column-reverse; }
+    .replacement-actions .battle-button { width: 100%; }
+}

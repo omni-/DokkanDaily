@@ -8,7 +8,7 @@ namespace DokkanDaily.Services.Interfaces
     {
         Task<List<BlobClient>> GetFilesForTag(string tag, string bucket = null);
 
-        Task<ScreenshotUploadResult> UploadToAzureAsync(string fileName, string contentType, IBrowserFile browserFile, Challenge challengeModel, string bucket = null, string userAgent = null, string discordUsername = null, string discordId = null, string remoteIp = null);
+        Task<ScreenshotUploadResult> UploadToAzureAsync(string fileName, string contentType, IBrowserFile browserFile, Challenge challengeModel, string bucket = null, string userAgent = null, string discordUsername = null, string discordId = null, string remoteIp = null, Func<IEnumerable<string>, CancellationToken, Task<bool>> confirmReplacement = null);
 
         Task<int> GetFileCountForTag(string tagName, string bucket = null);
 
