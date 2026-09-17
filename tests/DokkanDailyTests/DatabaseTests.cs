@@ -268,19 +268,6 @@ namespace DokkanDailyTests
         }
 
         [Test]
-        public async Task UploadAttemptAdmissionIsAtomicAcrossConcurrentConnectionsAndUtcDays()
-        {
-            DateOnly firstDay = new(2026, 8, 5);
-
-            bool[] admissions = await Task.WhenAll(Enumerable.Range(0, 40)
-                .Select(_ => repository.TryAcceptUploadAttempt("discord:concurrent", firstDay)));
-
-            Assert.That(admissions.Count(x => x), Is.EqualTo(5));
-            Assert.That(await repository.TryAcceptUploadAttempt("discord:concurrent", firstDay), Is.False);
-            Assert.That(await repository.TryAcceptUploadAttempt("discord:concurrent", firstDay.AddDays(1)), Is.True);
-        }
-
-        [Test]
         public async Task DatabaseCanRecordAndReturnChallengeList()
         {
             await repository.InsertChallenge(new(DailyType.Character, new Stage("foo", Tier.F, "fakepath"), new("a", Tier.F), new("b", Tier.F), new("bar", "baz", Tier.F), null, DateTime.UtcNow));

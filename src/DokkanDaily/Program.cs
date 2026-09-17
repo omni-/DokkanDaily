@@ -24,7 +24,7 @@ namespace DokkanDaily
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(builder.Configuration)
                 .Enrich.FromLogContext()
-                .WriteTo.Console()
+                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}")
                 .WriteTo.Debug()
                 .CreateLogger();
 
@@ -56,7 +56,6 @@ namespace DokkanDaily
             builder.Services.AddTransient<IResetService, ResetService>();
             builder.Services.AddTransient<IAzureBlobService, AzureBlobService>();
             builder.Services.AddTransient<IOcrService, OcrService>();
-            builder.Services.AddTransient<IUploadAttemptLimiter, UploadAttemptLimiter>();
             builder.Services.AddTransient<IDokkanDailyRepository, DokkanDailyRepository>();
             builder.Services.AddSingleton(TimeProvider.System);
 

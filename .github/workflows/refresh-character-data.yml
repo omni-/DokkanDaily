@@ -26,8 +26,6 @@ env:
   SCRAPER_REPO: omni-/DokkanWebScraper
   SCRAPER_DIR: .scraper
   DOTNET_CORE_VERSION: 10.0.x
-  # Nothing here drives a browser; skip the ~300MB playwright download.
-  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
 
 jobs:
   refresh:
@@ -71,8 +69,12 @@ jobs:
     - name: Test stage link sync
       run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
 
+    - name: Export event and stage metadata
+      working-directory: ${{ env.SCRAPER_DIR }}
+      run: npm run run:dokkaninfo -- stage-metadata --out "$RUNNER_TEMP/stage-metadata.json"
+
     - name: Sync stage links and OCR aliases
-      run: python3 scripts/sync-stage-links.py --summary "$RUNNER_TEMP/stage-link-summary.md"
+      run: python3 scripts/sync-stage-links.py --metadata "$RUNNER_TEMP/stage-metadata.json" --summary "$RUNNER_TEMP/stage-link-summary.md"
 
     - name: Check for changes
       id: changes

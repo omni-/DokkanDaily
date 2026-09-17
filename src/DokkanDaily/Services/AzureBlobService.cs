@@ -22,7 +22,6 @@ namespace DokkanDaily.Services
         private readonly ILogger<AzureBlobService> _logger;
         private readonly IOcrService _ocrService;
         private readonly IRngHelperService _rngHelperService;
-        private readonly IUploadAttemptLimiter _uploadAttemptLimiter;
         private readonly string _connectionString;
         private readonly string _containerName;
 
@@ -37,7 +36,7 @@ namespace DokkanDaily.Services
 
         private string TodaysBucketFullName => GetBucketNameForDate(DokkanDailyHelper.GetUtcNowDateTag());
 
-        public AzureBlobService(IOptions<DokkanDailySettings> settings, ILogger<AzureBlobService> logger, IOcrService ocrService, IRngHelperService rngHelperService, IUploadAttemptLimiter uploadAttemptLimiter)
+        public AzureBlobService(IOptions<DokkanDailySettings> settings, ILogger<AzureBlobService> logger, IOcrService ocrService, IRngHelperService rngHelperService)
         {
             _settings = settings.Value;
             _logger = logger;
@@ -45,7 +44,6 @@ namespace DokkanDaily.Services
             _containerName = _settings.AzureBlobContainerName;
             _ocrService = ocrService;
             _rngHelperService = rngHelperService;
-            _uploadAttemptLimiter = uploadAttemptLimiter;
         }
 
         public string GetBucketNameForDate(string formattedDateTag)
@@ -56,6 +54,7 @@ namespace DokkanDaily.Services
         public async Task<ScreenshotUploadResult> UploadToAzureAsync(string userFileName, string contentType, IBrowserFile browserFile, Challenge model, string bucket = null, string userAgent = null, string discordUsername = null, string discordId = null, string remoteIp = null, Func<IEnumerable<string>, CancellationToken, Task<bool>> confirmReplacement = null)
         {
             MemoryStream uploadStream = null;
+            using var logScope = _logger.BeginScope(new Dictionary<string, object> { ["UploadId"] = Guid.NewGuid() });
 
             try
             {
@@ -67,9 +66,8 @@ namespace DokkanDaily.Services
 
                 model = currentChallenge;
 
-                UploadAdmission admission = await _uploadAttemptLimiter.TryAcceptAsync(discordId, remoteIp);
-                if (!admission.Accepted)
-                    throw new UploadRejectedException(admission.RejectionMessage);
+                _logger.LogInformation("Upload started for challenge {ChallengeDate}, {Event}, stage {Stage}",
+                    model.Date, model.TodaysEvent.Name, model.TodaysEvent.StageNumber);
 
                 uploadStream = new MemoryStream();
                 using Stream fileStream = browserFile.OpenReadStream(maxFileSize);
@@ -82,7 +80,7 @@ namespace DokkanDaily.Services
                 try { parsedClear = _ocrService.ProcessImage(uploadStream); }
                 finally { _ocrThrottle.Release(); }
                 resetCancellation.ThrowIfCancellationRequested();
-                var tags = BuildTagDict(model, parsedClear, discordUsername, discordId, remoteIp, userAgent);
+                var tags = BuildTagDict(model, parsedClear, discordUsername, discordId, remoteIp, userAgent, _logger);
                 uploadStream.Position = 0;
 
                 string uploadDateTag = DokkanDailyHelper.GetUtcNowDateTag();
@@ -101,10 +99,12 @@ namespace DokkanDaily.Services
             }
             catch (OperationCanceledException)
             {
+                _logger.LogWarning("Upload canceled during daily reset");
                 throw new UploadRejectedException("Daily reset canceled this upload. Your previous clear has been kept");
             }
-            catch (UploadRejectedException)
+            catch (UploadRejectedException ex)
             {
+                _logger.LogWarning("Upload rejected: {Reason}", ex.Message);
                 throw;
             }
             catch (Exception ex)
@@ -182,9 +182,9 @@ namespace DokkanDaily.Services
         {
             // A missing OCR name cannot establish ownership. Never fall back to IP alone.
             return !string.IsNullOrWhiteSpace(nickname) &&
-                UploadAttemptLimiter.TryNormalizeIpAddress(remoteIp, out string normalizedIp) &&
+                UploadIdentity.TryNormalizeIpAddress(remoteIp, out string normalizedIp) &&
                 metadata.TryGetValue(AzureConstants.IP_TAG, out string previousIp) &&
-                UploadAttemptLimiter.TryNormalizeIpAddress(previousIp, out string normalizedPreviousIp) &&
+                UploadIdentity.TryNormalizeIpAddress(previousIp, out string normalizedPreviousIp) &&
                 normalizedIp == normalizedPreviousIp &&
                 metadata.TryGetValue(AzureConstants.USER_NAME_TAG, out string previousNickname) &&
                 previousNickname == nickname.EscapeUnicode();
@@ -193,7 +193,7 @@ namespace DokkanDaily.Services
         private static async Task<List<BlobItem>> FindPreviousClears(BlobContainerClient container, string remoteIp, string nickname)
         {
             List<BlobItem> previousClears = [];
-            if (string.IsNullOrWhiteSpace(nickname) || !UploadAttemptLimiter.TryNormalizeIpAddress(remoteIp, out _))
+            if (string.IsNullOrWhiteSpace(nickname) || !UploadIdentity.TryNormalizeIpAddress(remoteIp, out _))
             {
                 return previousClears;
             }
@@ -439,29 +439,34 @@ namespace DokkanDaily.Services
             return dict.Where(kv => !string.IsNullOrEmpty(kv.Value)).ToDictionary();
         }
 
-        internal static StageTextResult ValidateScreenshot(Stage stage, ClearMetadata metadata)
+        internal static StageTextResult ValidateScreenshot(Stage stage, ClearMetadata metadata, ILogger logger = null)
         {
             // Minimum difficulty is an independent eligibility requirement, even when titles
             // or catalog coverage are insufficient. Missing difficulty remains unknown.
+            StageTextResult result;
             if (stage.MinimumDifficulty is { } minimum && metadata?.Difficulty is string label &&
                 Enum.TryParse<StageDifficulty>(label, out var difficulty) && Enum.IsDefined(difficulty) &&
                 label == difficulty.ToString() && difficulty < minimum)
-                throw new UploadRejectedException($"This challenge requires {minimum} or higher; your screenshot shows {difficulty}");
-            var result = StageTextValidator.Validate(new(metadata?.EventTitle, metadata?.StageTitle,
-                metadata?.Difficulty == "ZHARD" ? "Z-HARD" : metadata?.Difficulty, metadata is not null), StageTitleCatalog.ForStage(stage));
+                result = new("difficulty-mismatch", "below-assigned-minimum");
+            else
+                result = StageTextValidator.Validate(new(metadata?.EventTitle, metadata?.StageTitle,
+                    metadata?.Difficulty == "ZHARD" ? "Z-HARD" : metadata?.Difficulty, metadata is not null), StageTitleCatalog.ForStage(stage));
+            logger?.LogInformation("Screenshot observed event {ObservedEvent}, stage {ObservedStage}, difficulty {Difficulty}: {Outcome}, {Reason}",
+                metadata?.EventTitle?.ReplaceLineEndings(" "), metadata?.StageTitle?.ReplaceLineEndings(" "),
+                metadata?.Difficulty, result.Outcome, result.Reason);
             if (result.IsMismatch)
                 throw new UploadRejectedException(result.Outcome switch
                 {
                     "event-mismatch" => "The screenshot shows a different event. Upload the clear-details screenshot for this challenge's event",
                     "stage-mismatch" => "The screenshot shows a different stage. Upload the clear-details screenshot for this challenge's stage",
-                    _ => $"This challenge requires {stage.MinimumDifficulty} or higher"
+                    _ => $"This challenge requires {stage.MinimumDifficulty} or higher; your screenshot shows {metadata?.Difficulty}"
                 });
             return result;
         }
 
-        internal static Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata, string discordUsername, string discordId, string remoteIp, string userAgent)
+        internal static Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata, string discordUsername, string discordId, string remoteIp, string userAgent, ILogger logger = null)
         {
-            var validation = ValidateScreenshot(model.TodaysEvent, metadata);
+            var validation = ValidateScreenshot(model.TodaysEvent, metadata, logger);
             Dictionary<string, string> dict = BuildIdentityTagDict(model, discordUsername, discordId, remoteIp, userAgent);
 
             dict[AzureConstants.STAGE_VALIDATION_TAG] = validation.Outcome;

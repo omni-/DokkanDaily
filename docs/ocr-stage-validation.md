@@ -11,8 +11,8 @@ accidental-upload check, not proof of completion or team compliance.
 
 The production implementation preserves the final September 2026 OCR candidate:
 geometry, routing, matching thresholds and model are frozen. The alias catalog is
-maintained by `python scripts/sync-stage-links.py` alongside stage links. It fetches
-English event names and numbered stage titles from Dokkan Info, preserves reviewed
+maintained by `python scripts/sync-stage-links.py --metadata <scratch>/stage-metadata.json` alongside stage links. It imports
+English event names and numbered stage titles exported by DokkanWebScraper, preserves reviewed
 localizations and historical contrast entries, and refuses incomplete coverage.
 The [research release](https://github.com/omni-/DokkanDaily/releases/tag/ocr-test)
 contains the full September 2026 research/evaluation provenance, including the
