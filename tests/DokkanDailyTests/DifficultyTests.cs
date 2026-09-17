@@ -103,9 +103,6 @@ public class DifficultyTests
             null, current.Category, null, null, current.Date);
         var rng = new Mock<IRngHelperService>();
         rng.Setup(x => x.GetDailyChallenge()).ReturnsAsync(current);
-        var admission = new Mock<IUploadAttemptLimiter>();
-        admission.Setup(x => x.TryAcceptAsync("123", null))
-            .ReturnsAsync(new UploadAdmission(true, "discord:123", DateOnly.FromDateTime(current.Date)));
         var ocr = new Mock<IOcrService>();
         ocr.Setup(x => x.ProcessImage(It.IsAny<MemoryStream>()))
             .Returns(new ClearMetadata { Difficulty = label });
@@ -116,7 +113,7 @@ public class DifficultyTests
         {
             // Reaching storage would fail before any network call, rather than using real credentials.
             AzureBlobConnectionString = "intentionally invalid", AzureBlobContainerName = "test"
-        }), NullLogger<AzureBlobService>.Instance, ocr.Object, rng.Object, admission.Object);
+        }), NullLogger<AzureBlobService>.Instance, ocr.Object, rng.Object);
 
         var error = Assert.ThrowsAsync<UploadRejectedException>(() => service.UploadToAzureAsync(
             "clear.png", "image/png", file.Object, submitted, discordId: "123"));

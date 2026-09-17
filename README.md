@@ -13,3 +13,5 @@ It supports Global and JP clears and does a probably-unreasonable amount of OCR 
 Found something broken or have an idea? [Submit an Issue](https://github.com/omni-/DokkanDaily/issues).
 
 If you're more technically inclined, [Submit a Pull Request](https://github.com/omni-/DokkanDaily/pulls). *(no promises on merging!)*
+
+Maintainer documentation: [Stage links and OCR alias synchronization](docs/stage-link-sync.md).

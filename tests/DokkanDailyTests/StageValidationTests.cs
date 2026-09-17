@@ -22,6 +22,56 @@ public class StageValidationTests
     private static string Fixtures => Path.Combine(Root, "tests/DokkanDailyTests/Data/stage-validation");
     private static StageTextTarget Target(string e, string s) => new() { Aliases = [new(e, s)], MinimumDifficulty = "SUPER2" };
 
+    [TestCase("komachi.png", "Komachi", "0'02\"13.7")]
+    [TestCase("serenity.png", "Serenity", "0'01\"52.0")]
+    public void SeptemberIncidentScreenshotsMatchAssignedStage(string file, string nickname, string clearTime)
+    {
+        var service = new OcrService(NullLogger<OcrService>.Instance,
+            Options.Create(new DokkanDailySettings { FeatureFlags = new() { EnableJapaneseParsing = true } }), new());
+        using var stream = new MemoryStream(File.ReadAllBytes(Path.Combine(Root, "tests/fixtures/upload-incident-20260916", file)));
+        var actual = service.ProcessImage(stream);
+        var stage = DokkanConstants.Stages.Single(s => s.Name == "Ultimate Red Zone [Majin Buu Saga]" && s.StageNumber == 2);
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual.Nickname, Is.EqualTo(nickname));
+            Assert.That(actual.ClearTime, Is.EqualTo(clearTime));
+            Assert.That(actual.ItemlessClear, Is.True);
+            Assert.That(AzureBlobService.ValidateScreenshot(stage, actual).Outcome, Is.EqualTo("match"));
+        });
+    }
+
+    [TestCase(1)]
+    [TestCase(3)]
+    public void ClearDetailsAliasStillRejectsOtherStageNumbers(int stageNumber)
+    {
+        var stage = DokkanConstants.Stages.Single(s => s.Name == "Ultimate Red Zone [Majin Buu Saga]" && s.StageNumber == 2);
+        Assert.Throws<UploadRejectedException>(() => AzureBlobService.ValidateScreenshot(stage,
+            new() { EventTitle = "Ultimate Red Zone", StageTitle = $"Majin Buu Saga Stage {stageNumber}", Difficulty = "SUPER" }));
+    }
+
+    [Test]
+    public void RejectedUploadsCanRetryMoreThanNinetyNineTimesWithoutQuotaOrIdentityGate()
+    {
+        var stage = DokkanConstants.Stages.First(s => s.Name == "Fearsome Activation! Cell Max" && s.StageNumber == 2);
+        var challenge = new Challenge(DailyType.Category, stage, null, new Category("Test", Tier.Z), null, null, DateTime.Today);
+        var rng = new Mock<IRngHelperService>();
+        rng.Setup(x => x.GetDailyChallenge()).ReturnsAsync(challenge);
+        var ocr = new Mock<IOcrService>();
+        ocr.Setup(x => x.ProcessImage(It.IsAny<MemoryStream>())).Returns(new ClearMetadata
+            { EventTitle = "Heart-Pounding Heroine Battle", StageTitle = "Vs. Mai", Difficulty = "SUPER3" });
+        var file = new Mock<IBrowserFile>();
+        file.Setup(x => x.OpenReadStream(It.IsAny<long>(), It.IsAny<CancellationToken>())).Returns(() => new MemoryStream([1]));
+        var service = new AzureBlobService(Options.Create(new DokkanDailySettings()),
+            NullLogger<AzureBlobService>.Instance, ocr.Object, rng.Object);
+        for (int attempt = 0; attempt < 100; attempt++)
+        {
+            var error = Assert.ThrowsAsync<UploadRejectedException>(() =>
+                service.UploadToAzureAsync("clear.png", "image/png", file.Object, challenge));
+            Assert.That(error.Message, Does.Contain("different event"));
+        }
+        ocr.Verify(x => x.ProcessImage(It.IsAny<MemoryStream>()), Times.Exactly(100));
+    }
+
     [TestCase("Movie Battle", "Vs. Gogeta", "Movie Battle", "Vs. Gogeta", "match")]
     [TestCase("Ultimate Red Zone Movie Editlon", "Vs. Super Janemha", "Ultimate Red Zone Movie Edition", "Vs. Super Janemba", "match")]
     [TestCase("Movie Battle", "Vs. Super Saiyan Gohan", "Movie Battle", "Vs. Super Saiyan Goku", "unknown")]
@@ -206,13 +256,11 @@ public class StageValidationTests
         var client = new Challenge(DailyType.Category, new("Unconfigured", Tier.Z, "test"), null, current.Category, null, null, current.Date);
         var rng = new Mock<IRngHelperService>();
         rng.Setup(x => x.GetDailyChallenge()).ReturnsAsync(current);
-        var admission = new Mock<IUploadAttemptLimiter>();
-        admission.Setup(x => x.TryAcceptAsync("123", null)).ReturnsAsync(new UploadAdmission(true, "discord:123", DateOnly.FromDateTime(current.Date)));
         var ocr = new Mock<IOcrService>();
         ocr.Setup(x => x.ProcessImage(It.IsAny<MemoryStream>())).Returns(new ClearMetadata { EventTitle = eventTitle, StageTitle = stageTitle, Difficulty = "SUPER3" });
         var file = new Mock<IBrowserFile>();
         file.Setup(x => x.OpenReadStream(It.IsAny<long>(), It.IsAny<CancellationToken>())).Returns(() => new MemoryStream([1, 2, 3]));
-        var service = new AzureBlobService(Options.Create(new DokkanDailySettings { AzureBlobConnectionString = "intentionally invalid", AzureBlobContainerName = "test" }), NullLogger<AzureBlobService>.Instance, ocr.Object, rng.Object, admission.Object);
+        var service = new AzureBlobService(Options.Create(new DokkanDailySettings { AzureBlobConnectionString = "intentionally invalid", AzureBlobContainerName = "test" }), NullLogger<AzureBlobService>.Instance, ocr.Object, rng.Object);
         var error = Assert.ThrowsAsync<UploadRejectedException>(() => service.UploadToAzureAsync("clear.png", "image/png", file.Object, client, discordId: "123"));
         Assert.That(error.Message, Does.Contain(message));
         ocr.Verify(x => x.ProcessImage(It.IsAny<MemoryStream>()), Times.Once);

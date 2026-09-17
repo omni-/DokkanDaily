@@ -36,7 +36,7 @@ public class ClearReplacementTests
 
     private static AzureBlobService CreateService() => new(
         Microsoft.Extensions.Options.Options.Create(new DokkanDaily.Configuration.DokkanDailySettings()),
-        Microsoft.Extensions.Logging.Abstractions.NullLogger<AzureBlobService>.Instance, null, null, null);
+        Microsoft.Extensions.Logging.Abstractions.NullLogger<AzureBlobService>.Instance, null, null);
 
     [Test]
     public async Task ResetCancelsUnansweredConfirmationAndDoesNotWaitForTheBrowser()

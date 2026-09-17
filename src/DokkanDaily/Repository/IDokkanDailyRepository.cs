@@ -15,6 +15,5 @@ namespace DokkanDaily.Repository
 
         Task<IEnumerable<DbLeaderboardResult>> GetHallOfFame();
 
-        Task<bool> TryAcceptUploadAttempt(string uploaderKey, DateOnly utcDate);
     }
 }

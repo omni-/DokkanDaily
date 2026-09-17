@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
-"""Sync Dokkan Info links and OCR aliases: python scripts/sync-stage-links.py [--dry-run] [--summary FILE].
-Requires Python 3.10+ and curl. No browser or third-party Python packages required.
-Only unique normalized event names and unique stage destinations are accepted.
+"""Import scraper metadata: python scripts/sync-stage-links.py --metadata FILE [--dry-run] [--summary FILE].
+Requires Python 3.10+. No network or third-party Python packages required.
+Ambiguous event matches fail; stages with multiple difficulties link to the event choices.
 """
 import argparse
 import copy
 from collections import defaultdict
-from concurrent.futures import ThreadPoolExecutor
-from html import unescape
-from html.parser import HTMLParser
+from contextlib import ExitStack
 import json
+import os
 from pathlib import Path
 import re
-import subprocess
+import tempfile
+from types import SimpleNamespace
 import unicodedata
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -38,58 +38,52 @@ def local_stages(source):
     return list(dict.fromkeys((name, int(number or 1)) for name, _, number in rows))
 
 
-def fetch(path):
-    # Same transport as DokkanWebScraper's Dokkan Info adapter.
-    result = subprocess.run(["curl", "--silent", "--show-error", "--fail", "--location",
-                             "--compressed", "--max-time", "45", "--retry", "2",
-                             BASE + path], capture_output=True, check=True)
-    return result.stdout.decode("utf-8")
-
-
-def parse_directory(source):
-    match = re.search(r'v-bind:eventjson="([^"]+)"', source)
-    if not match:
-        raise ValueError("Dokkan Info event directory was not recognized.")
-    events = json.loads(unescape(match[1]))
+def read_metadata(source):
+    """Validate the versioned scraper boundary before applying any Daily policy."""
+    data = json.loads(source)
+    if not isinstance(data, dict) or type(data.get("schemaVersion")) is not int or data["schemaVersion"] != 1:
+        raise ValueError("Unsupported stage metadata schema.")
+    events = data.get("events")
     if not isinstance(events, list) or not events:
-        raise ValueError("Dokkan Info returned an empty event directory.")
+        raise ValueError("Empty event metadata.")
+    directory, details = [], {}
     for event in events:
-        if not isinstance(event.get("id"), int) or event["id"] <= 0 or not event.get("name"):
-            raise ValueError("Invalid event in Dokkan Info directory.")
-    return events
-
-
-class StageParser(HTMLParser):
-    def __init__(self, event_id):
-        super().__init__(convert_charrefs=True)
-        self.prefix = f"/events/challenge/{event_id}/"
-        self.level = None
-        self.links = defaultdict(set)
-        self.titles = defaultdict(set)
-
-    def handle_data(self, data):
-        match = re.fullmatch(r"Level (\d+):\s*(.*)", " ".join(data.split()))
-        if match:
-            self.level = int(match[1])
-            if match[2]:
-                self.titles[self.level].add(match[2])
-
-    def handle_starttag(self, tag, attrs):
-        href = dict(attrs).get("href", "").removeprefix(BASE)
-        if tag == "a" and self.level is not None and re.fullmatch(re.escape(self.prefix) + r"\d+", href):
-            self.links[self.level].add(BASE + href)
-
-
-def parse_stages(source, event_id):
-    return parse_stage_details(source, event_id).links
-
-
-def parse_stage_details(source, event_id):
-    parser = StageParser(event_id)
-    parser.feed(source)
-    if not parser.links:
-        raise ValueError(f"No numbered stages found for event {event_id}; no links were changed.")
-    return parser
+        if not isinstance(event, dict):
+            raise ValueError("Invalid event metadata.")
+        event_id, title = event.get("id"), event.get("title")
+        if type(event_id) is not int or event_id <= 0 or event_id in details or not isinstance(title, str) or not title.strip():
+            raise ValueError("Invalid or duplicate event metadata.")
+        if event.get("sourceUrl") != f"{BASE}/events/challenge/{event_id}":
+            raise ValueError("Invalid event source URL.")
+        stages = event.get("stages")
+        if not isinstance(stages, list) or not stages:
+            raise ValueError("Empty event stages.")
+        links, titles, ids = {}, {}, set()
+        for stage in stages:
+            if not isinstance(stage, dict):
+                raise ValueError("Invalid stage metadata.")
+            number, name = stage.get("number"), stage.get("title")
+            if type(number) is not int or number <= 0 or number in links or not isinstance(name, str) or not name.strip():
+                raise ValueError("Invalid, duplicate or conflicting stage title/number.")
+            destinations = stage.get("destinations")
+            if not isinstance(destinations, list) or not destinations:
+                raise ValueError("Missing stage destinations.")
+            urls = set()
+            for destination in destinations:
+                if not isinstance(destination, dict):
+                    raise ValueError("Invalid stage destination.")
+                dest_id = destination.get("id")
+                if type(dest_id) is not int or dest_id <= 0 or dest_id in ids:
+                    raise ValueError("Invalid or duplicate destination ID.")
+                url = f"{BASE}/events/challenge/{event_id}/{dest_id}"
+                if destination.get("url") != url:
+                    raise ValueError("Invalid stage destination URL.")
+                ids.add(dest_id)
+                urls.add(url)
+            links[number], titles[number] = urls, {" ".join(name.split())}
+        directory.append(dict(id=event_id, name=" ".join(title.split())))
+        details[event_id] = SimpleNamespace(links=links, titles=titles)
+    return directory, details
 
 
 def build_aliases(links, events, details, previous):
@@ -141,22 +135,49 @@ def build_links(stages, events, details, overrides=None):
     return dict(sorted(result.items())), unresolved
 
 
+def replace_catalogs(links, aliases):
+    # Stage both files outside the repos before replacing either. If the second replacement
+    # fails, restore the first. Temp storage must be on the catalogs' filesystem for rename.
+    with ExitStack() as cleanup:
+        def temporary(suffix):
+            descriptor, name = tempfile.mkstemp(prefix="dokkan-stage-sync-", suffix=suffix)
+            os.close(descriptor)
+            path = Path(name)
+            cleanup.callback(path.unlink, missing_ok=True)
+            return path
+
+        prepared = []
+        for index, (target, data) in enumerate([(TARGET, links), (ALIASES, aliases)]):
+            staged = temporary(f"-{index}.json")
+            staged.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            backup = temporary(f"-{index}.backup")
+            existed = target.exists()
+            if existed:
+                backup.write_bytes(target.read_bytes())
+            prepared.append((target, staged, backup, existed))
+        replaced = []
+        try:
+            for target, staged, backup, existed in prepared:
+                staged.replace(target)
+                replaced.append((target, backup, existed))
+        except OSError:
+            for target, backup, existed in reversed(replaced):
+                if existed:
+                    backup.replace(target)
+                else:
+                    target.unlink()
+            raise
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--metadata", type=Path, required=True, help="DokkanWebScraper stage-metadata JSON export")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--summary", type=Path)
     args = parser.parse_args()
     stages = local_stages((ROOT / "src/DokkanDaily/Constants/DokkanConstants.cs").read_text(encoding="utf-8-sig"))
-    events = parse_directory(fetch("/events/challenge"))
+    events, details = read_metadata(args.metadata.read_text(encoding="utf-8"))
     overrides = json.loads((ROOT / "scripts/stage-link-overrides.json").read_text(encoding="utf-8"))
-    names = {normalize(name) for name, _ in stages}
-    needed = [event for event in events if normalize(event["name"]) in names or event["id"] in overrides.values()]
-    def load(event):
-        print(f"Reading {event['id']}: {event['name'].strip()}", flush=True)
-        return event["id"], parse_stage_details(fetch(f"/events/challenge/{event['id']}"), event["id"])
-    # Finish every fetch before touching the output; any network/parser error preserves it.
-    with ThreadPoolExecutor(max_workers=3) as pool:
-        details = dict(pool.map(load, needed))
     links, unresolved = build_links(stages, events, {key: value.links for key, value in details.items()}, overrides)
     if not links:
         raise ValueError("No stages matched; existing links were preserved.")
@@ -174,12 +195,7 @@ def main():
         args.summary.write_text(report, encoding="utf-8")
     print(report)
     if not args.dry_run:
-        temp = TARGET.with_suffix(".json.tmp")
-        temp.write_text(json.dumps(links, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        alias_temp = ALIASES.with_suffix(".json.tmp")
-        alias_temp.write_text(json.dumps(aliases, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        temp.replace(TARGET)
-        alias_temp.replace(ALIASES)
+        replace_catalogs(links, aliases)
 
 
 if __name__ == "__main__":

@@ -39,12 +39,9 @@ public class ClearReplacementIntegrationTests
             null, new Category("Test", Tier.Z), null, null, DateTime.Today);
         Mock<IRngHelperService> rng = new();
         rng.Setup(r => r.GetDailyChallenge()).ReturnsAsync(challenge);
-        Mock<IUploadAttemptLimiter> admission = new();
-        admission.Setup(a => a.TryAcceptAsync(null, "192.0.2.1"))
-            .ReturnsAsync(new UploadAdmission(true, "ip:192.0.2.1", DateOnly.FromDateTime(challenge.Date)));
         OcrService ocr = new(NullLogger<OcrService>.Instance, Options.Create(settings), new());
         AzureBlobService service = new(Options.Create(settings), NullLogger<AzureBlobService>.Instance,
-            ocr, rng.Object, admission.Object);
+            ocr, rng.Object);
         string root = Path.GetFullPath(Path.Combine(TestContext.CurrentContext.TestDirectory, "../../../../.."));
         byte[] screenshot = await File.ReadAllBytesAsync(Path.Combine(root, "tests/DokkanDailyTests/Data/difficulty/heroine-global-super2-small.jpg"));
         Mock<IBrowserFile> file = new();
