@@ -2502,6 +2502,17 @@
     ]
   },
   {
+    "eventId": 1742,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "11th Anniversary! Special Battle Part 1",
+        "stageTitle": "Stage 2",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1742"
+      }
+    ]
+  },
+  {
     "eventId": 1743,
     "stageNumber": 1,
     "aliases": [
@@ -2509,6 +2520,17 @@
         "eventTitle": "11th Anniversary! Special Battle Part 2",
         "stageTitle": "Stage 1",
         "provenance": "retained-v2-corpus-alias"
+      }
+    ]
+  },
+  {
+    "eventId": 1743,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "11th Anniversary! Special Battle Part 2",
+        "stageTitle": "Stage 2",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1743"
       }
     ]
   },
@@ -2806,6 +2828,39 @@
         "eventTitle": "Collection of Epic Battles",
         "stageTitle": "Planet Namek Saga",
         "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1769"
+      }
+    ]
+  },
+  {
+    "eventId": 1775,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle: RE [The Cell Games]",
+        "stageTitle": "Vs. Hercule",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1775"
+      }
+    ]
+  },
+  {
+    "eventId": 1775,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle: RE [The Cell Games]",
+        "stageTitle": "Vs. Goku",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1775"
+      }
+    ]
+  },
+  {
+    "eventId": 1775,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Supreme Magnificent Battle: RE [The Cell Games]",
+        "stageTitle": "Vs. Gohan",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1775"
       }
     ]
   }
