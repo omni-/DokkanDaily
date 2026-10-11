@@ -3,6 +3,7 @@ using System.Text.Json;
 using DokkanDaily.Configuration;
 using DokkanDaily.Constants;
 using DokkanDaily.Exceptions;
+using DokkanDaily.Helpers;
 using DokkanDaily.Models;
 using DokkanDaily.Models.Enums;
 using DokkanDaily.Ocr;
@@ -205,7 +206,7 @@ public class StageValidationTests
     }
 
     [Test]
-    public void UploadUsesExistingStageAndPreservesUnknown()
+    public void RecognizedClearsPreserveUnknownTitles()
     {
         var stage = DokkanConstants.Stages.First(s => s.Name == "Fearsome Activation! Cell Max" && s.StageNumber == 2);
         var challenge = new Challenge(DailyType.Category, stage, null, new Category("Test", Tier.Z), null, null, DateTime.Today);
@@ -213,24 +214,67 @@ public class StageValidationTests
         var valid = Tags(new() { EventTitle = stage.Name, StageTitle = "Horrendous Calamity", Difficulty = "SUPER3" });
         Assert.That(valid[AzureConstants.UPLOAD_STATUS_TAG], Is.EqualTo("valid"));
         Assert.Throws<UploadRejectedException>(() => Tags(new() { EventTitle = stage.Name, StageTitle = stage.Name, Difficulty = "SUPER3" }));
-        var unknown = Tags(new() { Difficulty = "SUPER3" });
+        var unknown = Tags(new() { Difficulty = "SUPER3", Nickname = "Tester", ClearTime = "0'01\"00.0", ItemlessClear = true });
         Assert.Multiple(() =>
         {
+            Assert.That(valid[AzureConstants.STAGE_VALIDATION_TAG], Is.EqualTo("match"));
             Assert.That(unknown[AzureConstants.UPLOAD_STATUS_TAG], Is.EqualTo("valid"));
             Assert.That(unknown[AzureConstants.STAGE_VALIDATION_TAG], Is.EqualTo("unknown"));
-            Assert.That(unknown.ContainsKey(AzureConstants.INVALID_TAG), Is.False);
-            Assert.That(Tags(null)[AzureConstants.UPLOAD_STATUS_TAG], Is.EqualTo("valid"));
+            Assert.That(DokkanDailyHelper.IsConfirmedClear(unknown), Is.True);
+            Assert.Throws<UploadRejectedException>(() => Tags(null));
         });
     }
 
     [Test]
-    public void MissingCatalogNamesDoNotWithholdUploads()
+    public void MissingCatalogNamesDoNotWithholdRecognizedClears()
     {
         var stage = new Stage("Unconfigured future event", Tier.Z, "test");
         var challenge = new Challenge(DailyType.Category, stage, null, new Category("Test", Tier.Z), null, null, DateTime.Today);
-        var tags = AzureBlobService.BuildTagDict(challenge, new() { Difficulty = "SUPER3" }, null, null, null, null);
-        Assert.That(tags[AzureConstants.UPLOAD_STATUS_TAG], Is.EqualTo("valid"));
+        var metadata = new ClearMetadata { Difficulty = "SUPER3", Nickname = "Tester", ClearTime = "0'01\"00.0" };
+        var tags = AzureBlobService.BuildTagDict(challenge, metadata, null, null, null, null);
         Assert.That(tags[AzureConstants.STAGE_VALIDATION_REASON_TAG], Is.EqualTo("missing-target-localized-names"));
+        Assert.That(DokkanDailyHelper.IsConfirmedClear(tags), Is.True);
+    }
+
+    [TestCase(null, null, null)]
+    [TestCase("Fearsome Activation! Cell Max", "Horrendous Calamity", null)]
+    [TestCase("Fearsome Activation! Cell Max", null, "SUPER3")]
+    [TestCase(null, "Horrendous Calamity", "SUPER3")]
+    public void UnreadableTitlesOrDifficultyDoNotRejectARecognizedClear(string eventTitle, string stageTitle, string difficulty)
+    {
+        var stage = DokkanConstants.Stages.First(s => s.Name == "Fearsome Activation! Cell Max" && s.StageNumber == 2);
+        var challenge = new Challenge(DailyType.Category, stage, null, new Category("Test", Tier.Z), null, null, DateTime.Today);
+        var tags = AzureBlobService.BuildTagDict(challenge, new ClearMetadata
+        {
+            EventTitle = eventTitle, StageTitle = stageTitle, Difficulty = difficulty, Nickname = "Tester", ClearTime = "0'01\"00.0"
+        }, null, null, null, null);
+        Assert.That(tags[AzureConstants.STAGE_VALIDATION_TAG], Is.EqualTo("unknown"));
+        Assert.That(DokkanDailyHelper.IsConfirmedClear(tags), Is.True);
+    }
+
+    [Test]
+    public async Task UnrecognizedScreenshotsRejectBeforeStorageOrReplacement()
+    {
+        var stage = DokkanConstants.Stages.First(s => s.Name == "Fearsome Activation! Cell Max" && s.StageNumber == 2);
+        var challenge = new Challenge(DailyType.Category, stage, null, new Category("Test", Tier.Z), null, null, DateTime.Today);
+        var rng = new Mock<IRngHelperService>();
+        rng.Setup(x => x.GetDailyChallenge()).ReturnsAsync(challenge);
+        var ocr = new Mock<IOcrService>();
+        ocr.Setup(x => x.ProcessImage(It.IsAny<MemoryStream>())).Returns((ClearMetadata)null);
+        var file = new Mock<IBrowserFile>();
+        file.Setup(x => x.OpenReadStream(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+            .Returns(() => new MemoryStream([1, 2, 3]));
+        var service = new AzureBlobService(Options.Create(new DokkanDailySettings
+        {
+            AzureBlobConnectionString = "intentionally invalid", AzureBlobContainerName = "test"
+        }), NullLogger<AzureBlobService>.Instance, ocr.Object, rng.Object);
+
+        var error = Assert.ThrowsAsync<UploadRejectedException>(() => service.UploadToAzureAsync(
+            "clear.png", "image/png", file.Object, challenge, remoteIp: "192.0.2.1",
+            confirmReplacement: (_, _) => throw new AssertionException("An unrecognized screenshot must not replace a clear")));
+        Assert.That(error.Message, Does.Contain("couldn't recognize"));
+        ocr.Verify(x => x.ProcessImage(It.IsAny<MemoryStream>()), Times.Once);
+        await service.WaitForPendingAnalysis(TimeSpan.FromMilliseconds(50)).WaitAsync(TimeSpan.FromSeconds(5));
     }
 
     [TestCase(1, "Saiyan Saga", "Planet Namek Saga")]

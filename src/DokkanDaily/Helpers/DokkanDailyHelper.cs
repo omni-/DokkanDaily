@@ -24,6 +24,23 @@ namespace DokkanDaily.Helpers
         #endregion
 
         #region Helper Functions
+        public static bool IsConfirmedClear(IDictionary<string, string> metadata)
+        {
+            if (metadata is null ||
+                (metadata.TryGetValue(AzureConstants.UPLOAD_STATUS_TAG, out string status) && status != AzureConstants.UPLOAD_STATUS_VALID) ||
+                (metadata.TryGetValue(AzureConstants.STAGE_VALIDATION_TAG, out string validation) && validation is not ("match" or "unknown")))
+                return false;
+
+            if (metadata.TryGetValue(AzureConstants.INVALID_TAG, out string invalid) &&
+                (!bool.TryParse(invalid, out bool invalidResult) || invalidResult))
+                return false;
+
+            // Core clear-screen OCR confirms the screenshot independently of title matching.
+            return metadata.TryGetValue(AzureConstants.USER_NAME_TAG, out string nickname) && !string.IsNullOrWhiteSpace(nickname) &&
+                metadata.TryGetValue(AzureConstants.CLEAR_TIME_TAG, out string clearTime) && TryParseDokkanTimeSpan(clearTime, out _) &&
+                metadata.TryGetValue(AzureConstants.ITEMLESS_TAG, out string itemless) && bool.TryParse(itemless, out _);
+        }
+
         public static IEnumerable<Unit> BuildCharacterDb()
         {
             using Stream s = File.OpenRead("./wwwroot/data/DokkanCharacterData.json");

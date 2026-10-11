@@ -93,6 +93,7 @@ namespace DokkanDaily.Services
 
                 return new(stored.Blob, new(tags[AzureConstants.STAGE_VALIDATION_TAG], tags[AzureConstants.STAGE_VALIDATION_REASON_TAG]))
                 {
+                    Metadata = tags,
                     RemovedClearNames = stored.RemovedClearNames,
                     ReplacementIncomplete = stored.ReplacementIncomplete
                 };
@@ -466,15 +467,15 @@ namespace DokkanDaily.Services
 
         internal static Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata, string discordUsername, string discordId, string remoteIp, string userAgent, ILogger logger = null)
         {
+            if (metadata is null)
+                throw new UploadRejectedException("We couldn't recognize a clear-details screenshot. Upload a screenshot showing the clear details");
             var validation = ValidateScreenshot(model.TodaysEvent, metadata, logger);
             Dictionary<string, string> dict = BuildIdentityTagDict(model, discordUsername, discordId, remoteIp, userAgent);
 
             dict[AzureConstants.STAGE_VALIDATION_TAG] = validation.Outcome;
             dict[AzureConstants.STAGE_VALIDATION_REASON_TAG] = validation.Reason;
-            // Unknown evidence is diagnostic, not a reason to withhold a clear.
-            // Confirmed mismatches have already thrown before reaching storage.
+            // A recognized clear can have unreadable titles. Only known mismatches reject it.
             dict[AzureConstants.UPLOAD_STATUS_TAG] = AzureConstants.UPLOAD_STATUS_VALID;
-            if (metadata == null) return dict;
             // OCR titles can wrap; Azure metadata is sent as single-line HTTP headers.
             dict[AzureConstants.OBSERVED_EVENT_TAG] = metadata.EventTitle?.ReplaceLineEndings(" ").EscapeUnicode();
             dict[AzureConstants.OBSERVED_STAGE_TAG] = metadata.StageTitle?.ReplaceLineEndings(" ").EscapeUnicode();

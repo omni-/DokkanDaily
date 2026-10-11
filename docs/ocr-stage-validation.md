@@ -3,9 +3,11 @@
 Uploads independently read the visible event title, stage title and difficulty, then
 compare them with the server-assigned challenge. Accepted uploads can score;
 clear event/stage mismatches and known lower difficulties reject before storage.
-Unknown results are accepted for display and scoring.
-Missing data never establishes a mismatch. Validation outcomes
-remain in metadata for diagnostics. Missing aliases remain unknown.
+Unknown title/difficulty results and missing aliases do not reject a recognized clear.
+Complete clear-screen recognition failure rejects before storage or replacement.
+The gallery requires recognized player-name, clear-time and itemless metadata, and
+hides pending or invalid clears. Missing titles do not hide a recognized clear.
+Older uploads marked valid without any clear-screen OCR data remain hidden.
 All 156 current configured stages have sourced English alias pairs. This is an
 accidental-upload check, not proof of completion or team compliance.
 
