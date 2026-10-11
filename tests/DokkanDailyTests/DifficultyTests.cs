@@ -90,7 +90,7 @@ public class DifficultyTests
         });
         Assert.Throws<UploadRejectedException>(() => AzureBlobService.BuildTagDict(challenge,
             new ClearMetadata { Difficulty = "SUPER2" }, null, null, null, null));
-        Assert.That(AzureBlobService.BuildTagDict(challenge, null, null, null, null, null)[AzureConstants.UPLOAD_STATUS_TAG], Is.EqualTo(AzureConstants.UPLOAD_STATUS_VALID));
+        Assert.Throws<UploadRejectedException>(() => AzureBlobService.BuildTagDict(challenge, null, null, null, null, null));
     }
 
     [TestCase("SUPER2")]

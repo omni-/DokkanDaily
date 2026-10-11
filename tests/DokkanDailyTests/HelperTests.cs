@@ -9,6 +9,65 @@ namespace DokkanDailyTests
     [TestFixture]
     public class HelperTests
     {
+        [TestCase("valid", "match", null, true)]
+        [TestCase("valid", "match", "false", true)]
+        [TestCase("valid", "match", "true", false)]
+        [TestCase("valid", "match", "malformed", false)]
+        [TestCase("valid", "unknown", null, true)]
+        [TestCase("valid", "stage-mismatch", null, false)]
+        [TestCase("valid", null, null, true)]
+        [TestCase("unknown", "match", null, false)]
+        [TestCase("pending", "match", null, false)]
+        [TestCase("invalid", "match", null, false)]
+        [TestCase(null, "match", null, true)]
+        [TestCase(null, null, null, true)]
+        public void GalleryRequiresRecognizedClearDataRegardlessOfTitleReadability(string status, string validation, string invalid, bool visible)
+        {
+            Dictionary<string, string> metadata = new()
+            {
+                [AzureConstants.USER_NAME_TAG] = "Tester",
+                [AzureConstants.CLEAR_TIME_TAG] = "0'01\"00.0",
+                [AzureConstants.ITEMLESS_TAG] = "true"
+            };
+            if (status is not null) metadata[AzureConstants.UPLOAD_STATUS_TAG] = status;
+            if (validation is not null) metadata[AzureConstants.STAGE_VALIDATION_TAG] = validation;
+            if (invalid is not null) metadata[AzureConstants.INVALID_TAG] = invalid;
+            Assert.That(DokkanDailyHelper.IsConfirmedClear(metadata), Is.EqualTo(visible));
+        }
+
+        [TestCase("username")]
+        [TestCase("cleartime")]
+        [TestCase("itemless")]
+        public void GalleryHidesUploadsMissingCoreClearData(string missingField)
+        {
+            Dictionary<string, string> metadata = new()
+            {
+                [AzureConstants.UPLOAD_STATUS_TAG] = "valid",
+                [AzureConstants.STAGE_VALIDATION_TAG] = "match",
+                [AzureConstants.USER_NAME_TAG] = "Tester",
+                [AzureConstants.CLEAR_TIME_TAG] = "0'01\"00.0",
+                [AzureConstants.ITEMLESS_TAG] = "false"
+            };
+            Assert.That(DokkanDailyHelper.IsConfirmedClear(metadata), Is.True);
+            metadata.Remove(missingField);
+            Assert.That(DokkanDailyHelper.IsConfirmedClear(metadata), Is.False);
+        }
+
+        [Test]
+        public void IncidentMetadataDoesNotDisplayWithoutRecognizedClearData()
+        {
+            Dictionary<string, string> metadata = new()
+            {
+                [AzureConstants.EVENT_TAG] = "When Wishes Backfire! Birth of the Shadow Dragons, Stage 9",
+                [AzureConstants.DAILY_TYPE_TAG] = "LinkSkill",
+                [AzureConstants.UPLOAD_STATUS_TAG] = "valid",
+                [AzureConstants.STAGE_VALIDATION_TAG] = "unknown",
+                [AzureConstants.STAGE_VALIDATION_REASON_TAG] = "missing-or-unsupported-difficulty"
+            };
+            Assert.That(DokkanDailyHelper.IsConfirmedClear(metadata), Is.False);
+            Assert.That(DokkanDailyHelper.IsConfirmedClear(null), Is.False);
+        }
+
         [Test]
         public void EveryCurrentStageHasAValidDokkanInfoDestination()
         {
