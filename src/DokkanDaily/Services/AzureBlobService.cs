@@ -33,6 +33,7 @@ namespace DokkanDaily.Services
         private static CancellationTokenSource _uploadCancellation = new();
         private const string ResetInProgressMessage = "Daily results are being calculated. Please try your upload again shortly";
         private const string ChallengeChangedMessage = "The daily challenge changed while this page was open. Refresh the page and try again";
+        private const string UnrecognizedClearMessage = "We couldn't recognize a clear-details screenshot. Upload a screenshot showing the clear details";
 
         private string TodaysBucketFullName => GetBucketNameForDate(DokkanDailyHelper.GetUtcNowDateTag());
 
@@ -468,7 +469,7 @@ namespace DokkanDaily.Services
         internal static Dictionary<string, string> BuildTagDict(Challenge model, ClearMetadata metadata, string discordUsername, string discordId, string remoteIp, string userAgent, ILogger logger = null)
         {
             if (metadata is null)
-                throw new UploadRejectedException("We couldn't recognize a clear-details screenshot. Upload a screenshot showing the clear details");
+                throw new UploadRejectedException(UnrecognizedClearMessage);
             var validation = ValidateScreenshot(model.TodaysEvent, metadata, logger);
             Dictionary<string, string> dict = BuildIdentityTagDict(model, discordUsername, discordId, remoteIp, userAgent);
 
@@ -483,6 +484,10 @@ namespace DokkanDaily.Services
             dict[AzureConstants.ITEMLESS_TAG] = metadata.ItemlessClear.ToString();
             dict[AzureConstants.CLEAR_TIME_TAG] = metadata.ClearTime;
             dict[AzureConstants.DIFFICULTY_TAG] = metadata.Difficulty;
+
+            // Use the gallery's core-data requirement before storage can replace a previous clear.
+            if (!DokkanDailyHelper.IsConfirmedClear(dict))
+                throw new UploadRejectedException(UnrecognizedClearMessage);
 
             return dict.Where(kv => !string.IsNullOrEmpty(kv.Value)).ToDictionary();
         }

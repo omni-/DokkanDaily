@@ -4,7 +4,8 @@ Uploads independently read the visible event title, stage title and difficulty, 
 compare them with the server-assigned challenge. Accepted uploads can score;
 clear event/stage mismatches and known lower difficulties reject before storage.
 Unknown title/difficulty results and missing aliases do not reject a recognized clear.
-Complete clear-screen recognition failure rejects before storage or replacement.
+Unrecognized clears and missing or malformed core clear-screen metadata reject
+before storage or replacement.
 The gallery requires recognized player-name, clear-time and itemless metadata, and
 hides pending or invalid clears. Missing titles do not hide a recognized clear.
 Older uploads marked valid without any clear-screen OCR data remain hidden.

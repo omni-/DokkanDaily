@@ -211,7 +211,11 @@ public class StageValidationTests
         var stage = DokkanConstants.Stages.First(s => s.Name == "Fearsome Activation! Cell Max" && s.StageNumber == 2);
         var challenge = new Challenge(DailyType.Category, stage, null, new Category("Test", Tier.Z), null, null, DateTime.Today);
         Dictionary<string, string> Tags(ClearMetadata m) => AzureBlobService.BuildTagDict(challenge, m, null, null, null, null);
-        var valid = Tags(new() { EventTitle = stage.Name, StageTitle = "Horrendous Calamity", Difficulty = "SUPER3" });
+        var valid = Tags(new()
+        {
+            EventTitle = stage.Name, StageTitle = "Horrendous Calamity", Difficulty = "SUPER3",
+            Nickname = "Tester", ClearTime = "0'01\"00.0"
+        });
         Assert.That(valid[AzureConstants.UPLOAD_STATUS_TAG], Is.EqualTo("valid"));
         Assert.Throws<UploadRejectedException>(() => Tags(new() { EventTitle = stage.Name, StageTitle = stage.Name, Difficulty = "SUPER3" }));
         var unknown = Tags(new() { Difficulty = "SUPER3", Nickname = "Tester", ClearTime = "0'01\"00.0", ItemlessClear = true });
@@ -252,15 +256,28 @@ public class StageValidationTests
         Assert.That(DokkanDailyHelper.IsConfirmedClear(tags), Is.True);
     }
 
-    [Test]
-    public async Task UnrecognizedScreenshotsRejectBeforeStorageOrReplacement()
+    [TestCase(null, null)]
+    [TestCase("Tester", "0'01\"00")]
+    [TestCase("Tester", "0'99\"00.0")]
+    [TestCase("Tester", null)]
+    [TestCase("Tester", "")]
+    [TestCase("Tester", " ")]
+    [TestCase(null, "0'01\"00.0")]
+    [TestCase("", "0'01\"00.0")]
+    [TestCase(" ", "0'01\"00.0")]
+    public async Task UnrecognizedScreenshotsRejectBeforeStorageOrReplacement(string nickname, string clearTime)
     {
         var stage = DokkanConstants.Stages.First(s => s.Name == "Fearsome Activation! Cell Max" && s.StageNumber == 2);
         var challenge = new Challenge(DailyType.Category, stage, null, new Category("Test", Tier.Z), null, null, DateTime.Today);
         var rng = new Mock<IRngHelperService>();
         rng.Setup(x => x.GetDailyChallenge()).ReturnsAsync(challenge);
+        ClearMetadata metadata = nickname is null && clearTime is null ? null : new()
+        {
+            EventTitle = stage.Name, StageTitle = "Horrendous Calamity", Difficulty = "SUPER3",
+            Nickname = nickname, ClearTime = clearTime
+        };
         var ocr = new Mock<IOcrService>();
-        ocr.Setup(x => x.ProcessImage(It.IsAny<MemoryStream>())).Returns((ClearMetadata)null);
+        ocr.Setup(x => x.ProcessImage(It.IsAny<MemoryStream>())).Returns(metadata);
         var file = new Mock<IBrowserFile>();
         file.Setup(x => x.OpenReadStream(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .Returns(() => new MemoryStream([1, 2, 3]));
