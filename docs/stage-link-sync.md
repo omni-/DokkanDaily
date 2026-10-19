@@ -9,7 +9,6 @@ npm run run:dokkaninfo -- stage-metadata --out <scratch>/stage-metadata.json
 # From DokkanDaily
 python scripts/sync-stage-links.py --metadata <scratch>/stage-metadata.json
 ```
-The monthly `refresh-character-data` workflow runs this too and includes link and OCR alias changes in its PR.
 Use `--dry-run` to review matches without writing, or `--summary <file>` for a Markdown report.
 Temporary replacement files stay in the system temp directory; it must share a filesystem with
 the catalogs (set `TMPDIR`/`TEMP` to an external directory on that filesystem if needed).
