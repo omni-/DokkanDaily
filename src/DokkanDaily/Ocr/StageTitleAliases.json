@@ -2863,5 +2863,49 @@
         "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1775"
       }
     ]
+  },
+  {
+    "eventId": 1782,
+    "stageNumber": 1,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone: RE [Greatest Sworn Enemies Edition]",
+        "stageTitle": "Vs. Vegeta",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1782"
+      }
+    ]
+  },
+  {
+    "eventId": 1782,
+    "stageNumber": 2,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone: RE [Greatest Sworn Enemies Edition]",
+        "stageTitle": "Vs. Frieza (Final Form)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1782"
+      }
+    ]
+  },
+  {
+    "eventId": 1782,
+    "stageNumber": 3,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone: RE [Greatest Sworn Enemies Edition]",
+        "stageTitle": "Vs. Perfect Cell",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1782"
+      }
+    ]
+  },
+  {
+    "eventId": 1782,
+    "stageNumber": 4,
+    "aliases": [
+      {
+        "eventTitle": "Ultimate Red Zone: RE [Greatest Sworn Enemies Edition]",
+        "stageTitle": "Vs. Buu (Kid)",
+        "provenance": "Dokkan Info stage sync: https://dokkaninfo.com/events/challenge/1782"
+      }
+    ]
   }
 ]
