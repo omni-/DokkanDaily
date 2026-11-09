@@ -5,9 +5,13 @@ nav ::deep a { color: #fff0d6; text-decoration: none; padding: 12px 0; font-size
 nav ::deep a:hover, nav ::deep a.active { color: #ffb448; border-bottom-color: var(--orange); }
 .account-action ::deep button { background: #f6e5c9; border: 2px solid var(--ink); padding: 8px 16px; font-weight: bold; box-shadow: 3px 3px 0 var(--ink); min-height: 44px; }
 .account-action { margin-left: auto;}
+/* Below this width the centered nav runs into the logo, so it gets its own row. */
+@media (max-width: 900px) {
+    .site-header { flex-wrap: wrap; row-gap: 0; }
+    nav { position: static; transform: none; order: 1; width: 100%; justify-content: center; }
+}
 @media (max-width: 720px) {
-    .site-header { flex-wrap: wrap; gap: 8px; }
-    .brand img { display: none; }
-    nav { width: 100%; justify-content: center; display: flex; position: absolute; left: 35%; transform: translateX(-50%); gap: 24px;}
+    .brand img { width: 150px; }
+    nav { gap: 16px; }
     nav ::deep a { font-size: 13px; }
 }
