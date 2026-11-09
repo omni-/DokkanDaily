@@ -41,7 +41,9 @@ jobs:
         path: Dacpac/${{ env.DACPAC_NAME }}    
 
   build:
-    runs-on: ubuntu-latest
+    # The Tesseract package loads Leptonica 1.82. Ubuntu 26.04 ships 1.86 as libleptonica.so,
+    # which the OCR library step can't find.
+    runs-on: ubuntu-24.04
     needs: db-build
     permissions:
       contents: read
