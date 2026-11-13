@@ -386,6 +386,7 @@ namespace DokkanDaily.Services
         {
             Mat clearTimeSection = t.T(binaryBlackOnWhite.SubMat(clearTimeRect.Add(boundingRect.TopLeft)));
             Cv2.Resize(clearTimeSection, clearTimeSection, new Size(0, 0), scaleFactor, scaleFactor, InterpolationFlags.Linear);
+            clearTimeSection = RemoveItalicSlant(t, clearTimeSection);
             using Pix clearTimePix = Pix.LoadFromMemory(clearTimeSection.ToBytes());
             clearTimePix.XRes = 300;
             clearTimePix.YRes = 300;
@@ -402,6 +403,25 @@ namespace DokkanDaily.Services
             if (clearTimeText.Length == 0) clearTimeText = null;
 
             return clearTimeText;
+        }
+
+        // Horizontal shift per pixel of height that stands the clear-time digits upright.
+        // Any value from 0.15 to 0.25 reads the English fixtures correctly.
+        private const double ClearTimeSlant = 0.2;
+
+        // The clear-time font is italic, and Tesseract can read its slanted 1 as 7,
+        // e.g. 0'01"01.2 as 0'7"01.2 on a 750x1334 screenshot.
+        private static Mat RemoveItalicSlant(ResourcesTracker t, Mat image)
+        {
+            // The shear moves the top of each glyph left, so pad on the left to keep it in frame.
+            int shift = (int)Math.Ceiling(ClearTimeSlant * image.Height);
+            Mat padded = t.NewMat();
+            Cv2.CopyMakeBorder(image, padded, 0, 0, shift, 0, BorderTypes.Constant, Scalar.White);
+
+            using Mat shear = Mat.FromPixelData(2, 3, MatType.CV_64FC1, new[] { 1, ClearTimeSlant, -ClearTimeSlant * image.Height, 0, 1, 0 });
+            Mat upright = t.NewMat();
+            Cv2.WarpAffine(padded, upright, shear, padded.Size(), InterpolationFlags.Linear, BorderTypes.Constant, Scalar.White);
+            return upright;
         }
 
         public bool ParseItemsUsed(TesseractEngine engine, ResourcesTracker t, Mat binaryBlackOnWhite, Rect itemlessRect, Rect boundingRect, float scaleFactor)
